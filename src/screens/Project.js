@@ -204,7 +204,7 @@ export default function Project(){
             </div>
           </div>
           <div className="container ">
-            <div className="row" style={{marginTop: '2rem'}}>
+            <div className="row" style={{marginTop: '2rem',marginLeft:'2rem'}}>
               <div style={{width: '90%'}} className="text-right">
                 <textarea name id cols={110} rows={3} style={{width: '90%'}} placeholder="  Add a coment" defaultValue={""} />
               </div>

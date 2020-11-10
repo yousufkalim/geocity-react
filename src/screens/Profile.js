@@ -12,11 +12,11 @@ export default function Profile(){
           <div className="container ">
             <div className="row">
               <div style={{width: '50%'}}>
-                <h4 >Ne soyez plus seul pour realiser vos projects, soyez entoures des meilleurs !</h4>
+                <h4 style={{fontWeight:'600'}}>Ne soyez plus seul pour realiser vos projects, soyez entoures des meilleurs !</h4>
                 {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div> 
               <div style={{width: '50%'}}>
-                <p className="mt-1 ml-3" >Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p>
+                <p className="mt-1 ml-3" style={{fontSize:'18px',color:'#707070'}}>Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.</p>
                 {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div>{/* end of col */}
             </div> {/* end of row */}
@@ -243,9 +243,9 @@ export default function Profile(){
               </div>
             </div>
             <div className="container ">
-              <div className="row" style={{marginTop: '2rem'}}>
+              <div className="row" style={{marginTop: '2rem',marginLeft:'6rem'}}>
                 <div style={{width: '90%'}} className="text-right">
-                  <textarea name id cols={110} rows={3} placeholder="  Add a coment" defaultValue={""} />
+                  <textarea name id cols={110} rows={3} style={{width: '90%'}}  placeholder="  Add a coment" defaultValue={""} />
                 </div>
                 <div style={{width: '10%'}} className="text-center">
                   <button type="button" className="btn btn-block mt-4" style={{maxWidth: '80%'}}>Send</button>

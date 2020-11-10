@@ -122,6 +122,7 @@ textarea:focus {
   -ms-background-size: cover;
   background-position: center center;
   font-weight: 400;
+  overflow: auto;
   font-family: "Roboto Slab";
   margin: 0px;
 }

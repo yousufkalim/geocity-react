@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Header() {
     return (
@@ -7,7 +8,9 @@ function Header() {
           {/* Text Logo - Use this if you don't have a graphic logo */}
           {/* <a class="navbar-brand logo-text page-scroll" href="index.html">Evolo</a> */}
           {/* Image Logo */}
-          <a className="navbar-brand logo-image" href="index.html">GEOCITY</a>
+          <Link to="/" className="navbar-brand logo-image">
+            GEOCITY
+          </Link>
           {/* Mobile Menu Toggle Button */}
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-awesome fas fa-bars" />

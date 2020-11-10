@@ -120,13 +120,13 @@ function Home() {
           <div className="container">
             <div className="row">
               <div className="col-lg-12">
-                <h2>Comment cela fontctionne</h2>
+                <h2>Comment cela fontctionne ?</h2>
                 {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div> {/* end of col */}
             </div> {/* end of row */}
             <div className="row " id="section1">
               <div className="col-lg-12">
-                <h2 className="h2-heading">Pour les porteurs de projet</h2>
+                <h3 className="h2-heading">Pour les porteurs de projet</h3>
                 {/* Card */}
                 <div className="card">
                   <img className="card-image" src="images/light-bulb.svg" alt="alternative" />
