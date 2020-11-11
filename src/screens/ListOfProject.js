@@ -12,7 +12,7 @@ export default function List(){
           <div className="container ">
             <div className="row">
               <div className="col-lg-12">
-                <h2>Realisez vos projects de facon <br /> collaborative !</h2>
+                <h2>Realisez vos projects de facon collaborative !</h2>
                 {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div> {/* end of col */}
             </div>
@@ -20,10 +20,10 @@ export default function List(){
           <div className="container-fluid">
             {/* end of row */}
             <div className="row">
-              <div className="col-lg-8">
-                <hr style={{border: '3px solid #707070'}} />
+              <div className="col-lg-7">
+                <hr style={{border: '3px solid #e8d7c9'}} />
               </div>
-              <div className="col-lg-4" />
+              <div className="col-lg-5" />
             </div>
           </div>
         </div>
@@ -33,8 +33,8 @@ export default function List(){
             {/* end of row */}
             <div className="row " >
               <div className="col-lg-2" />
-              <div className="col-lg-2" id="selectbox">
-                <select className="selectpicker form-control" data-style="btn-secondary">
+              <div className="col-lg-2 " id="selectbox" >
+                <select className="" >
                   <option>
                     Categories
                   </option>
@@ -44,32 +44,21 @@ export default function List(){
                 </select>
               </div>
               <div className="col-lg-2 " id="selectbox2">
-                {/* <select class="form-control" id="sel1" style="margin-left: 2rem;">
+                 <select class="form-control" id="sel1" >
                             <option>
                                 Domaine
                             </option>
                             <option>2</option>
                             <option>3</option>
                             <option>4</option>
-                          </select> */}
-                <select className="selectpicker form-control" data-style="btn-secondary">
-                  <option>
-                    Domaine
-                  </option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                </select>
+                          </select> 
+           
               </div>
               <div className="col-lg-3" id="selectbox3">
                 <form>
                   <div className="input-group">
                     <input type="text" className="form-control" placeholder="Lieu du project" />
-                    <div className="input-group-btn">
-                      <button className="btn btn-primary" type="submit">
-                        <i className="fas fa-search" />
-                      </button>
-                    </div>
+                  
                   </div>
                 </form>
               </div>

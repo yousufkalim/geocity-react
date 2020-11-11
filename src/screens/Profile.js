@@ -70,8 +70,8 @@ export default function Profile(){
               </div>
             </div>
             <div className="row" style={{marginTop: '2rem'}}>
-              <div className="col-lg-1" />
-              <div className="col-lg-11 text-left  p-1" style={{background: '#fcfcfc', margin: 'auto', position: 'relative'}}>
+             
+              <div className="col-lg-12 text-left  p-1" style={{background: '#fcfcfc', margin: 'auto', position: 'relative'}}>
                 <h3 className="mt-1 ml-3">PROFIL</h3>
               </div>
             </div>
@@ -143,9 +143,9 @@ export default function Profile(){
               </div>
             </div>
             <div className="row " style={{marginTop: '2rem'}}>
-              <div className="col-lg-1" />
-              <div className="col-lg-11 text-left  p-1" style={{background: '#fcfcfc', margin: 'auto', position: 'relative'}}>
-                <h4 className="mt-1 ml-2">PROJECTS</h4>
+             
+              <div className="col-lg-12 text-left  p-1" style={{background: '#fcfcfc', margin: 'auto', position: 'relative'}}>
+                <h4 className="mt-1 ml-3">PROJECTS</h4>
               </div>
             </div>
             <div className="row text-left" style={{marginTop: '2rem'}} id="projectPage">
@@ -164,11 +164,12 @@ export default function Profile(){
                 <i className="fas fa-circle fa-lg " style={{color: '#4B8B0B'}} />
                 <button type="button" className="btn btn-block">Voir Plus</button>
               </div>
+              <div className="col-lg-12 text-right" >
+              <i className="fas fa-heart fa-lg " style={{marginRight: '5rem'}}/>
             </div>
-            <div className="col-lg-11 text-right" style={{marginLeft: '1rem'}}>
-              <i className="fas fa-heart fa-lg " />
             </div>
-            <div className="row text-left" style={{marginTop: '2rem'}} id="projectPage">
+           
+            <div className="row text-left" style={{marginTop: '1rem'}} id="projectPage">
               <div className=" text-right" style={{width: '20%'}}>
                 <img className="project-image" src="images/305b7327ab645935e179307a21247d89232a242a.png" alt="alternative" />
               </div>
@@ -183,12 +184,12 @@ export default function Profile(){
               <div className="  text-center" style={{width: '30%'}}>
                 <i className="fas fa-circle fa-lg" />
                 <button type="button" className="btn btn-block">Voir Plus</button>
-              </div>
+              </div> <div className="col-lg-12 text-right" >
+              <i className="fas fa-heart fa-lg " style={{marginRight: '5rem'}}/>
             </div>
-            <div className="col-lg-11 text-right" style={{marginLeft: '1rem'}}>
-              <i className="fas fa-heart fa-lg " />
             </div>
-            <div className="row text-left" style={{marginTop: '2rem'}} id="projectPage">
+           
+            <div className="row text-left" style={{marginTop: '1rem'}} id="projectPage">
               <div className=" text-right" style={{width: '20%'}}>
                 <img className="project-image" src="images/89dadc1055d5a03f7cc45e7dc36030fb11d6f236.png" alt="alternative" />
               </div>
@@ -203,17 +204,17 @@ export default function Profile(){
               <div className="  text-center" style={{width: '30%'}}>
                 <i className="fas fa-circle fa-lg" />
                 <button type="button" className="btn btn-block">Voir Plus</button>
-              </div>
+              </div> <div className="col-lg-12 text-right" >
+              <i className="fas fa-heart fa-lg " style={{marginRight: '5rem'}}/>
             </div>
-            <div className="col-lg-11 text-right" style={{marginLeft: '1rem'}}>
-              <i className="fas fa-heart fa-lg " />
             </div>
+           
             {/* end of row */}
             {/* end of row */}
             <div className="row" style={{marginTop: '2rem'}}>
-              <div className="col-lg-1" />
-              <div className="col-lg-11 text-left  p-1" style={{background: '#fcfcfc', margin: 'auto', position: 'relative'}}>
-                <h4 className="mt-1 ml-2">COMMENTAIRIES</h4>
+              
+              <div className="col-lg-12 text-left ml-2 p-1" style={{background: '#fcfcfc', margin: 'auto', position: 'relative'}}>
+                <h4 className="mt-1 ml-3">COMMENTAIRIES</h4>
               </div>
             </div>
             <div className="row text-left" style={{marginTop: '2rem'}} >
@@ -243,7 +244,7 @@ export default function Profile(){
               </div>
             </div>
             <div className="container ">
-              <div className="row" style={{marginTop: '2rem',marginLeft:'6rem'}}>
+              <div className="row" style={{marginTop: '2rem',marginLeft:'5rem'}}>
                 <div style={{width: '90%'}} className="text-right">
                   <textarea name id cols={110} rows={3} style={{width: '90%'}}  placeholder="  Add a coment" defaultValue={""} />
                 </div>

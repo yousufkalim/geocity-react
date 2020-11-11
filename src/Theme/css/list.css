@@ -631,7 +631,7 @@ input[type="checkbox"] {
 }
 .navbar-custom {
   background-color: #fff;
-  box-shadow: 0 0.0625rem 0.375rem 0 rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 0.0625rem 0.375rem 0 rgba(0, 0, 0, 0.1); */
   /* font: 600 0.875rem/0.875rem "Raleway", sans-serif; */
   transition: all 0.2s;
 }
@@ -945,6 +945,7 @@ input[type="checkbox"] {
 }
 .cardsList select {
   /* background: rgba(255, 230, 206, 0.986); */
+  width: 90%;
   color: #000;
   border-radius: 4px;
 }
@@ -973,6 +974,7 @@ input[type="checkbox"] {
 .cardsList h2 {
   margin-bottom: 2rem;
   color: #707070;
+  margin-top: 3rem;
   font-weight: bold;
 }
 
@@ -1901,9 +1903,9 @@ a:hover.back-to-top {
 @media (min-width: 992px) {
   /* Navigation */
   .navbar-custom {
-    padding: 2.125rem 1.5rem 2.125rem 2rem;
+    padding: 1.125rem 4rem 0.7rem 0rem;
     box-shadow: none;
-    background: transparent;
+    background: linear-gradient(to right, #59b6b9, #96dca6);
   }
 
   .navbar-custom .navbar-nav {
@@ -2163,7 +2165,7 @@ a:hover.back-to-top {
 @media (min-width: 1200px) {
   /* Navigation */
   .navbar-custom {
-    padding: 2.125rem 2rem 2.125rem 5rem;
+    padding: 1.125rem 4rem 0.7rem 0rem;
   }
   /* .navbar-custom .navbar-nav span{
 		padding-left: 2rem;
@@ -2337,10 +2339,13 @@ a:hover.back-to-top {
   margin-left: -1.5rem;
 }
 .cardsList #selectbox2 {
-  margin-left: 2.5rem;
+  margin-left: 1rem;
 }
 .cardsList #selectbox3 {
-  margin-left: 5rem;
+  margin-left: 1rem;
+}
+.cardsList #selectbox3 .input-group {
+  width: 90%;
 }
 .cardsList #card1 {
   margin-left: -1rem;

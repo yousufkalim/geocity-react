@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import '../Theme/css/styles.css';
 // import './css/fontawesome-all.css'
 import Footer from '../Components/footer'
@@ -6,8 +6,11 @@ import Footer from '../Components/footer'
 import {  Link
 } from "react-router-dom";
 function Home() {
+  useEffect(()=>{
+    
+  })
   return (
-    <div>
+    <div >
         {/* Preloader */}
         {/* <div class="spinner-wrapper">
         <div class="spinner">
@@ -18,7 +21,7 @@ function Home() {
     </div> */}
         {/* end of preloader */}
         {/* Navigation */}
-        <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <nav className="navbar navbar-expand-lg navbar-dark navbar-custom-home fixed-top">
           {/* Text Logo - Use this if you don't have a graphic logo */}
           {/* <a class="navbar-brand logo-text page-scroll" href="index.html">Evolo</a> */}
           {/* Image Logo */}
