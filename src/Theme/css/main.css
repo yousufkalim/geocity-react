@@ -27,7 +27,7 @@ textarea {
   -ms-appearance: unset !important;
 }
 
-.appointmentform input::-webkit-outer-spin-button,
+/* .appointmentform input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   appearance: none !important;
   -moz-appearance: none !important;
@@ -35,7 +35,7 @@ input::-webkit-inner-spin-button {
   -o-appearance: none !important;
   -ms-appearance: none !important;
   margin: 0;
-}
+} */
 
 .appointmentform input:focus,
 select:focus,
@@ -228,11 +228,20 @@ select:focus {
 }
 
 .appointmentform .label-agree-term {
-  color: #999;
+  /* color: #999; */
+  color: #6f6f6f;
 }
 
 .appointmentform .term-service {
   color: #222;
+}
+
+.appointmentform .submitAdd {
+  width: 20%;
+  background: cover;
+  background: #4966b1;
+  color: #fff;
+  border-radius: 4px;
 }
 
 .appointmentform .submit {
@@ -242,11 +251,11 @@ select:focus {
   padding: 16px 17px;
   font-size: 13px;
   border: none;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
-  -ms-border-radius: 5px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
   cursor: pointer;
 }
 .appointmentform .submit:hover {
@@ -257,7 +266,14 @@ select:focus {
   -o-box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
   -ms-box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
 }
-
+.appointmentform .submitAdd:hover {
+  background: #3a518d;
+  box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
+  -moz-box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
+  -webkit-box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
+  -o-box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
+  -ms-box-shadow: 0px 1px 15px 0px rgba(73, 102, 177, 0.7);
+}
 #confirm_type {
   margin-bottom: 30px;
 }
