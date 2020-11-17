@@ -34,14 +34,14 @@ export default function List(){
             <div className="row " >
               <div className="col-lg-2" />
               <div className="col-lg-2 " id="selectbox" >
-                <select className="" >
-                  <option>
-                    Categories
-                  </option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                </select>
+              <select class="form-control" id="sel1" >
+                            <option>
+                                Categories
+                            </option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                          </select> 
               </div>
               <div className="col-lg-2 " id="selectbox2">
                  <select class="form-control" id="sel1" >
