@@ -29,13 +29,13 @@ export default function Profile(){
             <div className="row pt-4" style={{background: '#fcfcfc'}}>
               <div className="col-lg-1 text-center">
                 <span>
-                  <img src="images/facebook.png" style={{width: '25px', height: '25px'}} />
+                  <img alt="facebook" src="images/facebook.png" style={{width: '25px', height: '25px'}} />
                 </span>
                 <div className="mt-4">
-                  <img src="images/instagram.png" style={{width: '25px', height: '25px'}} />
+                  <img alt="facebook" src="images/instagram.png" style={{width: '25px', height: '25px'}} />
                 </div>
                 <div className="mt-4">
-                  <img src="images/youtube.png" style={{width: '25px', height: '25px'}} />
+                  <img alt="facebook" src="images/youtube.png" style={{width: '25px', height: '25px'}} />
                 </div>
                 {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div> 
@@ -150,7 +150,7 @@ export default function Profile(){
             </div>
             <div className="row text-left" style={{marginTop: '2rem'}} id="projectPage">
               <div className=" text-right" style={{width: '20%'}}>
-                <img className="project-image" src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png" alt="alternative" />
+                <img  className="project-image" src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png" alt="alternative" />
               </div>
               <div className="text-left" style={{width: '50%'}}>
                 <div style={{marginLeft: '2rem'}}>
@@ -171,7 +171,7 @@ export default function Profile(){
            
             <div className="row text-left" style={{marginTop: '1rem'}} id="projectPage">
               <div className=" text-right" style={{width: '20%'}}>
-                <img className="project-image" src="images/305b7327ab645935e179307a21247d89232a242a.png" alt="alternative" />
+                <img  className="project-image" src="images/305b7327ab645935e179307a21247d89232a242a.png" alt="alternative" />
               </div>
               <div className="text-left" style={{width: '50%'}}>
                 <div style={{marginLeft: '2rem'}}>

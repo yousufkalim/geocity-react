@@ -16,7 +16,7 @@ function CreateProject() {
    latitude: "",
    longitude: "",
   }
-  
+
   const stepData = {
     name: "",
     tradeName: "",
@@ -35,52 +35,63 @@ function CreateProject() {
   const [skillList, setskillList] = useState("")
   const [stepformData, setstepFormData] = useState(stepData)
   const [stepArrayData, setstepArrayData] = useState([])
+
+  const [aboutRequiredFields, setAboutRequiredFields] = useState({
+  title:""
+  })
 // validation start
-const TitleValidation = (fieldName, fieldValue) => {
-  if (fieldValue.trim() === "") {
-    return `${fieldName} is required`;
+const handleTitle=()=>{
+  const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
+    formData.title.trim()
+  )
+  if (formData.title.trim() && !isValid) {
+    const msg = "Title should not contain any digit or special characters"
+    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
+    return false
+  } else if (formData.title.trim().length<5) {
+    const msg = "Title needs to be at least 5 characters"
+    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
+    // setFNErr("Please Enter Name");
+    return false
   }
-  if (/[^a-zA-Z -]/.test(fieldValue)) {
-    return "Invalid characters";
+
+  setAboutRequiredFields({ ...aboutRequiredFields, title: "" })
+  setFormData({ ...formData, title: formData.title.trim() })
+  return true
+ 
+}
+const handleGenraldesc=()=>{
+  const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
+    formData.general_description.trim()
+  )
+  if (formData.general_description.trim() && !isValid) {
+    const msg = "Name should not contain any digit or special characters"
+    setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
+    return false
+  } else if (formData.general_description.trim().length<10) {
+    const msg = "Title needs to be at least 10 characters"
+    setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
+    // setFNErr("Please Enter Name");
+    return false
   }
-  if (fieldValue.trim().length < 13) {
-    return `${fieldName} needs to be at least three characters`;
-  }
-  return null;
-};
 
+  setAboutRequiredFields({ ...aboutRequiredFields, general_description: "" })
+  setFormData({ ...formData, general_description: formData.general_description.trim() })
+  return true
+ 
+}
 
-
-// const ageValidation = age => {
-//   if (!age) {
-//     return "Age is required";
-//   }
-//   if (age < 18) {
-//     return "Age must be at least 18";
-//   }
-//   if (age > 99) {
-//     return "Age must be under 99";
-//   }
-//   return null;
-// };
-
-const validate = {
-  title: title => TitleValidation("title", title),
-  // lastName: name => TitleValidation("Last Name", name),
-  // email: emailValidation,
-  // age: ageValidation
-};
 
 // validation end
 // useEffect
-useEffect(async () => {
+useEffect( () => {
   const headers = {
     headers: {
       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
     },
   }
   try {
-    await axios
+     axios
       .get("http://localhost:3000/api/v1/admin/categoryList",  headers)
       .then((res) => {
         setCategoryList(res.data.categories)
@@ -180,10 +191,7 @@ setAddress(e.target.value)
 
   // get set adress end
 
-const handleMenu= async (e)=>{
-  // alert("oy")
- 
-}
+
 
   const onSubmit=async (e)=>{
     e.preventDefault();
@@ -262,18 +270,16 @@ const handleMenu= async (e)=>{
   const onAdd=()=>{
     setstepArrayData((prevState) => [...prevState, stepformData])
   }
-  // console.log(formData,"FormData")
   
     return (
         <div className='main'>
         <div className='containerProject'>
          <Form
-         validate={validate}
-          // handleBlur={handleBlur}
+         handleGenraldesc={handleGenraldesc}
           handleChange={handleChange}
           onSubmit={onSubmit}
-          // errors={errors}
-          // touched={touched}
+          aboutRequiredFields={aboutRequiredFields}
+          handleTitle={handleTitle}
           formData={formData}
           items={items}
           getAddress={getAddress}

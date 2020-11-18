@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  // Link
 } from "react-router-dom";
 import CreateProject from "./screens/CreateProject";
 import Home from "./screens/Home";

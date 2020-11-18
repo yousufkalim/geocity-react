@@ -1,14 +1,15 @@
 import React from "react";
 import Autocomplete from "react-autocomplete";
-import { withFormik } from "formik";
-import Debug from "./Debug";
-function MyForm({
+// import { withFormik } from "formik";
+// import Debug from "./Debug";
+function Form({
   errors,
-//   handleBlur,
+  handleTitle,
 address,onAdd,
   handleChange,
   onSubmit,
-//   touched,
+  handleGenraldesc,
+aboutRequiredFields,
   formData,
   items,
   getAddress,
@@ -28,8 +29,9 @@ address,onAdd,
               <label className="label-agree-term">Project Title</label>
               <input type="text" name="title" id="title" value={formData.title} placeholder="Title" required 
               onChange={handleChange}
-              
+              onBlur={handleTitle}
               />
+              {aboutRequiredFields.title!=='' ? <p className="error"> {aboutRequiredFields.title}</p> : ""}
               <label className="label-agree-term">Project Type</label>
 
               <div className="select-list">
@@ -107,7 +109,9 @@ address,onAdd,
               <input type="text" name="general_description"  id="general_description" value={formData.general_description} 
               onChange={handleChange}
               
-              placeholder="Description" required />
+              placeholder="Description" required 
+              onBlur={handleGenraldesc}
+              />
               <label className="label-agree-term">Category</label>
 
               <div className="select-list">
@@ -131,6 +135,7 @@ address,onAdd,
               <input type="text" name="name" value={stepformData.name} placeholder="name" required 
               onChange={handleStepChange}
               />
+              
               <label className="label-agree-term">Step Type</label>
 
               <div className="select-list">
@@ -198,34 +203,10 @@ address,onAdd,
               <input type="submit" name="submit" onClick={onSubmit} className="submit" defaultValue="Request an appointment" />
             </div>
           </form>
-          <Debug values={formData} errors={errors}  />
+         
 
           </>
   );
 }
-const Form = withFormik({
-    mapPropsToValues: ({ initialValues }) => {
-      return {
-        ...initialValues
-      };
-    },
-  
-    validate: (values, { validate }) =>
-      Object.keys(values).reduce((errors, field) => {
-        const error = validate[field](values[field]);
-        return {
-          ...errors,
-          ...(error && { [field]: error })
-        };
-      }, {}),
-  
-    handleSubmit: (values, { setSubmitting }) => {
-      alert(JSON.stringify(values, null, 2));
-      setSubmitting(false);
-    },
-  
-    validateOnChange: false,
-  
-    displayName: "FormFormik"
-  })(MyForm);
+
 export default Form;

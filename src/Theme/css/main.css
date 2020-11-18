@@ -4,6 +4,11 @@ display-flex {
   display: -webkit-flex;
 }
 
+.error {
+  color: red;
+  margin-top: -20px;
+  padding-bottom: 5px;
+}
 /* @extend list-type-ulli; */
 /* list-type-ulli,
 ul {
