@@ -4,11 +4,19 @@ import Autocomplete from "react-autocomplete";
 // import Debug from "./Debug";
 function Form({
   errors,
-  handleTitle,
 address,onAdd,
   handleChange,
-  onSubmit,
+  onSubmit,error,isLoading,
+//   validator
   handleName,
+  handleDescription,
+  handleTitle,
+  validateCategory,
+  validateStepType,
+  stepRequiredFields,validateStatus,validateSpeciality,
+  validateProjectType,
+  validateCity,validatePhoto,validateGenralDesc,
+// validator
 aboutRequiredFields,
   formData,
   items,
@@ -37,12 +45,15 @@ aboutRequiredFields,
               <div className="select-list">
                 <select name="type" id="type" value={formData.type} 
               onChange={handleChange}
-                
+                onBlur={validateProjectType}
                 >
+                  <option  value=""></option>
                   <option  value="Public">Public</option>
                   <option value="Private">Private</option>
                 </select>
               </div> 
+              {aboutRequiredFields.type!=='' ? <p className="error"> {aboutRequiredFields.type}</p> : ""}
+
               <label className="label-agree-term">City</label>
               {/* <input type="file" name="city" id="file" value={formData.city} required 
               onChange={handleChange}
@@ -86,7 +97,11 @@ aboutRequiredFields,
                       name="address"
                       onChange={getAddress}
                       onSelect={SetAddress}
+                    
+
                     />
+              {aboutRequiredFields.address!=='' ? <p className="error"> {aboutRequiredFields.address}</p> : ""}
+                    
           {/* <div className="select-list">
             <select name="city" id="city" value={formData.city} 
           onChange={handleCityChange}
@@ -102,21 +117,28 @@ aboutRequiredFields,
 
               <input type="file" name="general_photo" id="file" value={formData.general_photo} required 
               onChange={handleChange}
+              onBlur={validatePhoto}
               
               />
+              {aboutRequiredFields.general_photo!=='' ? <p className="error"> {aboutRequiredFields.general_photo}</p> : ""}
+
               <label className="label-agree-term">General Description</label>
             
               <input type="text" name="general_description"  id="general_description" value={formData.general_description} 
               onChange={handleChange}
+              onBlur={validateGenralDesc}
               
               placeholder="Description"
                required 
               />
+              {aboutRequiredFields.general_description!=='' ? <p className="error"> {aboutRequiredFields.general_description}</p> : ""}
+
               <label className="label-agree-term">Category</label>
 
               <div className="select-list">
                 <select name="category" id="category" value={formData.category}
                   onChange={handleChange}
+                  onBlur={validateCategory}
                 
                 >
                   {CategoryList ? CategoryList.map(cat=>(
@@ -125,6 +147,7 @@ aboutRequiredFields,
                   )):""}
                 </select>
               </div> 
+              {aboutRequiredFields.category!=='' ? <p className="error"> {aboutRequiredFields.category}</p> : ""}
            
             </div>
             {/* form1 end */}
@@ -137,33 +160,45 @@ aboutRequiredFields,
               onBlur={handleName}
 
               />
+              {stepRequiredFields.name!=='' ? <p className="error"> {stepRequiredFields.name}</p> : ""}
               
               <label className="label-agree-term">Step Type</label>
 
               <div className="select-list">
-                <select name="tradeName" id="tradeName" value={stepformData.tradeName} 
-              onChange={handleStepChange}>
+                <select name="skillField" id="skillField" value={stepformData.skillField} 
+              onChange={handleStepChange}
+              onBlur={validateStepType}
+              
+              >
                   <option  value=""></option>
 
                   <option  value="Field">Field</option>
                   <option value="Material">Material</option>
                 </select>
               </div> 
+              {stepRequiredFields.skillField!=='' ? <p className="error"> {stepRequiredFields.skillField}</p> : ""}
+
+              {stepformData.skillField==="Material"?
+              <>
               <label className="label-agree-term">Step</label>
-              {stepformData.tradeName==="Material"?
+
             <div className="select-list">
               <select name="material" id="material" value={stepformData.material} 
             onChange={handleStepChange}
+            onBlur={validateStepType}
+
               >
                {materialList ?materialList.map(mat=>(
                 <option value={mat.name}>{mat.name}</option>
                ))
-                :""}
+              
+:""}
 
               </select>
-            </div> : stepformData.tradeName==="Field" ?  <div className="select-list">
+            </div></>  : stepformData.skillField==="Field" ?  <div className="select-list">
               <select name="material" id="material" value={stepformData.material} 
-            onChange={handleStepChange}>
+            onChange={handleStepChange}
+            onBlur={validateStepType}>
                     {skillList ?skillList.map(mat=>(
                 <option value={mat.skillField}>{mat.skillField}</option>
                ))
@@ -172,16 +207,21 @@ aboutRequiredFields,
               </select>
             </div>:""
 }
+{stepRequiredFields.material!=='' ? <p className="error"> {stepRequiredFields.material}</p> : ""}
   
               <label className="label-agree-term">Description</label>
               <input type="text" name="description" id="title" value={stepformData.description} placeholder="Description" required 
               onChange={handleStepChange}
+              onBlur={handleDescription}
               />
+              {stepRequiredFields.description!=='' ? <p className="error"> {stepRequiredFields.description}</p> : ""}
+
               <label className="label-agree-term">Project Status</label>
 
             <div className="select-list">
               <select name="status" id="Type" value={stepformData.status} 
             onChange={handleStepChange}
+            onBlur={validateStatus}
               
               >
                 <option  value="completed">completed</option>
@@ -190,18 +230,29 @@ aboutRequiredFields,
 
               </select>
             </div> 
+              {stepRequiredFields.status!=='' ? <p className="error"> {stepRequiredFields.status}</p> : ""}
+                          
           <label className="label-agree-term">Speciality</label>
               <input type="text" name="speciality" id="title" value={stepformData.speciality} placeholder="Speciality" required 
               onChange={handleStepChange}
+              onBlur={validateSpeciality}
+
               />
+              {stepRequiredFields.speciality!=='' ? <p className="error"> {stepRequiredFields.speciality}</p> : ""}
           
       
               <input type="button" name="add" onClick={onAdd} className="submitAdd" value="Add" />
+              {error!=='' ? <p className="error"> {error}</p> : ""}
 
             </div>
         
             <div className="form-submit">
+                {isLoading===true?
+              <input type="submit" name="submit" disabled className="submit" defaultValue="Loading...." />
+               :
               <input type="submit" name="submit" onClick={onSubmit} className="submit" defaultValue="Request an appointment" />
+
+            }
             </div>
           </form>
          

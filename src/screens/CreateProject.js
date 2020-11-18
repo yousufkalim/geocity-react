@@ -19,7 +19,7 @@ function CreateProject() {
 
   const stepData = {
     name: "",
-    tradeName: "",
+    skillField: "",
     speciality: "",
     description: "",
     // StepsType: "",
@@ -33,15 +33,141 @@ function CreateProject() {
   const [CategoryList, setCategoryList] = useState("")
   const [materialList, setMaterialList] = useState("")
   const [skillList, setskillList] = useState("")
+  
+  const [isLoading, setisLoading] = useState(false)
+  const [isCheck, setisCheck] = useState(false)
+  const [error, seterror] = useState("")
+
+
+
   const [stepformData, setstepFormData] = useState(stepData)
   const [stepArrayData, setstepArrayData] = useState([])
 
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
   title:"",
-  general_description:"",
-  name:""
+  type: "",
+    general_photo: "",
+    general_description: "",
+    category: "",
+    address: "",
+   
   })
+  
+  const [stepRequiredFields, setstepRequiredFields] = useState({
+  
+    name:"",
+      skillField: "",
+      speciality: "",
+      // StepsType: "",
+      // Steps: "",
+      status:"",
+      material:[]
+    })
 // validation start
+const validateStepType = () => {
+  if (!stepformData.skillField) {
+
+    const msg = "Required"
+    setstepRequiredFields({ ...stepRequiredFields, skillField: msg })
+    return false
+  }
+  
+  setstepRequiredFields({ ...stepRequiredFields, skillField: '' })
+  
+
+  return true
+}
+const validateSpeciality = () => {
+  if (!stepformData.speciality) {
+
+    const msg = "Required"
+    setstepRequiredFields({ ...stepRequiredFields, speciality: msg })
+    return false
+  }
+  
+  setstepRequiredFields({ ...stepRequiredFields, speciality: '' })
+  
+
+  return true
+}
+const validateStatus = () => {
+  if (!stepformData.status) {
+
+    const msg = "Required"
+    setstepRequiredFields({ ...stepRequiredFields, status: msg })
+    return false
+  }
+  
+  setstepRequiredFields({ ...stepRequiredFields, status: '' })
+  
+
+  return true
+}
+const validateGenralDesc = () => {
+  if (!formData.general_description) {
+
+    const msg = "Required"
+    setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
+    return false
+  }
+  
+  setAboutRequiredFields({ ...aboutRequiredFields, general_description: '' })
+  
+
+  return true
+}
+const validateProjectType = () => {
+  if (!formData.type) {
+
+    const msg = "Required"
+    setAboutRequiredFields({ ...aboutRequiredFields, type: msg })
+    return false
+  }
+  
+  setAboutRequiredFields({ ...aboutRequiredFields, type: '' })
+  
+
+  return true
+}
+const validatePhoto = () => {
+  if (!formData.general_photo) {
+
+    const msg = "Required"
+    setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg })
+    return false
+  }
+  
+  setAboutRequiredFields({ ...aboutRequiredFields, general_photo: '' })
+  
+
+  return true
+}
+const validateCity = () => {
+  
+  if (address.length>0) {
+    
+  setAboutRequiredFields({ ...aboutRequiredFields, address: '' })
+  
+
+  return true
+  }
+ 
+}
+const validateCategory = () => {
+  
+  if (!formData.category) {
+    const msg = "Required"
+    setAboutRequiredFields({ ...aboutRequiredFields, category: msg })
+    return false
+  }
+  
+  setAboutRequiredFields({ ...aboutRequiredFields, category: '' })
+  
+
+  return true
+}
+
+
 const handleTitle=()=>{
   const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
     formData.title.trim()
@@ -56,29 +182,77 @@ const handleTitle=()=>{
     // setFNErr("Please Enter Name");
     return false
   }
-
+  else if (formData.title.trim().length>100) {
+    const msg = "Title needs to be  100 characters long"
+    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
+    // setFNErr("Please Enter Name");
+    return false
+  }
+  else if (!formData.title.length) {
+    // alert("hello")
+    const msg = "Required"
+    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
+    // setFNErr("Please Enter Name");
+    return false
+  }
   setAboutRequiredFields({ ...aboutRequiredFields, title: "" })
   setFormData({ ...formData, title: formData.title.trim() })
   return true
- 
 }
 const handleName=()=>{
+  // alert("hello")
   const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-    formData.general_description.trim()
+    stepformData.name.trim()
   )
-  if (formData.general_description.trim() && !isValid) {
+  if (stepformData.name.trim() && !isValid) {
     const msg = "Name should not contain any digit or special characters"
-    setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
+    setstepRequiredFields({ ...stepRequiredFields, name: msg })
     return false
-  } else if (formData.general_description.trim().length<5) {
-    const msg = "Title needs to be at least 5 characters"
-    setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
+  } else if (stepformData.name.trim().length>20) {
+    const msg = "Name needs to be  20 characters long"
+    setstepRequiredFields({ ...stepRequiredFields, name: msg })
+    // setFNErr("Please Enter Name");
+    return false
+  }
+  
+  else if (!stepformData.name.length) {
+    const msg = "Required"
+    setstepRequiredFields({ ...stepRequiredFields, name: msg })
     // setFNErr("Please Enter Name");
     return false
   }
 
-  setAboutRequiredFields({ ...aboutRequiredFields, general_description: "" })
-  setFormData({ ...formData, general_description: formData.general_description.trim() })
+  setstepRequiredFields({ ...stepRequiredFields, name: "" })
+  setstepFormData({ ...stepformData, name: stepformData.name.trim() })
+  return true
+ 
+}
+
+const handleDescription=()=>{
+  // alert("hello")
+  const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
+    stepformData.description.trim()
+  )
+  if (stepformData.description.trim() && !isValid) {
+    const msg = "description should not contain any digit or special characters"
+    setstepRequiredFields({ ...stepRequiredFields, description: msg })
+    return false
+  } else if (stepformData.description.trim().length>150) {
+    const msg = "description needs to be  150 characters"
+    setstepRequiredFields({ ...stepRequiredFields, description: msg })
+    // setFNErr("Please Enter Name");
+    return false
+  }
+  else if (!stepformData.description.length) {
+    // alert("hello")
+    const msg = "Required"
+    setstepRequiredFields({ ...stepRequiredFields, description: msg })
+    // setFNErr("Please Enter Name");
+    return false
+  }
+
+  setstepRequiredFields({ ...stepRequiredFields, description: "" })
+  setstepFormData({ ...stepformData, description: stepformData.description.trim() })
   return true
  
 }
@@ -104,7 +278,7 @@ useEffect( () => {
     console.log(error, "error catch")
   }
 }, [])
-console.log(skillList,"materialList")
+// console.log(formData,"formData")
   // get set address
  
   const getAddress = (e) => {
@@ -189,16 +363,78 @@ setAddress(e.target.value)
         // this.handleValidationCheckForButtonEnable();
       }
     }
+    validateCity();
   };
 
   // get set adress end
 
 
+  const checkValidateForm = () => {
+    let obj = {}
+    let reqFields = true
+    Object.keys(formData).map((key) => {
+      if (formData[key] === "") {
+        obj[key] = "Required"
+        reqFields = false
+      }
+      return obj
+    })
+    
+    setAboutRequiredFields(obj)
 
+    if (!reqFields ) {
+      // validatePortfolioThumbnail()
+      // validatePortfolioFiles()
+      const msg="Required"
+      // const flashData = { type: "error", text: "Fill the required fields." }
+      // props.addFlashMessage(flashData)
+      return false
+    } else {
+      return true
+    }
+  }
+  const checkValidateForm2 = () => {
+    let obj = {}
+    let reqFields = true
+    Object.keys(stepformData).map((key) => {
+      if (stepformData[key] === "") {
+        obj[key] = "Required"
+        reqFields = false
+      }
+      return obj
+    })
+    
+    setstepRequiredFields(obj)
+
+    if (!reqFields ) {
+      // validatePortfolioThumbnail()
+      // validatePortfolioFiles()
+      const msg="Required"
+      // const flashData = { type: "error", text: "Fill the required fields." }
+      // props.addFlashMessage(flashData)
+      return false
+    } else {
+    setAboutRequiredFields({})
+
+      return true
+    }
+  }
+  
   const onSubmit=async (e)=>{
     e.preventDefault();
+    setisLoading(true)
+
   // console.log(items,"items")
-    
+  checkValidateForm()
+  checkValidateForm2()
+  if(isCheck===false){
+    // alert("hello")
+    seterror("You must have to add atleast one implementation step, for this fill steps field and press Add")
+
+  }
+  else{
+
+  
     setFormData({ ...formData,implementation_steps:stepArrayData })
     const headers = {
       headers: {
@@ -210,14 +446,17 @@ setAddress(e.target.value)
       await axios
         .post("http://localhost:3000/api/v1/project/CreateProject", formData, headers)
         .then((res) => {
-       
+          setisLoading(false)
           // console.log(res,"res")
         })
-        .catch((err) => console.log(" error =>", err))
+        .catch((err) => {
+          setisLoading(true)
+          console.log(" error =>", err)})
     } catch (error) {
       console.log(error, "error catch")
+      setisLoading(true)
     }
-  
+  }
   }
  
   const handleChange=(e)=>{
@@ -270,8 +509,12 @@ setAddress(e.target.value)
 
 
   const onAdd=()=>{
+  checkValidateForm2()
+    setisCheck(true)
+    seterror("")
     setstepArrayData((prevState) => [...prevState, stepformData])
   }
+  // console.log(stepformData,"stepformData")
   
     return (
         <div className='main'>
@@ -279,9 +522,23 @@ setAddress(e.target.value)
          <Form
          handleName={handleName}
           handleChange={handleChange}
+          error={error}
           onSubmit={onSubmit}
+          isLoading={isLoading}
           aboutRequiredFields={aboutRequiredFields}
+          // validator
           handleTitle={handleTitle}
+          validateStatus={validateStatus}
+          validateSpeciality={validateSpeciality}
+          handleDescription={handleDescription}
+          validateStepType={validateStepType}
+          validateCity={validateCity}
+          validateCategory={validateCategory}
+          stepRequiredFields={stepRequiredFields}
+          validateProjectType={validateProjectType}
+          validatePhoto={validatePhoto}
+          validateGenralDesc={validateGenralDesc}
+          // validator end
           formData={formData}
           items={items}
           getAddress={getAddress}
