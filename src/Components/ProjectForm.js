@@ -8,7 +8,7 @@ function Form({
 address,onAdd,
   handleChange,
   onSubmit,
-  handleGenraldesc,
+  handleName,
 aboutRequiredFields,
   formData,
   items,
@@ -109,8 +109,8 @@ aboutRequiredFields,
               <input type="text" name="general_description"  id="general_description" value={formData.general_description} 
               onChange={handleChange}
               
-              placeholder="Description" required 
-              onBlur={handleGenraldesc}
+              placeholder="Description"
+               required 
               />
               <label className="label-agree-term">Category</label>
 
@@ -134,6 +134,8 @@ aboutRequiredFields,
               <label className="label-agree-term">Step Name</label>
               <input type="text" name="name" value={stepformData.name} placeholder="name" required 
               onChange={handleStepChange}
+              onBlur={handleName}
+
               />
               
               <label className="label-agree-term">Step Type</label>
@@ -161,8 +163,7 @@ aboutRequiredFields,
               </select>
             </div> : stepformData.tradeName==="Field" ?  <div className="select-list">
               <select name="material" id="material" value={stepformData.material} 
-            onChange={handleStepChange}
-              >
+            onChange={handleStepChange}>
                     {skillList ?skillList.map(mat=>(
                 <option value={mat.skillField}>{mat.skillField}</option>
                ))

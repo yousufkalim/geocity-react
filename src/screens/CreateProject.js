@@ -37,7 +37,9 @@ function CreateProject() {
   const [stepArrayData, setstepArrayData] = useState([])
 
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
-  title:""
+  title:"",
+  general_description:"",
+  name:""
   })
 // validation start
 const handleTitle=()=>{
@@ -60,7 +62,7 @@ const handleTitle=()=>{
   return true
  
 }
-const handleGenraldesc=()=>{
+const handleName=()=>{
   const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
     formData.general_description.trim()
   )
@@ -68,8 +70,8 @@ const handleGenraldesc=()=>{
     const msg = "Name should not contain any digit or special characters"
     setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
     return false
-  } else if (formData.general_description.trim().length<10) {
-    const msg = "Title needs to be at least 10 characters"
+  } else if (formData.general_description.trim().length<5) {
+    const msg = "Title needs to be at least 5 characters"
     setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
     // setFNErr("Please Enter Name");
     return false
@@ -275,7 +277,7 @@ setAddress(e.target.value)
         <div className='main'>
         <div className='containerProject'>
          <Form
-         handleGenraldesc={handleGenraldesc}
+         handleName={handleName}
           handleChange={handleChange}
           onSubmit={onSubmit}
           aboutRequiredFields={aboutRequiredFields}
