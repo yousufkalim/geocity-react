@@ -1,21 +1,20 @@
-import React,{useState,useEffect} from 'react'
-import  '../Theme/css/main.css'
-import axios from 'axios'
-import Form from '../Components/ProjectForm';
+import React, { useState, useEffect } from "react";
+import "../Theme/css/main.css";
+import axios from "axios";
+import Form from "../Components/ProjectForm";
 function CreateProject() {
-
   const projectData = {
     title: "",
     type: "",
     general_photo: "",
     general_description: "",
     category: "",
-   address: "",
-   zipCode : "",
-   city: "",
-   latitude: "",
-   longitude: "",
-  }
+    address: "",
+    zipCode: "",
+    city: "",
+    latitude: "",
+    longitude: "",
+  };
 
   const stepData = {
     name: "",
@@ -24,265 +23,240 @@ function CreateProject() {
     description: "",
     // StepsType: "",
     // Steps: "",
-    status:"",
-    material:[]
-  }
-  const [formData, setFormData] = useState(projectData)
-  const [address, setAddress] = useState("")
-  const [items, setItems] = useState([])
-  const [CategoryList, setCategoryList] = useState("")
-  const [materialList, setMaterialList] = useState("")
-  const [skillList, setskillList] = useState("")
-  
-  const [isLoading, setisLoading] = useState(false)
-  const [isCheck, setisCheck] = useState(false)
-  const [error, seterror] = useState("")
+    status: "",
+    material: [],
+  };
+  const [formData, setFormData] = useState(projectData);
+  const [address, setAddress] = useState("");
+  const [items, setItems] = useState([]);
+  const [CategoryList, setCategoryList] = useState("");
+  const [materialList, setMaterialList] = useState("");
+  const [skillList, setskillList] = useState("");
 
+  const [isLoading, setisLoading] = useState(false);
+  const [isCheck, setisCheck] = useState(false);
+  const [error, seterror] = useState("");
 
-
-  const [stepformData, setstepFormData] = useState(stepData)
-  const [stepArrayData, setstepArrayData] = useState([])
+  const [stepformData, setstepFormData] = useState(stepData);
+  const [stepArrayData, setstepArrayData] = useState([]);
 
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
-  title:"",
-  type: "",
+    title: "",
+    type: "",
     general_photo: "",
     general_description: "",
     category: "",
     address: "",
-   
-  })
-  
+  });
+
   const [stepRequiredFields, setstepRequiredFields] = useState({
-  
-    name:"",
-      skillField: "",
-      speciality: "",
-      // StepsType: "",
-      // Steps: "",
-      status:"",
-      material:[]
-    })
-// validation start
-const validateStepType = () => {
-  if (!stepformData.skillField) {
+    name: "",
+    skillField: "",
+    speciality: "",
+    // StepsType: "",
+    // Steps: "",
+    status: "",
+    material: [],
+  });
+  // validation start
+  const validateStepType = () => {
+    if (!stepformData.skillField) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, skillField: msg });
+      return false;
+    }
 
-    const msg = "Required"
-    setstepRequiredFields({ ...stepRequiredFields, skillField: msg })
-    return false
-  }
-  
-  setstepRequiredFields({ ...stepRequiredFields, skillField: '' })
-  
+    setstepRequiredFields({ ...stepRequiredFields, skillField: "" });
 
-  return true
-}
-const validateSpeciality = () => {
-  if (!stepformData.speciality) {
+    return true;
+  };
+  const validateSpeciality = () => {
+    if (!stepformData.speciality) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, speciality: msg });
+      return false;
+    }
 
-    const msg = "Required"
-    setstepRequiredFields({ ...stepRequiredFields, speciality: msg })
-    return false
-  }
-  
-  setstepRequiredFields({ ...stepRequiredFields, speciality: '' })
-  
+    setstepRequiredFields({ ...stepRequiredFields, speciality: "" });
 
-  return true
-}
-const validateStatus = () => {
-  if (!stepformData.status) {
+    return true;
+  };
+  const validateStatus = () => {
+    if (!stepformData.status) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, status: msg });
+      return false;
+    }
 
-    const msg = "Required"
-    setstepRequiredFields({ ...stepRequiredFields, status: msg })
-    return false
-  }
-  
-  setstepRequiredFields({ ...stepRequiredFields, status: '' })
-  
+    setstepRequiredFields({ ...stepRequiredFields, status: "" });
 
-  return true
-}
-const validateGenralDesc = () => {
-  if (!formData.general_description) {
+    return true;
+  };
+  const validateGenralDesc = () => {
+    if (!formData.general_description) {
+      const msg = "Required";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        general_description: msg,
+      });
+      return false;
+    }
 
-    const msg = "Required"
-    setAboutRequiredFields({ ...aboutRequiredFields, general_description: msg })
-    return false
-  }
-  
-  setAboutRequiredFields({ ...aboutRequiredFields, general_description: '' })
-  
+    setAboutRequiredFields({ ...aboutRequiredFields, general_description: "" });
 
-  return true
-}
-const validateProjectType = () => {
-  if (!formData.type) {
+    return true;
+  };
+  const validateProjectType = () => {
+    if (!formData.type) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, type: msg });
+      return false;
+    }
 
-    const msg = "Required"
-    setAboutRequiredFields({ ...aboutRequiredFields, type: msg })
-    return false
-  }
-  
-  setAboutRequiredFields({ ...aboutRequiredFields, type: '' })
-  
+    setAboutRequiredFields({ ...aboutRequiredFields, type: "" });
 
-  return true
-}
-const validatePhoto = () => {
-  if (!formData.general_photo) {
+    return true;
+  };
+  const validatePhoto = () => {
+    if (!formData.general_photo) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
+      return false;
+    }
 
-    const msg = "Required"
-    setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg })
-    return false
-  }
-  
-  setAboutRequiredFields({ ...aboutRequiredFields, general_photo: '' })
-  
+    setAboutRequiredFields({ ...aboutRequiredFields, general_photo: "" });
 
-  return true
-}
-const validateCity = () => {
-  
-  if (address.length>0) {
-    
-  setAboutRequiredFields({ ...aboutRequiredFields, address: '' })
-  
+    return true;
+  };
+  const validateCity = () => {
+    if (address.length > 0) {
+      setAboutRequiredFields({ ...aboutRequiredFields, address: "" });
 
-  return true
-  }
- 
-}
-const validateCategory = () => {
-  
-  if (!formData.category) {
-    const msg = "Required"
-    setAboutRequiredFields({ ...aboutRequiredFields, category: msg })
-    return false
-  }
-  
-  setAboutRequiredFields({ ...aboutRequiredFields, category: '' })
-  
+      return true;
+    }
+  };
+  const validateCategory = () => {
+    if (!formData.category) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, category: msg });
+      return false;
+    }
 
-  return true
-}
+    setAboutRequiredFields({ ...aboutRequiredFields, category: "" });
 
+    return true;
+  };
 
-const handleTitle=()=>{
-  const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-    formData.title.trim()
-  )
-  if (formData.title.trim() && !isValid) {
-    const msg = "Title should not contain any digit or special characters"
-    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
-    return false
-  } else if (formData.title.trim().length<5) {
-    const msg = "Title needs to be at least 5 characters"
-    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
-  else if (formData.title.trim().length>100) {
-    const msg = "Title needs to be  100 characters long"
-    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
-  else if (!formData.title.length) {
+  const handleTitle = () => {
+    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
+      formData.title.trim()
+    );
+    if (formData.title.trim() && !isValid) {
+      const msg = "Title should not contain any digit or special characters";
+      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      return false;
+    } else if (formData.title.trim().length < 5) {
+      const msg = "Title needs to be at least 5 characters";
+      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (formData.title.trim().length > 100) {
+      const msg = "Title needs to be  100 characters long";
+      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (!formData.title.length) {
+      // alert("hello")
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    }
+    setAboutRequiredFields({ ...aboutRequiredFields, title: "" });
+    setFormData({ ...formData, title: formData.title.trim() });
+    return true;
+  };
+  const handleName = () => {
     // alert("hello")
-    const msg = "Required"
-    setAboutRequiredFields({ ...aboutRequiredFields, title: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
-  setAboutRequiredFields({ ...aboutRequiredFields, title: "" })
-  setFormData({ ...formData, title: formData.title.trim() })
-  return true
-}
-const handleName=()=>{
-  // alert("hello")
-  const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-    stepformData.name.trim()
-  )
-  if (stepformData.name.trim() && !isValid) {
-    const msg = "Name should not contain any digit or special characters"
-    setstepRequiredFields({ ...stepRequiredFields, name: msg })
-    return false
-  } else if (stepformData.name.trim().length>20) {
-    const msg = "Name needs to be  20 characters long"
-    setstepRequiredFields({ ...stepRequiredFields, name: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
-  
-  else if (!stepformData.name.length) {
-    const msg = "Required"
-    setstepRequiredFields({ ...stepRequiredFields, name: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
+    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
+      stepformData.name.trim()
+    );
+    if (stepformData.name.trim() && !isValid) {
+      const msg = "Name should not contain any digit or special characters";
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
+      return false;
+    } else if (stepformData.name.trim().length > 20) {
+      const msg = "Name needs to be  20 characters long";
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (!stepformData.name.length) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    }
 
-  setstepRequiredFields({ ...stepRequiredFields, name: "" })
-  setstepFormData({ ...stepformData, name: stepformData.name.trim() })
-  return true
- 
-}
+    setstepRequiredFields({ ...stepRequiredFields, name: "" });
+    setstepFormData({ ...stepformData, name: stepformData.name.trim() });
+    return true;
+  };
 
-const handleDescription=()=>{
-  // alert("hello")
-  const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-    stepformData.description.trim()
-  )
-  if (stepformData.description.trim() && !isValid) {
-    const msg = "description should not contain any digit or special characters"
-    setstepRequiredFields({ ...stepRequiredFields, description: msg })
-    return false
-  } else if (stepformData.description.trim().length>150) {
-    const msg = "description needs to be  150 characters"
-    setstepRequiredFields({ ...stepRequiredFields, description: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
-  else if (!stepformData.description.length) {
+  const handleDescription = () => {
     // alert("hello")
-    const msg = "Required"
-    setstepRequiredFields({ ...stepRequiredFields, description: msg })
-    // setFNErr("Please Enter Name");
-    return false
-  }
+    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
+      stepformData.description.trim()
+    );
+    if (stepformData.description.trim() && !isValid) {
+      const msg =
+        "description should not contain any digit or special characters";
+      setstepRequiredFields({ ...stepRequiredFields, description: msg });
+      return false;
+    } else if (stepformData.description.trim().length > 150) {
+      const msg = "description needs to be  150 characters";
+      setstepRequiredFields({ ...stepRequiredFields, description: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (!stepformData.description.length) {
+      // alert("hello")
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, description: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    }
 
-  setstepRequiredFields({ ...stepRequiredFields, description: "" })
-  setstepFormData({ ...stepformData, description: stepformData.description.trim() })
-  return true
- 
-}
+    setstepRequiredFields({ ...stepRequiredFields, description: "" });
+    setstepFormData({
+      ...stepformData,
+      description: stepformData.description.trim(),
+    });
+    return true;
+  };
 
-
-// validation end
-// useEffect
-useEffect( () => {
-  const headers = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-    },
-  }
-  try {
-     axios
-      .get("http://localhost:3000/api/v1/admin/categoryList",  headers)
-      .then((res) => {
-        setCategoryList(res.data.categories)
-        console.log(res,"response cat")
-      })
-      .catch((err) => console.log(" error =>", err))
-  } catch (error) {
-    console.log(error, "error catch")
-  }
-}, [])
-// console.log(formData,"formData")
+  // validation end
+  // useEffect
+  useEffect(() => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
+      },
+    };
+    try {
+      axios
+        .get("http://localhost:3000/api/v1/admin/categoryList", headers)
+        .then((res) => {
+          setCategoryList(res.data.categories);
+          console.log(res, "response cat");
+        })
+        .catch((err) => console.log(" error =>", err));
+    } catch (error) {
+      console.log(error, "error catch");
+    }
+  }, []);
+  // console.log(formData,"formData")
   // get set address
- 
+
   const getAddress = (e) => {
- 
     // this.setState({
     //   address: e.target.value,
     //   zip: "",
@@ -292,8 +266,8 @@ useEffect( () => {
     //   zipError: "auto-complete-error",
     //   isDisableSubmitBtn: true,
     // });
-  
-setAddress(e.target.value)
+
+    setAddress(e.target.value);
     fetch(
       "https://api-adresse.data.gouv.fr/search/?q=" +
         e.target.value +
@@ -310,13 +284,13 @@ setAddress(e.target.value)
             label: responseJson.features[i].properties.label,
             city: responseJson.features[i].properties.city,
             PostalCode: responseJson.features[i].properties.postcode,
-            lat: responseJson.features[0].geometry.coordinates[1], 
+            lat: responseJson.features[0].geometry.coordinates[1],
             lng: responseJson.features[0].geometry.coordinates[0],
           });
         }
         if (addressToSet.length === responseJson.features.length) {
-    // setFormData({ ...formData,items:addressToSet })
-          setItems(addressToSet)
+          // setFormData({ ...formData,items:addressToSet })
+          setItems(addressToSet);
           // this.setState({ items: addressToSet }, () => {
           //   console.log(
           //     "Address to set",
@@ -325,7 +299,6 @@ setAddress(e.target.value)
           //     items
           //   );
           // });
-     
         }
       })
       .catch((error) => {
@@ -334,7 +307,7 @@ setAddress(e.target.value)
   };
   const SetAddress = (item) => {
     // console.log(item,'item')
-    setAddress(item)
+    setAddress(item);
     // this.setState({ address: item });
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
@@ -345,12 +318,12 @@ setAddress(e.target.value)
         var lng = items[i].lng.toString();
         var newAddress = items[i].label.split(String(zipCode));
         setFormData({
-             address: newAddress[0],
-             zipCode : zipCode,
+          address: newAddress[0],
+          zipCode: zipCode,
           city: city,
           latitude: lat,
           longitude: lng,
-        })
+        });
         // this.setState({
         //   address: newAddress[0],
         //   zip: zipCode,
@@ -368,159 +341,157 @@ setAddress(e.target.value)
 
   // get set adress end
 
-
   const checkValidateForm = () => {
-    let obj = {}
-    let reqFields = true
+    let obj = {};
+    let reqFields = true;
     Object.keys(formData).map((key) => {
       if (formData[key] === "") {
-        obj[key] = "Required"
-        reqFields = false
+        obj[key] = "Required";
+        reqFields = false;
       }
-      return obj
-    })
-    
-    setAboutRequiredFields(obj)
+      return obj;
+    });
 
-    if (!reqFields ) {
+    setAboutRequiredFields(obj);
+
+    if (!reqFields) {
       // validatePortfolioThumbnail()
       // validatePortfolioFiles()
-      const msg="Required"
+      const msg = "Required";
       // const flashData = { type: "error", text: "Fill the required fields." }
       // props.addFlashMessage(flashData)
-      return false
+      return false;
     } else {
-      return true
+      return true;
     }
-  }
+  };
   const checkValidateForm2 = () => {
-    let obj = {}
-    let reqFields = true
+    let obj = {};
+    let reqFields = true;
     Object.keys(stepformData).map((key) => {
       if (stepformData[key] === "") {
-        obj[key] = "Required"
-        reqFields = false
+        obj[key] = "Required";
+        reqFields = false;
       }
-      return obj
-    })
-    
-    setstepRequiredFields(obj)
+      return obj;
+    });
 
-    if (!reqFields ) {
+    setstepRequiredFields(obj);
+
+    if (!reqFields) {
       // validatePortfolioThumbnail()
       // validatePortfolioFiles()
-      const msg="Required"
+      const msg = "Required";
       // const flashData = { type: "error", text: "Fill the required fields." }
       // props.addFlashMessage(flashData)
-      return false
+      return false;
     } else {
-    setAboutRequiredFields({})
+      setstepRequiredFields({});
 
-      return true
+      return true;
     }
-  }
-  
-  const onSubmit=async (e)=>{
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setisLoading(true)
+    setisLoading(true);
 
-  // console.log(items,"items")
-  checkValidateForm()
-  checkValidateForm2()
-  if(isCheck===false){
-    // alert("hello")
-    seterror("You must have to add atleast one implementation step, for this fill steps field and press Add")
-
-  }
-  else{
-
-  
-    setFormData({ ...formData,implementation_steps:stepArrayData })
-    const headers = {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-     
-      },
+    // console.log(items,"items")
+    checkValidateForm();
+    checkValidateForm2();
+    if (isCheck === false) {
+      // alert("hello")
+      seterror(
+        "You must have to add atleast one implementation step, for this fill steps field and press Add"
+      );
+    } else {
+      setFormData({ ...formData, implementation_steps: stepArrayData });
+      const headers = {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
+        },
+      };
+      try {
+        await axios
+          .post(
+            "http://localhost:3000/api/v1/project/CreateProject",
+            formData,
+            headers
+          )
+          .then((res) => {
+            setisLoading(false);
+            // console.log(res,"res")
+          })
+          .catch((err) => {
+            setisLoading(true);
+            console.log(" error =>", err);
+          });
+      } catch (error) {
+        console.log(error, "error catch");
+        setisLoading(true);
+      }
     }
-    try {
-      await axios
-        .post("http://localhost:3000/api/v1/project/CreateProject", formData, headers)
-        .then((res) => {
-          setisLoading(false)
-          // console.log(res,"res")
-        })
-        .catch((err) => {
-          setisLoading(true)
-          console.log(" error =>", err)})
-    } catch (error) {
-      console.log(error, "error catch")
-      setisLoading(true)
-    }
-  }
-  }
- 
-  const handleChange=(e)=>{
-    let value = e.target.value
-    setFormData({ ...formData, [e.target.name]: value })
+  };
 
-  }
-  const handleStepChange= async (e)=>{
+  const handleChange = (e) => {
+    let value = e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
+  };
+  const handleStepChange = async (e) => {
     // alert("yooo")
-    let value = e.target.value
-    setstepFormData({ ...stepformData, [e.target.name]: value })
-    if(e.target.value==='Material'){
+    let value = e.target.value;
+    setstepFormData({ ...stepformData, [e.target.name]: value });
+    if (e.target.value === "Material") {
       // alert("hello")
       const headers = {
         headers: {
           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
         },
-      }
+      };
       try {
         await axios
           .get("http://localhost:3000/api/v1/admin/materialList", headers)
           .then((res) => {
-            setMaterialList(res.data.materials)
-            console.log(res,"res material")
+            setMaterialList(res.data.materials);
+            console.log(res, "res material");
           })
-          .catch((err) => console.log(" error =>", err))
+          .catch((err) => console.log(" error =>", err));
       } catch (error) {
-        console.log(error, "error catch")
+        console.log(error, "error catch");
       }
-    }
-    else{
+    } else {
       const headers = {
         headers: {
           Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
         },
-      }
+      };
       try {
         await axios
           .get("http://localhost:3000/api/v1/admin/skillList", headers)
           .then((res) => {
-         setskillList(res.data.skills)
-            console.log(res,"res skilllist")
+            setskillList(res.data.skills);
+            console.log(res, "res skilllist");
           })
-          .catch((err) => console.log(" error =>", err))
+          .catch((err) => console.log(" error =>", err));
       } catch (error) {
-        console.log(error, "error catch")
+        console.log(error, "error catch");
       }
     }
-  }
+  };
 
-
-  const onAdd=()=>{
-  checkValidateForm2()
-    setisCheck(true)
-    seterror("")
-    setstepArrayData((prevState) => [...prevState, stepformData])
-  }
+  const onAdd = () => {
+    checkValidateForm2();
+    setisCheck(true);
+    seterror("");
+    setstepArrayData((prevState) => [...prevState, stepformData]);
+  };
   // console.log(stepformData,"stepformData")
-  
-    return (
-        <div className='main'>
-        <div className='containerProject'>
-         <Form
-         handleName={handleName}
+
+  return (
+    <div className="main">
+      <div className="containerProject">
+        <Form
+          handleName={handleName}
           handleChange={handleChange}
           error={error}
           onSubmit={onSubmit}
@@ -550,10 +521,10 @@ setAddress(e.target.value)
           skillList={skillList}
           address={address}
           onAdd={onAdd}
-         />
-        </div>
+        />
       </div>
-    )
+    </div>
+  );
 }
 
-export default CreateProject
+export default CreateProject;
