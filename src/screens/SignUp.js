@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../Theme/css/main.css";
 import Autocomplete from "react-autocomplete";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { useStyles } from "../Theme/styles";
 import axios from "axios";
 function Signup() {
   const signupData = {
@@ -39,6 +42,8 @@ function Signup() {
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
   const [materialList, setMaterialList] = useState("");
+  const [skillList, setskillList] = useState("");
+  const [skillFieldList, setskillFieldList] = useState("");
 
   const [skillformData, setskillFormData] = useState(stepData);
   const [materialformData, setmaterialFormData] = useState([]);
@@ -70,36 +75,47 @@ function Signup() {
 
   // validation start*************************
   const ValidateSpecialization = () => {
-    if (!skillformData.specialization) {
+    if (skillformData.specialization) {
+      setskillRequiredFields({ ...skillRequiredFields, specialization: "" });
+
+      return true;
+    } else if (!skillformData.specialization) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, specialization: msg });
       return false;
     }
-
-    setskillRequiredFields({ ...skillRequiredFields, specialization: "" });
-
-    return true;
   };
   const validatePhoneNumber = () => {
-    if (!formData.phone) {
+    if (formData.phone) {
+      setAboutRequiredFields({ ...aboutRequiredFields, phone: "" });
+      return true;
+    } else if (!formData.phone) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, phone: msg });
       return false;
     }
-    setAboutRequiredFields({ ...aboutRequiredFields, phone: "" });
-    return true;
   };
+
   const validateEmail = () => {
-    if (!formData.email) {
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+    if (formData.email && isValid) {
+      setAboutRequiredFields({ ...aboutRequiredFields, email: "" });
+      return true;
+    } else if (formData.email && !isValid) {
+      const msg = "You have entered an invalid email address!";
+      setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
+      return false;
+    } else if (!formData.email) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
       return false;
     }
-    setAboutRequiredFields({ ...aboutRequiredFields, email: "" });
-    return true;
   };
   const validateAvailability = () => {
-    if (!formData.availability) {
+    if (formData.availability) {
+      setAboutRequiredFields({ ...aboutRequiredFields, availability: "" });
+      return true;
+    } else if (!formData.availability) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
       return false;
@@ -108,31 +124,37 @@ function Signup() {
     return true;
   };
   const ValidateSkillField = () => {
-    if (!skillformData.skillField) {
+    if (skillformData.skillField) {
+      setskillRequiredFields({ ...skillRequiredFields, skillField: "" });
+
+      return true;
+    } else if (!skillformData.skillField) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return false;
     }
-
-    setskillRequiredFields({ ...skillRequiredFields, skillField: "" });
-
-    return true;
   };
 
   const ValidateSkill = () => {
-    if (!skillformData.skill) {
+    if (skillformData.skill) {
+      setskillRequiredFields({ ...skillRequiredFields, skill: "" });
+
+      return true;
+    } else if (!skillformData.skill) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skill: msg });
       return false;
     }
-
-    setskillRequiredFields({ ...skillRequiredFields, skill: "" });
-
-    return true;
   };
 
   const validateProfileDesc = () => {
-    if (!formData.profile_description) {
+    if (formData.profile_description) {
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        profile_description: "",
+      });
+      return true;
+    } else if (!formData.profile_description) {
       const msg = "Required";
       setAboutRequiredFields({
         ...aboutRequiredFields,
@@ -140,14 +162,14 @@ function Signup() {
       });
       return false;
     }
-
-    setAboutRequiredFields({ ...aboutRequiredFields, profile_description: "" });
-
-    return true;
   };
 
   const validateScore = () => {
-    if (skillformData.score >= 5) {
+    if (skillformData.score === 5) {
+      setskillRequiredFields({ ...skillRequiredFields, score: "" });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (skillformData.score >= 5) {
       const msg = "Score needs to be equal 5 or less";
       setskillRequiredFields({ ...skillRequiredFields, score: msg });
       // setFNErr("Please Enter Name");
@@ -165,40 +187,51 @@ function Signup() {
     return true;
   };
 
-  const validateProjectType = () => {
-    if (!formData.type) {
-      const msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, type: msg });
-      return false;
-    }
-
-    setAboutRequiredFields({ ...aboutRequiredFields, type: "" });
-
-    return true;
-  };
   const validatePhoto = () => {
-    if (!formData.profile_picture) {
+    if (formData.profile_picture) {
+      // alert("hello h1");
+      setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: "" });
+
+      return true;
+    } else if (!formData.profile_picture) {
+      // alert("hello");
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: msg });
       return false;
     }
+  };
+  const validateCity = () => {
+    if (formData.city) {
+      // alert("hello");
 
-    setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: "" });
-
-    return true;
+      setAboutRequiredFields({ ...aboutRequiredFields, city: "" });
+      return false;
+    } else if (!formData.city) {
+      let msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      return false;
+    }
   };
   const validateMaterial = () => {
-    if (!materialformData.name) {
+    if (materialformData.name) {
+      setmaterialRequiredFields({ ...materialRequiredFields, name: "" });
+
+      return true;
+    } else if (!materialformData.name) {
       let msg = "Required";
       setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
       return false;
     }
-    setmaterialRequiredFields({ ...materialRequiredFields, name: "" });
-
-    return true;
   };
   const validatePassword = () => {
-    if (formData.password.trim().length < 6) {
+    if (
+      formData.password.trim().length > 4 &&
+      formData.password.trim().length < 20
+    ) {
+      setAboutRequiredFields({ ...aboutRequiredFields, password: "" });
+      setFormData({ ...formData, password: formData.password });
+      return true;
+    } else if (formData.password.trim().length < 5) {
       const msg = "Passowrd needs to be at least 6 characters";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
       // setFNErr("Please Enter Name");
@@ -215,13 +248,42 @@ function Signup() {
       // setFNErr("Please Enter Name");
       return false;
     }
-    setAboutRequiredFields({ ...aboutRequiredFields, password: "" });
-    setFormData({ ...formData, password: formData.password });
-    return true;
+  };
+  const validateConfirmPassword = () => {
+    if (
+      formData.confirm_password.trim().length > 4 &&
+      formData.confirm_password.trim().length < 20
+    ) {
+      setAboutRequiredFields({ ...aboutRequiredFields, confirm_password: "" });
+      setFormData({ ...formData, confirm_password: formData.confirm_password });
+      return true;
+    } else if (formData.confirm_password !== formData.password) {
+      const msg = "Confirm_Password should be same as Password";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        confirm_password: msg,
+      });
+    } else if (formData.confirm_password.trim().length < 5) {
+      const msg = "Confirm_Password needs to be at least 6 characters";
+      setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (!formData.confirm_password.length) {
+      // alert("hello")
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, confirm_password: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    }
   };
 
   const ValidateUsername = () => {
-    if (formData.username.trim().length < 5) {
+    if (formData.username.length === 4 && formData.username.length < 20) {
+      // alert("hello h1");
+      setAboutRequiredFields({ ...aboutRequiredFields, username: "" });
+      setFormData({ ...formData, username: formData.username });
+    } else if (formData.username.trim().length < 5) {
+      // alert("hello");
       const msg = "Username needs to be at least 5 characters";
       setAboutRequiredFields({ ...aboutRequiredFields, username: msg });
       // setFNErr("Please Enter Name");
@@ -232,14 +294,12 @@ function Signup() {
       // setFNErr("Please Enter Name");
       return false;
     } else if (!formData.username.length) {
-      // alert("hello")
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, username: msg });
       // setFNErr("Please Enter Name");
       return false;
     }
-    setAboutRequiredFields({ ...aboutRequiredFields, username: "" });
-    setFormData({ ...formData, username: formData.username });
+
     return true;
   };
 
@@ -257,7 +317,19 @@ function Signup() {
         .get("http://localhost:3000/api/v1/admin/materialList", headers)
         .then((res) => {
           setMaterialList(res.data.materials);
-          console.log(res, "res material");
+          // console.log(res, "res material");
+        })
+        .catch((err) => console.log(" error =>", err));
+    } catch (error) {
+      console.log(error, "error catch");
+    }
+
+    try {
+      axios
+        .get("http://localhost:3000/api/v1/admin/skillList", headers)
+        .then((res) => {
+          setskillFieldList(res.data.skills);
+          console.log(res, "res skill");
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
@@ -267,6 +339,35 @@ function Signup() {
 
   const handleChange = (e) => {
     let value = e.target.value;
+    switch (e.target.name) {
+      case "username":
+        ValidateUsername();
+        break;
+      case "email":
+        validateEmail();
+        break;
+      case "password":
+        validatePassword();
+        break;
+      case "confirm_password":
+        validateConfirmPassword();
+        break;
+      case "profile_picture":
+        validatePhoto();
+        break;
+      case "profile_description":
+        validateProfileDesc();
+        break;
+      case "phone":
+        validatePhoneNumber();
+        break;
+      case "availability":
+        validateAvailability();
+        break;
+
+      default:
+        break;
+    }
 
     if (e.target.name === "phone") {
       setFormData({
@@ -274,25 +375,88 @@ function Signup() {
         [e.target.name]: value.replace(/[^\d+]/, ""),
       });
     }
+
     setFormData({ ...formData, [e.target.name]: value });
   };
   // handle cahnge end
-  const handleMaterialChange = (e) => {
-    let value = e.target.value;
-    setmaterialFormData({ ...materialformData, [e.target.name]: value });
-  };
-
+  // const handleMaterialChange = (e) => {
+  //   let value = e.target.value;
+  //   setmaterialFormData({ ...materialformData, [e.target.name]: value });
+  // };
+  // console.log(skillList, "skillList");
   const handleSkillChange = async (e) => {
     // alert("yooo")
+    if (e.target.name === "skillField") {
+      skillFieldList.map((skill) =>
+        skill._id === e.target.value ? setskillList(skill.skill) : ""
+      );
+
+      // alert(e.target.value);
+    }
+    switch (e.target.name) {
+      case "skillField":
+        ValidateSkillField();
+        break;
+      case "skill":
+        ValidateSkill();
+        break;
+      case "specialization":
+        ValidateSpecialization();
+        break;
+      case "score":
+        validateScore();
+        break;
+
+      default:
+        break;
+    }
+
     let value = e.target.value;
     setskillFormData({ ...skillformData, [e.target.name]: value });
   };
   const onskillAdd = () => {
+    checkValidateForm2();
     setskillArrayData((prevState) => [...prevState, skillformData]);
+    const stepData = {
+      skillField: "",
+      skill: "",
+      specialization: "",
+      score: "",
+    };
+    setskillFormData(stepData);
   };
+
   const onMaterialAdd = () => {
-    setmaterialArrayData((prevState) => [...prevState, material]);
+    if (material) {
+      setmaterialArrayData((prevState) => [...prevState, material]);
+    } else {
+      setmaterialRequiredFields({ ...aboutRequiredFields, name: "Required" });
+    }
   };
+
+  // set get
+
+  // const getSkill = (e) => {
+  //   // setAddress(e.target.value);
+  //   const headers = {
+  //     headers: {
+  //       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
+  //     },
+  //   };
+  //   try {
+  //     axios
+  //       .get("http://localhost:3000/api/v1/admin/skillList", headers)
+  //       .then((res) => {
+  //         setskillList(res.data.skills.skill);
+  //         // console.log(res, "res material");
+  //       })
+  //       .catch((err) => console.log(" error =>", err));
+  //   } catch (error) {
+  //     console.log(error, "error catch");
+  //   }
+  // };
+
+  // ************
   const getAddress = (e) => {
     setAddress(e.target.value);
     fetch(
@@ -360,7 +524,7 @@ function Signup() {
         // this.handleValidationCheckForButtonEnable();
       }
     }
-    // validateCity();
+    validateCity();
   };
   // city_end
 
@@ -378,7 +542,7 @@ function Signup() {
 
     setAboutRequiredFields(obj);
 
-    if (!reqFields) {
+    if (!reqFields && !formData.city) {
       // validatePortfolioThumbnail()
       // validatePortfolioFiles()
       const msg = "Required";
@@ -451,7 +615,7 @@ function Signup() {
     console.log(materialArrayData, "materialArrayData");
     checkValidateForm();
     checkValidateForm2();
-    // checkValidateForm3();
+    validateMaterial();
     const Signup = formData;
     Signup.skills = skillArrayData;
     Signup.material = materialArrayData;
@@ -479,7 +643,9 @@ function Signup() {
       axios
         .post("http://localhost:3000/api/v1/auth/register", Signup, headers)
         .then((res) => {
-          setisLoading(false);
+          setTimeout(() => {
+            setisLoading(false);
+          }, 5000);
           // console.log(res,"res")
         })
         .catch((err) => {
@@ -491,8 +657,28 @@ function Signup() {
       console.log(error, "error catch");
       setisLoading(false);
     }
+    const signupData = {
+      username: "",
+      email: "",
+      city: "",
+      password: "",
+      availability: "",
+      confirm_password: "",
+      profile_picture: "",
+      profile_description: "",
+      phone: "",
+      address: "",
+      zipCode: "",
+      latitude: "",
+      longitude: "",
+      // name:""
+      // skills:[],
+      // material:[],
+    };
+    setFormData(signupData);
   };
   // }
+  console.log(skillList, "skillList");
   return (
     <div className="main">
       <div className="containerProject">
@@ -509,7 +695,7 @@ function Signup() {
               placeholder="Username"
               required
               onChange={handleChange}
-              // onFocus={ValidateUsername}
+              onFocus={ValidateUsername}
             />
             {aboutRequiredFields.username !== "" ? (
               <p className="error"> {aboutRequiredFields.username}</p>
@@ -527,7 +713,7 @@ function Signup() {
               required
               value={formData.email}
               onChange={handleChange}
-              // onFocus={validateEmail}
+              onFocus={validateEmail}
             />
             {aboutRequiredFields.email !== "" ? (
               <p className="error"> {aboutRequiredFields.email}</p>
@@ -544,7 +730,7 @@ function Signup() {
               required
               value={formData.password}
               onChange={handleChange}
-              // onFocus={validatePassword}
+              onFocus={validatePassword}
             />
             {aboutRequiredFields.password !== "" ? (
               <p className="error"> {aboutRequiredFields.password}</p>
@@ -561,7 +747,13 @@ function Signup() {
               required
               value={formData.confirm_password}
               onChange={handleChange}
+              onFocus={validateConfirmPassword}
             />
+            {aboutRequiredFields.confirm_password !== "" ? (
+              <p className="error"> {aboutRequiredFields.confirm_password}</p>
+            ) : (
+              ""
+            )}
             <label className="label-agree-term">City</label>
 
             <Autocomplete
@@ -601,6 +793,11 @@ function Signup() {
               onChange={getAddress}
               onSelect={SetAddress}
             />
+            {aboutRequiredFields.city !== "" ? (
+              <p className="error"> {aboutRequiredFields.city}</p>
+            ) : (
+              ""
+            )}
             <label className="label-agree-term">Profile_picture</label>
 
             <input
@@ -610,7 +807,7 @@ function Signup() {
               required
               value={formData.profile_picture}
               onChange={handleChange}
-              // onFocus={validatePhoto}
+              onFocus={validatePhoto}
             />
             {aboutRequiredFields.profile_picture !== "" ? (
               <p className="error"> {aboutRequiredFields.profile_picture}</p>
@@ -627,7 +824,7 @@ function Signup() {
               required
               value={formData.profile_description}
               onChange={handleChange}
-              // onFocus={validateProfileDesc}
+              onFocus={validateProfileDesc}
             />
             {aboutRequiredFields.profile_description !== "" ? (
               <p className="error">
@@ -647,7 +844,7 @@ function Signup() {
               required
               value={formData.phone}
               onChange={handleChange}
-              // onFocus={validatePhoneNumber}
+              onFocus={validatePhoneNumber}
             />
             {aboutRequiredFields.phone !== "" ? (
               <p className="error"> {aboutRequiredFields.phone}</p>
@@ -664,7 +861,7 @@ function Signup() {
               required
               value={formData.availability}
               onChange={handleChange}
-              // onFocus={validateAvailability}
+              onFocus={validateAvailability}
             />
             {aboutRequiredFields.availability !== "" ? (
               <p className="error"> {aboutRequiredFields.availability}</p>
@@ -682,12 +879,13 @@ function Signup() {
                 id="skillField"
                 value={skillformData.skillField}
                 onChange={handleSkillChange}
-                // onFocus={ValidateSkillField}
+                onFocus={ValidateSkillField}
               >
-                <option value=""></option>
-
-                <option value="phone">By phone</option>
-                <option value="by_email">By email</option>
+                {skillFieldList
+                  ? skillFieldList.map((skill) => (
+                      <option value={skill._id}>{skill.skillField}</option>
+                    ))
+                  : ""}
               </select>
             </div>
             {skillRequiredFields.skillField !== "" ? (
@@ -695,9 +893,32 @@ function Signup() {
             ) : (
               ""
             )}
-            <label className="label-agree-term">Skill</label>
-
-            <input
+            {skillList.length > 0 ? (
+              <>
+                <label className="label-agree-term">Skill</label> <br />
+                <div className="select-list">
+                  <select
+                    name="skill"
+                    id="skill"
+                    value={skillformData.skill}
+                    onChange={handleSkillChange}
+                    onFocus={ValidateSkillField}
+                  >
+                    {skillList.map((skill) => (
+                      <option value={skill}>{skill}</option>
+                    ))}
+                  </select>
+                </div>
+                {skillRequiredFields.skill !== "" ? (
+                  <p className="error"> {skillRequiredFields.skill}</p>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              ""
+            )}
+            {/* <input
               type="text"
               onChange={handleSkillChange}
               // onFocus={ValidateSkill}
@@ -706,18 +927,14 @@ function Signup() {
               placeholder="Enter Skill"
               value={skillformData.skill}
               required
-            />
-            {skillRequiredFields.skill !== "" ? (
-              <p className="error"> {skillRequiredFields.skill}</p>
-            ) : (
-              ""
-            )}
+            /> */}
+
             <label className="label-agree-term">Specialization</label>
 
             <input
               type="text"
               onChange={handleSkillChange}
-              // onFocus={ValidateSpecialization}
+              onFocus={ValidateSpecialization}
               name="specialization"
               id="specialization"
               placeholder="Enter Specialization"
@@ -746,13 +963,25 @@ function Signup() {
             ) : (
               ""
             )}
-            <input
-              type="button"
-              name="add"
-              onClick={onskillAdd}
-              className="submitAdd"
-              value="Add"
-            />
+            {skillformData.score ? (
+              <Button
+                variant="contained"
+                onClick={onskillAdd}
+                name="add"
+                className="submitAdd"
+              >
+                Add
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                disabled
+                name="add"
+                className="submitAdd"
+              >
+                Add
+              </Button>
+            )}
           </div>
           <div className="form-group-2">
             <h3>Material</h3>
@@ -761,8 +990,10 @@ function Signup() {
                 name="material"
                 id="material"
                 value={material}
-                onChange={(e) => setMaterial(e.target.value)}
-                // onFocus={validateMaterial}
+                onChange={(e) => {
+                  setMaterial(e.target.value);
+                }}
+                onFocus={validateMaterial}
               >
                 {materialList
                   ? materialList.map((mat) => (
@@ -776,31 +1007,44 @@ function Signup() {
             ) : (
               ""
             )}
-            <input
-              type="button"
-              name="add"
-              onClick={onMaterialAdd}
-              className="submitAdd"
-              value="Add"
-            />
+            {material.length > 0 ? (
+              <Button
+                variant="contained"
+                onClick={onMaterialAdd}
+                name="add"
+                className="submitAdd"
+              >
+                Add
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                disabled
+                name="add"
+                className="submitAdd"
+              >
+                Add
+              </Button>
+            )}
           </div>
-          {isLoading === true ? (
-            <input
-              type="submit"
-              name="submit"
-              disabled
-              className="submit"
-              value="Loading...."
-            />
-          ) : (
-            <input
-              type="submit"
-              name="submit"
-              onClick={onSubmit}
-              className="submit"
-              value="Submit"
-            />
-          )}
+          <div>
+            {isLoading === true ? (
+              <center>
+                <div className={useStyles.root}>
+                  <CircularProgress disableShrink />
+                </div>
+              </center>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={onSubmit}
+                name="add"
+                className="submit"
+              >
+                Submit
+              </Button>
+            )}
+          </div>
         </form>
       </div>
     </div>

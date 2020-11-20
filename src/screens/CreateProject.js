@@ -60,40 +60,49 @@ function CreateProject() {
   });
   // validation start
   const validateStepType = () => {
-    if (!stepformData.skillField) {
+    if (stepformData.skillField) {
+      const msg = "Required";
+
+      setstepRequiredFields({ ...stepRequiredFields, skillField: "" });
+
+      return true;
+    } else if (!stepformData.skillField) {
       const msg = "Required";
       setstepRequiredFields({ ...stepRequiredFields, skillField: msg });
       return false;
     }
-
-    setstepRequiredFields({ ...stepRequiredFields, skillField: "" });
-
-    return true;
   };
   const validateSpeciality = () => {
-    if (!stepformData.speciality) {
+    if (stepformData.speciality) {
+      setstepRequiredFields({ ...stepRequiredFields, speciality: "" });
+
+      return true;
+    } else if (!stepformData.speciality) {
       const msg = "Required";
       setstepRequiredFields({ ...stepRequiredFields, speciality: msg });
       return false;
     }
-
-    setstepRequiredFields({ ...stepRequiredFields, speciality: "" });
-
-    return true;
   };
   const validateStatus = () => {
-    if (!stepformData.status) {
+    if (stepformData.status) {
+      setstepRequiredFields({ ...stepRequiredFields, status: "" });
+
+      return true;
+    } else if (!stepformData.status) {
       const msg = "Required";
       setstepRequiredFields({ ...stepRequiredFields, status: msg });
       return false;
     }
-
-    setstepRequiredFields({ ...stepRequiredFields, status: "" });
-
-    return true;
   };
   const validateGenralDesc = () => {
-    if (!formData.general_description) {
+    if (formData.general_description) {
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        general_description: "",
+      });
+
+      return true;
+    } else if (!formData.general_description) {
       const msg = "Required";
       setAboutRequiredFields({
         ...aboutRequiredFields,
@@ -101,57 +110,65 @@ function CreateProject() {
       });
       return false;
     }
-
-    setAboutRequiredFields({ ...aboutRequiredFields, general_description: "" });
-
-    return true;
   };
   const validateProjectType = () => {
-    if (!formData.type) {
+    if (formData.type) {
+      setAboutRequiredFields({ ...aboutRequiredFields, type: "" });
+
+      return true;
+    } else if (!formData.type) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, type: msg });
       return false;
     }
-
-    setAboutRequiredFields({ ...aboutRequiredFields, type: "" });
-
-    return true;
   };
   const validatePhoto = () => {
-    if (!formData.general_photo) {
+    if (formData.general_photo) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, general_photo: "" });
+
+      return true;
+    } else if (!formData.general_photo) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
       return false;
     }
-
-    setAboutRequiredFields({ ...aboutRequiredFields, general_photo: "" });
-
-    return true;
   };
   const validateCity = () => {
-    if (address.length > 0) {
-      setAboutRequiredFields({ ...aboutRequiredFields, address: "" });
+    if (formData.city) {
+      // alert("hello");
 
-      return true;
+      setAboutRequiredFields({ ...aboutRequiredFields, city: "" });
+      return false;
+    } else if (!formData.city) {
+      let msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      return false;
     }
   };
+
   const validateCategory = () => {
-    if (!formData.category) {
+    if (formData.category) {
+      setAboutRequiredFields({ ...aboutRequiredFields, category: "" });
+
+      return true;
+    } else if (!formData.category) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, category: msg });
       return false;
     }
-
-    setAboutRequiredFields({ ...aboutRequiredFields, category: "" });
-
-    return true;
   };
 
-  const handleTitle = () => {
+  const validateTitle = () => {
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
       formData.title.trim()
     );
-    if (formData.title.trim() && !isValid) {
+    if (formData.title.length === 4 && formData.title.length < 20) {
+      // alert("hello h1");
+      setAboutRequiredFields({ ...aboutRequiredFields, title: "" });
+      setFormData({ ...formData, title: formData.title.trim() });
+      return true;
+    } else if (formData.title.trim() && !isValid) {
       const msg = "Title should not contain any digit or special characters";
       setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
       return false;
@@ -172,16 +189,18 @@ function CreateProject() {
       // setFNErr("Please Enter Name");
       return false;
     }
-    setAboutRequiredFields({ ...aboutRequiredFields, title: "" });
-    setFormData({ ...formData, title: formData.title.trim() });
-    return true;
   };
   const handleName = () => {
     // alert("hello")
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
       stepformData.name.trim()
     );
-    if (stepformData.name.trim() && !isValid) {
+    if (stepformData.name.length === 4 && stepformData.name.length < 20) {
+      // alert("hello h1");
+      setstepRequiredFields({ ...stepRequiredFields, name: "" });
+      setstepFormData({ ...stepformData, name: stepformData.name.trim() });
+      return true;
+    } else if (stepformData.name.trim() && !isValid) {
       const msg = "Name should not contain any digit or special characters";
       setstepRequiredFields({ ...stepRequiredFields, name: msg });
       return false;
@@ -196,18 +215,25 @@ function CreateProject() {
       // setFNErr("Please Enter Name");
       return false;
     }
-
-    setstepRequiredFields({ ...stepRequiredFields, name: "" });
-    setstepFormData({ ...stepformData, name: stepformData.name.trim() });
-    return true;
   };
 
-  const handleDescription = () => {
+  const validateDescription = () => {
     // alert("hello")
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
       stepformData.description.trim()
     );
-    if (stepformData.description.trim() && !isValid) {
+    if (
+      stepformData.description.length === 4 &&
+      stepformData.description.length < 20
+    ) {
+      // alert("hello h1");
+      setstepRequiredFields({ ...stepRequiredFields, description: "" });
+      setstepFormData({
+        ...stepformData,
+        description: stepformData.description.trim(),
+      });
+      return true;
+    } else if (stepformData.description.trim() && !isValid) {
       const msg =
         "description should not contain any digit or special characters";
       setstepRequiredFields({ ...stepRequiredFields, description: msg });
@@ -224,13 +250,6 @@ function CreateProject() {
       // setFNErr("Please Enter Name");
       return false;
     }
-
-    setstepRequiredFields({ ...stepRequiredFields, description: "" });
-    setstepFormData({
-      ...stepformData,
-      description: stepformData.description.trim(),
-    });
-    return true;
   };
 
   // validation end
@@ -357,7 +376,7 @@ function CreateProject() {
     if (!reqFields) {
       // validatePortfolioThumbnail()
       // validatePortfolioFiles()
-      const msg = "Required";
+      // const msg = "Required";
       // const flashData = { type: "error", text: "Fill the required fields." }
       // props.addFlashMessage(flashData)
       return false;
@@ -381,7 +400,7 @@ function CreateProject() {
     if (!reqFields) {
       // validatePortfolioThumbnail()
       // validatePortfolioFiles()
-      const msg = "Required";
+      // const msg = "Required";
       // const flashData = { type: "error", text: "Fill the required fields." }
       // props.addFlashMessage(flashData)
       return false;
@@ -435,11 +454,57 @@ function CreateProject() {
 
   const handleChange = (e) => {
     let value = e.target.value;
+    switch (e.target.name) {
+      case "title":
+        validateTitle();
+        break;
+      case "type":
+        validateProjectType();
+        break;
+      case "address":
+        validateCity();
+        break;
+      case "general_photo":
+        validatePhoto();
+        break;
+      case "general_description":
+        validateGenralDesc();
+        break;
+      case "category":
+        validateCategory();
+        break;
+
+      default:
+        break;
+    }
     setFormData({ ...formData, [e.target.name]: value });
   };
   const handleStepChange = async (e) => {
     // alert("yooo")
     let value = e.target.value;
+    switch (e.target.name) {
+      case "name":
+        handleName();
+        break;
+      case "skillField":
+        validateStepType();
+        break;
+      case "material":
+        validateStepType();
+        break;
+      case "description":
+        validateDescription();
+        break;
+      case "status":
+        validateStatus();
+        break;
+      case "speciality":
+        validateSpeciality();
+        break;
+
+      default:
+        break;
+    }
     setstepFormData({ ...stepformData, [e.target.name]: value });
     if (e.target.value === "Material") {
       // alert("hello")
@@ -498,10 +563,10 @@ function CreateProject() {
           isLoading={isLoading}
           aboutRequiredFields={aboutRequiredFields}
           // validator
-          handleTitle={handleTitle}
+          handleTitle={validateTitle}
           validateStatus={validateStatus}
           validateSpeciality={validateSpeciality}
-          handleDescription={handleDescription}
+          handleDescription={validateDescription}
           validateStepType={validateStepType}
           validateCity={validateCity}
           validateCategory={validateCategory}
