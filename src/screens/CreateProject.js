@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Theme/css/main.css";
 import axios from "axios";
 import Form from "../Components/ProjectForm";
+import { headers } from "../Auth/Index";
 function CreateProject() {
   const projectData = {
     title: "",
@@ -14,6 +15,8 @@ function CreateProject() {
     city: "",
     latitude: "",
     longitude: "",
+    // implementation_steps: "",
+    // progress: "",
   };
 
   const stepData = {
@@ -23,8 +26,7 @@ function CreateProject() {
     description: "",
     // StepsType: "",
     // Steps: "",
-    status: "",
-    material: [],
+    status: "nothing",
   };
   const [formData, setFormData] = useState(projectData);
   const [address, setAddress] = useState("");
@@ -32,9 +34,12 @@ function CreateProject() {
   const [CategoryList, setCategoryList] = useState("");
   const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
+  const [materialArrayData, setmaterialArrayData] = useState([]);
+  const [material, setMaterial] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
   const [isCheck, setisCheck] = useState(false);
+
   const [error, seterror] = useState("");
 
   const [stepformData, setstepFormData] = useState(stepData);
@@ -47,6 +52,7 @@ function CreateProject() {
     general_description: "",
     category: "",
     address: "",
+    progress: "",
   });
 
   const [stepRequiredFields, setstepRequiredFields] = useState({
@@ -56,7 +62,7 @@ function CreateProject() {
     // StepsType: "",
     // Steps: "",
     status: "",
-    material: [],
+    material: "",
   });
   // validation start
   const validateStepType = () => {
@@ -69,6 +75,18 @@ function CreateProject() {
     } else if (!stepformData.skillField) {
       const msg = "Required";
       setstepRequiredFields({ ...stepRequiredFields, skillField: msg });
+      return false;
+    }
+  };
+  const validateMaterial = () => {
+    if (material) {
+      const msg = "";
+      setstepRequiredFields({ ...stepRequiredFields, material: msg });
+
+      return true;
+    } else if (!material) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, material: msg });
       return false;
     }
   };
@@ -124,8 +142,10 @@ function CreateProject() {
   };
   const validatePhoto = () => {
     if (formData.general_photo) {
-      const msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, general_photo: "" });
+      // alert("hello");
+      const msg = "";
+
+      setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
 
       return true;
     } else if (!formData.general_photo) {
@@ -147,6 +167,17 @@ function CreateProject() {
     }
   };
 
+  // const validateProgress = () => {
+  //   if (formData.progress) {
+  //     setAboutRequiredFields({ ...aboutRequiredFields, progress: "" });
+
+  //     return true;
+  //   } else if (!formData.progress) {
+  //     const msg = "Required";
+  //     setAboutRequiredFields({ ...aboutRequiredFields, progress: msg });
+  //     return false;
+  //   }
+  // };
   const validateCategory = () => {
     if (formData.category) {
       setAboutRequiredFields({ ...aboutRequiredFields, category: "" });
@@ -160,10 +191,14 @@ function CreateProject() {
   };
 
   const validateTitle = () => {
-    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-      formData.title.trim()
-    );
-    if (formData.title.length === 4 && formData.title.length < 20) {
+    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(formData.title);
+    if (!formData.title.length) {
+      // alert("hello")
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (formData.title.length === 4 && formData.title.length < 20) {
       // alert("hello h1");
       setAboutRequiredFields({ ...aboutRequiredFields, title: "" });
       setFormData({ ...formData, title: formData.title.trim() });
@@ -179,12 +214,6 @@ function CreateProject() {
       return false;
     } else if (formData.title.trim().length > 100) {
       const msg = "Title needs to be  100 characters long";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
-      // setFNErr("Please Enter Name");
-      return false;
-    } else if (!formData.title.length) {
-      // alert("hello")
-      const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
       // setFNErr("Please Enter Name");
       return false;
@@ -251,25 +280,19 @@ function CreateProject() {
       return false;
     }
   };
-
   // validation end
   // useEffect
   useEffect(() => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-      },
-    };
     try {
       axios
         .get("http://localhost:3000/api/v1/admin/categoryList", headers)
         .then((res) => {
           setCategoryList(res.data.categories);
-          console.log(res, "response cat");
+          // console.log(res, "response cat");
         })
-        .catch((err) => console.log(" error =>", err));
+        .catch((err) => console.log(" error category =>", err));
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
   }, []);
   // console.log(formData,"formData")
@@ -333,7 +356,7 @@ function CreateProject() {
         // debugger;
         var city = items[i].city;
         var zipCode = items[i].PostalCode;
-        var lat = items[i].toString();
+        var lat = items[i].lat.toString();
         var lng = items[i].lng.toString();
         var newAddress = items[i].label.split(String(zipCode));
         setFormData({
@@ -410,26 +433,27 @@ function CreateProject() {
       return true;
     }
   };
+  console.log(formData, "formdata");
+  console.log(stepArrayData, "stepArrayData");
 
   const onSubmit = async (e) => {
+    // stepArrayData.material = materialArrayData;
+    formData.implementation_steps = stepArrayData;
     e.preventDefault();
     setisLoading(true);
 
     // console.log(items,"items")
     checkValidateForm();
     checkValidateForm2();
+
     if (isCheck === false) {
-      // alert("hello")
+      // alert("hello");
+      setisLoading(false);
+
       seterror(
         "You must have to add atleast one implementation step, for this fill steps field and press Add"
       );
     } else {
-      setFormData({ ...formData, implementation_steps: stepArrayData });
-      const headers = {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-        },
-      };
       try {
         await axios
           .post(
@@ -439,15 +463,20 @@ function CreateProject() {
           )
           .then((res) => {
             setisLoading(false);
+            setFormData(projectData);
             // console.log(res,"res")
           })
           .catch((err) => {
-            setisLoading(true);
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
             console.log(" error =>", err);
           });
       } catch (error) {
         console.log(error, "error catch");
-        setisLoading(true);
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
       }
     }
   };
@@ -464,9 +493,10 @@ function CreateProject() {
       case "address":
         validateCity();
         break;
-      case "general_photo":
-        validatePhoto();
-        break;
+      // will use later for photo validation
+      // case "general_photo":
+      //   validatePhoto();
+      //   break;
       case "general_description":
         validateGenralDesc();
         break;
@@ -479,9 +509,29 @@ function CreateProject() {
     }
     setFormData({ ...formData, [e.target.name]: value });
   };
+  // console.log(materialArrayData, "material aary data");
   const handleStepChange = async (e) => {
-    // alert("yooo")
     let value = e.target.value;
+    if (e.target.name === "material") {
+      setMaterial(e.target.value);
+      const msg = "Value Already Existed";
+      if (materialArrayData.length > 0) {
+        materialArrayData.map((data) => {
+          console.log(data, "data");
+
+          data !== e.target.value
+            ? setmaterialArrayData((prevState) => [
+                ...prevState,
+                e.target.value,
+              ])
+            : setstepRequiredFields({ ...stepRequiredFields, material: msg });
+        });
+      } else {
+        console.log("succceess");
+        setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+      }
+    }
+
     switch (e.target.name) {
       case "name":
         handleName();
@@ -490,7 +540,7 @@ function CreateProject() {
         validateStepType();
         break;
       case "material":
-        validateStepType();
+        validateMaterial();
         break;
       case "description":
         validateDescription();
@@ -506,49 +556,44 @@ function CreateProject() {
         break;
     }
     setstepFormData({ ...stepformData, [e.target.name]: value });
+
     if (e.target.value === "Material") {
       // alert("hello")
-      const headers = {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-        },
-      };
+
       try {
         await axios
           .get("http://localhost:3000/api/v1/admin/materialList", headers)
           .then((res) => {
             setMaterialList(res.data.materials);
-            console.log(res, "res material");
+            // console.log(res, "res material");
           })
           .catch((err) => console.log(" error =>", err));
       } catch (error) {
-        console.log(error, "error catch");
+        // console.log(error, "error catch");
       }
     } else {
-      const headers = {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-        },
-      };
       try {
         await axios
           .get("http://localhost:3000/api/v1/admin/skillList", headers)
           .then((res) => {
             setskillList(res.data.skills);
-            console.log(res, "res skilllist");
+            // console.log(res, "res skilllist");
           })
           .catch((err) => console.log(" error =>", err));
       } catch (error) {
-        console.log(error, "error catch");
+        // console.log(error, "error catch");
       }
     }
   };
+  console.log(stepformData, "stepformData");
 
   const onAdd = () => {
     checkValidateForm2();
     setisCheck(true);
     seterror("");
+    stepformData.material = materialArrayData;
     setstepArrayData((prevState) => [...prevState, stepformData]);
+    setstepFormData(stepData);
   };
   // console.log(stepformData,"stepformData")
 
@@ -573,9 +618,13 @@ function CreateProject() {
           stepRequiredFields={stepRequiredFields}
           validateProjectType={validateProjectType}
           validatePhoto={validatePhoto}
+          validateMaterial={validateMaterial}
+          // validateProgress={validateProgress}
           validateGenralDesc={validateGenralDesc}
           // validator end
           formData={formData}
+          materialArrayData={materialArrayData}
+          setmaterialArrayData={setmaterialArrayData}
           items={items}
           getAddress={getAddress}
           SetAddress={SetAddress}
@@ -585,6 +634,8 @@ function CreateProject() {
           materialList={materialList}
           skillList={skillList}
           address={address}
+          setMaterial={setMaterial}
+          material={material}
           onAdd={onAdd}
         />
       </div>

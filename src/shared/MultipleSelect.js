@@ -1,12 +1,24 @@
-import React, { Component } from "react";
-import Select from "react-select";
+import React from "react";
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-];
-
-export default function MultipleSelect() {
-  return <Select options={options} />;
+export default function MultipleSelect({
+  handleStepChange,
+  validateStepType,
+  data,
+  name,
+  value,
+}) {
+  return (
+    <select
+      name={name}
+      id={name}
+      value={value}
+      onChange={handleStepChange}
+      onBlur={validateStepType}
+    >
+      <option value=""></option>
+      {data.map((name) => (
+        <option value={name}>{name}</option>
+      ))}
+    </select>
+  );
 }

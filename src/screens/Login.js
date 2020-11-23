@@ -4,6 +4,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import "../Theme/css/main.css";
 import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
+import { headers } from "../Auth/Index";
+import { Redirect, Route } from "react-router-dom";
 
 function Login() {
   const signupData = {
@@ -11,11 +13,16 @@ function Login() {
     password: "",
   };
   const [isLoading, setisLoading] = useState(false);
+  const [isSuccess, setisSuccess] = useState(false);
+
+  const [formData, setFormData] = useState(signupData);
+
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
     email: "",
-
     password: "",
   });
+
+  // validation start ******************
   const validateEmail = () => {
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
@@ -33,22 +40,19 @@ function Login() {
     }
   };
   const validatePassword = () => {
-    if (!formData.password) {
+    if (formData.password.length <= 4) {
+      // alert("hello");
+      const msg = "Password length must be at least 6 characters long";
+      setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
+      return false;
+    } else if (!formData.password) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
       return false;
-    }
-    setAboutRequiredFields({ ...aboutRequiredFields, password: "" });
-    return true;
-  };
-  const handleChange = (e) => {
-    let value = e.target.value;
-    if (e.target.name === "email") {
-      setAboutRequiredFields({ ...aboutRequiredFields, email: "" });
-    } else if (e.target.name === "password") {
+    } else {
       setAboutRequiredFields({ ...aboutRequiredFields, password: "" });
+      return true;
     }
-    setFormData({ ...formData, [e.target.name]: value });
   };
   const checkValidateForm = () => {
     let obj = {};
@@ -74,44 +78,37 @@ function Login() {
       return true;
     }
   };
+  // validation end ***************
+
+  // handle Actions
+
+  const handleChange = (e) => {
+    let value = e.target.value;
+    if (e.target.name === "email") {
+      validateEmail();
+    } else if (e.target.name === "password") {
+      validatePassword();
+    }
+    setFormData({ ...formData, [e.target.name]: value });
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
 
     checkValidateForm();
 
-    // if(isCheck===false){
-    //   // alert("hello")
-    //   seterror("You must have to add atleast one implementation step, for this fill steps field and press Add")
-
-    // }
-    // else{
-
-    // setFormData({
-    //   ...formData,
-    //   skills: skillArrayData,
-    //   material: materialArrayData,
-    // });
-    // console.log(formData, "signup on sumbit");
-
-    const headers = {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-      },
-    };
-
     try {
       axios
         .post("http://localhost:3000/api/v1/auth/login", formData, headers)
         .then((res) => {
-          setTimeout(() => {
-            setisLoading(false);
-            localStorage.setItem("jwt", res.data.token);
-          }, 5000);
-
-          // console.log(res, "res token");
+          setisLoading(false);
+          localStorage.setItem("jwt", res.data.token);
+          setFormData(signupData);
+          setisSuccess(true);
+          // setisError()
         })
-        .catch((err) => {
+        .catch((err, res) => {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
@@ -126,67 +123,69 @@ function Login() {
     }
   };
 
-  const [formData, setFormData] = useState(signupData);
-  return (
-    <div className="main">
-      <div className="Logincontainer">
-        <form method="POST" className="appointmentform" id="appointment-form">
-          <h2>Login Form</h2>
-          <div className="form-group-1">
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              value={formData.email}
-              onFocus={validateEmail}
-              onChange={handleChange}
-              required
-            />
-            {aboutRequiredFields.email !== "" ? (
-              <p className="error"> {aboutRequiredFields.email}</p>
-            ) : (
-              ""
-            )}
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Password"
-              onFocus={validatePassword}
-              onChange={handleChange}
-              required
-              value={formData.password}
-            />
-            {aboutRequiredFields.password !== "" ? (
-              <p className="error"> {aboutRequiredFields.password}</p>
-            ) : (
-              ""
-            )}
-          </div>
+  // handle actions end ***************
+  if (isSuccess === true) {
+    return <Redirect to="/" />;
+  } else {
+    return (
+      <div className="main">
+        <div className="Logincontainer">
+          <form method="POST" className="appointmentform" id="appointment-form">
+            <h2>Login Form</h2>
+            <div className="form-group-1">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Email"
+                value={formData.email}
+                onFocus={validateEmail}
+                onChange={handleChange}
+              />
+              {aboutRequiredFields.email !== "" ? (
+                <p className="error"> {aboutRequiredFields.email}</p>
+              ) : (
+                ""
+              )}
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Password"
+                onFocus={validatePassword}
+                onChange={handleChange}
+                value={formData.password}
+              />
+              {aboutRequiredFields.password !== "" ? (
+                <p className="error"> {aboutRequiredFields.password}</p>
+              ) : (
+                ""
+              )}
+            </div>
 
-          <div className="form-submit">
-            {isLoading === true ? (
-              <center>
-                <div className={useStyles.root}>
-                  <CircularProgress disableShrink />
-                </div>
-              </center>
-            ) : (
-              <Button
-                variant="contained"
-                onClick={onSubmit}
-                name="add"
-                className="submit"
-              >
-                Login
-              </Button>
-            )}
-          </div>
-        </form>
+            <div className="form-submit">
+              {isLoading === true ? (
+                <center>
+                  <div className={useStyles.root}>
+                    <CircularProgress disableShrink />
+                  </div>
+                </center>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={onSubmit}
+                  name="add"
+                  className="submit"
+                >
+                  Login
+                </Button>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Login;

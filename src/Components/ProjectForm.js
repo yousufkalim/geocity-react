@@ -4,7 +4,10 @@ import Autocomplete from "react-autocomplete";
 // import Debug from "./Debug";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import MultipleSelect from "../shared/MultipleSelect";
+import { names } from "../shared/Data";
 import { useStyles } from "../Theme/styles";
+import ChipArray from "../shared/Chip";
 function Form({
   errors,
   address,
@@ -26,8 +29,12 @@ function Form({
   validateCity,
   validatePhoto,
   validateGenralDesc,
+  validateMaterial,
+  // validateProgress,
   // validator
+  setmaterialArrayData,
   aboutRequiredFields,
+  materialArrayData,
   formData,
   items,
   getAddress,
@@ -35,6 +42,8 @@ function Form({
   CategoryList,
   stepformData,
   handleStepChange,
+  setMaterial,
+  material,
   materialList,
   skillList,
 }) {
@@ -50,7 +59,6 @@ function Form({
             id="title"
             value={formData.title}
             placeholder="Title"
-            required
             onChange={handleChange}
             onBlur={handleTitle}
           />
@@ -81,10 +89,7 @@ function Form({
           )}
 
           <label className="label-agree-term">City</label>
-          {/* <input type="file" name="city" id="file" value={formData.city} required 
-              onChange={handleChange}
-              
-              /> */}
+
           <Autocomplete
             items={items}
             // shouldItemRender={(item, value) =>
@@ -128,17 +133,6 @@ function Form({
             ""
           )}
 
-          {/* <div className="select-list">
-            <select name="city" id="city" value={formData.city} 
-          onChange={handleCityChange}
-          
-            >
-              
-              <option  value="Public">Public</option>
-              <option value="Private">Private</option>
-            </select>
-          </div>  */}
-
           <label className="label-agree-term">general_photo</label>
 
           <input
@@ -146,7 +140,6 @@ function Form({
             name="general_photo"
             id="file"
             value={formData.general_photo}
-            required
             onChange={handleChange}
             // onBlur={validatePhoto}
           />
@@ -166,7 +159,6 @@ function Form({
             onChange={handleChange}
             onBlur={validateGenralDesc}
             placeholder="Description"
-            required
           />
           {aboutRequiredFields.general_description !== "" ? (
             <p className="error"> {aboutRequiredFields.general_description}</p>
@@ -198,6 +190,29 @@ function Form({
           ) : (
             ""
           )}
+          {/* will use it in future becoz its project progress wel will add later */}
+          {/* <label className="label-agree-term">Project Progress</label>
+
+          <div className="select-list">
+            <select
+              name="progress"
+              id="progress"
+              value={formData.progress}
+              onChange={handleChange}
+              onBlur={validateProgress}
+            >
+              <option value=""></option>
+
+              <option value="Completed">Completed</option>
+              <option value="InProgress">InProgress</option>
+              <option value="NoProgress">NoProgress</option>
+            </select>
+          </div>
+          {aboutRequiredFields.progress !== "" ? (
+            <p className="error"> {aboutRequiredFields.progress}</p>
+          ) : (
+            ""
+          )} */}
         </div>
         {/* form1 end */}
         {/* form 2 */}
@@ -209,7 +224,6 @@ function Form({
             name="name"
             value={stepformData.name}
             placeholder="name"
-            required
             onChange={handleStepChange}
             onBlur={handleName}
           />
@@ -222,18 +236,14 @@ function Form({
           <label className="label-agree-term">Step Type</label>
 
           <div className="select-list">
-            <select
+            <MultipleSelect
               name="skillField"
-              id="skillField"
               value={stepformData.skillField}
-              onChange={handleStepChange}
-              onBlur={validateStepType}
-            >
-              <option value=""></option>
-
-              <option value="Field">Field</option>
-              <option value="Material">Material</option>
-            </select>
+              validateStepType={validateStepType}
+              handleStepChange={handleStepChange}
+              stepformData={stepformData}
+              data={names}
+            />
           </div>
           {stepRequiredFields.skillField !== "" ? (
             <p className="error"> {stepRequiredFields.skillField}</p>
@@ -249,9 +259,9 @@ function Form({
                 <select
                   name="material"
                   id="material"
-                  value={stepformData.material}
+                  value={material}
                   onChange={handleStepChange}
-                  onBlur={validateStepType}
+                  onBlur={validateMaterial}
                 >
                   {materialList
                     ? materialList.map((mat) => (
@@ -280,6 +290,17 @@ function Form({
           ) : (
             ""
           )}
+          {materialArrayData.length > 0 ? (
+            <>
+              <ChipArray
+                materialArrayData={materialArrayData}
+                setmaterialArrayData={setmaterialArrayData}
+              />
+            </>
+          ) : (
+            ""
+          )}
+          <br />
           {stepRequiredFields.material !== "" ? (
             <p className="error"> {stepRequiredFields.material}</p>
           ) : (
@@ -293,7 +314,6 @@ function Form({
             id="title"
             value={stepformData.description}
             placeholder="Description"
-            required
             onChange={handleStepChange}
             onBlur={handleDescription}
           />
@@ -313,6 +333,8 @@ function Form({
               onChange={handleStepChange}
               onBlur={validateStatus}
             >
+              <option value=""></option>
+
               <option value="completed">completed</option>
               <option value="ongoing">ongoing</option>
               <option value="nothing">nothing</option>
@@ -331,7 +353,6 @@ function Form({
             id="title"
             value={stepformData.speciality}
             placeholder="Speciality"
-            required
             onChange={handleStepChange}
             onBlur={validateSpeciality}
           />
@@ -359,9 +380,8 @@ function Form({
               Add
             </Button>
           )}
-
-          {error !== "" ? <p className="error"> {error}</p> : ""}
         </div>
+        {error !== "" ? <p className="error"> {error}</p> : ""}
 
         <div className="form-submit">
           {isLoading === true ? (

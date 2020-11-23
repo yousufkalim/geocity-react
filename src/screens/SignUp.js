@@ -352,9 +352,10 @@ function Signup() {
       case "confirm_password":
         validateConfirmPassword();
         break;
-      case "profile_picture":
-        validatePhoto();
-        break;
+      // will use it
+      // case "profile_picture":
+      //   validatePhoto();
+      //   break;
       case "profile_description":
         validateProfileDesc();
         break;
@@ -417,12 +418,7 @@ function Signup() {
   const onskillAdd = () => {
     checkValidateForm2();
     setskillArrayData((prevState) => [...prevState, skillformData]);
-    const stepData = {
-      skillField: "",
-      skill: "",
-      specialization: "",
-      score: "",
-    };
+
     setskillFormData(stepData);
   };
 
@@ -643,42 +639,28 @@ function Signup() {
       axios
         .post("http://localhost:3000/api/v1/auth/register", Signup, headers)
         .then((res) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 5000);
+          setisLoading(false);
+
           // console.log(res,"res")
         })
         .catch((err) => {
-          setisLoading(false);
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
 
-          console.log(" error =>", err);
+          // console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
-      setisLoading(false);
+      // console.log(error, "error catch");
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
     }
-    const signupData = {
-      username: "",
-      email: "",
-      city: "",
-      password: "",
-      availability: "",
-      confirm_password: "",
-      profile_picture: "",
-      profile_description: "",
-      phone: "",
-      address: "",
-      zipCode: "",
-      latitude: "",
-      longitude: "",
-      // name:""
-      // skills:[],
-      // material:[],
-    };
+
     setFormData(signupData);
   };
   // }
-  console.log(skillList, "skillList");
+  // console.log(skillList, "skillList");
   return (
     <div className="main">
       <div className="containerProject">
@@ -904,6 +886,8 @@ function Signup() {
                     onChange={handleSkillChange}
                     onFocus={ValidateSkillField}
                   >
+                    <option></option>
+
                     {skillList.map((skill) => (
                       <option value={skill}>{skill}</option>
                     ))}
@@ -918,16 +902,6 @@ function Signup() {
             ) : (
               ""
             )}
-            {/* <input
-              type="text"
-              onChange={handleSkillChange}
-              // onFocus={ValidateSkill}
-              name="skill"
-              id="skill"
-              placeholder="Enter Skill"
-              value={skillformData.skill}
-              required
-            /> */}
 
             <label className="label-agree-term">Specialization</label>
 
@@ -995,6 +969,8 @@ function Signup() {
                 }}
                 onFocus={validateMaterial}
               >
+                <option></option>
+
                 {materialList
                   ? materialList.map((mat) => (
                       <option value={mat._id}>{mat.name}</option>
