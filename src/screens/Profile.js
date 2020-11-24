@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { usgit eEffect, useState } from "react";
 import "../Theme/css/profile.css";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
