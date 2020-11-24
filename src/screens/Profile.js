@@ -1,9 +1,26 @@
-import React from "react";
+import React, { usgit eEffect, useState } from "react";
 import "../Theme/css/profile.css";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
+import Axios from "axios";
 
 export default function Profile() {
+  const [data, setData] = useState(" ");
+
+  useEffect(() => {
+    Axios.get(
+      "http://localhost:3000/api/v1/profile/view-profile?id=5fb4c722a85a9a2270639d62",
+      {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjRjNzIyYTg1YTlhMjI3MDYzOWQ2MiIsImlhdCI6MTYwNTY4NTM0MiwiZXhwIjoxNjA4Mjc3MzQyfQ.SCKnDYOXUgfguSWp_27BM49RKq1L8YthBWX0Cqzlir4",
+        },
+      }
+    ).then((res) => {
+      setData(res.data.user);
+    });
+  }, []);
+  console.log(data, "All Data of User");
   return (
     <div>
       <Header />
@@ -67,7 +84,7 @@ export default function Profile() {
               <div className="card">
                 <img
                   className="card-image"
-                  src="images/2ec3fab78d6bb56ad5ea7980d9013f7e3b39cdf3.png"
+                  src={`http://localhost:3000/views/uploads/${data.profile_picture}`}
                   alt="alternative"
                 />
               </div>
@@ -75,16 +92,10 @@ export default function Profile() {
             </div>
             <div className="col-lg-9  text-left">
               <div>
-                <h5>Franco Prefumo</h5>
+                <h5>{data.username}</h5>
                 <hr style={{ border: "2px solid #c4bec2" }} />
               </div>
-              <p className="mt-2">
-                Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-                used in laying out print, graphic or web designs. The passage is
-                attributed to an unknown typesetter in the 15th century who is
-                thought to have scrambled parts of Cicero's De Finibus Bonorum
-                et Malorum for use in a type specimen book.
-              </p>
+              <p className="mt-2">{data.profile_description}</p>
               {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
             </div>
             {/* end of col */}
@@ -93,14 +104,19 @@ export default function Profile() {
             <div className="col-lg-6">
               <p style={{ marginLeft: "6rem" }}>
                 <i className="fas fa-map-marker-alt fa-lg" />
-                <span className="ml-3">Paris</span>
+                <span className="ml-3">{data.city ? data.city : "City"}</span>
               </p>
             </div>
             <div className="col-lg-6">
               <p>
                 <i className="fas fa-search fa-lg" />
                 <span className="ml-3">
-                  Interet pour : asoociatiff , e-commerce, construction
+                  Interet pour :{" "}
+                  {data.interests
+                    ? data.interests.map((item, i) => {
+                        return <span key={i}>{item + ","}</span>;
+                      })
+                    : " "}
                 </span>
               </p>
             </div>
@@ -134,11 +150,17 @@ export default function Profile() {
                   className="fas fa-camera fa-lg "
                   style={{ color: "#0d2456" }}
                 />
-                <span className="ml-2">Franco@gmail.com</span>
+                <span className="ml-2">
+                  {data.email ? data.email : "email@email.com"}
+                </span>
               </p>
               <p style={{ marginTop: "1.5rem" }}>
                 <i className="fas fa-shopping-basket fa-lg " />
-                <span className="ml-2">Sable, Beton, Granulat</span>
+                <span className="ml-2">
+                  {data.material
+                    ? data.material.name
+                    : "Sable, Beton, Granulat"}
+                </span>
               </p>
             </div>
             <div className="col-lg-6" style={{ marginTop: "-0.8rem" }}>
