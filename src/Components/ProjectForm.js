@@ -42,11 +42,16 @@ function Form({
   CategoryList,
   stepformData,
   handleStepChange,
-  setMaterial,
+  skillField,
+  stepType,
+  setstepType,
   material,
   materialList,
   skillList,
 }) {
+  const handleStep = (e) => {
+    setstepType(e.target.value);
+  };
   return (
     <>
       <form method="POST" className="appointmentform" id="appointment-form">
@@ -237,11 +242,11 @@ function Form({
 
           <div className="select-list">
             <MultipleSelect
-              name="skillField"
-              value={stepformData.skillField}
-              validateStepType={validateStepType}
-              handleStepChange={handleStepChange}
-              stepformData={stepformData}
+              name="stepType"
+              value={stepType}
+              // validateStepType={validateStepType}
+              handleStepChange={handleStep}
+              // stepformData={stepformData}
               data={names}
             />
           </div>
@@ -251,9 +256,9 @@ function Form({
             ""
           )}
 
-          {stepformData.skillField === "Material" ? (
+          {stepType === "Material" ? (
             <>
-              <label className="label-agree-term">Step</label>
+              <label className="label-agree-term">{stepType}</label>
 
               <div className="select-list">
                 <select
@@ -265,28 +270,32 @@ function Form({
                 >
                   {materialList
                     ? materialList.map((mat) => (
-                        <option value={mat.name}>{mat.name}</option>
+                        <option value={mat._id}>{mat.name}</option>
                       ))
                     : ""}
                 </select>
               </div>
             </>
-          ) : stepformData.skillField === "Field" ? (
-            <div className="select-list">
-              <select
-                name="material"
-                id="material"
-                value={stepformData.material}
-                onChange={handleStepChange}
-                onBlur={validateStepType}
-              >
-                {skillList
-                  ? skillList.map((mat) => (
-                      <option value={mat.skillField}>{mat.skillField}</option>
-                    ))
-                  : ""}
-              </select>
-            </div>
+          ) : stepType === "Field" ? (
+            <>
+              <label className="label-agree-term">{stepType}</label>
+
+              <div className="select-list">
+                <select
+                  name="skillField"
+                  id="skillField"
+                  value={skillField}
+                  onChange={handleStepChange}
+                  // onBlur={validateStepType}
+                >
+                  {skillList
+                    ? skillList.map((mat) => (
+                        <option value={mat._id}>{mat.skillField}</option>
+                      ))
+                    : ""}
+                </select>
+              </div>
+            </>
           ) : (
             ""
           )}
@@ -294,6 +303,7 @@ function Form({
             <>
               <ChipArray
                 materialArrayData={materialArrayData}
+                materialList={materialList}
                 setmaterialArrayData={setmaterialArrayData}
               />
             </>

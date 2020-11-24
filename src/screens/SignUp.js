@@ -4,9 +4,8 @@ import Autocomplete from "react-autocomplete";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
-import { Headers } from "../Auth/Index";
-
 import axios from "axios";
+
 function Signup() {
   const signupData = {
     username: "",
@@ -126,11 +125,16 @@ function Signup() {
     return true;
   };
   const ValidateSkillField = () => {
+    // alert(skillformData.skillField);
+
     if (skillformData.skillField) {
-      setskillRequiredFields({ ...skillRequiredFields, skillField: "" });
+      const msg = "";
+
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
 
       return true;
     } else if (!skillformData.skillField) {
+      alert("hello");
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return false;
@@ -309,9 +313,14 @@ function Signup() {
 
   // Handle_change
   useEffect(() => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/materialList", Headers)
+        .get("http://localhost:3000/api/v1/admin/materialList", headers)
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -323,7 +332,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/skillList", Headers)
+        .get("http://localhost:3000/api/v1/admin/skillList", headers)
         .then((res) => {
           setskillFieldList(res.data.skills);
           console.log(res, "res skill");
@@ -336,6 +345,7 @@ function Signup() {
 
   const handleChange = (e) => {
     let value = e.target.value;
+
     switch (e.target.name) {
       case "username":
         ValidateUsername();
@@ -366,15 +376,15 @@ function Signup() {
       default:
         break;
     }
-
     if (e.target.name === "phone") {
       setFormData({
         ...formData,
-        [e.target.name]: value.replace(/[^\d+]/, ""),
+        [e.target.name]: e.target.value.replace(/\D/g, ""),
       });
+      // }
+    } else {
+      setFormData({ ...formData, [e.target.name]: value });
     }
-
-    setFormData({ ...formData, [e.target.name]: value });
   };
   // handle cahnge end
   // const handleMaterialChange = (e) => {
@@ -384,12 +394,22 @@ function Signup() {
   // console.log(skillList, "skillList");
   const handleSkillChange = async (e) => {
     // alert("yooo")
+    let value = e.target.value;
+
     if (e.target.name === "skillField") {
       skillFieldList.map((skill) =>
         skill._id === e.target.value ? setskillList(skill.skill) : ""
       );
 
       // alert(e.target.value);
+    } else if (e.target.name === "score") {
+      setskillFormData({
+        ...skillformData,
+        [e.target.name]: e.target.value.replace(/\D/g, ""),
+      });
+      // }
+    } else {
+      setskillFormData({ ...skillformData, [e.target.name]: value });
     }
     switch (e.target.name) {
       case "skillField":
@@ -408,9 +428,6 @@ function Signup() {
       default:
         break;
     }
-
-    let value = e.target.value;
-    setskillFormData({ ...skillformData, [e.target.name]: value });
   };
   const onskillAdd = () => {
     checkValidateForm2();
@@ -431,14 +448,14 @@ function Signup() {
 
   // const getSkill = (e) => {
   //   // setAddress(e.target.value);
-  //   const Headers = {
-  //     Headers: {
+  //   const headers = {
+  //     headers: {
   //       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
   //     },
   //   };
   //   try {
   //     axios
-  //       .get("http://localhost:3000/api/v1/admin/skillList", Headers)
+  //       .get("http://localhost:3000/api/v1/admin/skillList", headers)
   //       .then((res) => {
   //         setskillList(res.data.skills.skill);
   //         // console.log(res, "res material");
@@ -517,7 +534,7 @@ function Signup() {
         // this.handleValidationCheckForButtonEnable();
       }
     }
-    validateCity();
+    // validateCity();
   };
   // city_end
 
@@ -625,10 +642,14 @@ function Signup() {
     //   material: materialArrayData,
     // });
     console.log(Signup, "signup on sumbit");
-
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     try {
       axios
-        .post("http://localhost:3000/api/v1/auth/register", Signup, Headers)
+        .post("http://localhost:3000/api/v1/auth/register", Signup, headers)
         .then((res) => {
           setisLoading(false);
 
@@ -658,7 +679,7 @@ function Signup() {
         <form method="POST" className="appointmentform" id="appointment-form">
           <h2>Sign Up form</h2>
           <div className="form-group-1">
-            <label className="label-agree-term">User_name</label>
+            <label className="label-agree-term">User_name*</label>
 
             <input
               type="text"
@@ -676,7 +697,7 @@ function Signup() {
               ""
             )}
 
-            <label className="label-agree-term">Email</label>
+            <label className="label-agree-term">Email*</label>
 
             <input
               type="email"
@@ -693,7 +714,7 @@ function Signup() {
             ) : (
               ""
             )}
-            <label className="label-agree-term">Password</label>
+            <label className="label-agree-term">Password*</label>
 
             <input
               type="password"
@@ -710,7 +731,7 @@ function Signup() {
             ) : (
               ""
             )}
-            <label className="label-agree-term">Confirm_Password</label>
+            <label className="label-agree-term">Confirm_Password*</label>
 
             <input
               type="confirm_password"
@@ -771,7 +792,7 @@ function Signup() {
             ) : (
               ""
             )}
-            <label className="label-agree-term">Profile_picture</label>
+            <label className="label-agree-term">Profile_picture*</label>
 
             <input
               type="file"
@@ -780,14 +801,14 @@ function Signup() {
               required
               value={formData.profile_picture}
               onChange={handleChange}
-              onFocus={validatePhoto}
+              // onFocus={validatePhoto}
             />
             {aboutRequiredFields.profile_picture !== "" ? (
               <p className="error"> {aboutRequiredFields.profile_picture}</p>
             ) : (
               ""
             )}
-            <label className="label-agree-term">Profile_description</label>
+            <label className="label-agree-term">Profile_description*</label>
 
             <input
               type="text"
@@ -807,7 +828,7 @@ function Signup() {
             ) : (
               ""
             )}
-            <label className="label-agree-term">Phone Number</label>
+            <label className="label-agree-term">Phone Number*</label>
 
             <input
               type="text"
@@ -824,7 +845,7 @@ function Signup() {
             ) : (
               ""
             )}
-            <label className="label-agree-term">Availability</label>
+            <label className="label-agree-term">Availability*</label>
 
             <input
               type="text"
@@ -844,7 +865,7 @@ function Signup() {
           </div>
           <div className="form-group-2">
             <h3>Skills</h3>
-            <label className="label-agree-term">Skill_Field</label>
+            <label className="label-agree-term">Skill_Field*</label>
 
             <div className="select-list">
               <select
@@ -868,7 +889,7 @@ function Signup() {
             )}
             {skillList.length > 0 ? (
               <>
-                <label className="label-agree-term">Skill</label> <br />
+                <label className="label-agree-term">Skill*</label> <br />
                 <div className="select-list">
                   <select
                     name="skill"
@@ -894,7 +915,7 @@ function Signup() {
               ""
             )}
 
-            <label className="label-agree-term">Specialization</label>
+            <label className="label-agree-term">Specialization*</label>
 
             <input
               type="text"
@@ -949,7 +970,7 @@ function Signup() {
             )}
           </div>
           <div className="form-group-2">
-            <h3>Material</h3>
+            <h3>Material*</h3>
             <div className="select-list">
               <select
                 name="material"

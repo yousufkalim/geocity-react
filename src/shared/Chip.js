@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
-import TagFacesIcon from "@material-ui/icons/TagFaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,18 +20,19 @@ const useStyles = makeStyles((theme) => ({
 export default function ChipsArray({
   materialArrayData,
   setmaterialArrayData,
+  materialList,
 }) {
   const classes = useStyles();
   const [chipData, setChipData] = React.useState(materialArrayData);
 
   const handleDelete = (chipToDelete) => {
-    // setChipData((chips) => chips.filter((chip) => chip !== chipToDelete));
     const ChipsArray = materialArrayData.filter(
       (chip) => chip !== chipToDelete
     );
     setmaterialArrayData(ChipsArray);
   };
 
+  console.log(materialArrayData, "dsfsdsdsddssfsd");
   return (
     <Paper component="ul" className={classes.root}>
       {materialArrayData.map((data) => {

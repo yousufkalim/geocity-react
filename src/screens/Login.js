@@ -4,7 +4,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import "../Theme/css/main.css";
 import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
-import { Headers } from "../Auth/Index";
 import { Redirect, Route } from "react-router-dom";
 
 function Login() {
@@ -100,7 +99,7 @@ function Login() {
 
     try {
       axios
-        .post("http://localhost:3000/api/v1/auth/login", formData, Headers)
+        .post("http://localhost:3000/api/v1/auth/login", formData)
         .then((res) => {
           setisLoading(false);
           localStorage.setItem("jwt", res.data.token);

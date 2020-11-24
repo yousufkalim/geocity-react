@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Theme/css/main.css";
 import axios from "axios";
 import Form from "../Components/ProjectForm";
-import { Headers } from "../Auth/Index";
+
 function CreateProject() {
   const projectData = {
     title: "",
@@ -21,7 +21,7 @@ function CreateProject() {
 
   const stepData = {
     name: "",
-    skillField: "",
+    // skillField: "",
     speciality: "",
     description: "",
     // StepsType: "",
@@ -36,6 +36,8 @@ function CreateProject() {
   const [skillList, setskillList] = useState("");
   const [materialArrayData, setmaterialArrayData] = useState([]);
   const [material, setMaterial] = useState("");
+  const [skillField, setskillField] = useState("");
+  const [stepType, setstepType] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
   const [isCheck, setisCheck] = useState(false);
@@ -191,14 +193,9 @@ function CreateProject() {
   };
 
   const validateTitle = () => {
+    console.log(formData.title.length, "formData.title.length");
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(formData.title);
-    if (!formData.title.length) {
-      // alert("hello")
-      const msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
-      // setFNErr("Please Enter Name");
-      return false;
-    } else if (formData.title.length === 4 && formData.title.length < 20) {
+    if (formData.title.length >= 4 && formData.title.length < 20) {
       // alert("hello h1");
       setAboutRequiredFields({ ...aboutRequiredFields, title: "" });
       setFormData({ ...formData, title: formData.title.trim() });
@@ -214,6 +211,12 @@ function CreateProject() {
       return false;
     } else if (formData.title.trim().length > 100) {
       const msg = "Title needs to be  100 characters long";
+      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      // setFNErr("Please Enter Name");
+      return false;
+    } else if (!formData.title.length) {
+      // alert("hello")
+      const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
       // setFNErr("Please Enter Name");
       return false;
@@ -283,9 +286,41 @@ function CreateProject() {
   // validation end
   // useEffect
   useEffect(() => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    if (stepType) {
+      if (stepType === "Material") {
+        try {
+          axios
+            .get("http://localhost:3000/api/v1/admin/materialList", headers)
+            .then((res) => {
+              setMaterialList(res.data.materials);
+              // console.log(res, "res material");
+            })
+            .catch((err) => console.log(" error =>", err));
+        } catch (error) {
+          // console.log(error, "error catch");
+        }
+      } else if (stepType === "Field") {
+        try {
+          axios
+            .get("http://localhost:3000/api/v1/admin/skillList", headers)
+            .then((res) => {
+              setskillList(res.data.skills);
+              // console.log(res, "res skilllist");
+            })
+            .catch((err) => console.log(" error =>", err));
+        } catch (error) {
+          // console.log(error, "error catch");
+        }
+      }
+    }
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/categoryList", Headers)
+        .get("http://localhost:3000/api/v1/admin/categoryList", headers)
         .then((res) => {
           setCategoryList(res.data.categories);
           console.log(res, "response cat");
@@ -294,7 +329,7 @@ function CreateProject() {
     } catch (error) {
       // console.log(error, "error catch");
     }
-  }, []);
+  }, [stepType]);
   // console.log(formData,"formData")
   // get set address
 
@@ -365,6 +400,11 @@ function CreateProject() {
           city: city,
           latitude: lat,
           longitude: lng,
+          title: formData.title,
+          type: formData.type,
+          general_photo: formData.general_photo,
+          general_description: formData.general_description,
+          category: formData.category,
         });
         // this.setState({
         //   address: newAddress[0],
@@ -433,14 +473,14 @@ function CreateProject() {
       return true;
     }
   };
-  console.log(formData, "formdata");
-  console.log(stepArrayData, "stepArrayData");
+  // console.log(stepArrayData, "stepArrayData");
 
   const onSubmit = async (e) => {
     // stepArrayData.material = materialArrayData;
     formData.implementation_steps = stepArrayData;
     e.preventDefault();
     setisLoading(true);
+    console.log(formData, "formdata");
 
     // console.log(items,"items")
     checkValidateForm();
@@ -455,11 +495,18 @@ function CreateProject() {
       );
     } else {
       try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjc5ZmQ2YWY2Yjk2MThkYzI1MzJlMyIsImlhdCI6MTYwNjE5NDA3NSwiZXhwIjoxNjA4Nzg2MDc1fQ.Iimk-9NMQiydnIrE2MM69ZeRd3ZsL6mIIX9t8ZrvMO4`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        };
         await axios
           .post(
             "http://localhost:3000/api/v1/project/CreateProject",
             formData,
-            Headers
+            headers
           )
           .then((res) => {
             setisLoading(false);
@@ -483,6 +530,7 @@ function CreateProject() {
 
   const handleChange = (e) => {
     let value = e.target.value;
+
     switch (e.target.name) {
       case "title":
         validateTitle();
@@ -509,27 +557,43 @@ function CreateProject() {
     }
     setFormData({ ...formData, [e.target.name]: value });
   };
-  // console.log(materialArrayData, "material aary data");
+  console.log(materialArrayData, "material aary data");
+
   const handleStepChange = async (e) => {
+    // console.log(stepType, "stepType");
+
     let value = e.target.value;
     if (e.target.name === "material") {
       setMaterial(e.target.value);
-      const msg = "Value Already Existed";
       if (materialArrayData.length > 0) {
+        const msg = "Value Already Existed";
+
         materialArrayData.map((data) => {
           console.log(data, "data");
 
-          data !== e.target.value
-            ? setmaterialArrayData((prevState) => [
+          data === e.target.value
+            ? setstepRequiredFields({ ...stepRequiredFields, material: msg })
+            : // materialList.map((mat) => {
+              // if (mat._id === e.target.value) {
+              setmaterialArrayData((prevState) => [
                 ...prevState,
                 e.target.value,
-              ])
-            : setstepRequiredFields({ ...stepRequiredFields, material: msg });
+              ]);
+          //   }
+          // });
         });
       } else {
-        console.log("succceess");
+        // materialList.map((mat) => {
+        //   if (mat._id === e.target.value) {
         setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+        //   }
+        // });
+
+        // console.log("succceess");
       }
+    } else if (e.target.name === "skillField") {
+      setskillField(e.target.value);
+      stepformData.skillField = e.target.value;
     }
 
     switch (e.target.name) {
@@ -556,45 +620,18 @@ function CreateProject() {
         break;
     }
     setstepFormData({ ...stepformData, [e.target.name]: value });
-
-    if (e.target.value === "Material") {
-      // alert("hello")
-
-      try {
-        await axios
-          .get("http://localhost:3000/api/v1/admin/materialList", Headers)
-          .then((res) => {
-            setMaterialList(res.data.materials);
-            // console.log(res, "res material");
-          })
-          .catch((err) => console.log(" error =>", err));
-      } catch (error) {
-        // console.log(error, "error catch");
-      }
-    } else {
-      try {
-        await axios
-          .get("http://localhost:3000/api/v1/admin/skillList", Headers)
-          .then((res) => {
-            setskillList(res.data.skills);
-            // console.log(res, "res skilllist");
-          })
-          .catch((err) => console.log(" error =>", err));
-      } catch (error) {
-        // console.log(error, "error catch");
-      }
-    }
   };
-  console.log(stepformData, "stepformData");
+  // console.log(stepformData, "stepformData");
 
   const onAdd = () => {
     checkValidateForm2();
     setisCheck(true);
     seterror("");
-    stepformData.material = materialArrayData;
+    if (materialArrayData.length > 0) {
+      stepformData.material = materialArrayData;
+    }
     setstepArrayData((prevState) => [...prevState, stepformData]);
     setstepFormData(stepData);
-    setstepArrayData([]);
   };
   // console.log(stepformData,"stepformData")
 
@@ -637,6 +674,9 @@ function CreateProject() {
           address={address}
           setMaterial={setMaterial}
           material={material}
+          stepType={stepType}
+          setstepType={setstepType}
+          skillField={skillField}
           onAdd={onAdd}
         />
       </div>

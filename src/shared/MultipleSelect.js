@@ -2,7 +2,7 @@ import React from "react";
 
 export default function MultipleSelect({
   handleStepChange,
-  validateStepType,
+  // validateStepType,
   data,
   name,
   value,
@@ -13,7 +13,7 @@ export default function MultipleSelect({
       id={name}
       value={value}
       onChange={handleStepChange}
-      onBlur={validateStepType}
+      // onBlur={validateStepType}
     >
       <option value=""></option>
       {data.map((name) => (
