@@ -12,36 +12,29 @@ import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Project from "./screens/Project";
 import SignUp from "./screens/SignUp";
-
+import PrivateRoute from "./Auth/PrivateRoute";
 export default function App() {
   return (
     <Router>
       <div>
-    
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-         
-          <Route path="/Profile" exact>
-            <Profile/>
-          </Route>
-          <Route path="/List" exact>
-            <List/>
-          </Route>
-          <Route path="/Project" exact>
-            <Project/>
-          </Route>
-          <Route path="/Createproject" exact>
-            <CreateProject/>
-          </Route>
+          <PrivateRoute path="/Profile" component={Profile} />
+
+          <PrivateRoute path="/List" component={List} exact />
+          <PrivateRoute path="/Project" component={Project} exact />
+
+          <PrivateRoute path="/Createproject" exact component={CreateProject} />
+
           <Route path="/SignUp" exact>
-            <SignUp/>
+            <SignUp />
           </Route>
           <Route path="/Login" exact>
-            <Login/>
+            <Login />
           </Route>
           <Route path="/">
-            <Home/>
+            <Home />
           </Route>
         </Switch>
       </div>
