@@ -24,7 +24,7 @@ export const SignOut = () => {
   }
 };
 
-export const headers = {
+export const Headers = {
   headers: {
     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
   },

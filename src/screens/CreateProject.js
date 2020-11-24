@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Theme/css/main.css";
 import axios from "axios";
 import Form from "../Components/ProjectForm";
-import { headers } from "../Auth/Index";
+import { Headers } from "../Auth/Index";
 function CreateProject() {
   const projectData = {
     title: "",
@@ -285,10 +285,10 @@ function CreateProject() {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/categoryList", headers)
+        .get("http://localhost:3000/api/v1/admin/categoryList", Headers)
         .then((res) => {
           setCategoryList(res.data.categories);
-          // console.log(res, "response cat");
+          console.log(res, "response cat");
         })
         .catch((err) => console.log(" error category =>", err));
     } catch (error) {
@@ -459,7 +459,7 @@ function CreateProject() {
           .post(
             "http://localhost:3000/api/v1/project/CreateProject",
             formData,
-            headers
+            Headers
           )
           .then((res) => {
             setisLoading(false);
@@ -562,7 +562,7 @@ function CreateProject() {
 
       try {
         await axios
-          .get("http://localhost:3000/api/v1/admin/materialList", headers)
+          .get("http://localhost:3000/api/v1/admin/materialList", Headers)
           .then((res) => {
             setMaterialList(res.data.materials);
             // console.log(res, "res material");
@@ -574,7 +574,7 @@ function CreateProject() {
     } else {
       try {
         await axios
-          .get("http://localhost:3000/api/v1/admin/skillList", headers)
+          .get("http://localhost:3000/api/v1/admin/skillList", Headers)
           .then((res) => {
             setskillList(res.data.skills);
             // console.log(res, "res skilllist");
@@ -594,6 +594,7 @@ function CreateProject() {
     stepformData.material = materialArrayData;
     setstepArrayData((prevState) => [...prevState, stepformData]);
     setstepFormData(stepData);
+    setstepArrayData([]);
   };
   // console.log(stepformData,"stepformData")
 

@@ -4,6 +4,8 @@ import Autocomplete from "react-autocomplete";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
+import { Headers } from "../Auth/Index";
+
 import axios from "axios";
 function Signup() {
   const signupData = {
@@ -307,14 +309,9 @@ function Signup() {
 
   // Handle_change
   useEffect(() => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-      },
-    };
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/materialList", headers)
+        .get("http://localhost:3000/api/v1/admin/materialList", Headers)
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -326,7 +323,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/skillList", headers)
+        .get("http://localhost:3000/api/v1/admin/skillList", Headers)
         .then((res) => {
           setskillFieldList(res.data.skills);
           console.log(res, "res skill");
@@ -434,14 +431,14 @@ function Signup() {
 
   // const getSkill = (e) => {
   //   // setAddress(e.target.value);
-  //   const headers = {
-  //     headers: {
+  //   const Headers = {
+  //     Headers: {
   //       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
   //     },
   //   };
   //   try {
   //     axios
-  //       .get("http://localhost:3000/api/v1/admin/skillList", headers)
+  //       .get("http://localhost:3000/api/v1/admin/skillList", Headers)
   //       .then((res) => {
   //         setskillList(res.data.skills.skill);
   //         // console.log(res, "res material");
@@ -629,15 +626,9 @@ function Signup() {
     // });
     console.log(Signup, "signup on sumbit");
 
-    const headers = {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-      },
-    };
-
     try {
       axios
-        .post("http://localhost:3000/api/v1/auth/register", Signup, headers)
+        .post("http://localhost:3000/api/v1/auth/register", Signup, Headers)
         .then((res) => {
           setisLoading(false);
 
