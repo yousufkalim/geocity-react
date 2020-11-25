@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../Theme/css/list.css";
-
+import axios from "axios";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
-
+import Loader from "../shared/Loaders";
+import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
 export default function List() {
+  const [projectData, setProjectData] = useState("");
+  useEffect(() => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+
+    try {
+      axios
+        .get("http://localhost:3000/api/v1/admin/projectslist", headers)
+        .then((res) => {
+          setProjectData(res.data.projects);
+          console.log(res, "response cat");
+        })
+        .catch((err) => console.log(" error project =>", err));
+    } catch (error) {
+      // console.log(error, "error catch");
+    }
+  }, []);
+
   return (
     <div>
       <Header />
@@ -69,434 +91,58 @@ export default function List() {
             {/* end of col */}
           </div>
           {/* row 1 */}
-          <div className="row" id="search2">
-            <div className="col-lg-3 ">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
+
+          {projectData.length > 0 ? (
+            <div className="row" id="search2">
+              {projectData.map((data) => (
+                <div className="col-lg-3 ">
+                  <div className="card">
                     <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
+                      className="card-image"
+                      src={
+                        !data.general_photo
+                          ? `http://localhost:3000/views/uploads/${data.general_photo}`
+                          : DefaultImage
+                      }
                       alt="alternative"
                     />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
+                    <div className="card-body mb-1">
+                      <span className="row ml-2">
+                        <img
+                          id="ImageSmall"
+                          src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
+                          alt="alternative"
+                        />
+                        <h6 className="card-title ml-3">{data.title}</h6>
                       </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
+                      <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
+                      <div className="w-100  ml-2 " id="iconRow">
+                        <span>
+                          <i className="fas fa-heart" />
+                          <span className="ml-2 " id="span2">
+                            21
+                          </span>
+                        </span>
+                        <span id="second">
+                          <i className="far fa-circle" />
+                          <span className="ml-2 " id="span2">
+                            21%
+                          </span>
+                        </span>
+                      </div>
+                      {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
+                    </div>
                   </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
                 </div>
-              </div>
+              ))}
             </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-          </div>
+          ) : (
+            <Loader />
+          )}
           {/* row end */}
-          <div className="row" id="search2">
-            <div className="col-lg-3 ">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-          </div>
+
           {/* row end */}
-          <div className="row" id="search2">
-            <div className="col-lg-3 ">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 " id="card1">
-              <div className="card">
-                <img
-                  className="card-image"
-                  src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                  alt="alternative"
-                />
-                <div className="card-body mb-1">
-                  <span className="row ml-2">
-                    <img
-                      id="ImageSmall"
-                      src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                      alt="alternative"
-                    />
-                    <h6 className="card-title ml-3">Project Name</h6>
-                  </span>
-                  <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                  <div className="w-100  ml-2 " id="iconRow">
-                    <span>
-                      <i className="fas fa-heart" />
-                      <span className="ml-2 " id="span2">
-                        21
-                      </span>
-                    </span>
-                    <span id="second">
-                      <i className="far fa-circle" />
-                      <span className="ml-2 " id="span2">
-                        21%
-                      </span>
-                    </span>
-                  </div>
-                  {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                </div>
-              </div>
-            </div>
-          </div>
+
           {/* end of row */}
         </div>{" "}
         {/* end of container */}

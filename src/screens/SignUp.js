@@ -43,6 +43,9 @@ function Signup() {
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
   const [materialList, setMaterialList] = useState("");
+  const [userList, setuserList] = useState("");
+  const [error, setError] = useState("");
+
   const [skillList, setskillList] = useState("");
   const [skillFieldList, setskillFieldList] = useState("");
 
@@ -113,8 +116,13 @@ function Signup() {
     }
   };
   const validateAvailability = () => {
-    if (formData.availability) {
-      setAboutRequiredFields({ ...aboutRequiredFields, availability: "" });
+    if (formData.availability.length <= 5) {
+      const msg = "Availability must be 6 chracters long";
+      setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
+      return false;
+    } else if (formData.availability) {
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
       return true;
     } else if (!formData.availability) {
       const msg = "Required";
@@ -134,7 +142,7 @@ function Signup() {
 
       return true;
     } else if (!skillformData.skillField) {
-      alert("hello");
+      // alert("hello");
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return false;
@@ -143,8 +151,9 @@ function Signup() {
 
   const ValidateSkill = () => {
     if (skillformData.skill) {
-      setskillRequiredFields({ ...skillRequiredFields, skill: "" });
+      const msg = "";
 
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
       return true;
     } else if (!skillformData.skill) {
       const msg = "Required";
@@ -320,6 +329,17 @@ function Signup() {
     };
     try {
       axios
+        .get("http://localhost:3000/api/v1/admin/userslist", headers)
+        .then((res) => {
+          setuserList(res.data.users);
+          console.log(res, "res users");
+        })
+        .catch((err) => console.log(" error =>", err));
+    } catch (error) {
+      console.log(error, "error catch");
+    }
+    try {
+      axios
         .get("http://localhost:3000/api/v1/admin/materialList", headers)
         .then((res) => {
           setMaterialList(res.data.materials);
@@ -397,6 +417,9 @@ function Signup() {
     let value = e.target.value;
 
     if (e.target.name === "skillField") {
+      // alert("hello");
+      setskillFormData({ ...skillformData, [e.target.name]: value });
+
       skillFieldList.map((skill) =>
         skill._id === e.target.value ? setskillList(skill.skill) : ""
       );
@@ -434,13 +457,19 @@ function Signup() {
     setskillArrayData((prevState) => [...prevState, skillformData]);
 
     setskillFormData(stepData);
+    setskillRequiredFields(skillRequiredFields);
   };
 
   const onMaterialAdd = () => {
     if (material) {
+      const msg = "";
+      setmaterialRequiredFields({ ...aboutRequiredFields, name: msg });
+
       setmaterialArrayData((prevState) => [...prevState, material]);
+      setMaterial("");
     } else {
-      setmaterialRequiredFields({ ...aboutRequiredFields, name: "Required" });
+      const msg = "Required";
+      setmaterialRequiredFields({ ...aboutRequiredFields, name: msg });
     }
   };
 
@@ -629,18 +658,14 @@ function Signup() {
     const Signup = formData;
     Signup.skills = skillArrayData;
     Signup.material = materialArrayData;
-    // if(isCheck===false){
-    //   // alert("hello")
-    //   seterror("You must have to add atleast one implementation step, for this fill steps field and press Add")
+    if (userList.length > 0) {
+      userList.map((user) => {
+        if (user.email === Signup.email) {
+          setError("Email Already Existed");
+        }
+      });
+    }
 
-    // }
-    // else{
-
-    // setFormData({
-    //   ...formData,
-    //   skills: skillArrayData,
-    //   material: materialArrayData,
-    // });
     console.log(Signup, "signup on sumbit");
     const headers = {
       headers: {
@@ -652,6 +677,7 @@ function Signup() {
         .post("http://localhost:3000/api/v1/auth/register", Signup, headers)
         .then((res) => {
           setisLoading(false);
+          setFormData(signupData);
 
           // console.log(res,"res")
         })
@@ -668,8 +694,6 @@ function Signup() {
         setisLoading(false);
       }, 1000);
     }
-
-    setFormData(signupData);
   };
   // }
   // console.log(skillList, "skillList");
@@ -1015,6 +1039,8 @@ function Signup() {
               </Button>
             )}
           </div>
+          {error !== "" ? <p className="error"> {error}</p> : ""}
+
           <div>
             {isLoading === true ? (
               <center>

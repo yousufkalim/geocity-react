@@ -5,7 +5,7 @@ import Footer from "../Components/footer";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Axios from "axios";
 import { useStyles } from "../Theme/styles";
-import Button from "@material-ui/core/Button";
+import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
 
 export default function Profile() {
   const [data, setData] = useState(" ");
@@ -15,21 +15,20 @@ export default function Profile() {
   const [commentArray, setCommentArray] = useState([]);
   console.log(commentArray, "commentArray");
   const onAdd = async () => {
-    const array = commentArray;
-    array.map((v) => [v, comment]);
-    console.log(array, "array");
+    setCommentArray([...commentArray, comment]);
+
+    // console.log(array, "array");
 
     try {
       const headers = {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjc5ZmQ2YWY2Yjk2MThkYzI1MzJlMyIsImlhdCI6MTYwNjE5NDA3NSwiZXhwIjoxNjA4Nzg2MDc1fQ.Iimk-9NMQiydnIrE2MM69ZeRd3ZsL6mIIX9t8ZrvMO4`,
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
       };
+
       await Axios.post(
         "http://localhost:3000/api/v1/profile/view-profile/comment",
-        array,
+        comment,
         headers
       )
         .then((res) => {
@@ -131,9 +130,9 @@ export default function Profile() {
                   <img
                     className="card-image"
                     src={
-                      data.profile_picture
+                      !data.profile_picture
                         ? `http://localhost:3000/views/uploads/${data.profile_picture}`
-                        : ""
+                        : DefaultImage
                     }
                     alt="alternative"
                   />
@@ -193,7 +192,7 @@ export default function Profile() {
                     className="fas fa-phone-volume fa-lg "
                     style={{ color: "#0d2456" }}
                   />
-                  <span className="ml-2">06.45.30.12.31</span>
+                  <span className="ml-2">{data.phone}</span>
                 </p>
                 <p style={{ marginTop: "1.5rem" }}>
                   <i
@@ -206,110 +205,49 @@ export default function Profile() {
                 </p>
                 <p style={{ marginTop: "1.5rem" }}>
                   <i className="fas fa-shopping-basket fa-lg " />
-                  <span className="ml-2">
-                    {data.material
-                      ? data.material.name
-                      : "Sable, Beton, Granulat"}
-                  </span>
+                  {data.material
+                    ? data.material.map((mat) => (
+                        <span className="ml-2">{mat}</span>
+                      ))
+                    : ""}
                 </p>
               </div>
               <div className="col-lg-6" style={{ marginTop: "-0.8rem" }}>
-                <div className=" ml-2 " id="iconRow">
-                  <p>
-                    <small>Informatique - </small>
-                    Developer Front End <br />
-                    <span>
-                      <i
-                        className="fas fa-star fa-sm fa-sm"
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                    </span>
-                  </p>
-                  <p style={{ marginRight: "8rem" }}>
-                    <i className="fas fa-heart text-danger" />
-                    {/* <span class="ml-2 " id="span2" >21%</span> */}
-                  </p>
-                </div>
-                <div
-                  className=" ml-2  "
-                  id="iconRow"
-                  style={{ marginTop: "-0.3rem" }}
-                >
-                  <p>
-                    <small>Informatique - </small>
-                    Developer Front End
-                    <br />
-                    <span>
-                      <i
-                        className="fas fa-star fa-sm fa-sm"
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i className="fas fa-star fa-sm " />
-                      <i className="fas fa-star fa-sm " />
-                    </span>
-                  </p>
-                  <p style={{ marginRight: "8rem" }}>
-                    <i className="fas fa-heart " />
-                    {/* <span class="ml-2 " id="span2" >21%</span> */}
-                  </p>
-                </div>
-                <div
-                  className=" ml-2 "
-                  id="iconRow"
-                  style={{ marginTop: "-0.3rem" }}
-                >
-                  <p>
-                    <small>Informatique - </small>
-                    Developer Front End <br />
-                    <span>
-                      <i
-                        className="fas fa-star fa-sm fa-sm"
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i
-                        className="fas fa-star fa-sm "
-                        style={{ color: "#ffe500" }}
-                      />
-                      <i className="fas fa-star fa-sm " />
-                    </span>
-                  </p>
-                  <p style={{ marginRight: "8rem" }}>
-                    <i className="fas fa-heart " />
-                    {/* <span class="ml-2 " id="span2" >21%</span> */}
-                  </p>
-                </div>
+                {data.skills
+                  ? data.skills.map((skill) => (
+                      <div
+                        className=" ml-2  "
+                        id="iconRow"
+                        style={{ marginTop: "-0.3rem" }}
+                      >
+                        <p>
+                          <small>{skill.skillField} - </small>
+                          {skill.skill}
+                          <br />
+                          <span>
+                            <i
+                              className="fas fa-star fa-sm fa-sm"
+                              style={{ color: "#ffe500" }}
+                            />
+                            <i
+                              className="fas fa-star fa-sm "
+                              style={{ color: "#ffe500" }}
+                            />
+                            <i
+                              className="fas fa-star fa-sm "
+                              style={{ color: "#ffe500" }}
+                            />
+                            <i className="fas fa-star fa-sm " />
+                            <i className="fas fa-star fa-sm " />
+                          </span>
+                        </p>
+                        <p style={{ marginRight: "8rem" }}>
+                          <i className="fas fa-heart " />
+                          {/* <span class="ml-2 " id="span2" >21%</span> */}
+                        </p>
+                      </div>
+                    ))
+                  : ""}
               </div>
             </div>
             <div className="row " style={{ marginTop: "2rem" }}>

@@ -33,6 +33,8 @@ function Form({
   // validateProgress,
   // validator
   setmaterialArrayData,
+  skillRequiredFields,
+  handleSkillChange,
   aboutRequiredFields,
   materialArrayData,
   formData,
@@ -46,8 +48,11 @@ function Form({
   stepType,
   setstepType,
   material,
+  formDataSkillField,
   materialList,
+  skillfieldList,
   skillList,
+  formDataCity,
 }) {
   const handleStep = (e) => {
     setstepType(e.target.value);
@@ -181,6 +186,8 @@ function Form({
               onChange={handleChange}
               onBlur={validateCategory}
             >
+              <option value=""></option>
+
               {CategoryList
                 ? CategoryList.map((cat) => (
                     <option value={cat._id} key={cat._id}>
@@ -278,20 +285,38 @@ function Form({
             </>
           ) : stepType === "Field" ? (
             <>
-              <label className="label-agree-term">{stepType}</label>
+              <label className="label-agree-term">Skill Field</label>
 
               <div className="select-list">
                 <select
                   name="skillField"
                   id="skillField"
-                  value={skillField}
-                  onChange={handleStepChange}
+                  value={formDataSkillField.skillField}
+                  onChange={handleSkillChange}
                   // onBlur={validateStepType}
                 >
-                  {skillList
-                    ? skillList.map((mat) => (
+                  <option value=""></option>
+
+                  {skillfieldList
+                    ? skillfieldList.map((mat) => (
                         <option value={mat._id}>{mat.skillField}</option>
                       ))
+                    : ""}
+                </select>
+              </div>
+              <label className="label-agree-term">Skill</label>
+              <div className="select-list">
+                <select
+                  name="skill"
+                  id="skill"
+                  value={formDataSkillField.skill}
+                  onChange={handleSkillChange}
+                  // onBlur={validateStepType}
+                >
+                  <option value=""></option>
+
+                  {skillList
+                    ? skillList.map((mat) => <option value={mat}>{mat}</option>)
                     : ""}
                 </select>
               </div>
@@ -346,8 +371,8 @@ function Form({
               <option value=""></option>
 
               <option value="completed">completed</option>
-              <option value="ongoing">ongoing</option>
-              <option value="nothing">nothing</option>
+              <option value="InProgress">InProgress</option>
+              <option value="NoProgress">NoProgress</option>
             </select>
           </div>
           {stepRequiredFields.status !== "" ? (
@@ -361,17 +386,17 @@ function Form({
             type="text"
             name="speciality"
             id="title"
-            value={stepformData.speciality}
+            value={formDataSkillField.speciality}
             placeholder="Speciality"
-            onChange={handleStepChange}
+            onChange={handleSkillChange}
             onBlur={validateSpeciality}
           />
-          {stepRequiredFields.speciality !== "" ? (
-            <p className="error"> {stepRequiredFields.speciality}</p>
+          {skillRequiredFields.speciality !== "" ? (
+            <p className="error"> {skillRequiredFields.speciality}</p>
           ) : (
             ""
           )}
-          {stepformData.speciality.length > 0 ? (
+          {formDataSkillField.speciality.length > 0 ? (
             <Button
               variant="contained"
               onClick={onAdd}
