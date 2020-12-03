@@ -784,7 +784,7 @@ a.white {
   border-radius: 0.5rem;
   background-color: #f7fcfd;
 }
-
+/* 
 .btn {
   display: inline-block;
   font-weight: 400;
@@ -803,7 +803,7 @@ a.white {
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+} */
 /************************/
 /*     06. Services     */
 /************************/
@@ -826,6 +826,7 @@ textarea:focus {
   margin-left: auto;
 }
 .cardSection #projectPage .fas {
+  cursor: pointer;
   margin-right: 5px;
 }
 .cardSection #projectPage .project-image {
@@ -843,6 +844,9 @@ textarea:focus {
 .cardSection #projectPage p {
   color: blue;
   font-weight: bold;
+}
+.cardSection #projectPage p .fas {
+  cursor: pointer;
 }
 .cardSection button {
   background: #9a7c64;

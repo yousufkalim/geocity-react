@@ -20,10 +20,10 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <PrivateRoute path="/Profile" component={Profile} />
+          <PrivateRoute path="/profile/:id" component={Profile} />
 
-          <PrivateRoute path="/List" component={List} exact />
-          <PrivateRoute path="/Project" component={Project} exact />
+          <PrivateRoute path="/ProjectList" component={List} exact />
+          <PrivateRoute path="/SingleProject/:id" component={Project} exact />
 
           <PrivateRoute path="/Createproject" exact component={CreateProject} />
 

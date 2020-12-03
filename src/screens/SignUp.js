@@ -5,7 +5,9 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
 import axios from "axios";
+import ChipArray from "../shared/Chip";
 
+import { Redirect } from "react-router-dom";
 function Signup() {
   const signupData = {
     username: "",
@@ -33,11 +35,16 @@ function Signup() {
   };
 
   // states start ************************************
+  const [skillformData, setskillFormData] = useState(stepData);
 
   const [formData, setFormData] = useState(signupData);
+
   const [address, setAddress] = useState("");
   const [material, setMaterial] = useState("");
+  const [isSuccess, setisSuccess] = useState(false);
+
   const [isLoading, setisLoading] = useState(false);
+  const [photo, setPhoto] = useState("");
 
   const [items, setItems] = useState([]);
   const [skillArrayData, setskillArrayData] = useState([]);
@@ -49,7 +56,6 @@ function Signup() {
   const [skillList, setskillList] = useState("");
   const [skillFieldList, setskillFieldList] = useState("");
 
-  const [skillformData, setskillFormData] = useState(stepData);
   const [materialformData, setmaterialFormData] = useState([]);
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
     username: "",
@@ -71,6 +77,7 @@ function Signup() {
   });
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
+    error: "",
   });
   console.log(formData, "formData");
   // console.log(materialformData,"materialformData")
@@ -78,6 +85,7 @@ function Signup() {
   // states end ***************************
 
   // validation start*************************
+
   const ValidateSpecialization = () => {
     if (skillformData.specialization) {
       setskillRequiredFields({ ...skillRequiredFields, specialization: "" });
@@ -205,7 +213,8 @@ function Signup() {
   const validatePhoto = () => {
     if (formData.profile_picture) {
       // alert("hello h1");
-      setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: "" });
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: msg });
 
       return true;
     } else if (!formData.profile_picture) {
@@ -218,8 +227,8 @@ function Signup() {
   const validateCity = () => {
     if (formData.city) {
       // alert("hello");
-
-      setAboutRequiredFields({ ...aboutRequiredFields, city: "" });
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
       return false;
     } else if (!formData.city) {
       let msg = "Required";
@@ -228,11 +237,13 @@ function Signup() {
     }
   };
   const validateMaterial = () => {
-    if (materialformData.name) {
-      setmaterialRequiredFields({ ...materialRequiredFields, name: "" });
+    if (material) {
+      let msg = "";
+
+      setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
 
       return true;
-    } else if (!materialformData.name) {
+    } else if (!material) {
       let msg = "Required";
       setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
       return false;
@@ -325,22 +336,13 @@ function Signup() {
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        "Content-Type": "multipart/form-data",
       },
     };
+
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/userslist", headers)
-        .then((res) => {
-          setuserList(res.data.users);
-          console.log(res, "res users");
-        })
-        .catch((err) => console.log(" error =>", err));
-    } catch (error) {
-      console.log(error, "error catch");
-    }
-    try {
-      axios
-        .get("http://localhost:3000/api/v1/admin/materialList", headers)
+        .get("http://localhost:3000/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -352,7 +354,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/skillList", headers)
+        .get("http://localhost:3000/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           console.log(res, "res skill");
@@ -362,7 +364,41 @@ function Signup() {
       console.log(error, "error catch");
     }
   }, []);
+  const onMaterialChange = (e) => {
+    // debugger;
 
+    setMaterial(e.target.value);
+    console.log(materialArrayData, "material aray dat from onchange");
+    if (Object.keys(materialArrayData).length > 0) {
+      materialArrayData.map((mat) => {
+        if (mat !== e.target.value) {
+          // alert(e.target.value);
+          const array = materialArrayData.filter(
+            (mat) => mat !== e.target.value
+          );
+          if (e.target.value) {
+            array.push(e.target.value);
+          }
+          setmaterialArrayData(array);
+          const msg = "";
+          setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
+          // setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+        } else {
+          const msg = "value already existed";
+          setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
+          // alert("msg");
+          const array = materialArrayData.filter(
+            (mat) => mat !== e.target.value
+          );
+          console.log(array, "array mat");
+          setmaterialArrayData(array);
+        }
+      });
+    } else {
+      // setmaterialArrayData([...materialArrayData, e.target.value]);
+      setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+    }
+  };
   const handleChange = (e) => {
     let value = e.target.value;
 
@@ -380,9 +416,9 @@ function Signup() {
         validateConfirmPassword();
         break;
       // will use it
-      // case "profile_picture":
-      //   validatePhoto();
-      //   break;
+      case "profile_picture":
+        validatePhoto();
+        break;
       case "profile_description":
         validateProfileDesc();
         break;
@@ -406,6 +442,14 @@ function Signup() {
       setFormData({ ...formData, [e.target.name]: value });
     }
   };
+  // else if (e.target.name === "profile_picture") {
+  //   // form_data.append("profile_picture", e.target.files[0]);
+  //   const file = e.target.files[0];
+  //   console.log(e.target.files[0], "1");
+  //   setFile(e.target.files[0]);
+  //   // console.log(form_data.getAll("profile_picture"), "profile_pic");
+  // }
+
   // handle cahnge end
   // const handleMaterialChange = (e) => {
   //   let value = e.target.value;
@@ -454,23 +498,18 @@ function Signup() {
   };
   const onskillAdd = () => {
     checkValidateForm2();
-    setskillArrayData((prevState) => [...prevState, skillformData]);
+    // debugger;
+    // setskillArrayData((prevState) => [...prevState, skillformData]);
+    setskillArrayData([...skillArrayData, skillformData]);
 
     setskillFormData(stepData);
     setskillRequiredFields(skillRequiredFields);
+    // console.log("skil", skillArrayData);
   };
 
   const onMaterialAdd = () => {
-    if (material) {
-      const msg = "";
-      setmaterialRequiredFields({ ...aboutRequiredFields, name: msg });
-
-      setmaterialArrayData((prevState) => [...prevState, material]);
-      setMaterial("");
-    } else {
-      const msg = "Required";
-      setmaterialRequiredFields({ ...aboutRequiredFields, name: msg });
-    }
+    debugger;
+    setmaterialArrayData((prevState) => [...prevState, material]);
   };
 
   // set get
@@ -505,6 +544,8 @@ function Signup() {
     )
       .then((response) => response.json())
       .then((responseJson) => {
+        const msg = "";
+        setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
         // console.log("res address", responseJson);
         var addressToSet = [];
         // debugger;
@@ -524,7 +565,9 @@ function Signup() {
         }
       })
       .catch((error) => {
-        // console.error(error);
+        const msg = "Required";
+        setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+        console.error(error);
       });
   };
   const SetAddress = (item) => {
@@ -647,24 +690,46 @@ function Signup() {
   // };
 
   // ******************
+  console.log(skillArrayData, "skillArrayData form");
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
 
-    console.log(materialArrayData, "materialArrayData");
     checkValidateForm();
     checkValidateForm2();
     validateMaterial();
+    // const form_data = new FormData();
+    // const data = form_data.getAll("profile_picture");
     const Signup = formData;
     Signup.skills = skillArrayData;
     Signup.material = materialArrayData;
-    if (userList.length > 0) {
-      userList.map((user) => {
-        if (user.email === Signup.email) {
-          setError("Email Already Existed");
-        }
-      });
-    }
+
+    const newFormData = new FormData();
+    // console.log(file, "profile data");
+
+    newFormData.append("username", formData.username);
+    newFormData.append("availability", formData.availability);
+    newFormData.append("city", formData.city);
+    newFormData.append("confirm_password", formData.confirm_password);
+    newFormData.append("email", formData.email);
+    newFormData.append("latitude", formData.latitude);
+    newFormData.append("longitude", formData.longitude);
+    newFormData.append("password", formData.password);
+    newFormData.append("phone", formData.phone);
+    newFormData.append("profile_description", formData.profile_description);
+    newFormData.append("profile_picture", photo);
+    newFormData.append("zipCode", formData.zipCode);
+    // console.log("asfjlas", JSON.stringify(skillArrayData));
+    newFormData.append("skills", JSON.stringify(skillArrayData));
+    newFormData.append("material", JSON.stringify(materialArrayData));
+
+    // if (userList.length > 0) {
+    //   userList.map((user) => {
+    //     if (user.email === Signup.email) {
+    //       setError("Email Already Existed");
+    //     }
+    //   });
+    // }
 
     console.log(Signup, "signup on sumbit");
     const headers = {
@@ -674,22 +739,28 @@ function Signup() {
     };
     try {
       axios
-        .post("http://localhost:3000/api/v1/auth/register", Signup, headers)
+        .post("http://localhost:3000/api/v1/auth/register", newFormData)
         .then((res) => {
           setisLoading(false);
           setFormData(signupData);
-
-          // console.log(res,"res")
+          setisSuccess(true);
+          console.log(res, "res");
         })
         .catch((err) => {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
-
-          // console.log(" error =>", err);
+          if (err.response.data) {
+            if (err.response.data.message) {
+              setError(err.response.data.message);
+            } else {
+              setError(err.response.data);
+            }
+          }
+          console.log(" error signup =>", err.response.data);
         });
     } catch (error) {
-      // console.log(error, "error catch");
+      console.log(error, "error signup catch");
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
@@ -697,372 +768,400 @@ function Signup() {
   };
   // }
   // console.log(skillList, "skillList");
-  return (
-    <div className="main">
-      <div className="containerProject">
-        <form method="POST" className="appointmentform" id="appointment-form">
-          <h2>Sign Up form</h2>
-          <div className="form-group-1">
-            <label className="label-agree-term">User_name*</label>
+  if (isSuccess === true) {
+    return <Redirect to="/Login" />;
+  } else {
+    return (
+      <div className="main">
+        <div className="containerProject">
+          <form method="POST" className="appointmentform" id="appointment-form">
+            <h2>Sign Up form</h2>
+            <div className="form-group-1">
+              <label className="label-agree-term">User_name*</label>
 
-            <input
-              type="text"
-              name="username"
-              id="username"
-              value={formData.username}
-              placeholder="Username"
-              required
-              onChange={handleChange}
-              onFocus={ValidateUsername}
-            />
-            {aboutRequiredFields.username !== "" ? (
-              <p className="error"> {aboutRequiredFields.username}</p>
-            ) : (
-              ""
-            )}
-
-            <label className="label-agree-term">Email*</label>
-
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              onFocus={validateEmail}
-            />
-            {aboutRequiredFields.email !== "" ? (
-              <p className="error"> {aboutRequiredFields.email}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Password*</label>
-
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              onFocus={validatePassword}
-            />
-            {aboutRequiredFields.password !== "" ? (
-              <p className="error"> {aboutRequiredFields.password}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Confirm_Password*</label>
-
-            <input
-              type="confirm_password"
-              name="confirm_password"
-              id="confirm_password"
-              placeholder="Confirm_Password"
-              required
-              value={formData.confirm_password}
-              onChange={handleChange}
-              onFocus={validateConfirmPassword}
-            />
-            {aboutRequiredFields.confirm_password !== "" ? (
-              <p className="error"> {aboutRequiredFields.confirm_password}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">City</label>
-
-            <Autocomplete
-              items={items}
-              // shouldItemRender={(item, value) =>
-              //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
-              // }
-              getItemValue={(item) => item.label}
-              renderItem={(item, highlighted) => (
-                <div
-                  key={item.id}
-                  style={{
-                    backgroundColor: highlighted ? "#eee" : "transparent",
-                  }}
-                >
-                  {item.label}
-                </div>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                value={formData.username}
+                placeholder="Username"
+                onChange={handleChange}
+                onFocus={ValidateUsername}
+                onfocusout={ValidateUsername}
+              />
+              {aboutRequiredFields.username !== "" ? (
+                <p className="error"> {aboutRequiredFields.username}</p>
+              ) : (
+                ""
               )}
-              wrapperStyle={{
-                display: "block",
-              }}
-              menuStyle={{
-                zIndex: "1",
-                position: "static",
-                borderRadius: "3px",
-                boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                background: "rgba(255, 255, 255, 0.9)",
-                padding: "2px 12px",
-                fontSize: "90%",
-                color: "#000",
-                overflow: "auto",
-                maxHeight: "50%",
-              }}
-              inputProps={{ className: "form-control" }}
-              value={address}
-              name="address"
-              onChange={getAddress}
-              onSelect={SetAddress}
-            />
-            {aboutRequiredFields.city !== "" ? (
-              <p className="error"> {aboutRequiredFields.city}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Profile_picture*</label>
 
-            <input
-              type="file"
-              name="profile_picture"
-              id="profile_picture"
-              required
-              value={formData.profile_picture}
-              onChange={handleChange}
-              // onFocus={validatePhoto}
-            />
-            {aboutRequiredFields.profile_picture !== "" ? (
-              <p className="error"> {aboutRequiredFields.profile_picture}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Profile_description*</label>
+              <label className="label-agree-term">Email *</label>
 
-            <input
-              type="text"
-              name="profile_description"
-              id="profile_description"
-              placeholder="Profile_description"
-              required
-              value={formData.profile_description}
-              onChange={handleChange}
-              onFocus={validateProfileDesc}
-            />
-            {aboutRequiredFields.profile_description !== "" ? (
-              <p className="error">
-                {" "}
-                {aboutRequiredFields.profile_description}
-              </p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Phone Number*</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                onFocus={validateEmail}
+              />
+              {aboutRequiredFields.email !== "" ? (
+                <p className="error"> {aboutRequiredFields.email}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Password*</label>
 
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              placeholder="Phone_number"
-              required
-              value={formData.phone}
-              onChange={handleChange}
-              onFocus={validatePhoneNumber}
-            />
-            {aboutRequiredFields.phone !== "" ? (
-              <p className="error"> {aboutRequiredFields.phone}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Availability*</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                onFocus={validatePassword}
+              />
+              {aboutRequiredFields.password !== "" ? (
+                <p className="error"> {aboutRequiredFields.password}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Confirm_Password*</label>
 
-            <input
-              type="text"
-              name="availability"
-              id="availability"
-              placeholder="Enter availability"
-              required
-              value={formData.availability}
-              onChange={handleChange}
-              onFocus={validateAvailability}
-            />
-            {aboutRequiredFields.availability !== "" ? (
-              <p className="error"> {aboutRequiredFields.availability}</p>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="form-group-2">
-            <h3>Skills</h3>
-            <label className="label-agree-term">Skill_Field*</label>
+              <input
+                type="password"
+                name="confirm_password"
+                id="confirm_password"
+                placeholder="Confirm_Password"
+                value={formData.confirm_password}
+                onChange={handleChange}
+                onFocus={validateConfirmPassword}
+              />
+              {aboutRequiredFields.confirm_password !== "" ? (
+                <p className="error"> {aboutRequiredFields.confirm_password}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">City</label>
 
-            <div className="select-list">
-              <select
-                name="skillField"
-                id="skillField"
-                value={skillformData.skillField}
-                onChange={handleSkillChange}
-                onFocus={ValidateSkillField}
-              >
-                {skillFieldList
-                  ? skillFieldList.map((skill) => (
-                      <option value={skill._id}>{skill.skillField}</option>
-                    ))
-                  : ""}
-              </select>
-            </div>
-            {skillRequiredFields.skillField !== "" ? (
-              <p className="error"> {skillRequiredFields.skillField}</p>
-            ) : (
-              ""
-            )}
-            {skillList.length > 0 ? (
-              <>
-                <label className="label-agree-term">Skill*</label> <br />
-                <div className="select-list">
-                  <select
-                    name="skill"
-                    id="skill"
-                    value={skillformData.skill}
-                    onChange={handleSkillChange}
-                    onFocus={ValidateSkillField}
+              <Autocomplete
+                items={items}
+                // shouldItemRender={(item, value) =>
+                //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
+                // }
+                getItemValue={(item) => item.label}
+                renderItem={(item, highlighted) => (
+                  <div
+                    key={item.id}
+                    style={{
+                      backgroundColor: highlighted ? "#eee" : "transparent",
+                    }}
                   >
-                    <option></option>
-
-                    {skillList.map((skill) => (
-                      <option value={skill}>{skill}</option>
-                    ))}
-                  </select>
-                </div>
-                {skillRequiredFields.skill !== "" ? (
-                  <p className="error"> {skillRequiredFields.skill}</p>
-                ) : (
-                  ""
+                    {item.label}
+                  </div>
                 )}
-              </>
-            ) : (
-              ""
-            )}
-
-            <label className="label-agree-term">Specialization*</label>
-
-            <input
-              type="text"
-              onChange={handleSkillChange}
-              onFocus={ValidateSpecialization}
-              name="specialization"
-              id="specialization"
-              placeholder="Enter Specialization"
-              value={skillformData.specialization}
-              required
-            />
-            {skillRequiredFields.specialization !== "" ? (
-              <p className="error"> {skillRequiredFields.specialization}</p>
-            ) : (
-              ""
-            )}
-            <label className="label-agree-term">Score</label>
-
-            <input
-              type="text"
-              onChange={handleSkillChange}
-              onFocus={validateScore}
-              name="score"
-              id="score"
-              placeholder="Enter Score"
-              value={skillformData.score}
-              required
-            />
-            {skillRequiredFields.score !== "" ? (
-              <p className="error"> {skillRequiredFields.score}</p>
-            ) : (
-              ""
-            )}
-            {skillformData.score ? (
-              <Button
-                variant="contained"
-                onClick={onskillAdd}
-                name="add"
-                className="submitAdd"
-              >
-                Add
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                disabled
-                name="add"
-                className="submitAdd"
-              >
-                Add
-              </Button>
-            )}
-          </div>
-          <div className="form-group-2">
-            <h3>Material*</h3>
-            <div className="select-list">
-              <select
-                name="material"
-                id="material"
-                value={material}
-                onChange={(e) => {
-                  setMaterial(e.target.value);
+                wrapperStyle={{
+                  display: "block",
                 }}
-                onFocus={validateMaterial}
-              >
-                <option></option>
+                menuStyle={{
+                  zIndex: "1",
+                  position: "static",
+                  borderRadius: "3px",
+                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                  background: "rgba(255, 255, 255, 0.9)",
+                  padding: "2px 12px",
+                  fontSize: "90%",
+                  color: "#000",
+                  overflow: "auto",
+                  maxHeight: "50%",
+                }}
+                inputProps={{
+                  className: "form-control",
+                  placeholder: "Enter City ",
+                }}
+                value={address}
+                name="address"
+                onChange={getAddress}
+                onSelect={SetAddress}
+              />
+              {aboutRequiredFields.city !== "" ? (
+                <p className="error"> {aboutRequiredFields.city}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Profile_picture*</label>
 
-                {materialList
-                  ? materialList.map((mat) => (
-                      <option value={mat._id}>{mat.name}</option>
-                    ))
-                  : ""}
-              </select>
+              <input
+                type="file"
+                name="profile_picture"
+                id="profile_picture"
+                // value={formData.profile_picture}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  console.log(file, "photo1");
+
+                  setPhoto(file);
+                }}
+                // onFocus={validatePhoto}
+              />
+              {aboutRequiredFields.profile_picture !== "" ? (
+                <p className="error"> {aboutRequiredFields.profile_picture}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Profile_description*</label>
+
+              <input
+                type="text"
+                name="profile_description"
+                id="profile_description"
+                placeholder="Profile_description"
+                value={formData.profile_description}
+                onChange={handleChange}
+                onFocus={validateProfileDesc}
+              />
+              {aboutRequiredFields.profile_description !== "" ? (
+                <p className="error">
+                  {" "}
+                  {aboutRequiredFields.profile_description}
+                </p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Phone Number*</label>
+
+              <input
+                type="text"
+                name="phone"
+                id="phone"
+                placeholder="Phone_number"
+                value={formData.phone}
+                onChange={handleChange}
+                onFocus={validatePhoneNumber}
+              />
+              {aboutRequiredFields.phone !== "" ? (
+                <p className="error"> {aboutRequiredFields.phone}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Availability*</label>
+
+              <input
+                type="text"
+                name="availability"
+                id="availability"
+                placeholder="Enter Availability"
+                value={formData.availability}
+                onChange={handleChange}
+                onFocus={validateAvailability}
+              />
+              {aboutRequiredFields.availability !== "" ? (
+                <p className="error"> {aboutRequiredFields.availability}</p>
+              ) : (
+                ""
+              )}
             </div>
-            {materialRequiredFields.name !== "" ? (
-              <p className="error"> {materialRequiredFields.name}</p>
-            ) : (
-              ""
-            )}
-            {material.length > 0 ? (
-              <Button
-                variant="contained"
-                onClick={onMaterialAdd}
-                name="add"
-                className="submitAdd"
-              >
-                Add
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                disabled
-                name="add"
-                className="submitAdd"
-              >
-                Add
-              </Button>
-            )}
-          </div>
-          {error !== "" ? <p className="error"> {error}</p> : ""}
+            <div className="form-group-2">
+              <h3>Skills</h3>
+              <label className="label-agree-term">Skill_Field*</label>
 
-          <div>
-            {isLoading === true ? (
-              <center>
-                <div className={useStyles.root}>
-                  <CircularProgress disableShrink />
+              <div className="select-list">
+                <select
+                  name="skillField"
+                  id="skillField"
+                  value={skillformData.skillField}
+                  onChange={handleSkillChange}
+                  onFocus={ValidateSkillField}
+                >
+                  <option>Select SelectField</option>
+
+                  {skillFieldList
+                    ? skillFieldList.map((skill) => (
+                        <option value={skill._id}>{skill.skillField}</option>
+                      ))
+                    : ""}
+                </select>
+              </div>
+              {skillRequiredFields.skillField !== "" ? (
+                <p className="error"> {skillRequiredFields.skillField}</p>
+              ) : (
+                ""
+              )}
+              {skillList.length > 0 ? (
+                <>
+                  <label className="label-agree-term">Skill*</label> <br />
+                  <div className="select-list">
+                    <select
+                      name="skill"
+                      id="skill"
+                      value={skillformData.skill}
+                      onChange={handleSkillChange}
+                      onFocus={ValidateSkillField}
+                    >
+                      <option>Select Select</option>
+
+                      {skillList.map((skill) => (
+                        <option value={skill}>{skill}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {skillRequiredFields.skill !== "" ? (
+                    <p className="error"> {skillRequiredFields.skill}</p>
+                  ) : (
+                    ""
+                  )}
+                </>
+              ) : (
+                ""
+              )}
+
+              <label className="label-agree-term">Specialization*</label>
+
+              <input
+                type="text"
+                onChange={handleSkillChange}
+                onFocus={ValidateSpecialization}
+                name="specialization"
+                id="specialization"
+                placeholder="Enter Specialization"
+                value={skillformData.specialization}
+              />
+              {skillRequiredFields.specialization !== "" ? (
+                <p className="error"> {skillRequiredFields.specialization}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term">Score*</label>
+
+              <input
+                type="text"
+                onChange={handleSkillChange}
+                onFocus={validateScore}
+                name="score"
+                id="score"
+                placeholder="Enter Score"
+                value={skillformData.score}
+              />
+              {skillRequiredFields.score !== "" ? (
+                <p className="error"> {skillRequiredFields.score}</p>
+              ) : (
+                ""
+              )}
+              {skillformData.score ? (
+                <Button
+                  variant="contained"
+                  onClick={onskillAdd}
+                  name="add"
+                  className="submitAdd"
+                >
+                  Add
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  disabled
+                  name="add"
+                  className="submitAdd"
+                >
+                  Add
+                </Button>
+              )}
+            </div>
+            <div className="form-group-2">
+              <h3>Material*</h3>
+              <div className="select-list">
+                <select
+                  name="material"
+                  id="material"
+                  value={material}
+                  onChange={onMaterialChange}
+                  onFocus={validateMaterial}
+                >
+                  <option value="">Select Material</option>
+
+                  {materialList
+                    ? materialList.map((mat) => (
+                        <option value={mat._id}>{mat.name}</option>
+                      ))
+                    : ""}
+                </select>
+              </div>
+              {materialRequiredFields.name !== "" ? (
+                <p className="error"> {materialRequiredFields.name}</p>
+              ) : (
+                ""
+              )}
+              {materialArrayData.length > 0 ? (
+                <div className="mt-2 mb-3">
+                  <ChipArray
+                    materialArrayData={materialArrayData}
+                    materialList={materialList}
+                    setmaterialArrayData={setmaterialArrayData}
+                  />
+                  {materialRequiredFields.error !== "" ? (
+                    <p className="error"> {materialRequiredFields.error}</p>
+                  ) : (
+                    ""
+                  )}
                 </div>
-              </center>
-            ) : (
-              <Button
-                variant="contained"
-                onClick={onSubmit}
-                name="add"
-                className="submit"
-              >
-                Submit
-              </Button>
-            )}
-          </div>
-        </form>
+              ) : (
+                ""
+              )}
+              {/* {material.length > 0 ? (
+                <Button
+                  variant="contained"
+                  onClick={onMaterialAdd}
+                  name="add"
+                  className="submitAdd"
+                >
+                  Add
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  disabled
+                  name="add"
+                  className="submitAdd"
+                >
+                  Add
+                </Button>
+              )} */}
+            </div>
+            {error !== "" ? <p className="error"> {error}</p> : ""}
+
+            <div>
+              {isLoading === true ? (
+                <center>
+                  <div className={useStyles.root}>
+                    <CircularProgress disableShrink />
+                  </div>
+                </center>
+              ) : materialArrayData.length > 0 && skillArrayData.length > 0 ? (
+                <Button
+                  variant="contained"
+                  onClick={onSubmit}
+                  name="add"
+                  className="submit"
+                >
+                  Submit
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  disabled
+                  name="add"
+                  className="submit"
+                >
+                  Submit
+                </Button>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Signup;

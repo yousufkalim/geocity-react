@@ -17,11 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ChipsArray({
-  materialArrayData,
-  setmaterialArrayData,
-  materialList,
-}) {
+export default function ChipsArray({ materialArrayData }) {
   const classes = useStyles();
   const [chipData, setChipData] = React.useState(materialArrayData);
 
@@ -29,26 +25,28 @@ export default function ChipsArray({
     const ChipsArray = materialArrayData.filter(
       (chip) => chip !== chipToDelete
     );
-    setmaterialArrayData(ChipsArray);
+    setChipData(ChipsArray);
   };
 
-  console.log(materialArrayData, "dsfsdsdsddssfsd");
+  console.log(chipData, "chipData");
   return (
     <Paper component="ul" className={classes.root}>
-      {materialArrayData.map((data) => {
-        // let icon = <TagFacesIcon />;
+      {chipData
+        ? chipData.map((data) => {
+            // let icon = <TagFacesIcon />;
 
-        return (
-          <li key={data}>
-            <Chip
-              //   icon={icon}
-              label={data}
-              onDelete={() => handleDelete(data)}
-              className={classes.chip}
-            />
-          </li>
-        );
-      })}
+            return (
+              <li key={data}>
+                <Chip
+                  //   icon={icon}
+                  label={data}
+                  onDelete={() => handleDelete(data)}
+                  className={classes.chip}
+                />
+              </li>
+            );
+          })
+        : ""}
     </Paper>
   );
 }

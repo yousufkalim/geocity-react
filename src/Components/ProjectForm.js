@@ -53,8 +53,21 @@ function Form({
   skillfieldList,
   skillList,
   formDataCity,
+  setPhoto,
+  iserror,
+  stepArrayData,
+  // setFormDataSkillField,
 }) {
   const handleStep = (e) => {
+    if (e.target.name === "Field") {
+      const array = [];
+      setmaterialArrayData(array);
+    }
+    // else if (e.target.name === "Material") {
+    //   setFormDataSkillField({ ...formDataSkillField, ["skill"]: "" });
+    //   setFormDataSkillField({ ...formDataSkillField, ["skillField"]: "" });
+    //   setFormDataSkillField({ ...formDataSkillField, ["speciality"]: "" });
+    // }
     setstepType(e.target.value);
   };
   return (
@@ -131,7 +144,10 @@ function Form({
               overflow: "auto",
               maxHeight: "50%",
             }}
-            inputProps={{ className: "form-control" }}
+            inputProps={{
+              className: "form-control",
+              placeholder: "Enter City ",
+            }}
             value={address}
             name="address"
             onChange={getAddress}
@@ -149,8 +165,13 @@ function Form({
             type="file"
             name="general_photo"
             id="file"
-            value={formData.general_photo}
-            onChange={handleChange}
+            // value={formData.general_photo}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              console.log(file, "photo1");
+
+              setPhoto(file);
+            }}
             // onBlur={validatePhoto}
           />
           {aboutRequiredFields.general_photo !== "" ? (
@@ -202,29 +223,6 @@ function Form({
           ) : (
             ""
           )}
-          {/* will use it in future becoz its project progress wel will add later */}
-          {/* <label className="label-agree-term">Project Progress</label>
-
-          <div className="select-list">
-            <select
-              name="progress"
-              id="progress"
-              value={formData.progress}
-              onChange={handleChange}
-              onBlur={validateProgress}
-            >
-              <option value=""></option>
-
-              <option value="Completed">Completed</option>
-              <option value="InProgress">InProgress</option>
-              <option value="NoProgress">NoProgress</option>
-            </select>
-          </div>
-          {aboutRequiredFields.progress !== "" ? (
-            <p className="error"> {aboutRequiredFields.progress}</p>
-          ) : (
-            ""
-          )} */}
         </div>
         {/* form1 end */}
         {/* form 2 */}
@@ -248,14 +246,26 @@ function Form({
           <label className="label-agree-term">Step Type</label>
 
           <div className="select-list">
-            <MultipleSelect
+            {/* <MultipleSelect
               name="stepType"
               value={stepType}
               // validateStepType={validateStepType}
               handleStepChange={handleStep}
               // stepformData={stepformData}
               data={names}
-            />
+            /> */}
+            <select
+              name="stepType"
+              id="stepType"
+              value={stepType}
+              onChange={handleStep}
+              // onBlur={validateMaterial}
+            >
+              <option>Select StepType</option>
+              {names
+                ? names.map((mat) => <option value={mat}>{mat}</option>)
+                : ""}
+            </select>
           </div>
           {stepRequiredFields.skillField !== "" ? (
             <p className="error"> {stepRequiredFields.skillField}</p>
@@ -295,7 +305,7 @@ function Form({
                   onChange={handleSkillChange}
                   // onBlur={validateStepType}
                 >
-                  <option value=""></option>
+                  <option value="">Select skillField</option>
 
                   {skillfieldList
                     ? skillfieldList.map((mat) => (
@@ -313,13 +323,29 @@ function Form({
                   onChange={handleSkillChange}
                   // onBlur={validateStepType}
                 >
-                  <option value=""></option>
+                  <option value="">Select skill</option>
 
                   {skillList
                     ? skillList.map((mat) => <option value={mat}>{mat}</option>)
                     : ""}
                 </select>
               </div>
+
+              <label className="label-agree-term">Speciality</label>
+              <input
+                type="text"
+                name="speciality"
+                id="title"
+                value={formDataSkillField.speciality}
+                placeholder="Speciality"
+                onChange={handleSkillChange}
+                onBlur={validateSpeciality}
+              />
+              {skillRequiredFields.speciality !== "" ? (
+                <p className="error"> {skillRequiredFields.speciality}</p>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
@@ -331,33 +357,22 @@ function Form({
                 materialList={materialList}
                 setmaterialArrayData={setmaterialArrayData}
               />
+              {stepRequiredFields.error !== "" ? (
+                <p className="error"> {stepRequiredFields.error}</p>
+              ) : (
+                ""
+              )}
             </>
           ) : (
             ""
           )}
+
           <br />
           {stepRequiredFields.material !== "" ? (
             <p className="error"> {stepRequiredFields.material}</p>
           ) : (
             ""
           )}
-
-          <label className="label-agree-term">Description</label>
-          <input
-            type="text"
-            name="description"
-            id="title"
-            value={stepformData.description}
-            placeholder="Description"
-            onChange={handleStepChange}
-            onBlur={handleDescription}
-          />
-          {stepRequiredFields.description !== "" ? (
-            <p className="error"> {stepRequiredFields.description}</p>
-          ) : (
-            ""
-          )}
-
           <label className="label-agree-term">Project Status</label>
 
           <div className="select-list">
@@ -375,33 +390,34 @@ function Form({
               <option value="NoProgress">NoProgress</option>
             </select>
           </div>
+          <label className="label-agree-term">Description</label>
+          <input
+            type="text"
+            name="description"
+            id="title"
+            value={stepformData.description}
+            placeholder="Description"
+            onChange={handleStepChange}
+            onBlur={handleDescription}
+          />
+          {stepRequiredFields.description !== "" ? (
+            <p className="error"> {stepRequiredFields.description}</p>
+          ) : (
+            ""
+          )}
+
           {stepRequiredFields.status !== "" ? (
             <p className="error"> {stepRequiredFields.status}</p>
           ) : (
             ""
           )}
 
-          <label className="label-agree-term">Speciality</label>
-          <input
-            type="text"
-            name="speciality"
-            id="title"
-            value={formDataSkillField.speciality}
-            placeholder="Speciality"
-            onChange={handleSkillChange}
-            onBlur={validateSpeciality}
-          />
-          {skillRequiredFields.speciality !== "" ? (
-            <p className="error"> {skillRequiredFields.speciality}</p>
-          ) : (
-            ""
-          )}
-          {formDataSkillField.speciality.length > 0 ? (
+          {stepformData.description !== "" ? (
             <Button
               variant="contained"
               onClick={onAdd}
               name="add"
-              className="submitAdd"
+              className="submitAdd mt-3"
             >
               Add
             </Button>
@@ -410,28 +426,32 @@ function Form({
               variant="contained"
               disabled
               name="add"
-              className="submitAdd"
+              className="submitAdd mt-3"
             >
               Add
             </Button>
           )}
         </div>
         {error !== "" ? <p className="error"> {error}</p> : ""}
-
-        <div className="form-submit">
+        {iserror !== "" ? <p className="error"> {iserror}</p> : ""}
+        <div className="form-submit mt-3">
           {isLoading === true ? (
             <center>
               <div className={useStyles.root}>
                 <CircularProgress disableShrink />
               </div>
             </center>
-          ) : (
+          ) : stepArrayData.length > 0 ? (
             <Button
               variant="contained"
               onClick={onSubmit}
               name="add"
               className="submit"
             >
+              Submit
+            </Button>
+          ) : (
+            <Button variant="contained" disabled name="add" className="submit">
               Submit
             </Button>
           )}

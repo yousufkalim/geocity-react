@@ -55,8 +55,10 @@ function CreateProject() {
 
   const [isLoading, setisLoading] = useState(false);
   const [isCheck, setisCheck] = useState(false);
+  const [photo, setPhoto] = useState("");
 
   const [error, seterror] = useState("");
+  const [iserror, setisError] = useState("");
 
   const [stepformData, setstepFormData] = useState(stepData);
   const [stepArrayData, setstepArrayData] = useState([]);
@@ -79,6 +81,7 @@ function CreateProject() {
     // Steps: "",
     status: "",
     material: "",
+    error: "",
   });
   const [skillRequiredFields, setskillRequiredFields] = useState({
     skillField: "",
@@ -216,7 +219,7 @@ function CreateProject() {
   };
 
   const validateTitle = () => {
-    console.log(formData.title.length, "formData.title.length");
+    // console.log(formData.title.length, "formData.title.length");
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(formData.title);
     if (formData.title.length >= 4 && formData.title.length < 20) {
       // alert("hello h1");
@@ -250,9 +253,11 @@ function CreateProject() {
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
       stepformData.name.trim()
     );
-    if (stepformData.name.length === 4 && stepformData.name.length < 20) {
+    if (stepformData.name.length <= 4 && stepformData.name.length < 20) {
       // alert("hello h1");
-      setstepRequiredFields({ ...stepRequiredFields, name: "" });
+      const msg = "";
+
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
       setstepFormData({ ...stepformData, name: stepformData.name.trim() });
       return true;
     } else if (stepformData.name.trim() && !isValid) {
@@ -278,7 +283,7 @@ function CreateProject() {
       stepformData.description.trim()
     );
     if (
-      stepformData.description.length === 4 &&
+      stepformData.description.length >= 4 &&
       stepformData.description.length < 20
     ) {
       // alert("hello h1");
@@ -321,52 +326,42 @@ function CreateProject() {
             .get("http://localhost:3000/api/v1/auth/materialList", headers)
             .then((res) => {
               setMaterialList(res.data.materials);
-              // console.log(res, "res material");
+              // // console.log(res, "res material");
             })
             .catch((err) => console.log(" error =>", err));
         } catch (error) {
-          // console.log(error, "error catch");
+          // // console.log(error, "error catch");
         }
       } else if (stepType === "Field") {
         try {
           axios
-            .get("http://localhost:3000/api/v1/auth/skillList", headers)
+            .get("http://localhost:3000/api/v1/auth/skillList")
             .then((res) => {
               setskillFieldList(res.data.skills);
-              // console.log(res, "res skilllist");
+              // // console.log(res, "res skilllist");
             })
             .catch((err) => console.log(" error =>", err));
         } catch (error) {
-          // console.log(error, "error catch");
+          console.log(error, "error catch");
         }
       }
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/categoryList", headers)
+        .get("http://localhost:3000/api/v1/auth/categoryList")
         .then((res) => {
-          setCategoryList(res.data.categories);
-          console.log(res, "response cat");
+          setCategoryList(res.data.category);
+          // console.log(res, "response category");
         })
         .catch((err) => console.log(" error category =>", err));
     } catch (error) {
-      // console.log(error, "error catch");
+      console.log(error, "error catch");
     }
   }, [stepType]);
-  // console.log(formData,"formData")
+  // // console.log(formData,"formData")
   // get set address
 
   const getAddress = (e) => {
-    // this.setState({
-    //   address: e.target.value,
-    //   zip: "",
-    //   city: "",
-    //   lat: 0,
-    //   long: 0,
-    //   zipError: "auto-complete-error",
-    //   isDisableSubmitBtn: true,
-    // });
-
     setAddress(e.target.value);
     fetch(
       "https://api-adresse.data.gouv.fr/search/?q=" +
@@ -375,7 +370,9 @@ function CreateProject() {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        // console.log("res address", responseJson);
+        const msg = "";
+        setAboutRequiredFields({ ...aboutRequiredFields, address: msg });
+        // // console.log("res address", responseJson);
         var addressToSet = [];
         // debugger;
         for (var i = 0; i < responseJson.features.length; i++) {
@@ -391,14 +388,6 @@ function CreateProject() {
         if (addressToSet.length === responseJson.features.length) {
           // setFormData({ ...formData,items:addressToSet })
           setItems(addressToSet);
-          // this.setState({ items: addressToSet }, () => {
-          //   console.log(
-          //     "Address to set",
-          //     addressToSet,
-          //     "state",
-          //     items
-          //   );
-          // });
         }
       })
       .catch((error) => {
@@ -406,7 +395,7 @@ function CreateProject() {
       });
   };
   const SetAddress = (item) => {
-    // console.log(item,'item')
+    // // console.log(item,'item')
     setAddress(item);
     // this.setState({ address: item });
 
@@ -435,19 +424,9 @@ function CreateProject() {
           general_description: formData.general_description,
           category: formData.category,
         });
-        // this.setState({
-        //   address: newAddress[0],
-        //   zip: zipCode,
-        //   city: city,
-        //   lat: lat,
-        //   lng: lng,
-        //   zipError: "",
-        // });
-        // this.validationCheckforAddress(formData);
-        // this.handleValidationCheckForButtonEnable();
       }
     }
-    validateCity();
+    // validateCity();
   };
 
   // get set adress end
@@ -498,21 +477,26 @@ function CreateProject() {
     }
   };
 
-  // console.log(stepArrayData, "stepArrayData");
+  // console.log(formDataCity, "formDataCity");
 
   const onSubmit = async (e) => {
     // stepArrayData.material = materialArrayData;
-    // const form_data=new FormData();
-    // form_data
+    // formData.implementation_steps = stepArrayData;
+    // formData.address = formDataCity;
 
-    formData.implementation_steps = stepArrayData;
-    formData.address = formDataCity;
+    console.log(photo, "photo");
+    const newFormData = new FormData();
+    newFormData.append("title", formData.title);
+    newFormData.append("type", formData.type);
+    newFormData.append("general_photo", photo);
+    newFormData.append("general_description", formData.general_description);
+    newFormData.append("category", formData.category);
+    newFormData.append("address", JSON.stringify(formDataCity));
+    newFormData.append("implementation_steps", JSON.stringify(stepArrayData));
 
     e.preventDefault();
     setisLoading(true);
-    console.log(formData, "formdata");
 
-    // console.log(items,"items")
     checkValidateForm();
     checkValidateForm2();
 
@@ -533,22 +517,32 @@ function CreateProject() {
         await axios
           .post(
             "http://localhost:3000/api/v1/project/CreateProject",
-            formData,
+            newFormData,
             headers
           )
           .then((res) => {
             setisLoading(false);
             setFormData(projectData);
-            // console.log(res,"res")
+            setPhoto("");
+            setAddress("");
+
+            // // console.log(res,"res")
           })
           .catch((err) => {
             setTimeout(() => {
               setisLoading(false);
             }, 1000);
-            console.log(" error =>", err);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                setisError(err.response.data.message);
+              } else {
+                setisError(err.response.data);
+              }
+            }
+            // console.log(" error =>", err);
           });
       } catch (error) {
-        console.log(error, "error catch");
+        // console.log(error, "error catch");
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
@@ -558,6 +552,7 @@ function CreateProject() {
 
   const handleChange = (e) => {
     let value = e.target.value;
+    // debugger;
 
     switch (e.target.name) {
       case "title":
@@ -583,9 +578,10 @@ function CreateProject() {
       default:
         break;
     }
+
     setFormData({ ...formData, [e.target.name]: value });
   };
-  console.log(materialArrayData, "material aary data");
+  // console.log(materialArrayData, "material aary data");
 
   const handleSkillChange = async (e) => {
     if (e.target.name === "skillField") {
@@ -605,38 +601,13 @@ function CreateProject() {
     }
   };
   const handleStepChange = async (e) => {
-    // console.log(stepType, "stepType");
+    // // console.log(stepType, "stepType");
 
     let value = e.target.value;
     if (e.target.name === "material") {
       setMaterial(e.target.value);
-      if (materialArrayData.length > 0) {
-        const msg = "Value Already Existed";
-
-        materialArrayData.map((data) => {
-          console.log(data, "data");
-
-          data === e.target.value
-            ? setstepRequiredFields({ ...stepRequiredFields, material: msg })
-            : // materialList.map((mat) => {
-              // if (mat._id === e.target.value) {
-              setmaterialArrayData((prevState) => [
-                ...prevState,
-                e.target.value,
-              ]);
-          //   }
-          // });
-        });
-      } else {
-        // materialList.map((mat) => {
-        //   if (mat._id === e.target.value) {
-        setmaterialArrayData((prevState) => [...prevState, e.target.value]);
-        //   }
-        // });
-
-        // console.log("succceess");
-      }
     }
+
     switch (e.target.name) {
       case "name":
         handleName();
@@ -662,22 +633,25 @@ function CreateProject() {
     }
     setstepFormData({ ...stepformData, [e.target.name]: value });
   };
-  // console.log(stepformData, "stepformData");
+  // // console.log(stepformData, "stepformData");
 
   const onAdd = () => {
-    console.log(formDataSkillField, "form data skil;field");
-    const skills = {};
-    skills.speciality = formDataSkillField.speciality;
-    skills.skill = formDataSkillField.skill;
-    skills.skillField = formDataSkillField.skillField;
+    // console.log(formDataSkillField, "form data skil;field");
 
     checkValidateForm2();
     setisCheck(true);
     seterror("");
-    if (materialArrayData.length > 0) {
-      stepformData.material = materialArrayData;
+    if (material !== "") {
+      stepformData.material = material;
     }
-    if (formDataSkillField.length > 0) {
+    if (
+      Object.keys(formDataSkillField).length > 0 &&
+      formDataSkillField.skillField !== ""
+    ) {
+      const skills = {};
+      skills.speciality = formDataSkillField.speciality;
+      skills.skill = formDataSkillField.skill;
+      skills.skillField = formDataSkillField.skillField;
       stepformData.skills = skills;
     }
     setstepArrayData((prevState) => [...prevState, stepformData]);
@@ -685,7 +659,7 @@ function CreateProject() {
     setFormDataSkillField(skillData);
     setstepType("");
   };
-  // console.log(stepformData,"stepformData")
+  // // console.log(stepformData,"stepformData")
 
   return (
     <div className="main">
@@ -705,6 +679,7 @@ function CreateProject() {
           validateStepType={validateStepType}
           validateCity={validateCity}
           validateCategory={validateCategory}
+          // setFormDataSkillField={setFormDataSkillField}
           stepRequiredFields={stepRequiredFields}
           validateProjectType={validateProjectType}
           validatePhoto={validatePhoto}
@@ -730,11 +705,14 @@ function CreateProject() {
           skillList={skillList}
           address={address}
           setMaterial={setMaterial}
+          iserror={iserror}
           material={material}
           stepType={stepType}
           setstepType={setstepType}
           skillField={skillField}
           onAdd={onAdd}
+          setPhoto={setPhoto}
+          stepArrayData={stepArrayData}
         />
       </div>
     </div>

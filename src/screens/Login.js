@@ -5,7 +5,7 @@ import "../Theme/css/main.css";
 import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
-
+import InputAdornment from "@material-ui/core/InputAdornment";
 function Login() {
   const signupData = {
     email: "",
@@ -13,6 +13,7 @@ function Login() {
   };
   const [isLoading, setisLoading] = useState(false);
   const [isSuccess, setisSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState(signupData);
 
@@ -88,6 +89,7 @@ function Login() {
     } else if (e.target.name === "password") {
       validatePassword();
     }
+    setError("");
     setFormData({ ...formData, [e.target.name]: value });
   };
 
@@ -102,12 +104,17 @@ function Login() {
         .post("http://localhost:3000/api/v1/auth/login", formData)
         .then((res) => {
           setisLoading(false);
+          console.log(res, "res user");
           localStorage.setItem("jwt", res.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+
           setFormData(signupData);
           setisSuccess(true);
-          // setisError()
         })
         .catch((err, res) => {
+          setError(err.response.data);
+
+          console.log(res, "res login");
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
@@ -132,6 +139,8 @@ function Login() {
           <form method="POST" className="appointmentform" id="appointment-form">
             <h2>Login Form</h2>
             <div className="form-group-1">
+              <label className="label-agree-term">Email*</label>
+
               <input
                 type="email"
                 name="email"
@@ -146,6 +155,8 @@ function Login() {
               ) : (
                 ""
               )}
+              <label className="label-agree-term">Password*</label>
+
               <input
                 type="password"
                 name="password"
@@ -161,8 +172,12 @@ function Login() {
                 ""
               )}
             </div>
-
-            <div className="form-submit">
+            {error !== "" && formData.email && formData.password ? (
+              <p className="error mt-1 mb-1"> {error}</p>
+            ) : (
+              ""
+            )}
+            <div className="form-submit ">
               {isLoading === true ? (
                 <center>
                   <div className={useStyles.root}>

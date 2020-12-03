@@ -145,7 +145,9 @@ export default class Home extends React.Component {
             {/* end of row */}
             <div className="row " id="section1">
               <div className="col-lg-12">
-                <h3 className="h2-heading">Pour les porteurs de projet</h3>
+                <h3 className="h2-heading" style={{ fontWeight: "bold" }}>
+                  Pour les porteurs de projet
+                </h3>
                 {/* Card */}
                 <div className="card">
                   <img
@@ -259,7 +261,7 @@ export default class Home extends React.Component {
               <div className="col-lg-6">
                 <div className="text-container">
                   <h2>Lancez-vous maintenant !</h2>
-                  <Link to="/list">
+                  <Link to="/ProjectList">
                     <p>See the list of projects</p>
                   </Link>
                   <Link to="/Createproject">

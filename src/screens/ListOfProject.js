@@ -4,9 +4,30 @@ import axios from "axios";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
 import Loader from "../shared/Loaders";
-import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+import Autocomplete from "react-autocomplete";
+import ProjectList from "../Components/projectList";
+import DefaultImage from "../Theme/images/download.jpg";
 export default function List() {
+  const filterData = {
+    category: "",
+    skillField: "",
+    city: "",
+  };
+  const [filterFormData, setfilterFormData] = useState("");
+
   const [projectData, setProjectData] = useState("");
+  const [CategoryList, setCategoryList] = useState("");
+  const [filteredArray, setfilteredArray] = useState([]);
+
+  const [category, setCategory] = useState("");
+  const [filter, setFilter] = useState(false);
+
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [items, setItems] = useState([]);
+
+  const [skillfieldList, setskillFieldList] = useState("");
+
   useEffect(() => {
     const headers = {
       headers: {
@@ -16,17 +37,191 @@ export default function List() {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/projectslist", headers)
+        .get("http://localhost:3000/api/v1/auth/skillList")
+        .then((res) => {
+          setskillFieldList(res.data.skills);
+          // console.log(res, "res skilllist");
+        })
+        .catch((err) => console.log(" error =>", err));
+    } catch (error) {
+      // console.log(error, "error catch");
+    }
+    try {
+      axios
+        .get("http://localhost:3000/api/v1/admin/categoryList", headers)
+        .then((res) => {
+          setCategoryList(res.data.categories);
+          // console.log(res, "response cat");
+        })
+        .catch((err) => console.log(" error category =>", err));
+    } catch (error) {
+      // console.log(error, "error catch");
+    }
+    try {
+      axios
+        .get("http://localhost:3000/api/v1/auth/projectList")
         .then((res) => {
           setProjectData(res.data.projects);
-          console.log(res, "response cat");
+          console.log(res, "response project");
         })
         .catch((err) => console.log(" error project =>", err));
     } catch (error) {
       // console.log(error, "error catch");
     }
   }, []);
+  const handleChange = (e) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    setfilterFormData({ ...filterFormData, [e.target.name]: e.target.value });
+    if (e.target.name === "category") {
+      try {
+        axios
+          .post(
+            "http://localhost:3000/api/v1/project/search/category",
+            { category: e.target.value },
+            headers
+          )
+          .then((res) => {
+            setFilter(true);
+            // setProjectData(res.data);
+            if (res.data.length > 0) {
+              setfilteredArray(res.data);
+            }
+            // setProjectData(res.data.projects);
+            console.log(res, "response projectCatgeoryData");
+          })
+          .catch((err) => {
+            setFilter(false);
+            console.log(" error project =>", err);
+          });
+      } catch (error) {
+        setFilter(false);
+      }
+    } else if (e.target.name === "skillField") {
+      console.log(e.target.value, "e.target.value");
+      try {
+        axios
+          .post(
+            "http://localhost:3000/api/v1/project/search/skill",
+            { skill: e.target.value },
+            headers
+          )
+          .then((res) => {
+            setFilter(true);
+            // setProjectData(res.data);
+            if (res.data) {
+              setfilteredArray(res.data.projects);
+            } else {
+              alert("hello");
+              setfilteredArray([]);
+            }
+            // setProjectData(res.data.projects);
+            console.log(res, "response projectskillData");
+          })
+          .catch((err) => {
+            setFilter(false);
+            console.log(" error project skill =>", err);
+          });
+      } catch (error) {
+        setFilter(false);
+      }
+    }
+  };
+  // const validateCity = () => {
+  //   if (address) {
+  //     // alert("hello");
+  //     const msg = "";
+  //     setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+  //     return false;
+  //   } else if (!adress) {
+  //     let msg = "Required";
+  //     setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+  //     return false;
+  //   }
+  // };
+  const getAddress = (e) => {
+    setAddress(e.target.value);
+    // validateCity();
 
+    fetch(
+      "https://api-adresse.data.gouv.fr/search/?q=" +
+        e.target.value +
+        "&type=housenumber&autocomplete=1&limit=10"
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // console.log("res address", responseJson);
+        var addressToSet = [];
+        // debugger;
+        for (var i = 0; i < responseJson.features.length; i++) {
+          addressToSet.push({
+            id: i,
+            label: responseJson.features[i].properties.label,
+            city: responseJson.features[i].properties.city,
+            PostalCode: responseJson.features[i].properties.postcode,
+            lat: responseJson.features[0].geometry.coordinates[1],
+            lng: responseJson.features[0].geometry.coordinates[0],
+          });
+        }
+        if (addressToSet.length === responseJson.features.length) {
+          // setFormData({ ...formData,items:addressToSet })
+          setItems(addressToSet);
+        }
+      })
+      .catch((error) => {
+        // console.error(error);
+      });
+  };
+  // console.log(projectData, "project data");
+  const SetAddress = (item) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    // console.log(item,'item')
+    setAddress(item);
+    // this.setState({ address: item });
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].label === item) {
+        // debugger;
+        var city = items[i].city;
+        var zipCode = items[i].PostalCode;
+        var lat = items[i].lat.toString();
+        var lng = items[i].lng.toString();
+        // var street = items[i].context.toString();
+
+        var newAddress = items[i].label.split(String(zipCode));
+      }
+    }
+    console.log(city, "city");
+    try {
+      axios
+        .post(
+          "http://localhost:3000/api/v1/project/search/city",
+          { city: city },
+          headers
+        )
+        .then((res) => {
+          setFilter(true);
+          // setProjectData(res.data);
+          setfilteredArray(res.data.projects);
+          // setProjectData(res.data.projects);
+          console.log(res, "response projectcityData");
+        })
+        .catch((err) => {
+          setFilter(false);
+          console.log(" error project =>", err);
+        });
+    } catch (error) {
+      setFilter(false);
+    }
+  };
+  console.log(filteredArray, "fltered array");
   return (
     <div>
       <Header />
@@ -61,23 +256,44 @@ export default function List() {
           <div className="row ">
             <div className="col-lg-2" />
             <div className="col-lg-2 " id="selectbox">
-              <select class="form-control" id="sel1">
-                <option>Categories</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
+              <select
+                class="form-control"
+                id="sel1"
+                name="category"
+                id="category"
+                value={filterFormData.category}
+                onChange={handleChange}
+              >
+                <option value="">Select Category</option>
+
+                {CategoryList
+                  ? CategoryList.map((cat) => (
+                      <option value={cat._id} key={cat._id}>
+                        {cat.name}
+                      </option>
+                    ))
+                  : ""}
               </select>
             </div>
             <div className="col-lg-2 " id="selectbox2">
-              <select class="form-control" id="sel1">
-                <option>Domaine</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
+              <select
+                class="form-control"
+                name="skillField"
+                id="skillField"
+                value={filterFormData.skillField}
+                onChange={handleChange}
+              >
+                <option value="">Select SkillField</option>
+
+                {skillfieldList
+                  ? skillfieldList.map((mat) => (
+                      <option value={mat._id}>{mat.skillField}</option>
+                    ))
+                  : ""}
               </select>
             </div>
             <div className="col-lg-3" id="selectbox3">
-              <form>
+              {/* <form>
                 <div className="input-group">
                   <input
                     type="text"
@@ -85,59 +301,92 @@ export default function List() {
                     placeholder="Lieu du project"
                   />
                 </div>
-              </form>
+              </form> */}
+              <Autocomplete
+                items={items}
+                // shouldItemRender={(item, value) =>
+                //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
+                // }
+                getItemValue={(item) => item.label}
+                renderItem={(item, highlighted) => (
+                  <div
+                    key={item.id}
+                    style={{
+                      backgroundColor: highlighted ? "#eee" : "transparent",
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                )}
+                wrapperStyle={{
+                  display: "block",
+                }}
+                menuStyle={{
+                  zIndex: "1",
+                  position: "static",
+                  borderRadius: "3px",
+                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                  background: "rgba(255, 255, 255, 0.9)",
+                  padding: "2px 12px",
+                  fontSize: "90%",
+                  color: "#000",
+                  overflow: "auto",
+                  maxHeight: "50%",
+                }}
+                inputProps={{
+                  className: "form-control",
+                  placeholder: "Enter City ",
+                }}
+                value={address}
+                name="address"
+                onChange={getAddress}
+                onSelect={SetAddress}
+              />
             </div>
             <div className="col-lg-3" />
             {/* end of col */}
           </div>
           {/* row 1 */}
-
-          {projectData.length > 0 ? (
-            <div className="row" id="search2">
-              {projectData.map((data) => (
-                <div className="col-lg-3 ">
-                  <div className="card">
-                    <img
-                      className="card-image"
-                      src={
-                        !data.general_photo
-                          ? `http://localhost:3000/views/uploads/${data.general_photo}`
-                          : DefaultImage
-                      }
-                      alt="alternative"
+          {filter === false ? (
+            projectData.length > 0 ? (
+              <div className="row" id="search2">
+                {projectData
+                  .slice(0, 12)
+                  .map(({ project: data, totalLikes }) => (
+                    <ProjectList
+                      data={data}
+                      totalLikes={totalLikes}
+                      DefaultImage={DefaultImage}
                     />
-                    <div className="card-body mb-1">
-                      <span className="row ml-2">
-                        <img
-                          id="ImageSmall"
-                          src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
-                          alt="alternative"
-                        />
-                        <h6 className="card-title ml-3">{data.title}</h6>
-                      </span>
-                      <p>Lorem ipsum, or lipsum as it is sometimes known,</p>
-                      <div className="w-100  ml-2 " id="iconRow">
-                        <span>
-                          <i className="fas fa-heart" />
-                          <span className="ml-2 " id="span2">
-                            21
-                          </span>
-                        </span>
-                        <span id="second">
-                          <i className="far fa-circle" />
-                          <span className="ml-2 " id="span2">
-                            21%
-                          </span>
-                        </span>
-                      </div>
-                      {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  ))}
+              </div>
+            ) : (
+              <center>
+                <h1>No project found</h1>
+              </center>
+            )
+          ) : typeof filteredArray !== typeof "" ? (
+            filteredArray ? (
+              <div className="row" id="search2">
+                {filteredArray &&
+                  filteredArray.map((data) => (
+                    <ProjectList
+                      data={data}
+                      filter={filter}
+                      totalLikes={data.totalLikes}
+                      DefaultImage={DefaultImage}
+                    />
+                  ))}
+              </div>
+            ) : (
+              <center>
+                <h1>No project found</h1>
+              </center>
+            )
           ) : (
-            <Loader />
+            <center>
+              <h1>No project found</h1>
+            </center>
           )}
           {/* row end */}
 

@@ -905,7 +905,7 @@ input[type="checkbox"] {
   color: #fff;
 }
 #search2 .card .card-image {
-  border: 5px solid #11ce70;
+  /* border: 5px solid #11ce70; */
 }
 #search2 p {
   width: 180px;

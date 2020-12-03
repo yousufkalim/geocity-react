@@ -18,6 +18,15 @@ export const SignOut = () => {
   }
 };
 
+export const getUser = () => {
+  const token = localStorage.getItem("user");
+  if (token) {
+    return JSON.parse(localStorage.getItem("user"));
+  } else {
+    return false;
+  }
+};
+
 export const Headers = {
   headers: {
     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
