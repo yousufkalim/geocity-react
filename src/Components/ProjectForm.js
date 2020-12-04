@@ -63,11 +63,7 @@ function Form({
       const array = [];
       setmaterialArrayData(array);
     }
-    // else if (e.target.name === "Material") {
-    //   setFormDataSkillField({ ...formDataSkillField, ["skill"]: "" });
-    //   setFormDataSkillField({ ...formDataSkillField, ["skillField"]: "" });
-    //   setFormDataSkillField({ ...formDataSkillField, ["speciality"]: "" });
-    // }
+
     setstepType(e.target.value);
   };
   return (

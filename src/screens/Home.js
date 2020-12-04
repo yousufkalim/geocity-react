@@ -26,84 +26,89 @@ export default class Home extends React.Component {
     // const { scrollTop } = this.state;
     return (
       <div
+      // style={{ background: "green" }}
       // ref={this.myRef}
       // onScroll={this.onScroll}
       // style={{ overflow: "scroll" }}
       >
-        <nav className="navbar navbar-expand-lg navbar-dark navbar-custom-home fixed-top">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-awesome fas fa-bars" />
-            <span className="navbar-toggler-awesome fas fa-times" />
-          </button>
-          {/* end of mobile menu toggle button */}
-          <div className="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to="/" className="nav-link page-scroll">
-                  Home <span className="sr-only">(current)</span>
-                </Link>
-                {/* <a className="nav-link page-scroll" href="#header">Home <span className="sr-only">(current)</span></a> */}
-              </li>
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#services">
-                  Features
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#pricing">
-                  About
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#request">
-                  Service
-                </a>
-              </li>
-
-              <li className="nav-item">
-                <a className="nav-link page-scroll" href="#contact">
-                  Contact Us
-                </a>
-              </li>
-            </ul>
-            {!isAuthenticated() ? (
-              <>
-                <span className="nav-item" style={{ marginLeft: "30px" }}>
-                  <Link className="btn-outline-sm" to="/SignUp">
-                    SIGN UP
-                  </Link>
-                </span>
-                <span className="nav-item" style={{ marginLeft: "1rem" }}>
-                  <Link className="btn-outline-sm" to="/Login">
-                    LOG IN
-                  </Link>
-                </span>
-              </>
-            ) : (
-              <span className="nav-item" style={{ marginLeft: "1rem" }}>
-                <Link className="btn-outline-sm" onClick={SignOut}>
-                  LOG OUT
-                </Link>
-              </span>
-            )}
-          </div>
-        </nav>{" "}
         {/* end of navbar */}
         {/* end of navigation */}
         {/* Header */}
+        {/* fixed-top */}
         <header id="header" className="header">
+          <nav className="navbar navbar-expand-lg navbar-dark navbar-custom-home ">
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarsExampleDefault"
+              aria-controls="navbarsExampleDefault"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-awesome fas fa-bars" />
+              <span className="navbar-toggler-awesome fas fa-times" />
+            </button>
+            {/* end of mobile menu toggle button */}
+            <div
+              className="collapse navbar-collapse"
+              id="navbarsExampleDefault"
+            >
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link to="/" className="nav-link page-scroll">
+                    Home <span className="sr-only">(current)</span>
+                  </Link>
+                  {/* <a className="nav-link page-scroll" href="#header">Home <span className="sr-only">(current)</span></a> */}
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link page-scroll" href="#services">
+                    Features
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link page-scroll" href="#pricing">
+                    About
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link page-scroll" href="#request">
+                    Service
+                  </a>
+                </li>
+
+                <li className="nav-item">
+                  <a className="nav-link page-scroll" href="#contact">
+                    Contact Us
+                  </a>
+                </li>
+              </ul>
+              {!isAuthenticated() ? (
+                <>
+                  <span className="nav-item" style={{ marginLeft: "30px" }}>
+                    <Link className="btn-outline-sm" to="/SignUp">
+                      SIGN UP
+                    </Link>
+                  </span>
+                  <span className="nav-item" style={{ marginLeft: "1rem" }}>
+                    <Link className="btn-outline-sm" to="/Login">
+                      LOG IN
+                    </Link>
+                  </span>
+                </>
+              ) : (
+                <span className="nav-item" style={{ marginLeft: "1rem" }}>
+                  <Link className="btn-outline-sm" onClick={SignOut}>
+                    LOG OUT
+                  </Link>
+                </span>
+              )}
+            </div>
+          </nav>{" "}
           <div className="header-content">
             <div className="container">
               <div className="row">
-                <div className="col-lg-8">
+                <div className="col-lg-7">
                   <div className="text-container">
                     <h2>
                       <span className="turquoise">Vous avez un project ?</span>{" "}
@@ -125,7 +130,7 @@ export default class Home extends React.Component {
                   {/* end of text-container */}
                 </div>{" "}
                 {/* end of col */}
-                <div className="col-lg-4"></div>
+                <div className="col-lg-5"></div>
               </div>{" "}
               {/* end of row */}
             </div>{" "}
@@ -247,10 +252,14 @@ export default class Home extends React.Component {
         <div className="basic-2">
           <div className="container">
             <div className="row">
-              <div className="col-lg-6">
+              <div className="col-lg-4">
                 <div className="image-container">
                   <img
                     className="img-fluid"
+                    style={{
+                      width: "351px",
+                      height: "278px",
+                    }}
                     src="https://img.freepik.com/free-photo/business-man-holding-bright-light-bulb-hand_28629-1091.jpg?size=626&ext=jpg"
                     alt="alternative"
                   />
@@ -258,7 +267,7 @@ export default class Home extends React.Component {
                 {/* end of image-container */}
               </div>{" "}
               {/* end of col */}
-              <div className="col-lg-6">
+              <div className="col-lg-8">
                 <div className="text-container">
                   <h2>Lancez-vous maintenant !</h2>
                   <Link to="/ProjectList">

@@ -6,6 +6,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
 import axios from "axios";
 import ChipArray from "../shared/Chip";
+import { Link } from "react-router-dom";
 
 import { Redirect } from "react-router-dom";
 function Signup() {
@@ -1157,6 +1158,18 @@ function Signup() {
                 </Button>
               )}
             </div>
+
+            <p className="text-left ml-1 mt-3">
+              <span style={{ opacity: 0.5 }}> Already have an account? </span>
+              <Link to="/Login">
+                <span
+                  style={{ fontSize: "15px", color: "#77b5dd" }}
+                  id="register"
+                >
+                  Login
+                </span>
+              </Link>
+            </p>
           </form>
         </div>
       </div>

@@ -307,6 +307,7 @@ export default function List() {
                 // shouldItemRender={(item, value) =>
                 //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
                 // }
+                wrapperProps={<i className="fas fa-heart " />}
                 getItemValue={(item) => item.label}
                 renderItem={(item, highlighted) => (
                   <div

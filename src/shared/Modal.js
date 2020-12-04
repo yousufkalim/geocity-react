@@ -20,11 +20,16 @@ const ModalExample = (props) => {
               <>
                 <h6
                   className="text-center text-dark"
-                  style={{ fontFamily: "Arial", fontWeight: "bold" }}
+                  style={{
+                    fontFamily: "Arial",
+                    fontWeight: "bold",
+                    fontSize: "22px",
+                    color: "#000",
+                  }}
                 >
                   SEARCH BY :
                 </h6>
-                <div className="row  ">
+                <div className="row  mt-4">
                   <div className="col-lg-2"></div>
                   <div className="col-lg-3">
                     <button

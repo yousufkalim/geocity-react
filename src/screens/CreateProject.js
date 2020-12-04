@@ -38,8 +38,10 @@ function CreateProject() {
     // Steps: "",
   };
   const [formData, setFormData] = useState(projectData);
-  const [formDataCity, setFormDataCity] = useState(cityData);
+  const [stepformData, setstepFormData] = useState(stepData);
   const [formDataSkillField, setFormDataSkillField] = useState(skillData);
+
+  const [formDataCity, setFormDataCity] = useState(cityData);
 
   const [address, setAddress] = useState("");
   const [items, setItems] = useState([]);
@@ -60,7 +62,6 @@ function CreateProject() {
   const [error, seterror] = useState("");
   const [iserror, setisError] = useState("");
 
-  const [stepformData, setstepFormData] = useState(stepData);
   const [stepArrayData, setstepArrayData] = useState([]);
 
   const [aboutRequiredFields, setAboutRequiredFields] = useState({

@@ -6,6 +6,7 @@ import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { Link } from "react-router-dom";
 function Login() {
   const signupData = {
     email: "",
@@ -195,6 +196,17 @@ function Login() {
                 </Button>
               )}
             </div>
+            <p className="text-left ml-1 mt-3">
+              <span style={{ opacity: 0.5 }}> Not registered? </span>
+              <Link to="/SignUp">
+                <span
+                  style={{ fontSize: "15px", color: "#77b5dd" }}
+                  id="register"
+                >
+                  Create an account
+                </span>
+              </Link>
+            </p>
           </form>
         </div>
       </div>

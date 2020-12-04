@@ -60,7 +60,24 @@ p {
   padding-top: 1.875rem;
   color: #fff;
 }
-
+.modal-content {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 1.2rem;
+  outline: 0;
+}
+img {
+  object-fit: cover;
+  /* object-position: 40% 60%; */
+}
 .p-small {
   /* /* font: 400 0.75rem/1.25rem Arial, Helvetica, sans-serif; */
 }
@@ -908,6 +925,15 @@ textarea:focus {
   padding: 1.55rem 0rem 1.25rem 0rem;
 }
 .cardSection {
+  padding-top: 4rem;
+  padding-bottom: 1.625rem;
+
+  text-align: center;
+}
+#Cardservices {
+  width: 75%;
+  /* background: tomato; */
+  margin: auto;
   padding-top: 4rem;
   padding-bottom: 1.625rem;
   text-align: center;

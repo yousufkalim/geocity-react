@@ -9,7 +9,7 @@ const Example = ({ skillFieldData, sendInvite, searchBy }) => {
   console.log(skillFieldData, "skildlak");
   if (skillFieldData && typeof skillFieldData !== typeof "") {
     return (
-      <div className="col-lg-12 text-center mt-4">
+      <div className="col-lg-12 text-center " style={{ marginTop: "5rem" }}>
         <Table>
           <thead>
             <tr>

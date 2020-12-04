@@ -3,6 +3,13 @@ display-flex {
   display: flex;
   display: -webkit-flex;
 }
+.main #register:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+img {
+  object-fit: cover;
+}
 #Profilemodal .modalForm Input {
   background-color: red;
 }
@@ -11,7 +18,7 @@ display-flex {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
+  color: #000;
   font-weight: bold;
   /* text-shadow: 0 1px 0 #fff; */
   /* opacity: 0.5; */

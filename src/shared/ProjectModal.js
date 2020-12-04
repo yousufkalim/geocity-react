@@ -30,6 +30,7 @@ const ModalExample = (props) => {
     photo,
     setPhoto,
     data,
+    error,
   } = props;
   const [profilePreview, setProfilePreview] = useState(DefaultImage);
 
@@ -157,6 +158,7 @@ const ModalExample = (props) => {
                 </FormGroup>
               </Col>
             </Row>
+            {error !== "" ? <p className="error"> {error}</p> : ""}
             <Col className="text-right">
               {isLoading === true ? (
                 <center>

@@ -621,7 +621,7 @@ export default function Profile(props) {
         </div>{" "}
         {/* end of cardSection */}
         {/* end of services */}
-        <div id="services" className="cardSection">
+        <div id="Cardservices" className="cardSection">
           <div className="container ">
             <div className="row pt-4" style={{ background: "#fcfcfc" }}>
               <div className="col-lg-1 text-center">
@@ -706,17 +706,20 @@ export default function Profile(props) {
               >
                 <div className="row ml-3">
                   <div className="col-8">
-                    <h3 className="mt-1 ml-3">PROFIL</h3>
+                    <h4 className="mt-1" style={{ fontWeight: "bold" }}>
+                      PROFIL
+                    </h4>
                   </div>
-                  <div className="col-4">
+                  <div className="col-4  ">
                     <button
                       onClick={Profiletoggle}
                       type="button"
                       style={{
                         // fontWeight: "lighter",
+                        marginLeft: "4rem",
                         maxWidth: "40%",
                       }}
-                      className="btn btn-block ml-3"
+                      className="btn btn-block mt-1"
                     >
                       Modifier
                     </button>
@@ -726,9 +729,9 @@ export default function Profile(props) {
             </div>
             <div
               className="row text-left"
-              style={{ marginLeft: "5rem", marginTop: "2rem" }}
+              style={{ marginLeft: "1.6rem", marginTop: "2rem" }}
             >
-              <div className="col-lg-6">
+              <div className="col-lg-6 ">
                 <p>
                   <i
                     className="fas fa-phone-volume fa-lg "
@@ -820,7 +823,7 @@ export default function Profile(props) {
                   position: "relative",
                 }}
               >
-                <h4 className="mt-1 ml-3">PROJECTS</h4>
+                <h4 className="mt-1 ml-4 text-bold">PROJETS</h4>
               </div>
             </div>
             {Object.entries(ProjectdataList).length > 0
@@ -839,20 +842,22 @@ export default function Profile(props) {
             {/* end of row */}
             <div className="row" style={{ marginTop: "2rem" }}>
               <div
-                className="col-lg-12 text-left ml-2 p-1"
+                className="col-lg-12 text-left  p-1"
                 style={{
                   background: "#fcfcfc",
                   margin: "auto",
                   position: "relative",
                 }}
               >
-                <h4 className="mt-1 ml-3">COMMENTAIRIES</h4>
+                <h4 className="mt-1 ml-3 " style={{ fontWeight: "bold" }}>
+                  COMMENTAIRIES
+                </h4>
               </div>
             </div>
             {data.data.comments && data.data.comments.length > 0
               ? data.data.comments.map((comment) => (
                   <div className="row text-left" style={{ marginTop: "2rem" }}>
-                    <div className="text-right" style={{ width: "15%" }}>
+                    <div className="text-right" style={{ width: "10%" }}>
                       <img
                         className="com-image"
                         src={
@@ -863,7 +868,7 @@ export default function Profile(props) {
                         alt="alternative"
                       />
                     </div>
-                    <div className="text-left" style={{ width: "75%" }}>
+                    <div className="text-left" style={{ width: "90%" }}>
                       <div style={{ marginLeft: "2rem" }}>
                         <h5>
                           {getUser() ? getUser().username : ""}
@@ -872,12 +877,10 @@ export default function Profile(props) {
                               new Date(comment.createdAt)
                                 .toString()
                                 .split(" ")[2]
-                            }{" "}
-                            {
-                              new Date(comment.createdAt)
-                                .toString()
-                                .split(" ")[1]
-                            }{" "}
+                            }
+                            {"/"}
+                            {new Date(comment.createdAt).getMonth()}
+                            {"/"}
                             {new Date(comment.createdAt).getFullYear()}
                           </small>
                         </h5>
@@ -886,14 +889,13 @@ export default function Profile(props) {
                         </p>
                       </div>
                     </div>
-                    <div></div>
                   </div>
                 ))
               : ""}
             {commentArray.length > 0
               ? commentArray.map((comment) => (
                   <div className="row text-left" style={{ marginTop: "2rem" }}>
-                    <div className="text-right" style={{ width: "15%" }}>
+                    <div className="text-right" style={{ width: "10%" }}>
                       <img
                         className="com-image"
                         src={DefaultImage}
@@ -927,7 +929,7 @@ export default function Profile(props) {
             <div className="container ">
               <div
                 className="row"
-                style={{ marginTop: "2rem", marginLeft: "5rem" }}
+                style={{ marginTop: "2rem", marginLeft: "3rem" }}
               >
                 <div style={{ width: "90%" }} className="text-right">
                   <textarea
