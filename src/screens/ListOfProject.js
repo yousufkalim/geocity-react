@@ -3,7 +3,6 @@ import "../Theme/css/list.css";
 import axios from "axios";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
-import Loader from "../shared/Loaders";
 import Autocomplete from "react-autocomplete";
 import ProjectList from "../Components/projectList";
 import DefaultImage from "../Theme/images/index.png";
@@ -11,38 +10,32 @@ import { isAuthenticated } from "../Auth/Index";
 import { Redirect } from "react-router-dom";
 import SelectBox from "../shared/select";
 import { useToasts } from "react-toast-notifications";
-
+import { headers } from "../Auth/Index";
 export default function List() {
   const { addToast } = useToasts();
-
   const filterData = {
     category: "",
     skillField: "",
     city: "",
   };
-  const [filterFormData, setfilterFormData] = useState("");
-
+  const [filterFormData, setfilterFormData] = useState(filterData);
+  // array || list states********************
   const [projectData, setProjectData] = useState("");
   const [CategoryList, setCategoryList] = useState("");
   const [filteredArray, setfilteredArray] = useState([]);
+  const [skillfieldList, setskillFieldList] = useState("");
+  const [items, setItems] = useState([]);
+  // list states end***********************
 
+  // single states *********************
   const [request, setRequest] = useState(false);
-
   const [filter, setFilter] = useState(false);
-
   const [requestCount, setrequestCount] = useState(0);
   const [address, setAddress] = useState("");
-  const [items, setItems] = useState([]);
+  // single states end
 
-  const [skillfieldList, setskillFieldList] = useState("");
-
+  // useEffect ************************
   useEffect(() => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
     try {
       axios
         .get("http://localhost:3000/api/v1/auth/skillList")
@@ -53,12 +46,9 @@ export default function List() {
             label: arr.skillField,
           }));
           setskillFieldList(options);
-          // console.log(res, "res skilllist");
         })
         .catch((err) => console.log(" error =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+    } catch (error) {}
     try {
       axios
         .get("http://localhost:3000/api/v1/admin/categoryList", headers)
@@ -69,13 +59,9 @@ export default function List() {
             label: arr.name,
           }));
           setCategoryList(options);
-
-          // console.log(res, "response cat");
         })
         .catch((err) => console.log(" error category =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+    } catch (error) {}
     try {
       axios
         .get("http://localhost:3000/api/v1/auth/projectList")
@@ -88,9 +74,9 @@ export default function List() {
       // console.log(error, "error catch");
     }
   }, []);
+  // useEffect end
 
-  // request for view
-
+  // request for view ***********************
   const RequestToView = (id) => {
     if (!isAuthenticated()) {
       setRequest(true);
@@ -98,11 +84,6 @@ export default function List() {
       if (requestCount >= 0) {
         setRequest(false);
 
-        const headers = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
         try {
           axios
             .post(
@@ -127,7 +108,7 @@ export default function List() {
               console.log(" error request =>", err);
             });
         } catch (error) {
-          // setFilter(false);
+          console.log(" error request =>", error);
         }
       } else {
         addToast("You already sent request to owner", {
@@ -138,14 +119,8 @@ export default function List() {
       }
     }
   };
-
+  // handleCategoryChange **************************
   const handleCategoryChange = (e) => {
-    // alert(e.value);
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
     setfilterFormData({ ...filterFormData, ["category"]: e.value });
     try {
       axios
@@ -156,31 +131,21 @@ export default function List() {
         )
         .then((res) => {
           setFilter(true);
-          // setProjectData(res.data);
           if (res.data.length > 0) {
             setfilteredArray(res.data);
           }
-          // setProjectData(res.data.projects);
-          // console.log(res, "response projectCatgeoryData");
         })
         .catch((err) => {
           setFilter(false);
-          // console.log(" error project =>", err);
         });
     } catch (error) {
       setFilter(false);
     }
   };
   // *********
+  // handleFieldChange
   const handleFieldChange = (e) => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
     setfilterFormData({ ...filterFormData, ["skillField"]: e.value });
-
-    // console.log(e.target.value, "e.target.value");
     try {
       axios
         .post(
@@ -190,39 +155,22 @@ export default function List() {
         )
         .then((res) => {
           setFilter(true);
-          // setProjectData(res.data);
           if (res.data) {
             setfilteredArray(res.data.projects);
           } else {
-            // alert("hello");
             setfilteredArray([]);
           }
-          // setProjectData(res.data.projects);
-          // console.log(res, "response projectskillData");
         })
         .catch((err) => {
           setFilter(false);
-          // console.log(" error project skill =>", err);
         });
     } catch (error) {
       setFilter(false);
     }
   };
-  // const validateCity = () => {
-  //   if (address) {
-  //     // alert("hello");
-  //     const msg = "";
-  //     setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-  //     return false;
-  //   } else if (!adress) {
-  //     let msg = "Required";
-  //     setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-  //     return false;
-  //   }
-  // };
+  // getAddress
   const getAddress = (e) => {
     setAddress(e.target.value);
-    // validateCity();
 
     fetch(
       "https://api-adresse.data.gouv.fr/search/?q=" +
@@ -231,9 +179,7 @@ export default function List() {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        // console.log("res address", responseJson);
         var addressToSet = [];
-        // debugger;
         for (var i = 0; i < responseJson.features.length; i++) {
           addressToSet.push({
             id: i,
@@ -245,38 +191,24 @@ export default function List() {
           });
         }
         if (addressToSet.length === responseJson.features.length) {
-          // setFormData({ ...formData,items:addressToSet })
           setItems(addressToSet);
         }
       })
-      .catch((error) => {
-        // console.error(error);
-      });
+      .catch((error) => {});
   };
-  // console.log(projectData, "project data");
+  // setAdress *********************
   const SetAddress = (item) => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-    // console.log(item,'item')
     setAddress(item);
-    // this.setState({ address: item });
-
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
-        // debugger;
         var city = items[i].city;
         var zipCode = items[i].PostalCode;
         var lat = items[i].lat.toString();
         var lng = items[i].lng.toString();
-        // var street = items[i].context.toString();
 
         var newAddress = items[i].label.split(String(zipCode));
       }
     }
-    // console.log(city, "city");
     try {
       axios
         .post(
@@ -299,7 +231,7 @@ export default function List() {
       setFilter(false);
     }
   };
-  // console.log(filteredArray, "fltered array");
+  // render *************************************
   if (request === false) {
     return (
       <div>
@@ -342,43 +274,9 @@ export default function List() {
                   value={filterFormData.category}
                   onChange={handleCategoryChange}
                 />
-                {/* <select
-                  class="form-control"
-                  id="sel1"
-                  name="category"
-                  id="category"
-                  value={filterFormData.category}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Category</option>
-
-                  {CategoryList
-                    ? CategoryList.map((cat) => (
-                        <option value={cat._id} key={cat._id}>
-                          {cat.name}
-                        </option>
-                      ))
-                    : ""}
-                </select> */}
               </div>
 
               <div className="col-lg-2 " id="selectbox2">
-                {/* <select
-                  class="form-control"
-                  name="skillField"
-                  id="skillField"
-                  value={filterFormData.skillField}
-                  onChange={handleChange}
-                >
-                  <option value="">Select SkillField</option>
-
-                  {skillfieldList
-                    ? skillfieldList.map((mat) => (
-                        <option value={mat._id}>{mat.skillField}</option>
-                      ))
-                    : ""}
-                </select> */}
-
                 <SelectBox
                   name="skillField"
                   id="category"
@@ -388,20 +286,8 @@ export default function List() {
                 />
               </div>
               <div className="col-lg-3" id="selectbox3">
-                {/* <form>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Lieu du project"
-                  />
-                </div>
-              </form> */}
                 <Autocomplete
                   items={items}
-                  // shouldItemRender={(item, value) =>
-                  //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
-                  // }
                   wrapperProps={<i className="fas fa-heart " />}
                   getItemValue={(item) => item.label}
                   renderItem={(item, highlighted) => (
@@ -485,24 +371,9 @@ export default function List() {
                 <h1>No project found</h1>
               </center>
             )}
-            {/* row end */}
+          </div>
+        </div>
 
-            {/* row end */}
-
-            {/* end of row */}
-          </div>{" "}
-          {/* end of container */}
-        </div>{" "}
-        {/* end of cardsList */}
-        {/* end of services */}
-        {/* Details 1 */}
-        {/* end of basic-1 */}
-        {/* end of details 1 */}
-        {/* Details 2 */}
-        {/* end of basic-2 */}
-        {/* end of details 2 */}
-        {/* Details Lightboxes */}
-        {/* Details Lightbox 1 */}
         {/* Footer */}
         <Footer />
       </div>
