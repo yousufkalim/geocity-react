@@ -7,9 +7,12 @@ import { useStyles } from "../Theme/styles";
 import axios from "axios";
 import ChipArray from "../shared/Chip";
 import { Link } from "react-router-dom";
+import { useToasts } from "react-toast-notifications";
 
 import { Redirect } from "react-router-dom";
 function Signup() {
+  const { addToast } = useToasts();
+
   const signupData = {
     username: "",
     email: "",
@@ -34,7 +37,24 @@ function Signup() {
     specialization: "",
     score: "",
   };
-
+  const skillRequired = {
+    skillField: "",
+    skill: "",
+    specialization: "",
+    score: "",
+  };
+  const aboutRequired = {
+    username: "",
+    email: "",
+    city: "",
+    password: "",
+    availability: "",
+    confirm_password: "",
+    profile_picture: "",
+    profile_description: "",
+    phone: "",
+    address: "",
+  };
   // states start ************************************
   const [skillformData, setskillFormData] = useState(stepData);
 
@@ -58,29 +78,13 @@ function Signup() {
   const [skillFieldList, setskillFieldList] = useState("");
 
   const [materialformData, setmaterialFormData] = useState([]);
-  const [aboutRequiredFields, setAboutRequiredFields] = useState({
-    username: "",
-    email: "",
-    city: "",
-    password: "",
-    availability: "",
-    confirm_password: "",
-    profile_picture: "",
-    profile_description: "",
-    phone: "",
-    address: "",
-  });
-  const [skillRequiredFields, setskillRequiredFields] = useState({
-    skillField: [],
-    skill: "",
-    specialization: "",
-    score: "",
-  });
+  const [aboutRequiredFields, setAboutRequiredFields] = useState(aboutRequired);
+  const [skillRequiredFields, setskillRequiredFields] = useState(skillRequired);
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
     error: "",
   });
-  console.log(formData, "formData");
+  console.log(skillRequiredFields, "formData");
   // console.log(materialformData,"materialformData")
 
   // states end ***************************
@@ -207,7 +211,7 @@ function Signup() {
     }
     const num = parseInt(skillformData.score);
     setskillRequiredFields({ ...skillRequiredFields, score: "" });
-    setskillFormData({ ...skillformData, score: num });
+
     return true;
   };
 
@@ -370,34 +374,42 @@ function Signup() {
 
     setMaterial(e.target.value);
     console.log(materialArrayData, "material aray dat from onchange");
-    if (Object.keys(materialArrayData).length > 0) {
-      materialArrayData.map((mat) => {
-        if (mat !== e.target.value) {
-          // alert(e.target.value);
-          const array = materialArrayData.filter(
-            (mat) => mat !== e.target.value
-          );
-          if (e.target.value) {
-            array.push(e.target.value);
+    if (e.target.value !== "") {
+      if (Object.keys(materialArrayData).length > 0) {
+        materialArrayData.map((mat) => {
+          if (mat !== e.target.value) {
+            // alert(e.target.value);
+            const array = materialArrayData.filter(
+              (mat) => mat !== e.target.value
+            );
+            if (e.target.value) {
+              array.push(e.target.value);
+            }
+            setmaterialArrayData(array);
+            const msg = "";
+            setmaterialRequiredFields({
+              ...materialRequiredFields,
+              error: msg,
+            });
+            // setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+          } else {
+            const msg = "value already existed";
+            setmaterialRequiredFields({
+              ...materialRequiredFields,
+              error: msg,
+            });
+            // alert("msg");
+            const array = materialArrayData.filter(
+              (mat) => mat !== e.target.value
+            );
+            console.log(array, "array mat");
+            setmaterialArrayData(array);
           }
-          setmaterialArrayData(array);
-          const msg = "";
-          setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
-          // setmaterialArrayData((prevState) => [...prevState, e.target.value]);
-        } else {
-          const msg = "value already existed";
-          setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
-          // alert("msg");
-          const array = materialArrayData.filter(
-            (mat) => mat !== e.target.value
-          );
-          console.log(array, "array mat");
-          setmaterialArrayData(array);
-        }
-      });
-    } else {
-      // setmaterialArrayData([...materialArrayData, e.target.value]);
-      setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+        });
+      } else {
+        // setmaterialArrayData([...materialArrayData, e.target.value]);
+        setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+      }
     }
   };
   const handleChange = (e) => {
@@ -497,14 +509,35 @@ function Signup() {
         break;
     }
   };
+
   const onskillAdd = () => {
+    console.log(skillRequiredFields, "skillRequiredFields ");
+    console.log(skillformData, "skillformData ");
+
+    // console.log(
+    //   Object.values(skillRequiredFields).map((val) => {
+    //     if (val === "Required") {
+    //       console.log("hello oy");
+    //     } else {
+    //       console.log("oy");
+    //     }
+    //   }),
+    //   "msg"
+    // );
     checkValidateForm2();
+    validateScore();
     // debugger;
     // setskillArrayData((prevState) => [...prevState, skillformData]);
-    setskillArrayData([...skillArrayData, skillformData]);
+    Object.values(skillformData).map((obj) => {
+      if (obj !== "") {
+        // alert("hello oy");
+        setskillArrayData([...skillArrayData, skillformData]);
 
-    setskillFormData(stepData);
-    setskillRequiredFields(skillRequiredFields);
+        setskillFormData(stepData);
+        setskillRequiredFields(skillRequired);
+      }
+    });
+
     // console.log("skil", skillArrayData);
   };
 
@@ -623,16 +656,18 @@ function Signup() {
       return obj;
     });
 
-    setAboutRequiredFields(obj);
+    if (!reqFields) {
+      setAboutRequiredFields(obj);
 
-    if (!reqFields && !formData.city) {
       // validatePortfolioThumbnail()
       // validatePortfolioFiles()
-      const msg = "Required";
+
       // const flashData = { type: "error", text: "Fill the required fields." }
       // props.addFlashMessage(flashData)
       return false;
     } else {
+      // alert("hello");
+      setAboutRequiredFields(aboutRequired);
       return true;
     }
   };
@@ -646,21 +681,22 @@ function Signup() {
       }
       return obj;
     });
-
-    setskillRequiredFields(obj);
-
+    // debugger;
     if (!reqFields) {
-      // validatePortfolioThumbnail()
-      // validatePortfolioFiles()
+      // console.log(obj, "obj");
       const msg = "Required";
-      // const flashData = { type: "error", text: "Fill the required fields." }
-      // props.addFlashMessage(flashData)
+
+      setskillRequiredFields((prevState) => {
+        Object.assign(skillRequiredFields, obj);
+      });
       return false;
     } else {
-      setskillRequiredFields({});
-
+      // alert("hello");
+      // setskillRequiredFields(skillRequired);
+      setskillRequiredFields(skillRequired);
       return true;
     }
+    console.log(skillRequiredFields);
   };
 
   // const checkValidateForm3 = () => {
@@ -691,19 +727,21 @@ function Signup() {
   // };
 
   // ******************
-  console.log(skillArrayData, "skillArrayData form");
+  console.log(aboutRequiredFields, "aboutRequiredFields form");
+  console.log(formData, "formData form");
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
 
     checkValidateForm();
-    checkValidateForm2();
+
     validateMaterial();
     // const form_data = new FormData();
     // const data = form_data.getAll("profile_picture");
-    const Signup = formData;
-    Signup.skills = skillArrayData;
-    Signup.material = materialArrayData;
+    // const Signup = formData;
+    // Signup.skills = skillArrayData;
+    // Signup.material = materialArrayData;
 
     const newFormData = new FormData();
     // console.log(file, "profile data");
@@ -745,7 +783,12 @@ function Signup() {
           setisLoading(false);
           setFormData(signupData);
           setisSuccess(true);
-          console.log(res, "res");
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+          // console.log(res, "res");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -758,6 +801,11 @@ function Signup() {
               setError(err.response.data);
             }
           }
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
           console.log(" error signup =>", err.response.data);
         });
     } catch (error) {
@@ -778,7 +826,7 @@ function Signup() {
           <form method="POST" className="appointmentform" id="appointment-form">
             <h2>Sign Up form</h2>
             <div className="form-group-1">
-              <label className="label-agree-term">User_name*</label>
+              <label className="label-agree-term">User Name*</label>
 
               <input
                 type="text"
@@ -828,7 +876,7 @@ function Signup() {
               ) : (
                 ""
               )}
-              <label className="label-agree-term">Confirm_Password*</label>
+              <label className="label-agree-term">Confirm Password*</label>
 
               <input
                 type="password"
@@ -891,7 +939,7 @@ function Signup() {
               ) : (
                 ""
               )}
-              <label className="label-agree-term">Profile_picture*</label>
+              <label className="label-agree-term">Profile Picture*</label>
 
               <input
                 type="file"
@@ -911,7 +959,7 @@ function Signup() {
               ) : (
                 ""
               )}
-              <label className="label-agree-term">Profile_description*</label>
+              <label className="label-agree-term">Profile Description*</label>
 
               <input
                 type="text"
@@ -965,7 +1013,7 @@ function Signup() {
             </div>
             <div className="form-group-2">
               <h3>Skills</h3>
-              <label className="label-agree-term">Skill_Field*</label>
+              <label className="label-agree-term">Skill Field*</label>
 
               <div className="select-list">
                 <select
@@ -1022,7 +1070,7 @@ function Signup() {
               <input
                 type="text"
                 onChange={handleSkillChange}
-                onFocus={ValidateSpecialization}
+                // onFocus={ValidateSpecialization}
                 name="specialization"
                 id="specialization"
                 placeholder="Enter Specialization"
@@ -1049,7 +1097,7 @@ function Signup() {
               ) : (
                 ""
               )}
-              {skillformData.score ? (
+              {Object.values(skillformData).length > 0 ? (
                 <Button
                   variant="contained"
                   onClick={onskillAdd}
@@ -1077,7 +1125,7 @@ function Signup() {
                   id="material"
                   value={material}
                   onChange={onMaterialChange}
-                  onFocus={validateMaterial}
+                  // onFocus={validateMaterial}
                 >
                   <option value="">Select Material</option>
 

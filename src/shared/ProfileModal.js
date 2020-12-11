@@ -18,6 +18,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
 import Autocomplete from "react-autocomplete";
 import ChipArray from "../shared/Chip";
+import SkillChipArray from "../shared/skillChip";
 
 const ModalExample = (props) => {
   const {
@@ -44,11 +45,17 @@ const ModalExample = (props) => {
     materialArrayData,
     data,
     DefaultImage,
+    setmaterialArrayData,
+    skillArrayData,
+    setskillArrayData,
+    errormessage,
   } = props;
   //   useEffect
 
   //
   const [profilePreview, setProfilePreview] = useState(DefaultImage);
+  console.log(materialArrayData, "material array datA FORM MODAL");
+  console.log(skillArrayData, "skillArrayData array datA FORM MODAL");
 
   return (
     <div id="Profilemodal">
@@ -179,7 +186,7 @@ const ModalExample = (props) => {
                   />
                 </FormGroup>
               </Col>
-              <Col md={4}>
+              {/* <Col md={4}>
                 <img
                   className="editproject-image"
                   src={
@@ -189,7 +196,7 @@ const ModalExample = (props) => {
                   }
                   alt="alternative"
                 />
-              </Col>
+              </Col> */}
             </Row>
             <hr />
             <h5 style={{ fontWeight: "bold" }}>Skills*</h5>
@@ -241,36 +248,39 @@ const ModalExample = (props) => {
                   />
                 </FormGroup>
               </Col>
-              <Col md={4}>
-                <FormGroup>
-                  <Label for="exampleAddress">Skills*</Label>
-                  {skillList.length > 0 ? (
-                    <Input
-                      name="skill"
-                      id="skill"
-                      type="select"
-                      value={skillformData.skill}
-                      onChange={handleSkillChange}
-                    >
-                      <option>Select Select</option>
+              {skillList.length > 0 ? (
+                <Col md={4}>
+                  <FormGroup>
+                    <>
+                      <Label for="exampleAddress">Skills*</Label>
 
-                      {skillList.map((skill) => (
-                        <option value={skill}>{skill}</option>
-                      ))}
+                      <Input
+                        name="skill"
+                        id="skill"
+                        type="select"
+                        value={skillformData.skill}
+                        onChange={handleSkillChange}
+                      >
+                        <option>Select Select</option>
 
-                      {CategoryList
-                        ? CategoryList.map((cat) => (
-                            <option value={cat._id} key={cat._id}>
-                              {cat.name}
-                            </option>
-                          ))
-                        : ""}
-                    </Input>
-                  ) : (
-                    ""
-                  )}
-                </FormGroup>
-              </Col>
+                        {skillList.map((skill) => (
+                          <option value={skill}>{skill}</option>
+                        ))}
+
+                        {CategoryList
+                          ? CategoryList.map((cat) => (
+                              <option value={cat._id} key={cat._id}>
+                                {cat.name}
+                              </option>
+                            ))
+                          : ""}
+                      </Input>
+                    </>
+                  </FormGroup>
+                </Col>
+              ) : (
+                ""
+              )}
               <Col md={4}>
                 <FormGroup>
                   <Label for="exampleAddress">Material*</Label>
@@ -323,7 +333,51 @@ const ModalExample = (props) => {
                 )}
               </Col>
             </Row>
+            <Row>
+              <Col md={4}>
+                {materialArrayData && materialArrayData.length > 0 ? (
+                  <>
+                    <Col className="mb-3">Material:</Col>
+                    <Col>
+                      <ChipArray
+                        materialArrayData={
+                          materialArrayData ? materialArrayData : ""
+                        }
+                        setmaterialArrayData={setmaterialArrayData}
+                        materialList={materialList}
+                      />
+                    </Col>
+                  </>
+                ) : (
+                  ""
+                )}
+              </Col>
 
+              <Col md={4}>
+                {skillArrayData && skillArrayData.length > 0 ? (
+                  <>
+                    <Col className="mb-3">Skills:</Col>
+                    <Col>
+                      <SkillChipArray
+                        skillArrayData={skillArrayData ? skillArrayData : ""}
+                        setskillArrayData={setskillArrayData}
+                        skillFieldList={skillFieldList}
+                      />
+                    </Col>
+                  </>
+                ) : (
+                  ""
+                )}
+              </Col>
+            </Row>
+
+            <Col className="mt-5">
+              {errormessage !== "" ? (
+                <p className="error"> {errormessage}</p>
+              ) : (
+                ""
+              )}
+            </Col>
             <Col className="text-right">
               {isLoading === true ? (
                 <center>

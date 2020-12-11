@@ -135,10 +135,10 @@ const ModalExample = (props) => {
                     <option value={formData.type ? formData.type : ""}>
                       {formData.type ? formData.type : "Select type"}
                     </option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+
+                    <option value="Private">
+                      {formData.type === "Public" ? "Private" : "Public"}
+                    </option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -158,7 +158,9 @@ const ModalExample = (props) => {
                 </FormGroup>
               </Col>
             </Row>
-            {error !== "" ? <p className="error"> {error}</p> : ""}
+            <Row className="mt-3">
+              <Col>{error !== "" ? <p className="error"> {error}</p> : ""}</Col>
+            </Row>
             <Col className="text-right">
               {isLoading === true ? (
                 <center>

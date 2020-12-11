@@ -46,6 +46,7 @@ const ModalExample = (props) => {
 
     setstepType(e.target.value);
   };
+  // console.log(data, "data from step ");
   return (
     <div id="Profilemodal">
       <Modal
@@ -55,7 +56,9 @@ const ModalExample = (props) => {
         style={{ width: "70%", borderRadius: "4rem" }}
         className="modal-xl"
       >
-        <ModalHeader toggle={props.toggle}>Edit Project</ModalHeader>
+        <ModalHeader toggle={props.toggle}>
+          Edit Implementation Step
+        </ModalHeader>
         <ModalBody>
           <Form>
             <Row form>

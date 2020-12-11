@@ -627,7 +627,7 @@ a.white {
   text-decoration: none;
 }
 .navbar-custom {
-  background-color: #fff;
+  background-color: transparent;
   /* box-shadow: 0 0.0625rem 0.375rem 0 rgba(0, 0, 0, 0.1); */
   /* font: 600 0.875rem/0.875rem Arial, Helvetica, sans-serif; */
   transition: all 0.2s;
@@ -1986,7 +1986,9 @@ a:hover.back-to-top {
   .headerProfile {
     background-image: url("../images/7406b9eb9afee087eedaccb520dcdbb0aadc404d.png");
     background-size: cover;
-    height: 18rem;
+    /* height: 18rem;
+     */
+    height: 13rem;
   }
 
   .headerProfile .headerProfile-content {

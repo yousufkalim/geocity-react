@@ -8,19 +8,27 @@ import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
 import ChipArray from "../shared/Chip";
 import axios from "axios";
-import { getUser } from "../Auth/Index";
+import { getUser, SignOut } from "../Auth/Index";
 import Popover from "@material-ui/core/Popover";
-import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import UserProjectList from "../Components/userprojectList";
+import RequestView from "../Components/request";
+import InvitationRequest from "../Components/Invitation";
+import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 import ProfileModal from "../shared/ProfileModal";
-import Toast from "../shared/toast";
+import MarkImage from "../Theme/images/mark.png";
+
+import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+
 import facebook from "../Theme/images/facebook.png";
 import instagram from "../Theme/images/instagram.png";
 import youtube from "../Theme/images/youtube.png";
-
+import { useToasts } from "react-toast-notifications";
+import Notifications from "../Components/Notifications";
 export default function Profile(props) {
+  const { addToast } = useToasts();
+
   const projectData = {
     title: "",
     type: "",
@@ -50,10 +58,11 @@ export default function Profile(props) {
   const [photo, setPhoto] = useState("");
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
+  const [tempmaterialArrayData, settempmaterialArrayData] = useState([]);
+
   const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
-  const [recommendstatus, setrecommendstatus] = useState(false);
 
   // toast
   const [show, setShow] = useState(false);
@@ -76,6 +85,8 @@ export default function Profile(props) {
     const obj = {};
     obj.comment = comment;
     obj.date = date;
+    obj.profile_picture = getUser().profile_picture;
+
     setCommentArray([...commentArray, obj]);
 
     try {
@@ -94,17 +105,26 @@ export default function Profile(props) {
       )
         .then((res) => {
           setComment("");
-
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
           setisLoading(false);
         })
         .catch((err) => {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
-          console.log(" error =>", err);
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+          // console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
@@ -158,9 +178,20 @@ export default function Profile(props) {
     // checkValidateForm2();
     // debugger;
     // setskillArrayData((prevState) => [...prevState, skillformData]);
-    setskillArrayData([...skillArrayData, skillformData]);
 
-    setskillFormData(stepData);
+    if (skillArrayData.length === 3) {
+      // alert(skillArrayData.length);
+      addToast("skills length must be 3 or less", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 1000,
+      });
+      seterrorMessage("You can only add upto 3 skills  or less");
+    } else {
+      setskillArrayData([...skillArrayData, skillformData]);
+      setskillFormData(stepData);
+    }
+
     // setskillRequiredFields(skillRequiredFields);
     // console.log("skil", skillArrayData);
   };
@@ -169,74 +200,90 @@ export default function Profile(props) {
   const onSubmit = async (e) => {
     e.preventDefault();
     setShow(true);
+
     const newFormData = new FormData();
-    // console.log(file, "profile data");
-
-    newFormData.append("username", formData.username);
-    newFormData.append("availability", formData.availability);
-    newFormData.append("city", formData.city);
-    // newFormData.append("confirm_password", formData.confirm_password);
-    // newFormData.append("email", formData.email);
-    newFormData.append("latitude", formData.latitude);
-    newFormData.append("longitude", formData.longitude);
-    // newFormData.append("password", formData.password);
-    newFormData.append("phone", formData.phone);
-    newFormData.append("profile_description", formData.profile_description);
-    newFormData.append("profile_picture", photo);
-    newFormData.append("zipCode", formData.zipCode);
-    // console.log("asfjlas", JSON.stringify(skillArrayData));
-    if (skillArrayData.length > 0 && materialArrayData.lenth > 0) {
-      newFormData.append("skills", JSON.stringify(skillArrayData));
-      newFormData.append("material", JSON.stringify(materialArrayData));
+    if (!photo || photo === "default.png") {
+      // alert("hello");
+      seterrorMessage("Photo is required");
     } else {
-      alert("hello");
-      newFormData.append("skills", JSON.stringify(formData.skills));
-      newFormData.append("material", JSON.stringify(formData.material));
-    }
-    setisLoading(true);
-    // console.log(newFormData.getAll("general_photo"), "formdata");
+      console.log(photo, "profile data");
 
-    // console.log(items,"items")
+      newFormData.append("username", formData.username);
+      newFormData.append("availability", formData.availability);
+      newFormData.append("city", formData.city);
+      // newFormData.append("confirm_password", formData.confirm_password);
+      // newFormData.append("email", formData.email);
+      newFormData.append("latitude", formData.latitude);
+      newFormData.append("longitude", formData.longitude);
+      // newFormData.append("password", formData.password);
+      newFormData.append("phone", formData.phone);
+      newFormData.append("profile_description", formData.profile_description);
+      newFormData.append("profile_picture", photo);
+      newFormData.append("zipCode", formData.zipCode);
+      // console.log("asfjlas", JSON.stringify(skillArrayData));
+      if (skillArrayData.length > 0 && materialArrayData.length > 0) {
+        // alert("hello");
+        newFormData.append("skills", JSON.stringify(skillArrayData));
+        newFormData.append("material", JSON.stringify(materialArrayData));
+      } else {
+        // alert("hello");
+        newFormData.append("skills", JSON.stringify(formData.skills));
+        newFormData.append("material", JSON.stringify(formData.material));
+      }
+      setisLoading(true);
+      // console.log(newFormData.getAll("general_photo"), "formdata");
 
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-      await axios
-        .post(
-          `http://localhost:3000/api/v1/profile/editProfile?id=${props.match.params.id}`,
-          newFormData,
-          headers
-        )
-        .then((res) => {
-          setisLoading(false);
-          setFormData(projectData);
-          setprofileModal(false);
-          setsuccessMessage("User updated successfully");
-          seterrorMessage("");
-          // console.log(res,"res")
-        })
-        .catch((err) => {
-          setTimeout(() => {
+      // console.log(items,"items")
+
+      try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+        await axios
+          .post(
+            `http://localhost:3000/api/v1/profile/editProfile?id=${props.match.params.id}`,
+            newFormData,
+            headers
+          )
+          .then((res) => {
             setisLoading(false);
-          }, 1000);
-          seterrorMessage("User updated false");
-          setsuccessMessage("");
-          console.log(" error =>", err);
-        });
-    } catch (error) {
-      console.log(error, "error catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
+            setFormData(projectData);
+            setprofileModal(false);
+            setsuccessMessage("User updated successfully");
+            seterrorMessage("");
+            addToast("Success", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
+            });
+            // console.log(res,"res")
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            seterrorMessage("User updated false");
+            setsuccessMessage("");
+            addToast("Error", {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
+            });
+            // console.log(" error =>", err);
+          });
+      } catch (error) {
+        console.log(error, "error catch");
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
     }
   };
   // onSubmit end
   const RecommendUser = async (skillField) => {
     // if (recommendstatus === true) {
-    setrecommendstatus(!recommendstatus);
     // }
     setShow(true);
     try {
@@ -255,19 +302,28 @@ export default function Profile(props) {
           // setrecommendstatus(true);
           setsuccessMessage("User recommended successfully");
           seterrorMessage("");
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
         })
         .catch((err) => {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
-
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
           setsuccessMessage("");
 
           seterrorMessage("User recommended failed");
-          console.log(" error recommend=>", err);
+          // console.log(" error recommend=>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
@@ -275,10 +331,10 @@ export default function Profile(props) {
   };
   const DeleteComment = (comment) => {
     const array = commentArray.filter((com) => com.comment !== comment.trim());
-    console.log(array, "array");
+    // console.log(array, "array");
     setCommentArray(array);
   };
-  console.log(commentArray, "commentArray");
+  // console.log(commentArray, "commentArray");
   // get set  address
 
   const getAddress = (e) => {
@@ -313,7 +369,7 @@ export default function Profile(props) {
       .catch((error) => {
         const msg = "Required";
         // setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-        console.error(error);
+        // console.error(error);
       });
   };
   const SetAddress = (item) => {
@@ -362,25 +418,43 @@ export default function Profile(props) {
     if (profilemodal === false) {
       // debugger;
       const tempskillArray = [];
-      const materialArray = [];
+      // skills
+      // let skillData = "";
+      // let tempSkills=""
+      data.data.skills.map((skill, i) => {
+        let skillData = skill.skillField._id;
+        let skillsObj = skill;
+        let tempSkills = { ...skillsObj };
+        tempSkills.skillField = skillData;
+        delete tempSkills.recommendedBy;
+        delete tempSkills._id;
+        tempskillArray.push(tempSkills);
+      });
 
-      const skillData = data.data.skills[0].skillField._id;
-      const skillsObj = data.data.skills[0];
-      const tempSkills = { ...skillsObj };
-      tempSkills.skillField = skillData;
-      delete tempSkills.recommendedBy;
-      delete tempSkills._id;
+      // const skillData = data.data.skills[0].skillField._id;
+      // const skillsObj = data.data.skills[0];
+      // const tempSkills = { ...skillsObj };
+      // tempSkills.skillField = skillData;
+      // delete tempSkills.recommendedBy;
+      // delete tempSkills._id;
+      // tempskillArray.push(tempSkills);
+      // *****
+
       delete data.data.email;
-      var tempMaterial = data.data.material;
+      // material
 
+      const materialArray = [];
+      var tempMaterial = data.data.material;
       tempMaterial.map((mat) => {
         materialArray.push(mat._id);
       });
       tempMaterial = materialArray;
-      console.log(tempskillArray, "tempSkills");
-      console.log(data.data.skills, "data.data.skills");
 
-      tempskillArray.push(tempSkills);
+      // *****
+
+      console.log(tempskillArray, "tempSkills");
+      // console.log(data.data.skills, "data.data.skills");
+
       const projectData = {
         username: data.data.username,
         // email: data.data.email,
@@ -395,13 +469,16 @@ export default function Profile(props) {
         skills: tempskillArray,
         material: tempMaterial,
       };
-      setPhoto(data.data.profile_picture);
+      setmaterialArrayData(tempMaterial);
+      setskillArrayData(tempskillArray);
+
+      // setPhoto(data.data.profile_picture);
       setAddress(data.data.city);
       setFormData({ ...projectData });
     }
     setprofileModal(!profilemodal);
   };
-  console.log(formData, "formDat from database");
+  // console.log(formData, "formDat from database");
   //profile toggle end
   const handleChange = (e) => {
     let value = e.target.value;
@@ -428,15 +505,25 @@ export default function Profile(props) {
             setLike(!like);
             setsuccessMessage("Success");
             seterrorMessage("");
+            addToast("Success", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
+            });
             // console.log(res, "res like");
           })
           .catch((err) => {
             seterrorMessage("Error!");
             setsuccessMessage("");
-            console.log(" error projects =>", err);
+            addToast("Error", {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
+            });
+            // console.log(" error projects =>", err);
           });
       } catch (error) {
-        console.log(error, "error catch");
+        // console.log(error, "error catch");
       }
     } else {
       setLike(!like);
@@ -473,15 +560,46 @@ export default function Profile(props) {
         }
       });
     } else {
-      // setmaterialArrayData([...materialArrayData, e.target.value]);
-      setmaterialArrayData((prevState) => [...prevState, e.target.value]);
+      setmaterialArrayData([...materialArrayData, e.target.value]);
+      // setmaterialArrayData(e.target.value);
     }
   };
   // Toast
-  const ToastClose = () => {
-    setShow(!show);
-  };
 
+  const DeleteProfile = () => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    try {
+      axios
+        .post(
+          `http://localhost:3000/api/v1/profile/delete-profile?id=${props.match.params.id}`,
+          {},
+          headers
+        )
+        .then((res) => {
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+          SignOut();
+          // console.log(res, "res material");
+        })
+        .catch((err) => {
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+          console.log(" error =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+    }
+  };
   // ****
   // useEffect
   useEffect(() => {
@@ -499,7 +617,7 @@ export default function Profile(props) {
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
 
     try {
@@ -507,11 +625,11 @@ export default function Profile(props) {
         .get("http://localhost:3000/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
-          console.log(res, "res skill");
+          // console.log(res, "res skill");
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
     try {
       axios
@@ -528,13 +646,13 @@ export default function Profile(props) {
       Axios.get("http://localhost:3000/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
-          console.log(res.data, "res owened projects");
+          // console.log(res.data, "res owened projects");
         })
         .catch((err) => {
           console.log(" error projects =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
     try {
       Axios.get(
@@ -545,25 +663,19 @@ export default function Profile(props) {
           // const obj = { ...res.data };
 
           setData({ ["data"]: res.data.user });
-          // console.log(res.data, "res data user");
+          console.log(res.data, "res data user");
         })
         .catch((err) => {
-          console.log(" error =>", err);
+          // console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
   }, []);
-  console.log(data, "user data list");
+  // console.log(data, "user data list");
   if (Object.keys(data)) {
     return (
       <div>
-        <Toast
-          show={show}
-          ToastClose={ToastClose}
-          successmessage={successmessage}
-          errormessage={errormessage}
-        />
         <ProfileModal
           modal={profilemodal}
           // sendInvite={sendInvite}
@@ -587,6 +699,10 @@ export default function Profile(props) {
           materialList={materialList}
           handleChange={handleChange}
           materialArrayData={materialArrayData}
+          setskillArrayData={setskillArrayData}
+          skillArrayData={skillArrayData}
+          setmaterialArrayData={setmaterialArrayData}
+          errormessage={errormessage}
           data={data}
           // searchBy={searchBy}
           // skillFieldData={skillFieldData.length > 0 ? skillFieldData : []}
@@ -688,7 +804,7 @@ export default function Profile(props) {
                     Interet pour :{" "}
                     {data.data.interests
                       ? data.data.interests.map((item, i) => {
-                          return <span key={i}>{item + ","}</span>;
+                          return <span key={i}>{item.name + ","}</span>;
                         })
                       : " "}
                   </span>
@@ -711,18 +827,53 @@ export default function Profile(props) {
                     </h4>
                   </div>
                   <div className="col-4  ">
-                    <button
-                      onClick={Profiletoggle}
-                      type="button"
-                      style={{
-                        // fontWeight: "lighter",
-                        marginLeft: "4rem",
-                        maxWidth: "40%",
-                      }}
-                      className="btn btn-block mt-1"
-                    >
-                      Modifier
-                    </button>
+                    {getUser()._id === data.data._id ? (
+                      // <button
+                      //   onClick={Profiletoggle}
+                      //   type="button"
+                      //   style={{
+                      //     // fontWeight: "lighter",
+                      //     marginLeft: "4rem",
+                      //     maxWidth: "40%",
+                      //   }}
+                      //   className="btn btn-block mt-1"
+                      // >
+                      //   Modifier
+                      // </button>
+                      <div className="row">
+                        <div className="col ">
+                          <button
+                            onClick={DeleteProfile}
+                            type="button"
+                            className="btn btn-block text-uppercase"
+                            style={{
+                              fontSize: "15px",
+                              border: 0,
+                              maxWidth: "100%",
+                            }}
+                          >
+                            Delete Profile
+                          </button>
+                        </div>
+
+                        <div className="col">
+                          <button
+                            type="button"
+                            className="btn btn-block"
+                            style={{
+                              fontSize: "15px",
+                              border: 0,
+                              maxWidth: "90%",
+                            }}
+                            onClick={Profiletoggle}
+                          >
+                            MODIFIER
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
@@ -768,15 +919,31 @@ export default function Profile(props) {
                         <p>
                           <small>{skill.skillField.skillField} - </small>
                           {skill.skill}
-                          <i
-                            class="fas fa-info-circle fa-xs"
-                            style={{
-                              marginLeft: 2,
-                              position: "absolute",
-                              color: "#c1c1c1",
-                            }}
-                          />
-
+                          {skill.specialization ? (
+                            <>
+                              <i
+                                id="PopoverLegacy"
+                                type="button"
+                                class="fas fa-info-circle fa-xs"
+                                style={{
+                                  marginLeft: 2,
+                                  position: "absolute",
+                                  color: "#c1c1c1",
+                                }}
+                              />
+                              <UncontrolledPopover
+                                trigger="legacy"
+                                placement="bottom"
+                                target="PopoverLegacy"
+                              >
+                                <PopoverBody>
+                                  {skill.specialization}
+                                </PopoverBody>
+                              </UncontrolledPopover>
+                            </>
+                          ) : (
+                            ""
+                          )}
                           <br />
                           <span>
                             <i
@@ -799,14 +966,8 @@ export default function Profile(props) {
                           style={{ marginRight: "8rem", cursor: "pointer" }}
                           onClick={() => RecommendUser(skill.skillField._id)}
                         >
-                          {recommendstatus == true ? (
-                            <i
-                              className="fas fa-heart "
-                              style={{ color: "red" }}
-                            />
-                          ) : (
-                            <i className="fas fa-heart " />
-                          )}
+                          <i className="fas fa-heart " />
+
                           {/* <span class="ml-2 " id="span2" >21%</span> */}
                         </p>
                       </div>
@@ -814,6 +975,37 @@ export default function Profile(props) {
                   : ""}
               </div>
             </div>
+
+            {ProjectdataList && typeof ProjectdataList !== typeof "" ? (
+              <>
+                <div className="row " style={{ marginTop: "2rem" }}>
+                  <div
+                    className="col-lg-12 text-left  p-1"
+                    style={{
+                      background: "#fcfcfc",
+                      margin: "auto",
+                      position: "relative",
+                    }}
+                  >
+                    <h4 className="mt-1 ml-4 text-bold">PROJETS</h4>
+                  </div>
+                </div>
+                {ProjectdataList.slice(0, 4).map((data, i) => (
+                  <UserProjectList
+                    data={data}
+                    i={i}
+                    DefaultImage={DefaultImage}
+                    like={like}
+                    projectLike={projectLike}
+                  />
+                ))}
+              </>
+            ) : (
+              ""
+            )}
+
+            {/* end of row */}
+            {/* end of row */}
             <div className="row " style={{ marginTop: "2rem" }}>
               <div
                 className="col-lg-12 text-left  p-1"
@@ -823,23 +1015,82 @@ export default function Profile(props) {
                   position: "relative",
                 }}
               >
-                <h4 className="mt-1 ml-4 text-bold">PROJETS</h4>
+                <h4 className="mt-1 ml-4 text-bold">
+                  Requests For View Projet
+                </h4>
               </div>
             </div>
-            {Object.entries(ProjectdataList).length > 0
-              ? ProjectdataList.slice(0, 4).map((data, i) => (
-                  <UserProjectList
-                    data={data}
-                    i={i}
-                    DefaultImage={DefaultImage}
-                    like={like}
-                    projectLike={projectLike}
-                  />
-                ))
+            {data.data && data.data.invitation.length > 0
+              ? data.data.invitation.map((data, i) =>
+                  data.hasOwnProperty("skillID") ? (
+                    ""
+                  ) : data.sender ? (
+                    <>
+                      <RequestView
+                        data={data}
+                        i={i}
+                        DefaultImage={DefaultImage}
+                      />
+                    </>
+                  ) : (
+                    ""
+                  )
+                )
               : ""}
-
-            {/* end of row */}
-            {/* end of row */}
+            <div className="row " style={{ marginTop: "2rem" }}>
+              <div
+                className="col-lg-12 text-left  p-1"
+                style={{
+                  background: "#fcfcfc",
+                  margin: "auto",
+                  position: "relative",
+                }}
+              >
+                <h4 className="mt-1 ml-4 text-bold">
+                  Requests For Collaboration
+                </h4>
+              </div>
+            </div>
+            {data.data && data.data.invitation.length > 0
+              ? data.data.invitation.map((data, i) =>
+                  data.hasOwnProperty("skillID") ? (
+                    data.sender ? (
+                      <>
+                        <InvitationRequest
+                          data={data}
+                          i={i}
+                          DefaultImage={DefaultImage}
+                        />
+                      </>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )
+                )
+              : ""}
+            <div className="row " style={{ marginTop: "2rem" }}>
+              <div
+                className="col-lg-12 text-left  p-1"
+                style={{
+                  background: "#fcfcfc",
+                  margin: "auto",
+                  position: "relative",
+                }}
+              >
+                <h4 className="mt-1 ml-4 text-bold">Notifications</h4>
+              </div>
+            </div>
+            {data.data && data.data.notifications.length > 0
+              ? data.data.notifications.map((data, i) =>
+                  data.hasOwnProperty("projectID") ? (
+                    <Notifications data={data} i={i} DefaultImage={MarkImage} />
+                  ) : (
+                    ""
+                  )
+                )
+              : ""}
             <div className="row" style={{ marginTop: "2rem" }}>
               <div
                 className="col-lg-12 text-left  p-1"
@@ -898,7 +1149,11 @@ export default function Profile(props) {
                     <div className="text-right" style={{ width: "10%" }}>
                       <img
                         className="com-image"
-                        src={DefaultImage}
+                        src={
+                          comment.profile_picture
+                            ? `http://localhost:3000/views/uploads/${comment.profile_picture}`
+                            : DefaultImage
+                        }
                         alt="alternative"
                       />
                     </div>

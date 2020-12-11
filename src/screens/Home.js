@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "../Theme/css/styles.css";
 // import './css/fontawesome-all.css'
 import Footer from "../Components/footer";
-import { SignOut, isAuthenticated } from "../Auth/Index";
+import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import { Link } from "react-router-dom";
 export default class Home extends React.Component {
   constructor(props) {
@@ -67,9 +67,13 @@ export default class Home extends React.Component {
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#pricing">
+                  <Link
+                    to={`/profile/${getUser()._id}`}
+                    className="nav-link page-scroll"
+                    href="#pricing"
+                  >
                     About
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link page-scroll" href="#request">

@@ -14,6 +14,7 @@ export const isAuthenticated = () => {
 export const SignOut = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("jwt");
+    localStorage.removeItem("user");
     window.location.href = "/Login";
   }
 };

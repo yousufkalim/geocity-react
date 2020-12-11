@@ -71,7 +71,7 @@ function Form({
       <form method="POST" className="appointmentform" id="appointment-form">
         <h2>Create A Project</h2>
         <div className="form-group-1">
-          <label className="label-agree-term">Project Title</label>
+          <label className="label-agree-term">Project Title*</label>
           <input
             type="text"
             name="title"
@@ -86,7 +86,7 @@ function Form({
           ) : (
             ""
           )}
-          <label className="label-agree-term">Project Type</label>
+          <label className="label-agree-term">Project Type*</label>
 
           <div className="select-list">
             <select
@@ -107,7 +107,7 @@ function Form({
             ""
           )}
 
-          <label className="label-agree-term">City</label>
+          <label className="label-agree-term">City*</label>
 
           <Autocomplete
             items={items}
@@ -155,7 +155,7 @@ function Form({
             ""
           )}
 
-          <label className="label-agree-term">general_photo</label>
+          <label className="label-agree-term">General Photo*</label>
 
           <input
             type="file"
@@ -176,7 +176,7 @@ function Form({
             ""
           )}
 
-          <label className="label-agree-term">General Description</label>
+          <label className="label-agree-term">General Description*</label>
 
           <input
             type="text"
@@ -193,7 +193,7 @@ function Form({
             ""
           )}
 
-          <label className="label-agree-term">Category</label>
+          <label className="label-agree-term">Category*</label>
 
           <div className="select-list">
             <select
@@ -224,7 +224,7 @@ function Form({
         {/* form 2 */}
         <div className="form-group-2">
           <h3>Implementation Steps </h3>
-          <label className="label-agree-term">Step Name</label>
+          <label className="label-agree-term">Step Name*</label>
           <input
             type="text"
             name="name"
@@ -239,7 +239,7 @@ function Form({
             ""
           )}
 
-          <label className="label-agree-term">Step Type</label>
+          <label className="label-agree-term">Step Type*</label>
 
           <div className="select-list">
             {/* <MultipleSelect
@@ -263,8 +263,8 @@ function Form({
                 : ""}
             </select>
           </div>
-          {stepRequiredFields.skillField !== "" ? (
-            <p className="error"> {stepRequiredFields.skillField}</p>
+          {stepRequiredFields.stepType !== "" ? (
+            <p className="error"> {stepRequiredFields.stepType}</p>
           ) : (
             ""
           )}
@@ -288,10 +288,15 @@ function Form({
                     : ""}
                 </select>
               </div>
+              {stepRequiredFields.material !== "" ? (
+                <p className="error"> {stepRequiredFields.material}</p>
+              ) : (
+                ""
+              )}
             </>
           ) : stepType === "Field" ? (
             <>
-              <label className="label-agree-term">Skill Field</label>
+              <label className="label-agree-term">Skill Field*</label>
 
               <div className="select-list">
                 <select
@@ -310,7 +315,7 @@ function Form({
                     : ""}
                 </select>
               </div>
-              <label className="label-agree-term">Skill</label>
+              <label className="label-agree-term">Skill*</label>
               <div className="select-list">
                 <select
                   name="skill"
@@ -327,7 +332,7 @@ function Form({
                 </select>
               </div>
 
-              <label className="label-agree-term">Speciality</label>
+              <label className="label-agree-term">Speciality*</label>
               <input
                 type="text"
                 name="speciality"
@@ -346,30 +351,15 @@ function Form({
           ) : (
             ""
           )}
-          {materialArrayData.length > 0 ? (
-            <>
-              <ChipArray
-                materialArrayData={materialArrayData}
-                materialList={materialList}
-                setmaterialArrayData={setmaterialArrayData}
-              />
-              {stepRequiredFields.error !== "" ? (
-                <p className="error"> {stepRequiredFields.error}</p>
-              ) : (
-                ""
-              )}
-            </>
-          ) : (
-            ""
-          )}
 
-          <br />
-          {stepRequiredFields.material !== "" ? (
-            <p className="error"> {stepRequiredFields.material}</p>
+          {stepRequiredFields.error !== "" ? (
+            <p className="error"> {stepRequiredFields.error}</p>
           ) : (
             ""
           )}
-          <label className="label-agree-term">Project Status</label>
+          <br />
+
+          <label className="label-agree-term">Project Status*</label>
 
           <div className="select-list">
             <select
@@ -386,7 +376,12 @@ function Form({
               <option value="NoProgress">NoProgress</option>
             </select>
           </div>
-          <label className="label-agree-term">Description</label>
+          {stepRequiredFields.status !== "" ? (
+            <p className="error"> {stepRequiredFields.status}</p>
+          ) : (
+            ""
+          )}
+          <label className="label-agree-term">Description*</label>
           <input
             type="text"
             name="description"
@@ -402,13 +397,7 @@ function Form({
             ""
           )}
 
-          {stepRequiredFields.status !== "" ? (
-            <p className="error"> {stepRequiredFields.status}</p>
-          ) : (
-            ""
-          )}
-
-          {stepformData.description !== "" ? (
+          {Object.values(stepformData).length > 0 ? (
             <Button
               variant="contained"
               onClick={onAdd}

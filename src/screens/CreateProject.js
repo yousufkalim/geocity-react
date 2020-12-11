@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import "../Theme/css/main.css";
 import axios from "axios";
 import Form from "../Components/ProjectForm";
+import { useToasts } from "react-toast-notifications";
 
 function CreateProject() {
+  const { addToast } = useToasts();
+
   const projectData = {
     title: "",
     type: "",
@@ -26,11 +29,40 @@ function CreateProject() {
     name: "",
     // skillField: "",
     description: "",
-    // StepsType: "",
     // Steps: "",
-    status: "NoProgress",
+    status: "",
+    // NoProgress
   };
   const skillData = {
+    skillField: "",
+    speciality: "",
+    skill: "",
+    // StepsType: "",
+    // Steps: "",
+  };
+  const aboutRequired = {
+    title: "",
+    type: "",
+    general_photo: "",
+    general_description: "",
+    category: "",
+    address: "",
+    progress: "",
+  };
+  const stepRequired = {
+    name: "",
+    description: "",
+    // skillField: "",
+    speciality: "",
+    // StepsType: "",
+    // Steps: "",
+    StepType: "",
+
+    status: "",
+    material: "",
+    error: "",
+  };
+  const skillRequired = {
     skillField: "",
     speciality: "",
     skill: "",
@@ -64,33 +96,10 @@ function CreateProject() {
 
   const [stepArrayData, setstepArrayData] = useState([]);
 
-  const [aboutRequiredFields, setAboutRequiredFields] = useState({
-    title: "",
-    type: "",
-    general_photo: "",
-    general_description: "",
-    category: "",
-    address: "",
-    progress: "",
-  });
+  const [aboutRequiredFields, setAboutRequiredFields] = useState(aboutRequired);
 
-  const [stepRequiredFields, setstepRequiredFields] = useState({
-    name: "",
-    // skillField: "",
-    speciality: "",
-    // StepsType: "",
-    // Steps: "",
-    status: "",
-    material: "",
-    error: "",
-  });
-  const [skillRequiredFields, setskillRequiredFields] = useState({
-    skillField: "",
-    speciality: "",
-    skill: "",
-    // StepsType: "",
-    // Steps: "",
-  });
+  const [stepRequiredFields, setstepRequiredFields] = useState(stepRequired);
+  const [skillRequiredFields, setskillRequiredFields] = useState(skillRequired);
   // validation start
   const validateStepType = () => {
     if (stepformData.skillField) {
@@ -443,11 +452,13 @@ function CreateProject() {
       return obj;
     });
 
-    setAboutRequiredFields(obj);
-
     if (!reqFields) {
+      setAboutRequiredFields(obj);
+
       return false;
     } else {
+      setAboutRequiredFields(aboutRequired);
+
       return true;
     }
   };
@@ -461,18 +472,37 @@ function CreateProject() {
       }
       return obj;
     });
+    console.log(obj, "validate 2 check");
+    // debugger;
+    if (!reqFields || stepType === "") {
+      obj.stepType = "Required";
+      setstepRequiredFields(obj);
 
-    setstepRequiredFields(obj);
-
-    if (!reqFields) {
-      // validatePortfolioThumbnail()
-      // validatePortfolioFiles()
-      // const msg = "Required";
-      // const flashData = { type: "error", text: "Fill the required fields." }
-      // props.addFlashMessage(flashData)
       return false;
     } else {
-      setstepRequiredFields({});
+      setstepRequiredFields(stepRequired);
+
+      return true;
+    }
+  };
+  const checkValidateForm3 = () => {
+    let obj = {};
+    let reqFields = true;
+    Object.keys(formDataSkillField).map((key) => {
+      if (formDataSkillField[key] === "") {
+        obj[key] = "Required";
+        reqFields = false;
+      }
+      return obj;
+    });
+    console.log(obj, "validate 2 check");
+    // debugger;
+    if (!reqFields) {
+      setskillRequiredFields(obj);
+
+      return false;
+    } else {
+      setskillRequiredFields(skillRequired);
 
       return true;
     }
@@ -484,7 +514,10 @@ function CreateProject() {
     // stepArrayData.material = materialArrayData;
     // formData.implementation_steps = stepArrayData;
     // formData.address = formDataCity;
+    e.preventDefault();
+    setisLoading(true);
 
+    checkValidateForm();
     console.log(photo, "photo");
     const newFormData = new FormData();
     newFormData.append("title", formData.title);
@@ -495,59 +528,60 @@ function CreateProject() {
     newFormData.append("address", JSON.stringify(formDataCity));
     newFormData.append("implementation_steps", JSON.stringify(stepArrayData));
 
-    e.preventDefault();
-    setisLoading(true);
-
-    checkValidateForm();
-    checkValidateForm2();
-
-    if (isCheck === false) {
-      // alert("hello");
-      setisLoading(false);
-
-      seterror(
-        "You must have to add atleast one implementation step, for this fill steps field and press Add"
-      );
-    } else {
-      try {
-        const headers = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
-        await axios
-          .post(
-            "http://localhost:3000/api/v1/project/CreateProject",
-            newFormData,
-            headers
-          )
-          .then((res) => {
-            setisLoading(false);
-            setFormData(projectData);
-            setPhoto("");
-            setAddress("");
-
-            // // console.log(res,"res")
-          })
-          .catch((err) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-            if (err.response.data) {
-              if (err.response.data.message) {
-                setisError(err.response.data.message);
-              } else {
-                setisError(err.response.data);
-              }
-            }
-            // console.log(" error =>", err);
-          });
-      } catch (error) {
-        // console.log(error, "error catch");
-        setTimeout(() => {
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      await axios
+        .post(
+          "http://localhost:3000/api/v1/project/CreateProject",
+          newFormData,
+          headers
+        )
+        .then((res) => {
           setisLoading(false);
-        }, 1000);
-      }
+          setFormData(projectData);
+          setPhoto("");
+          setAddress("");
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+          setisError("");
+          // // console.log(res,"res")
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          if (err.response.data) {
+            if (err.response.data.message) {
+              setisError(err.response.data.message);
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            } else {
+              setisError(err.response.data);
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            }
+          }
+
+          // console.log(" error =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
     }
   };
 
@@ -634,31 +668,42 @@ function CreateProject() {
     }
     setstepFormData({ ...stepformData, [e.target.name]: value });
   };
-  // // console.log(stepformData, "stepformData");
+  console.log(stepformData, "stepformData");
+  console.log(stepRequiredFields, "stepRequiredFields");
+
+  console.log(stepArrayData, "stepArrayData");
 
   const onAdd = () => {
     // console.log(formDataSkillField, "form data skil;field");
-
+    if (stepType !== "") {
+      // alert("hello");
+      checkValidateForm3();
+    }
     checkValidateForm2();
-    setisCheck(true);
-    seterror("");
-    if (material !== "") {
-      stepformData.material = material;
-    }
-    if (
-      Object.keys(formDataSkillField).length > 0 &&
-      formDataSkillField.skillField !== ""
-    ) {
-      const skills = {};
-      skills.speciality = formDataSkillField.speciality;
-      skills.skill = formDataSkillField.skill;
-      skills.skillField = formDataSkillField.skillField;
-      stepformData.skills = skills;
-    }
-    setstepArrayData((prevState) => [...prevState, stepformData]);
-    setstepFormData(stepData);
-    setFormDataSkillField(skillData);
-    setstepType("");
+
+    Object.values(stepformData).map((obj) => {
+      if (obj !== "") {
+        // alert("hello");
+        if (material !== "") {
+          stepformData.material = material;
+        }
+        if (
+          Object.keys(formDataSkillField).length > 0 &&
+          formDataSkillField.skillField !== ""
+        ) {
+          const skills = {};
+          skills.speciality = formDataSkillField.speciality;
+          skills.skill = formDataSkillField.skill;
+          skills.skillField = formDataSkillField.skillField;
+          stepformData.skills = skills;
+        }
+
+        setstepArrayData((prevState) => [...prevState, stepformData]);
+        setstepFormData(stepData);
+        setFormDataSkillField(skillData);
+        setstepType("");
+      }
+    });
   };
   // // console.log(stepformData,"stepformData")
 

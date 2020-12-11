@@ -254,7 +254,9 @@ select:focus {
 
 .appointmentform .label-agree-term {
   /* color: #999; */
-  color: #6f6f6f;
+  /* color: #6f6f6f; */
+  color: #4f4f4f;
+  font-size: initial;
 }
 
 .appointmentform .term-service {

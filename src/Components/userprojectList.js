@@ -34,7 +34,9 @@ export default function userprojectList({
       <div className="text-left" style={{ width: "50%" }}>
         <div style={{ marginLeft: "2rem" }}>
           <p>{data.project.category.name}</p>
-          <h6 style={{ marginTop: "-0.7rem" }}>{data.project.title}</h6>
+          <h5 style={{ marginTop: "-0.7rem", fontWeight: "bold" }}>
+            {data.project.title}
+          </h5>
           <small>{data.project.general_description}</small>
         </div>
       </div>

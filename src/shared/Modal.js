@@ -1,81 +1,74 @@
 import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Loaders from "./Loaders";
+import axios from "axios";
+import { useToasts } from "react-toast-notifications";
 import Table from "./Table";
 const ModalExample = (props) => {
-  const { skillFieldData, sendInvite, searchBy } = props;
-  if (skillFieldData && skillFieldData.length > 0) {
-    return (
-      <div>
-        <Button color="danger"></Button>
-        <Modal
-          isOpen={props.modal}
-          toggle={props.toggle}
-          className="modal-xl"
-          style={{ width: "70%", borderRadius: "4rem" }}
-        >
-          <ModalHeader toggle={props.toggle}></ModalHeader>
-          <ModalBody>
-            {typeof skillFieldData !== typeof "" ? (
-              <>
-                <h6
-                  className="text-center text-dark"
-                  style={{
-                    fontFamily: "Arial",
-                    fontWeight: "bold",
-                    fontSize: "22px",
-                    color: "#000",
-                  }}
-                >
-                  SEARCH BY :
-                </h6>
-                <div className="row  mt-4">
-                  <div className="col-lg-2"></div>
-                  <div className="col-lg-3">
-                    <button
-                      type="button"
-                      // id="userButton"
-                      id="modalButton"
-                      className="btn "
-                    >
-                      Goods
-                    </button>
-                  </div>
-                  <div className="col-lg-2"></div>
+  const { addToast } = useToasts();
 
-                  <div className="col-lg-3">
-                    <button type="button" id="modalButton" className="btn ">
-                      Field
-                    </button>
-                  </div>
-                  <div className="col-lg-2"></div>
-                </div>
+  const {
+    skillFieldData,
+    sendInvite,
+    searchBy,
+    setsearchBy,
+    MaterialData,
+    id,
+    materialList,
+    SearchBySkills,
+    SearchByMaterials,
+    InviteId,
+  } = props;
+  console.log(MaterialData, "skill field data");
+  const [CategoryData, setCategoryData] = useState("");
+  // console.log(MaterialData, "MaterialData");
+  const SearchByCategory = async () => {
+    setsearchBy("Category");
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      await axios
+        .post(
+          `http://localhost:3000/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
+          {},
 
-                <Table
-                  searchBy={searchBy}
-                  skillFieldData={skillFieldData}
-                  sendInvite={sendInvite}
-                />
-              </>
-            ) : (
-              <h5 className="text-center">
-                No Users found with this Skill name
-              </h5>
-            )}
-          </ModalBody>
-          {/* <ModalFooter>
-          <Button color="primary" onClick={props.toggle}>
-            Do Something
-          </Button>{" "}
-          <Button color="secondary" onClick={props.toggle}>
-            Cancel
-          </Button>
-        </ModalFooter> */}
-        </Modal>
-      </div>
-    );
-  } else {
-    return (
+          headers
+        )
+        .then((res) => {
+          setCategoryData(res.data);
+
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+            placement: "bottom-right",
+          });
+          // console.log(res,"res")
+        })
+        .catch((err) => {
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+
+          console.log(" error =>", err);
+        });
+    } catch (error) {
+      console.log(error, "error catch");
+    }
+  };
+  const SearchBySkill = () => {
+    SearchBySkills("skills", InviteId);
+  };
+  const SearchByMaterial = () => {
+    SearchByMaterials("material", InviteId);
+  };
+  return (
+    <div>
       <Modal
         isOpen={props.modal}
         toggle={props.toggle}
@@ -84,19 +77,94 @@ const ModalExample = (props) => {
       >
         <ModalHeader toggle={props.toggle}></ModalHeader>
         <ModalBody>
-          <h5 className="text-center">No Users found with this Skill name</h5>
+          <>
+            <h6
+              className="text-center text-dark"
+              style={{
+                fontFamily: "Arial",
+                fontWeight: "bold",
+                fontSize: "22px",
+                color: "#000",
+              }}
+            >
+              SEARCH BY :
+            </h6>
+            <div className="row  mt-4">
+              <div className="col-lg-2"></div>
+              <div className="col-lg-3">
+                <button
+                  type="button"
+                  onClick={SearchByMaterial}
+                  // id="userButton"
+                  id="modalButton"
+                  className={
+                    searchBy === "skills" || searchBy === "Category"
+                      ? "btn bg-light text-dark border"
+                      : "btn "
+                  }
+                >
+                  Goods
+                </button>
+              </div>
+
+              <div className="col-lg-3">
+                <button
+                  onClick={SearchBySkill}
+                  type="button"
+                  id="modalButton"
+                  className={
+                    searchBy === "material" || searchBy === "Category"
+                      ? "btn bg-light text-dark border"
+                      : "btn "
+                  }
+                >
+                  Field
+                </button>
+              </div>
+              <div className="col-lg-3">
+                <button
+                  onClick={SearchByCategory}
+                  type="button"
+                  id="modalButton"
+                  className={
+                    searchBy === "Category"
+                      ? "btn "
+                      : "bg-light text-dark border"
+                  }
+                >
+                  Category
+                </button>
+              </div>
+              <div className="col-lg-1"></div>
+            </div>
+            {searchBy === "skills" ? (
+              <Table
+                searchBy={searchBy}
+                sendInvite={sendInvite}
+                skillFieldData={skillFieldData ? skillFieldData : ""}
+              />
+            ) : searchBy === "material" ? (
+              <Table
+                searchBy={searchBy}
+                sendInvite={sendInvite}
+                MaterialData={MaterialData ? MaterialData : ""}
+              />
+            ) : searchBy === "Category" ? (
+              <Table
+                searchBy={searchBy}
+                skillFieldData={skillFieldData}
+                sendInvite={sendInvite}
+                materialList={materialList}
+                CategoryData={CategoryData ? CategoryData : ""}
+              />
+            ) : (
+              ""
+            )}
+          </>
         </ModalBody>
-        {/* <ModalFooter>
-      <Button color="primary" onClick={props.toggle}>
-        Do Something
-      </Button>{" "}
-      <Button color="secondary" onClick={props.toggle}>
-        Cancel
-      </Button>
-    </ModalFooter> */}
       </Modal>
-    );
-  }
+    </div>
+  );
 };
 
 export default ModalExample;

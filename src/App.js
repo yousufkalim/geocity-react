@@ -22,7 +22,7 @@ export default function App() {
         <Switch>
           <PrivateRoute path="/profile/:id" component={Profile} />
 
-          <PrivateRoute path="/ProjectList" component={List} exact />
+          <Route path="/ProjectList" component={List} exact />
           <PrivateRoute path="/SingleProject/:id" component={Project} exact />
 
           <PrivateRoute path="/Createproject" exact component={CreateProject} />

@@ -6,8 +6,12 @@ import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { useToasts } from "react-toast-notifications";
+
 import { Link } from "react-router-dom";
 function Login() {
+  const { addToast } = useToasts();
+
   const signupData = {
     email: "",
     password: "",
@@ -111,10 +115,19 @@ function Login() {
 
           setFormData(signupData);
           setisSuccess(true);
+          addToast("Success", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
         })
         .catch((err, res) => {
           setError(err.response.data);
-
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
           console.log(res, "res login");
           setTimeout(() => {
             setisLoading(false);
