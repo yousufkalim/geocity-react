@@ -1,40 +1,12 @@
 import React, { useEffect } from "react";
 import "../Theme/css/styles.css";
-// import './css/fontawesome-all.css'
 import Footer from "../Components/footer";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import { Link } from "react-router-dom";
 export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-    this.state = { scrollTop: 0 };
-  }
-
-  onScroll = () => {
-    alert("hello");
-    const scrollY = window.scrollY; //Don't get confused by what's scrolling - It's not the window
-    const scrollTop = this.myRef.current.scrollTop;
-    console.log(
-      `onScroll, window.scrollY: ${scrollY} myRef.scrollTop: ${scrollTop}`
-    );
-    this.setState({
-      scrollTop: scrollTop,
-    });
-  };
   render() {
-    // const { scrollTop } = this.state;
     return (
-      <div
-      // style={{ background: "green" }}
-      // ref={this.myRef}
-      // onScroll={this.onScroll}
-      // style={{ overflow: "scroll" }}
-      >
-        {/* end of navbar */}
-        {/* end of navigation */}
-        {/* Header */}
-        {/* fixed-top */}
+      <div>
         <header id="header" className="header">
           <nav className="navbar navbar-expand-lg navbar-dark navbar-custom-home ">
             <button
@@ -289,10 +261,6 @@ export default class Home extends React.Component {
           </div>{" "}
           {/* end of container */}
         </div>{" "}
-        {/* end of basic-2 */}
-        {/* end of details 2 */}
-        {/* Details Lightboxes */}
-        {/* Details Lightbox 1 */}
         {/* Footer */}
         <Footer />
       </div>

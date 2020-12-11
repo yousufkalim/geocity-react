@@ -54,8 +54,8 @@ const ModalExample = (props) => {
 
   //
   const [profilePreview, setProfilePreview] = useState(DefaultImage);
-  console.log(materialArrayData, "material array datA FORM MODAL");
-  console.log(skillArrayData, "skillArrayData array datA FORM MODAL");
+  // console.log(materialArrayData, "material array datA FORM MODAL");
+  // console.log(skillArrayData, "skillArrayData array datA FORM MODAL");
 
   return (
     <div id="Profilemodal">

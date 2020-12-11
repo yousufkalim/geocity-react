@@ -28,7 +28,17 @@ Table Of Contents:
 19. Extra Pages
 20. Media Queries
 ******************************************/
-
+.flex-column {
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
+  border: 1px solid #9a7c64;
+}
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #9a7c64;
+  border-radius: 0px;
+}
 /*****************************************
 Colors:
 - Backgrounds - turquoise #00bfd8

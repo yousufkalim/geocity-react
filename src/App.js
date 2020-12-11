@@ -13,6 +13,8 @@ import Profile from "./screens/Profile";
 import Project from "./screens/Project";
 import SignUp from "./screens/SignUp";
 import PrivateRoute from "./Auth/PrivateRoute";
+import UserDashboard from "./screens/userDashboard";
+
 export default function App() {
   return (
     <Router>
@@ -26,6 +28,11 @@ export default function App() {
           <PrivateRoute path="/SingleProject/:id" component={Project} exact />
 
           <PrivateRoute path="/Createproject" exact component={CreateProject} />
+          <PrivateRoute
+            path="/userdashboard/:id"
+            exact
+            component={UserDashboard}
+          />
 
           <Route path="/SignUp" exact>
             <SignUp />

@@ -26,7 +26,6 @@ export default function List() {
   const [CategoryList, setCategoryList] = useState("");
   const [filteredArray, setfilteredArray] = useState([]);
 
-  const [category, setCategory] = useState("");
   const [request, setRequest] = useState(false);
 
   const [filter, setFilter] = useState(false);
@@ -95,8 +94,6 @@ export default function List() {
   const RequestToView = (id) => {
     if (!isAuthenticated()) {
       setRequest(true);
-      // alert("hello");
-      // window.location.href = "/Login";
     } else {
       if (requestCount >= 0) {
         setRequest(false);
@@ -120,9 +117,6 @@ export default function List() {
                 autoDismissTimeout: 1000,
               });
               setrequestCount(requestCount + 1);
-              // setProjectData(res.data);
-              // setProjectData(res.data.projects);
-              // console.log(res, "response projectCatgeoryData");
             })
             .catch((err) => {
               addToast("Error", {

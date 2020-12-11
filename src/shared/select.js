@@ -10,7 +10,7 @@ const colourOptions = [
 const colourStyles = {
   option: (provided, state) => ({
     ...provided,
-    border: "1px solid #c9c9c9",
+    // border: "1px solid #c9c9c9",
     color: state.isSelected ? "red" : "blue",
     // marginTop: 1,
     // fontSize: "15px",

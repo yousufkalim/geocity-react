@@ -857,18 +857,20 @@ export default function Profile(props) {
                         </div>
 
                         <div className="col">
-                          <button
-                            type="button"
-                            className="btn btn-block"
-                            style={{
-                              fontSize: "15px",
-                              border: 0,
-                              maxWidth: "90%",
-                            }}
-                            onClick={Profiletoggle}
-                          >
-                            MODIFIER
-                          </button>
+                          <Link to={`/userdashboard/${props.match.params.id}`}>
+                            <button
+                              type="button"
+                              className="btn btn-block"
+                              style={{
+                                fontSize: "15px",
+                                border: 0,
+                                maxWidth: "90%",
+                              }}
+                              // onClick={Profiletoggle}
+                            >
+                              MODIFIER
+                            </button>
+                          </Link>
                         </div>
                       </div>
                     ) : (

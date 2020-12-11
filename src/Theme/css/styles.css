@@ -905,12 +905,12 @@ input[type="checkbox"] {
   color: white;
 }
 .cards-1 select {
-  background: rgba(116, 68, 30, 0.986);
-  color: white;
+  /* background: rgba(116, 68, 30, 0.986);
+  color: white; */
 }
 .cards-1 select:focus {
-  background: rgba(116, 68, 30, 0.986);
-  color: white;
+  /* background: rgba(116, 68, 30, 0.986);
+  color: white; */
 }
 .cards-1 #section1 {
   border: 1px solid #ccc;
