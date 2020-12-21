@@ -7,21 +7,16 @@ import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { useToasts } from "react-toast-notifications";
-
+import { loginData } from "../shared/Data";
 import { Link } from "react-router-dom";
 function Login() {
   const { addToast } = useToasts();
-
-  const signupData = {
-    email: "",
-    password: "",
-  };
+  // single states
   const [isLoading, setisLoading] = useState(false);
   const [isSuccess, setisSuccess] = useState(false);
-  const [error, setError] = useState("");
-
-  const [formData, setFormData] = useState(signupData);
-
+  const [formData, setFormData] = useState(loginData);
+  // ********
+  // Required Fields states
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
     email: "",
     password: "",
@@ -30,7 +25,6 @@ function Login() {
   // validation start ******************
   const validateEmail = () => {
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-
     if (!formData.email) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
@@ -46,7 +40,6 @@ function Login() {
   };
   const validatePassword = () => {
     if (formData.password.length <= 4) {
-      // alert("hello");
       const msg = "Password length must be at least 6 characters long";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
       return false;
@@ -73,11 +66,7 @@ function Login() {
 
     setAboutRequiredFields(obj);
     if (!reqFields) {
-      // validatePortfolioThumbnail()
-      // validatePortfolioFiles()
       const msg = "Required";
-      // const flashData = { type: "error", text: "Fill the required fields." }
-      // props.addFlashMessage(flashData)
       return false;
     } else {
       return true;
@@ -94,14 +83,12 @@ function Login() {
     } else if (e.target.name === "password") {
       validatePassword();
     }
-    setError("");
     setFormData({ ...formData, [e.target.name]: value });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
-
     checkValidateForm();
 
     try {
@@ -112,31 +99,37 @@ function Login() {
           console.log(res, "res user");
           localStorage.setItem("jwt", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data.user));
-
-          setFormData(signupData);
+          setFormData(loginData);
           setisSuccess(true);
-          addToast("Success", {
+          addToast(`Login Successfully`, {
             appearance: "success",
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
         })
-        .catch((err, res) => {
-          setError(err.response.data);
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-          console.log(res, "res login");
+        .catch((err) => {
+          if (err.response.data) {
+            if (err.response.data.message) {
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            } else {
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            }
+          }
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
 
-          console.log(" error =>", err);
+          // console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
@@ -163,6 +156,7 @@ function Login() {
                 value={formData.email}
                 onFocus={validateEmail}
                 onChange={handleChange}
+                onPaste={handleChange}
               />
               {aboutRequiredFields.email !== "" ? (
                 <p className="error"> {aboutRequiredFields.email}</p>
@@ -178,6 +172,7 @@ function Login() {
                 placeholder="Password"
                 onFocus={validatePassword}
                 onChange={handleChange}
+                onPaste={handleChange}
                 value={formData.password}
               />
               {aboutRequiredFields.password !== "" ? (
@@ -186,11 +181,7 @@ function Login() {
                 ""
               )}
             </div>
-            {error !== "" && formData.email && formData.password ? (
-              <p className="error mt-1 mb-1"> {error}</p>
-            ) : (
-              ""
-            )}
+
             <div className="form-submit ">
               {isLoading === true ? (
                 <center>

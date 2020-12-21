@@ -125,9 +125,10 @@ textarea:focus {
 .appointmentform h3 {
   font-weight: bold;
   color: #222;
-  font-size: 15px;
+  font-size: 17px;
   margin: 0px;
-  margin-bottom: 35px;
+  margin-bottom: 0px;
+  margin-bottom: 15px;
 }
 
 .appointmentform .clear {
@@ -256,6 +257,7 @@ select:focus {
   /* color: #999; */
   /* color: #6f6f6f; */
   color: #4f4f4f;
+  font-weight: 700;
   font-size: initial;
 }
 

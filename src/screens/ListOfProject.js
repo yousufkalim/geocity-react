@@ -6,11 +6,11 @@ import Footer from "../Components/footer";
 import Autocomplete from "react-autocomplete";
 import ProjectList from "../Components/projectList";
 import DefaultImage from "../Theme/images/index.png";
-import { isAuthenticated } from "../Auth/Index";
+import { isAuthenticated, getUser } from "../Auth/Index";
 import { Redirect } from "react-router-dom";
 import SelectBox from "../shared/select";
 import { useToasts } from "react-toast-notifications";
-import { headers } from "../Auth/Index";
+
 export default function List() {
   const { addToast } = useToasts();
   const filterData = {
@@ -30,12 +30,17 @@ export default function List() {
   // single states *********************
   const [request, setRequest] = useState(false);
   const [filter, setFilter] = useState(false);
-  const [requestCount, setrequestCount] = useState(0);
   const [address, setAddress] = useState("");
+
   // single states end
 
   // useEffect ************************
   useEffect(() => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     try {
       axios
         .get("http://localhost:3000/api/v1/auth/skillList")
@@ -78,49 +83,62 @@ export default function List() {
 
   // request for view ***********************
   const RequestToView = (id) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     if (!isAuthenticated()) {
       setRequest(true);
+      addToast("Please login", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 1000,
+      });
     } else {
-      if (requestCount >= 0) {
-        setRequest(false);
-
-        try {
-          axios
-            .post(
-              `http://localhost:3000/api/v1/project/view-project/send-request?id=${id}`,
-              {},
-              headers
-            )
-            .then((res) => {
-              addToast("Success", {
-                appearance: "success",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
-              setrequestCount(requestCount + 1);
-            })
-            .catch((err) => {
-              addToast("Error", {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
-              console.log(" error request =>", err);
+      try {
+        axios
+          .post(
+            `http://localhost:3000/api/v1/project/view-project/send-request?id=${id}`,
+            {},
+            headers
+          )
+          .then((res) => {
+            addToast("You have successfully Send Request to View Project ", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
             });
-        } catch (error) {
-          console.log(" error request =>", error);
-        }
-      } else {
-        addToast("You already sent request to owner", {
-          appearance: "error",
-          autoDismiss: true,
-          autoDismissTimeout: 1000,
-        });
+          })
+          .catch((err) => {
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              }
+            }
+          });
+      } catch (error) {
+        console.log(" error request =>", error);
       }
     }
   };
   // handleCategoryChange **************************
   const handleCategoryChange = (e) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     setfilterFormData({ ...filterFormData, ["category"]: e.value });
     try {
       axios
@@ -145,6 +163,11 @@ export default function List() {
   // *********
   // handleFieldChange
   const handleFieldChange = (e) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     setfilterFormData({ ...filterFormData, ["skillField"]: e.value });
     try {
       axios
@@ -198,6 +221,11 @@ export default function List() {
   };
   // setAdress *********************
   const SetAddress = (item) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
     setAddress(item);
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {

@@ -21,15 +21,23 @@ export default function ChipsArray({
   materialArrayData,
   setmaterialArrayData,
   materialList,
+  addToast,
 }) {
   const classes = useStyles();
-  const [chipData, setChipData] = React.useState(materialArrayData);
 
   const handleDelete = (chipToDelete) => {
-    const ChipsArray = materialArrayData.filter(
-      (chip) => chip !== chipToDelete
-    );
-    setmaterialArrayData(ChipsArray);
+    if (materialArrayData.length >= 2) {
+      const ChipsArray = materialArrayData.filter(
+        (chip) => chip !== chipToDelete
+      );
+      setmaterialArrayData(ChipsArray);
+    } else {
+      addToast("material length must be at least 1 ", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 1000,
+      });
+    }
   };
 
   // console.log(chipData, "chipData");
@@ -38,20 +46,23 @@ export default function ChipsArray({
       {materialArrayData
         ? materialArrayData.map((data) => {
             // let icon = <TagFacesIcon />;
-            return materialList.map((mat) => {
-              if (mat._id === data) {
-                return (
-                  <li key={data}>
-                    <Chip
-                      //   icon={icon}
-                      label={mat.name}
-                      onDelete={() => handleDelete(data)}
-                      className={classes.chip}
-                    />
-                  </li>
-                );
-              }
-            });
+            return (
+              materialList &&
+              materialList.map((mat) => {
+                if (mat._id === data) {
+                  return (
+                    <li key={data}>
+                      <Chip
+                        //   icon={icon}
+                        label={mat.name}
+                        onDelete={() => handleDelete(data)}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                }
+              })
+            );
           })
         : ""}
     </Paper>

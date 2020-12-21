@@ -901,8 +901,8 @@ input[type="checkbox"] {
   border-radius: 4px;
 }
 .cards-1 input:focus {
-  background: rgba(252, 216, 187, 0.986);
-  color: white;
+  /* background: none; */
+  /* color: white; */
 }
 .cards-1 select {
   /* background: rgba(116, 68, 30, 0.986);

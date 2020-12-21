@@ -3,40 +3,36 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { getUser } from "../Auth/Index";
 import PrivateModal from "../shared/PrivateModal";
-
 export default function ProjectList({
   data,
   totalLikes,
   DefaultImage,
   filter,
   RequestToView,
+  ProjectLike,
+  like,
 }) {
   const [check, setcheck] = useState(false);
   const [modal, setModal] = useState(false);
 
-  // console.log(data, "data filtered");
   const onRequestToView = (id) => {
-    // alert(id);
     RequestToView(id);
   };
+  const onProjectLike = () => {
+    ProjectLike();
+  };
   const CheckRedirect = () => {
-    // setModal(!modal);
     if (filter === true) {
       if (getUser()._id !== data.project_owner && data.type === "Private") {
         setModal(!modal);
       } else {
-        // setModal(false);
         setcheck(true);
-        // window.location.href = `/SingleProject/${data._id}`;
       }
     } else {
       if (getUser()._id !== data.project_owner && data.type === "Private") {
         setModal(!modal);
       } else {
-        // setModal(false);
-        // alert("hello");
         setcheck(true);
-        // window.location.href = `/SingleProject/${data._id}`;
       }
     }
   };
@@ -97,7 +93,15 @@ export default function ProjectList({
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   <span>
-                    <i className="fas fa-heart" />
+                    {like == 1 ? (
+                      <i
+                        className="fas fa-heart "
+                        style={{ color: "red" }}
+                        onClick={onProjectLike}
+                      />
+                    ) : (
+                      <i className="fas fa-heart " onClick={onProjectLike} />
+                    )}
                     <span className="ml-2 " id="span2">
                       {data.project.type &&
                       (getUser()._id !== data.project.project_owner) ===
@@ -148,6 +152,11 @@ export default function ProjectList({
                   data.type === "Private" &&
                   getUser()._id !== data.project_owner
                     ? DefaultImage
+                    : data.type === "Private" &&
+                      data.usersToView.map((user) => {
+                        return user;
+                      }) == getUser()._id
+                    ? DefaultImage
                     : data.general_photo
                     ? `http://localhost:3000/views/uploads/${data.general_photo}`
                     : DefaultImage
@@ -166,18 +175,41 @@ export default function ProjectList({
                     {data.type === "Private" &&
                     getUser()._id !== data.project_owner
                       ? data.type
+                      : data.type === "Private" &&
+                        data.usersToView.map((user) => {
+                          return user;
+                        }) == getUser()._id
+                      ? data.type
                       : data.title}
                   </h6>
                 </span>
                 <p>
                   {data.type === "Private" &&
                   getUser()._id !== data.project_owner
-                    ? "This project is private"
+                    ? "This Project is private"
+                    : data.type === "Private" &&
+                      data.usersToView.map((user) => {
+                        return user;
+                      }) == getUser()._id
+                    ? "This Project is private"
                     : data.general_description}
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   {data.type === "Private" &&
                   getUser()._id !== data.project_owner ? (
+                    <button
+                      type="button"
+                      style={{ fontSize: "0.9rem" }}
+                      id="modalButton"
+                      className="btn  ml-1"
+                      onClick={() => onRequestToView(data._id)}
+                    >
+                      Request To View
+                    </button>
+                  ) : data.type === "Private" &&
+                    data.usersToView.map((user) => {
+                      return user;
+                    }) == getUser()._id ? (
                     <button
                       type="button"
                       style={{ fontSize: "0.9rem" }}
@@ -204,7 +236,6 @@ export default function ProjectList({
                     </>
                   )}
                 </div>
-                {/* <p>Our team of enthusiastic marketers will analyse and evaluate how your company stacks against the closest competitors</p> */}
               </div>
             </div>
           </div>

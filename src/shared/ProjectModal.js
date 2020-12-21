@@ -30,7 +30,6 @@ const ModalExample = (props) => {
     photo,
     setPhoto,
     data,
-    error,
   } = props;
   const [profilePreview, setProfilePreview] = useState(DefaultImage);
 
@@ -64,7 +63,7 @@ const ModalExample = (props) => {
                 <Row>
                   <Col>
                     <FormGroup>
-                      <Label for="examplePassword">General Photo</Label>
+                      <Label for="examplePassword">General Photo*</Label>
                       <Input
                         type="file"
                         name="general_photo"
@@ -158,9 +157,7 @@ const ModalExample = (props) => {
                 </FormGroup>
               </Col>
             </Row>
-            <Row className="mt-3">
-              <Col>{error !== "" ? <p className="error"> {error}</p> : ""}</Col>
-            </Row>
+
             <Col className="text-right">
               {isLoading === true ? (
                 <center>

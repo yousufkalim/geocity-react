@@ -1,69 +1,59 @@
 import React from "react";
 import Autocomplete from "react-autocomplete";
-// import { withFormik } from "formik";
-// import Debug from "./Debug";
+
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import MultipleSelect from "../shared/MultipleSelect";
 import { names } from "../shared/Data";
 import { useStyles } from "../Theme/styles";
-import ChipArray from "../shared/Chip";
 function Form({
-  errors,
   address,
   onAdd,
   handleChange,
+  handleStepChange,
   onSubmit,
-  error,
   isLoading,
   //   validator
-  handleName,
-  handleDescription,
-  handleTitle,
+  validateStepName,
+  validateDescription,
+  validateTitle,
   validateCategory,
-  validateStepType,
   stepRequiredFields,
   validateStatus,
   validateSpeciality,
   validateProjectType,
-  validateCity,
-  validatePhoto,
   validateGenralDesc,
   validateMaterial,
-  // validateProgress,
+  validateStepType,
   // validator
   setmaterialArrayData,
   skillRequiredFields,
   handleSkillChange,
   aboutRequiredFields,
-  materialArrayData,
-  formData,
   items,
   getAddress,
   SetAddress,
   CategoryList,
-  stepformData,
-  handleStepChange,
-  skillField,
   stepType,
   setstepType,
   material,
   formDataSkillField,
+  // list
   materialList,
   skillfieldList,
   skillList,
-  formDataCity,
+  // ******
   setPhoto,
-  iserror,
+  // array data
+  stepformData,
+  formData,
   stepArrayData,
-  // setFormDataSkillField,
 }) {
   const handleStep = (e) => {
     if (e.target.name === "Field") {
       const array = [];
       setmaterialArrayData(array);
     }
-
+    validateStepType();
     setstepType(e.target.value);
   };
   return (
@@ -79,7 +69,7 @@ function Form({
             value={formData.title}
             placeholder="Title"
             onChange={handleChange}
-            onBlur={handleTitle}
+            onBlur={validateTitle}
           />
           {aboutRequiredFields.title !== "" ? (
             <p className="error"> {aboutRequiredFields.title}</p>
@@ -111,9 +101,6 @@ function Form({
 
           <Autocomplete
             items={items}
-            // shouldItemRender={(item, value) =>
-            //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
-            // }
             getItemValue={(item) => item.label}
             renderItem={(item, highlighted) => (
               <div
@@ -161,23 +148,19 @@ function Form({
             type="file"
             name="general_photo"
             id="file"
-            // value={formData.general_photo}
             onChange={(e) => {
               const file = e.target.files[0];
               console.log(file, "photo1");
 
               setPhoto(file);
             }}
-            // onBlur={validatePhoto}
           />
           {aboutRequiredFields.general_photo !== "" ? (
             <p className="error"> {aboutRequiredFields.general_photo}</p>
           ) : (
             ""
           )}
-
           <label className="label-agree-term">General Description*</label>
-
           <input
             type="text"
             name="general_description"
@@ -231,7 +214,7 @@ function Form({
             value={stepformData.name}
             placeholder="name"
             onChange={handleStepChange}
-            onBlur={handleName}
+            onBlur={validateStepName}
           />
           {stepRequiredFields.name !== "" ? (
             <p className="error"> {stepRequiredFields.name}</p>
@@ -242,25 +225,17 @@ function Form({
           <label className="label-agree-term">Step Type*</label>
 
           <div className="select-list">
-            {/* <MultipleSelect
-              name="stepType"
-              value={stepType}
-              // validateStepType={validateStepType}
-              handleStepChange={handleStep}
-              // stepformData={stepformData}
-              data={names}
-            /> */}
             <select
               name="stepType"
               id="stepType"
               value={stepType}
               onChange={handleStep}
-              // onBlur={validateMaterial}
+              onBlur={validateStepType}
             >
               <option>Select StepType</option>
-              {names
-                ? names.map((mat) => <option value={mat}>{mat}</option>)
-                : ""}
+              {names.map((mat) => (
+                <option value={mat}>{mat}</option>
+              ))}
             </select>
           </div>
           {stepRequiredFields.stepType !== "" ? (
@@ -382,17 +357,29 @@ function Form({
             ""
           )}
           <label className="label-agree-term">Description*</label>
-          <input
+          <textarea
+            rows={3}
+            cols={5}
+            type="text"
+            name="description"
+            className="form-control "
+            id="title"
+            value={stepformData.description}
+            placeholder="Description"
+            onChange={handleStepChange}
+            onBlur={validateDescription}
+          ></textarea>
+          {/* <input
             type="text"
             name="description"
             id="title"
             value={stepformData.description}
             placeholder="Description"
             onChange={handleStepChange}
-            onBlur={handleDescription}
-          />
+            onBlur={validateDescription}
+          /> */}
           {stepRequiredFields.description !== "" ? (
-            <p className="error"> {stepRequiredFields.description}</p>
+            <p className="error mt-3"> {stepRequiredFields.description}</p>
           ) : (
             ""
           )}
@@ -417,8 +404,6 @@ function Form({
             </Button>
           )}
         </div>
-        {error !== "" ? <p className="error"> {error}</p> : ""}
-        {iserror !== "" ? <p className="error"> {iserror}</p> : ""}
         <div className="form-submit mt-3">
           {isLoading === true ? (
             <center>

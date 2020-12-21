@@ -1,15 +1,19 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
-export default function userprojectList({
+export default function UserprojectList({
   data,
   i,
   DefaultImage,
   projectLike,
-  like,
 }) {
   //   const onLikeClick = (id) => {
   //     projectLike(id);
   //   };
+  const [like, setlike] = useState(0);
+  const LikeProject = (id) => {
+    setlike(like + 1);
+    projectLike(id, like, setlike);
+  };
   return (
     <div
       key={i}
@@ -65,12 +69,20 @@ export default function userprojectList({
             marginRight: "5rem",
           }}
         >
-          <i
-            className="fas fa-heart  "
-            onClick={() => projectLike(data.project._id)}
-          />
+          {like == 1 ? (
+            <i
+              className="fas fa-heart "
+              style={{ color: "red", cursor: "pointer" }}
+              onClick={() => LikeProject(data.project._id)}
+            />
+          ) : (
+            <i
+              className="fas fa-heart "
+              onClick={() => LikeProject(data.project._id)}
+            />
+          )}
           {/* {like == true ? data.Likes + 1 : data.Likes} */}
-          {data.Likes}
+          {data.Likes + like}
         </p>
       </div>
     </div>

@@ -14,6 +14,16 @@ import Project from "./screens/Project";
 import SignUp from "./screens/SignUp";
 import PrivateRoute from "./Auth/PrivateRoute";
 import UserDashboard from "./screens/userDashboard";
+// import "./Theme/css/bootstrap.css";
+// import "./Theme/css/styles.css";
+// import "./Theme/css/list.css";
+// import "./Theme/css/main.css";
+// import "./Theme/css/project.css";
+// import "./Theme/css/profile.css";
+
+// import "./Theme/css/fontawesomeAll.css";
+// import "./Theme/css/swiper.css";
+// import "./Theme/css/magnific-popup.css";
 
 export default function App() {
   return (

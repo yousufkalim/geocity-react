@@ -18,7 +18,7 @@ import InvitationRequest from "../Components/Invitation";
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 import ProfileModal from "../shared/ProfileModal";
 import MarkImage from "../Theme/images/mark.png";
-
+import LikeUser from "../Components/RecommendUser";
 import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
 
 import facebook from "../Theme/images/facebook.png";
@@ -64,14 +64,7 @@ export default function Profile(props) {
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
 
-  // toast
-  const [show, setShow] = useState(false);
-  const [successmessage, setsuccessMessage] = useState("");
-  const [errormessage, seterrorMessage] = useState("");
-  // toast end
-
   const [comment, setComment] = useState("");
-  const [like, setLike] = useState(false);
   // const [likeCount, setLikeCount] = useState(false);
   const [skillFieldList, setskillFieldList] = useState("");
 
@@ -181,12 +174,11 @@ export default function Profile(props) {
 
     if (skillArrayData.length === 3) {
       // alert(skillArrayData.length);
-      addToast("skills length must be 3 or less", {
+      addToast("You can only add upto 3 skills  or less", {
         appearance: "error",
         autoDismiss: true,
         autoDismissTimeout: 1000,
       });
-      seterrorMessage("You can only add upto 3 skills  or less");
     } else {
       setskillArrayData([...skillArrayData, skillformData]);
       setskillFormData(stepData);
@@ -197,136 +189,48 @@ export default function Profile(props) {
   };
 
   // *** skill end
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setShow(true);
 
-    const newFormData = new FormData();
-    if (!photo || photo === "default.png") {
-      // alert("hello");
-      seterrorMessage("Photo is required");
-    } else {
-      console.log(photo, "profile data");
+  // onSubmit end
+  const RecommendUser = async (skillField, like, setlike) => {
+    // if (recommendstatus === true) {
+    // }
 
-      newFormData.append("username", formData.username);
-      newFormData.append("availability", formData.availability);
-      newFormData.append("city", formData.city);
-      // newFormData.append("confirm_password", formData.confirm_password);
-      // newFormData.append("email", formData.email);
-      newFormData.append("latitude", formData.latitude);
-      newFormData.append("longitude", formData.longitude);
-      // newFormData.append("password", formData.password);
-      newFormData.append("phone", formData.phone);
-      newFormData.append("profile_description", formData.profile_description);
-      newFormData.append("profile_picture", photo);
-      newFormData.append("zipCode", formData.zipCode);
-      // console.log("asfjlas", JSON.stringify(skillArrayData));
-      if (skillArrayData.length > 0 && materialArrayData.length > 0) {
-        // alert("hello");
-        newFormData.append("skills", JSON.stringify(skillArrayData));
-        newFormData.append("material", JSON.stringify(materialArrayData));
-      } else {
-        // alert("hello");
-        newFormData.append("skills", JSON.stringify(formData.skills));
-        newFormData.append("material", JSON.stringify(formData.material));
-      }
-      setisLoading(true);
-      // console.log(newFormData.getAll("general_photo"), "formdata");
-
-      // console.log(items,"items")
-
+    if (like === 0) {
       try {
         const headers = {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },
         };
-        await axios
-          .post(
-            `http://localhost:3000/api/v1/profile/editProfile?id=${props.match.params.id}`,
-            newFormData,
-            headers
-          )
+
+        await Axios.post(
+          `http://localhost:3000/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
+          { skillField: skillField },
+          headers
+        )
           .then((res) => {
-            setisLoading(false);
-            setFormData(projectData);
-            setprofileModal(false);
-            setsuccessMessage("User updated successfully");
-            seterrorMessage("");
-            addToast("Success", {
+            // setrecommendstatus(true);
+
+            addToast("User recommended successfully", {
               appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            // console.log(res,"res")
           })
           .catch((err) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-            seterrorMessage("User updated false");
-            setsuccessMessage("");
             addToast("Error", {
               appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            // console.log(" error =>", err);
+
+            // console.log(" error recommend=>", err);
           });
       } catch (error) {
-        console.log(error, "error catch");
-        setTimeout(() => {
-          setisLoading(false);
-        }, 1000);
+        // console.log(error, "error catch");
       }
-    }
-  };
-  // onSubmit end
-  const RecommendUser = async (skillField) => {
-    // if (recommendstatus === true) {
-    // }
-    setShow(true);
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-
-      await Axios.post(
-        `http://localhost:3000/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
-        { skillField: skillField },
-        headers
-      )
-        .then((res) => {
-          // setrecommendstatus(true);
-          setsuccessMessage("User recommended successfully");
-          seterrorMessage("");
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-          setsuccessMessage("");
-
-          seterrorMessage("User recommended failed");
-          // console.log(" error recommend=>", err);
-        });
-    } catch (error) {
-      // console.log(error, "error catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
+    } else {
+      setlike(0);
     }
   };
   const DeleteComment = (comment) => {
@@ -486,15 +390,14 @@ export default function Profile(props) {
     setFormData({ ...formData, [e.target.name]: value });
   };
 
-  const projectLike = (id) => {
+  const projectLike = (id, like, setlike) => {
     // alert(id);
-    setShow(true);
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    if (like === false) {
+    if (like === 0) {
       try {
         Axios.post(
           `http://localhost:3000/api/v1/project/view-project/likedBy?id=${id}`,
@@ -502,9 +405,6 @@ export default function Profile(props) {
           headers
         )
           .then((res) => {
-            setLike(!like);
-            setsuccessMessage("Success");
-            seterrorMessage("");
             addToast("Success", {
               appearance: "success",
               autoDismiss: true,
@@ -513,8 +413,6 @@ export default function Profile(props) {
             // console.log(res, "res like");
           })
           .catch((err) => {
-            seterrorMessage("Error!");
-            setsuccessMessage("");
             addToast("Error", {
               appearance: "error",
               autoDismiss: true,
@@ -526,7 +424,7 @@ export default function Profile(props) {
         // console.log(error, "error catch");
       }
     } else {
-      setLike(!like);
+      setlike(0);
     }
   };
   const onMaterialChange = (e) => {
@@ -676,37 +574,6 @@ export default function Profile(props) {
   if (Object.keys(data)) {
     return (
       <div>
-        <ProfileModal
-          modal={profilemodal}
-          // sendInvite={sendInvite}
-          toggle={Profiletoggle}
-          isLoading={isLoading}
-          DefaultImage={DefaultImage}
-          skillFieldList={skillFieldList}
-          skillformData={skillformData}
-          handleSkillChange={handleSkillChange}
-          getAddress={getAddress}
-          SetAddress={SetAddress}
-          address={address}
-          onSubmit={onSubmit}
-          items={items}
-          onskillAdd={onskillAdd}
-          material={material}
-          onMaterialChange={onMaterialChange}
-          setPhoto={setPhoto}
-          skillList={skillList}
-          formData={formData}
-          materialList={materialList}
-          handleChange={handleChange}
-          materialArrayData={materialArrayData}
-          setskillArrayData={setskillArrayData}
-          skillArrayData={skillArrayData}
-          setmaterialArrayData={setmaterialArrayData}
-          errormessage={errormessage}
-          data={data}
-          // searchBy={searchBy}
-          // skillFieldData={skillFieldData.length > 0 ? skillFieldData : []}
-        />
         <Header />
         <div id="services" className="cardSection">
           <div className="container ">
@@ -913,66 +780,12 @@ export default function Profile(props) {
               <div className="col-lg-6" style={{ marginTop: "-0.8rem" }}>
                 {data.data.skills
                   ? data.data.skills.map((skill) => (
-                      <div
-                        className=" ml-2  "
-                        id="iconRow"
-                        style={{ marginTop: "-0.3rem" }}
-                      >
-                        <p>
-                          <small>{skill.skillField.skillField} - </small>
-                          {skill.skill}
-                          {skill.specialization ? (
-                            <>
-                              <i
-                                id="PopoverLegacy"
-                                type="button"
-                                class="fas fa-info-circle fa-xs"
-                                style={{
-                                  marginLeft: 2,
-                                  position: "absolute",
-                                  color: "#c1c1c1",
-                                }}
-                              />
-                              <UncontrolledPopover
-                                trigger="legacy"
-                                placement="bottom"
-                                target="PopoverLegacy"
-                              >
-                                <PopoverBody>
-                                  {skill.specialization}
-                                </PopoverBody>
-                              </UncontrolledPopover>
-                            </>
-                          ) : (
-                            ""
-                          )}
-                          <br />
-                          <span>
-                            <i
-                              className="fas fa-star fa-sm "
-                              style={{ color: "#ffe500" }}
-                            />
-                            <i
-                              className="fas fa-star fa-sm "
-                              style={{ color: "#ffe500" }}
-                            />
-                            <i
-                              className="fas fa-star fa-sm "
-                              style={{ color: "#ffe500" }}
-                            />
-                            <i className="fas fa-star fa-sm " />
-                            <i className="fas fa-star fa-sm " />
-                          </span>
-                        </p>
-                        <p
-                          style={{ marginRight: "8rem", cursor: "pointer" }}
-                          onClick={() => RecommendUser(skill.skillField._id)}
-                        >
-                          <i className="fas fa-heart " />
-
-                          {/* <span class="ml-2 " id="span2" >21%</span> */}
-                        </p>
-                      </div>
+                      <LikeUser
+                        skill={skill}
+                        RecommendUser={RecommendUser}
+                        UncontrolledPopover={UncontrolledPopover}
+                        PopoverBody={PopoverBody}
+                      />
                     ))
                   : ""}
               </div>
@@ -992,12 +805,11 @@ export default function Profile(props) {
                     <h4 className="mt-1 ml-4 text-bold">PROJETS</h4>
                   </div>
                 </div>
-                {ProjectdataList.slice(0, 4).map((data, i) => (
+                {ProjectdataList.map((data, i) => (
                   <UserProjectList
                     data={data}
                     i={i}
                     DefaultImage={DefaultImage}
-                    like={like}
                     projectLike={projectLike}
                   />
                 ))}
@@ -1008,7 +820,7 @@ export default function Profile(props) {
 
             {/* end of row */}
             {/* end of row */}
-            <div className="row " style={{ marginTop: "2rem" }}>
+            {/* <div className="row " style={{ marginTop: "2rem" }}>
               <div
                 className="col-lg-12 text-left  p-1"
                 style={{
@@ -1052,8 +864,8 @@ export default function Profile(props) {
                   Requests For Collaboration
                 </h4>
               </div>
-            </div>
-            {data.data && data.data.invitation.length > 0
+            </div> */}
+            {/* {data.data && data.data.invitation.length > 0
               ? data.data.invitation.map((data, i) =>
                   data.hasOwnProperty("skillID") ? (
                     data.sender ? (
@@ -1092,7 +904,7 @@ export default function Profile(props) {
                     ""
                   )
                 )
-              : ""}
+              : ""} */}
             <div className="row" style={{ marginTop: "2rem" }}>
               <div
                 className="col-lg-12 text-left  p-1"

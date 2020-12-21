@@ -3,68 +3,23 @@ import "../Theme/css/project.css";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
 import axios from "axios";
-import Loaders from "../shared/Loaders";
 import { useToasts } from "react-toast-notifications";
 import { useStyles } from "../Theme/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
-import { getUser } from "../Auth/Index";
+import { getUser, isAuthenticated } from "../Auth/Index";
 import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
 import { Link, Redirect } from "react-router-dom";
 import Modal from "../shared/Modal";
 import ProjectModal from "../shared/ProjectModal";
 import StepModal from "../shared/StepModal";
-import DeleteModal from "../shared/DeleteContributer";
+import AddStepModal from "../shared/AddStepModal";
+
+import DeleteModal from "../shared/ContributerModal";
 
 export default function Project(props) {
   const { addToast } = useToasts();
-
-  const [data, setData] = useState("");
-  const [comment, setComment] = useState("");
-  const [skillFieldData, setSkillFieldData] = useState("");
-  const [MaterialData, setMaterialData] = useState("");
-  const [like, setlike] = useState(0);
-
-  const [searchBy, setsearchBy] = useState("");
-  const [InviteId, setInviteId] = useState("");
-
-  const [commentArray, setCommentArray] = useState([]);
-
-  // modal states
-  const [modal, setModal] = useState(false);
-  const [Profilemodal, setProfileModal] = useState(false);
-  const [stepmodal, setstepModal] = useState(false);
-  const [deletemodal, setdeletemodal] = useState(false);
-
-  // ***
-  const [isLoading, setisLoading] = useState(false);
-  const [CategoryList, setCategoryList] = useState("");
-  const [stepId, setstepId] = useState("");
-  const [photo, setPhoto] = useState("");
-  const [error, setError] = useState("");
-
-  // toast
-  const [successmessage, setsuccessMessage] = useState("");
-  const [deleteCheck, setdeleteCheck] = useState(false);
-
-  const [errormessage, seterrorMessage] = useState("");
-
-  // toast end
-
-  const projectData = {
-    title: "",
-    type: "",
-    general_photo: "",
-    general_description: "",
-    category: "",
-
-    // implementation_steps: "",
-    // progress: "",
-  };
-  const [formData, setFormData] = useState(projectData);
-
-  // Edit step states*******************************************
   const stepData = {
     name: "",
     description: "",
@@ -75,17 +30,57 @@ export default function Project(props) {
     speciality: "",
     skill: "",
   };
+  const projectData = {
+    title: "",
+    type: "",
+    general_photo: "",
+    general_description: "",
+    category: "",
+  };
+  const [data, setData] = useState("");
+  const [comment, setComment] = useState("");
+  const [skillFieldData, setSkillFieldData] = useState("");
+  const [MaterialData, setMaterialData] = useState("");
+
+  const [like, setlike] = useState(0);
+  const [searchBy, setsearchBy] = useState("");
+  const [InviteId, setInviteId] = useState("");
+  const [request, setRequest] = useState(false);
+
+  const [commentArray, setCommentArray] = useState([]);
+  const [materialArrayData, setmaterialArrayData] = useState([]);
+
+  // modal states
+  const [modal, setModal] = useState(false);
+  const [Profilemodal, setProfileModal] = useState(false);
+  const [stepmodal, setstepModal] = useState(false);
+  const [addstepmodal, setaddstepModal] = useState(false);
+  const [deletemodal, setdeletemodal] = useState(false);
+
+  // ***
+  const [isLoading, setisLoading] = useState(false);
+  const [CategoryList, setCategoryList] = useState("");
+  const [stepId, setstepId] = useState("");
+  const [photo, setPhoto] = useState("");
+
+  // toast
+  const [deleteCheck, setdeleteCheck] = useState(false);
+
+  // toast end
+
+  // Edit step states*******************************************
+  const [formData, setFormData] = useState(projectData);
+
   const [stepformData, setstepFormData] = useState(stepData);
   const [formDataSkillField, setFormDataSkillField] = useState(skillData);
+
   const [stepType, setstepType] = useState("");
-  const [materialArrayData, setmaterialArrayData] = useState([]);
   const [material, setMaterial] = useState("");
   const [materialList, setMaterialList] = useState("");
   const [skillfieldList, setskillFieldList] = useState("");
   const [skillList, setskillList] = useState("");
   const [stepArrayData, setstepArrayData] = useState([]);
   const [tempstepId, settempstepId] = useState("");
-  const [requestCount, setrequestCount] = useState(0);
 
   // ***********************************************
 
@@ -185,8 +180,6 @@ export default function Project(props) {
           setisLoading(false);
           setFormData(projectData);
           setProfileModal(false);
-          setsuccessMessage("Success");
-          seterrorMessage("");
           addToast("Success", {
             appearance: "success",
             autoDismiss: true,
@@ -199,20 +192,22 @@ export default function Project(props) {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
-          seterrorMessage("Error");
-          setsuccessMessage("");
+
           if (err.response.data) {
             if (err.response.data.message) {
-              setError(err.response.data.message);
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
             } else {
-              setError(err.response.data);
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
             }
           }
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
 
           console.log(" error =>", err);
         });
@@ -223,18 +218,72 @@ export default function Project(props) {
       }, 1000);
     }
   };
+  const onAddStepSubmit = () => {
+    alert("hello");
+  };
   // modal dialoge
+  const addStepToggle = () => {
+    // if (addstepmodal === false) {
+    //   settempstepId(id);
+    // }
+    setaddstepModal(!addstepmodal);
+  };
   const Steptoggle = (id) => {
+    // debugger;
     if (stepmodal === false) {
       settempstepId(id);
+      const stepIndex = data.project.implementation_steps.findIndex(
+        (step) => step._id === id
+      );
+      const step = data.project.implementation_steps[stepIndex];
+      console.log(step, "step form toggle");
+      // if (step.skills) {
+      //   setstepType("Field");
+      // } else {
+      //   setstepType("Material");
+      // }
+
+      if (step.skills) {
+        setstepType("Field");
+        const skillData = {
+          skillField: step.skills.skillField._id,
+          speciality: step.skills.speciality,
+          skill: step.skills.skill,
+        };
+        skillfieldList.map((skill) =>
+          skill._id === step.skills.skillField._id
+            ? setskillList(skill.skill)
+            : ""
+        );
+        setFormDataSkillField(skillData);
+        const stepData = {
+          name: step.name,
+          description: step.description,
+          status: step.status,
+        };
+        // stepData.skills = skillData;
+
+        setstepFormData(stepData);
+      } else if (step.material) {
+        setstepType("Material");
+        const stepData = {
+          name: step.name,
+          description: step.description,
+          status: step.status,
+          material: step.material._id,
+        };
+        setMaterial(step.material._id);
+        setstepFormData(stepData);
+      }
     }
     setstepModal(!stepmodal);
   };
+  // console.log(formDataSkillField, "formDataSkillField data");
+
   // searchby functions
   const SearchBySkills = (skill, id) => {
     setsearchBy(skill);
 
-    // alert("hello");
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -256,7 +305,7 @@ export default function Project(props) {
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
-          console.log(res.data, "res skill search data");
+          // console.log(res.data, "res skill search data");
         })
         .catch((err) => {
           addToast("Error", {
@@ -273,7 +322,6 @@ export default function Project(props) {
   const SearchByMaterials = (skill, id) => {
     setsearchBy(skill);
 
-    // alert("hello");
     // alert(id);
 
     var headers = {
@@ -297,7 +345,7 @@ export default function Project(props) {
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
-          console.log(res.data, "res material search data");
+          // console.log(res.data, "res material search data");
         })
         .catch((err) => {
           addToast("Error", {
@@ -330,46 +378,63 @@ export default function Project(props) {
   // project Like
   const ProjectLike = () => {
     // debugger;
-    if (like >= 1) {
-      setlike(0);
+    if (!isAuthenticated()) {
+      setRequest(true);
+      addToast("Please login", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 1000,
+      });
     } else {
-      var headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-      // console.log(headers, "asnlnkoasnas");
-      try {
-        axios
-          .post(
-            `http://localhost:3000/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
-            {},
-            headers
-          )
-          .then((res) => {
-            setlike(like + 1);
-            setsuccessMessage("Success");
-            addToast("Success", {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
+      if (like >= 1) {
+        setlike(0);
+      } else {
+        var headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+        // console.log(headers, "asnlnkoasnas");
+        try {
+          axios
+            .post(
+              `http://localhost:3000/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
+              {},
+              headers
+            )
+            .then((res) => {
+              setlike(like + 1);
+
+              addToast("Success", {
+                appearance: "success",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+
+              // setProjectdataList(res.data.ownedProjects);
+            })
+            .catch((err) => {
+              setlike(0);
+              if (err.response.data) {
+                if (err.response.data.message) {
+                  addToast(`${err.response.data.message}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 1000,
+                  });
+                } else {
+                  addToast(`${err.response.data}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 1000,
+                  });
+                }
+              }
+              console.log(" error projects =>", err);
             });
-            seterrorMessage("");
-            // setProjectdataList(res.data.ownedProjects);
-          })
-          .catch((err) => {
-            setlike(false);
-            seterrorMessage("Error!");
-            setsuccessMessage("");
-            addToast("Error", {
-              appearance: "error",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
-            });
-            console.log(" error projects =>", err);
-          });
-      } catch (error) {
-        console.log(error, "error catch");
+        } catch (error) {
+          console.log(error, "error catch");
+        }
       }
     }
   };
@@ -391,6 +456,8 @@ export default function Project(props) {
   };
   // console.log(formData, "project in profile toggle");
   const sendInvite = (receiver) => {
+    // setrecieverId(receiver);
+    // if (requestCount === 0 && recieverId !== receiver) {
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -409,27 +476,42 @@ export default function Project(props) {
           // setData(res.data);
           setModal(false);
 
-          setsuccessMessage("success");
           addToast("Success", {
             appearance: "success",
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
-          console.log(res.data, "res invite sent");
+          // console.log(res.data, "res invite sent");
         })
         .catch((err) => {
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-          setsuccessMessage("");
+          if (err.response.data) {
+            if (err.response.data.message) {
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            } else {
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            }
+          }
 
           console.log(" error projects =>", err);
         });
     } catch (error) {
       console.log(error, "error catch");
     }
+    // } else {
+    //   addToast("You already sent invite to this user", {
+    //     appearance: "error",
+    //     autoDismiss: true,
+    //     autoDismissTimeout: 1000,
+    //   });
+    // }
   };
   const handleSkillChange = async (e) => {
     if (e.target.name === "skillField") {
@@ -477,31 +559,79 @@ export default function Project(props) {
     setFormDataSkillField(skillData);
     setstepType("");
   };
+
   const onStepSubmit = (e) => {
     e.preventDefault();
     setisLoading(true);
-    const newFormData = new FormData();
-    newFormData.append("step", JSON.stringify(stepArrayData));
-    newFormData.append("id", tempstepId);
-
-    console.log(stepArrayData, "step array data on submit");
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    // debugger;
+    if (
+      Object.keys(stepformData).length > 0 &&
+      Object.keys(formDataSkillField).length > 0
+    ) {
+      let array = [];
+      const obj1 = { ...formDataSkillField };
+      const obj2 = { ...stepformData };
+      obj2.skills = obj1;
+      // stepformData.skills = formDataSkillField;
+      // let merge = { ...stepformData, ...formDataSkillField };
+      array.push(obj2);
+      console.log(array, "array on submit");
       axios
         .post(
           `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
-          { id: tempstepId, step: stepArrayData },
+          { id: tempstepId, step: obj2 },
           headers
         )
         .then((res) => {
           setisLoading(false);
           setstepModal(false);
-          setError("");
-          addToast("Success", {
+
+          addToast("Step Update Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          if (err.response.data) {
+            if (err.response.data.message) {
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            } else {
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
+            }
+          }
+          // console.log(" error =>", err);
+        });
+    } else {
+      // alert("oy hoy");
+
+      axios
+        .post(
+          `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
+          { id: tempstepId, step: stepformData },
+          headers
+        )
+        .then((res) => {
+          setisLoading(false);
+          setstepModal(false);
+
+          addToast("Step updated Successfully", {
             appearance: "success",
             autoDismiss: true,
             autoDismissTimeout: 1000,
@@ -514,70 +644,59 @@ export default function Project(props) {
           }, 1000);
           if (err.response.data) {
             if (err.response.data.message) {
-              setError(err.response.data.message);
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
             } else {
-              setError(err.response.data);
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
             }
           }
-          addToast("Error", {
+          // console.log(" error =>", err);
+        });
+    }
+
+    // console.log(merge, "merge object");
+  };
+
+  const ShowInterest = (id) => {
+    var headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    // console.log(headers, "asnlnkoasnas");
+    try {
+      axios
+        .post(
+          `http://localhost:3000/api/v1/project/view-project/sendInviteToCollaborateByUser?id=${props.match.params.id}`,
+          { stepID: id },
+          headers
+        )
+        .then((res) => {
+          // setCategoryList(res.data.category);
+          addToast("You have successfully shown interest ", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+          console.log(res, "response interest");
+        })
+        .catch((err) => {
+          addToast(`${err.response.data.message}`, {
             appearance: "error",
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
-          // console.log(" error =>", err);
+          console.log(" error interest =>", err.response);
         });
     } catch (error) {
       // console.log(error, "error catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
-    }
-  };
-
-  const ShowInterest = (id) => {
-    if (requestCount >= 0) {
-      var headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-      // console.log(headers, "asnlnkoasnas");
-      try {
-        axios
-          .post(
-            "http://localhost:3000/api/v1/profile/Project-Interest",
-            { interest: id },
-            headers
-          )
-          .then((res) => {
-            setrequestCount(requestCount + 1);
-            // setCategoryList(res.data.category);
-            addToast("Success", {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
-            });
-            console.log(res, "response interest");
-          })
-          .catch((err) => {
-            setrequestCount(0);
-
-            addToast(`${err.response.data.message}`, {
-              appearance: "error",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
-            });
-            console.log(" error interest =>", err.response);
-          });
-      } catch (error) {
-        // console.log(error, "error catch");
-      }
-    } else {
-      addToast("You ALready shown interest", {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 1000,
-      });
     }
   };
 
@@ -712,7 +831,7 @@ export default function Project(props) {
           console.log(res.data, "res project data");
         })
         .catch((err) => {
-          console.log(" error projects all =>", err);
+          console.log(" error projects all =>", err.response.data);
         });
     } catch (error) {
       // console.log(error, "error catch");
@@ -753,695 +872,758 @@ export default function Project(props) {
       }
     }
   }, [stepType]);
-  if (deleteCheck === true) {
-    return <Redirect to="/ProjectList" />;
-  } else {
-    return (
-      <div>
-        <DeleteModal
-          ContributorDelete={ContributorDelete}
-          modal={deletemodal}
-          materialList={materialList}
-          skillfieldList={skillfieldList}
-          toggle={DeletContributor}
-          data={data ? data.project.implementation_steps : ""}
-        />
-        <Modal
-          modal={modal}
-          id={props.match.params.id}
-          sendInvite={sendInvite}
-          setsearchBy={setsearchBy}
-          SearchBySkills={SearchBySkills}
-          InviteId={InviteId}
-          SearchByMaterials={SearchByMaterials}
-          toggle={toggle}
-          materialList={materialList}
-          searchBy={searchBy}
-          skillFieldData={skillFieldData ? skillFieldData : []}
-          MaterialData={MaterialData ? MaterialData : []}
-        />
-        <ProjectModal
-          modal={Profilemodal}
-          toggle={Projecttoggle}
-          CategoryList={CategoryList}
-          formData={formData}
-          isLoading={isLoading}
-          error={error}
-          DefaultImage={DefaultImage}
-          setPhoto={setPhoto}
-          data={data}
-          photo={photo}
-          handleChange={handleChange}
-          onSubmit={onSubmit}
-          data={Object.keys(data).length > 0 ? data : ""}
-        />
-        <StepModal
-          modal={stepmodal}
-          toggle={Steptoggle}
-          stepformData={stepformData}
-          stepType={stepType}
-          setstepType={setstepType}
-          material={material}
-          setmaterialArrayData={setmaterialArrayData}
-          handleStepChange={handleStepChange}
-          onSubmit={onStepSubmit}
-          isLoading={isLoading}
-          materialList={materialList}
-          onStepAdd={onStepAdd}
-          skillfieldList={skillfieldList}
-          data={data}
-          skillList={skillList}
-          formDataSkillField={formDataSkillField}
-          handleSkillChange={handleSkillChange}
-        />
-        <Header />
+  // console.log(data, "data project");
+  if (request === false) {
+    if (deleteCheck === true) {
+      return <Redirect to="/ProjectList" />;
+    } else {
+      return (
+        <div>
+          <DeleteModal
+            ContributorDelete={ContributorDelete}
+            modal={deletemodal}
+            materialList={materialList}
+            skillfieldList={skillfieldList}
+            toggle={DeletContributor}
+            data={data ? data.project.implementation_steps : ""}
+          />
+          <Modal
+            modal={modal}
+            id={props.match.params.id}
+            sendInvite={sendInvite}
+            setsearchBy={setsearchBy}
+            SearchBySkills={SearchBySkills}
+            InviteId={InviteId}
+            SearchByMaterials={SearchByMaterials}
+            toggle={toggle}
+            materialList={materialList}
+            searchBy={searchBy}
+            skillFieldData={skillFieldData ? skillFieldData : []}
+            MaterialData={MaterialData ? MaterialData : []}
+          />
+          <ProjectModal
+            modal={Profilemodal}
+            toggle={Projecttoggle}
+            CategoryList={CategoryList}
+            formData={formData}
+            isLoading={isLoading}
+            DefaultImage={DefaultImage}
+            setPhoto={setPhoto}
+            data={data}
+            photo={photo}
+            handleChange={handleChange}
+            onSubmit={onSubmit}
+            data={Object.keys(data).length > 0 ? data : ""}
+          />
+          {/* <AddStepModal
+            modal={addstepmodal}
+            toggle={addStepToggle}
+            stepformData={stepformData}
+            stepType={stepType}
+            setstepType={setstepType}
+            material={material}
+            handleStepChange={handleStepChange}
+            onAddStepSubmit={onAddStepSubmit}
+            isLoading={isLoading}
+            materialList={materialList}
+            onStepAdd={onStepAdd}
+            skillfieldList={skillfieldList}
+            tempstepId={tempstepId}
+            data={data ? data.project.implementation_steps : ""}
+            skillList={skillList}
+            formDataSkillField={formDataSkillField}
+            handleSkillChange={handleSkillChange}
+          /> */}
+          <StepModal
+            modal={stepmodal}
+            toggle={Steptoggle}
+            stepformData={stepformData}
+            stepType={stepType}
+            setstepType={setstepType}
+            material={material}
+            handleStepChange={handleStepChange}
+            onSubmit={onStepSubmit}
+            isLoading={isLoading}
+            materialList={materialList}
+            onStepAdd={onStepAdd}
+            skillfieldList={skillfieldList}
+            tempstepId={tempstepId}
+            data={data ? data.project.implementation_steps : ""}
+            skillList={skillList}
+            formDataSkillField={formDataSkillField}
+            handleSkillChange={handleSkillChange}
+          />
+          <Header />
 
-        {/* start of api integrate */}
-        {data ? (
-          <div id="services" className="cardsProject">
-            <div className="container ">
-              <div className="row ">
-                <div
-                  className=" text-center"
-                  style={{
-                    width: "20%",
-                    background: "#fcfcfc",
-                    height: "15.1rem",
-                  }}
-                >
+          {/* start of api integrate */}
+          {data ? (
+            <div id="services" className="cardsProject">
+              <div className="container ">
+                <div className="row ">
                   <div
+                    className=" text-center"
                     style={{
-                      paddingRight: "0rem",
-                      paddingTop: "0.6rem",
-                      paddingLeft: "0rem",
-                    }}
-                  >
-                    <img
-                      className="project-image"
-                      style={{
-                        border: `${
-                          data.project.category
-                            ? data.project.category.color
-                              ? `5px solid ${data.project.category.color}`
-                              : ""
-                            : ""
-                        }`,
-                      }}
-                      src={
-                        data.project.general_photo
-                          ? `http://localhost:3000/views/uploads/${data.project.general_photo}`
-                          : DefaultImage
-                      }
-                      alt="alternative"
-                    />
-                  </div>
-                </div>
-                <div className="text-left" style={{ width: "55%" }}>
-                  <div
-                    style={{
+                      width: "20%",
                       background: "#fcfcfc",
-                      marginLeft: "2rem",
-                      paddingBottom: "0.1rem",
+                      height: "15.1rem",
                     }}
                   >
                     <div
                       style={{
-                        paddingLeft: "2rem",
-                        paddingBottom: 0,
-                        paddingTop: "0.8rem",
+                        paddingRight: "0rem",
+                        paddingTop: "0.6rem",
+                        paddingLeft: "0rem",
                       }}
                     >
-                      <p
+                      <img
+                        className="project-image"
                         style={{
-                          color: `${
+                          border: `${
                             data.project.category
                               ? data.project.category.color
-                                ? ` ${data.project.category.color}`
+                                ? `5px solid ${data.project.category.color}`
                                 : ""
                               : ""
                           }`,
-                          fontWeight: "bold",
                         }}
-                      >
-                        {data.project.category
-                          ? data.project.category.name
-                          : ""}
-                      </p>
-                      <h4
+                        src={
+                          data.project.general_photo
+                            ? `http://localhost:3000/views/uploads/${data.project.general_photo}`
+                            : DefaultImage
+                        }
+                        alt="alternative"
+                      />
+                    </div>
+                  </div>
+                  <div className="text-left" style={{ width: "55%" }}>
+                    <div
+                      style={{
+                        background: "#fcfcfc",
+                        marginLeft: "2rem",
+                        paddingBottom: "0.1rem",
+                      }}
+                    >
+                      <div
                         style={{
-                          marginTop: "-0.5rem",
-
-                          fontWeight: "bold",
+                          paddingLeft: "2rem",
+                          paddingBottom: 0,
+                          paddingTop: "0.8rem",
                         }}
                       >
-                        {data.project.title}
-                      </h4>
-                      <p>{data.project.general_description}</p>
-                    </div>
-                    <p style={{ marginLeft: "2rem", marginTop: "4.5rem" }}>
-                      {data.project.address ? data.project.address.city : ""}{" "}
-                      {`(${
-                        data.project.address ? data.project.address.zipCode : ""
-                      })`}
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="  text-right"
-                  style={{
-                    width: "25%",
-                    background: "#fcfcfc",
-                    paddingRight: "1rem",
-                    height: "15.2rem",
-                    // background: "red",
-                  }}
-                >
-                  {getUser()._id === data.project.project_owner._id ? (
-                    <div className="row">
-                      <div className="col ">
-                        <button
-                          onClick={DeleteProject}
-                          type="button"
-                          className="btn btn-block"
-                          style={{ fontSize: "15px", border: 0 }}
+                        <p
+                          style={{
+                            color: `${
+                              data.project.category
+                                ? data.project.category.color
+                                  ? ` ${data.project.category.color}`
+                                  : ""
+                                : ""
+                            }`,
+                            fontWeight: "bold",
+                          }}
                         >
-                          Delete Projet
-                        </button>
-                      </div>
+                          {data.project.category
+                            ? data.project.category.name
+                            : ""}
+                        </p>
+                        <h4
+                          style={{
+                            marginTop: "-0.5rem",
 
-                      <div className="col">
-                        <button
-                          type="button"
-                          className="btn btn-block"
-                          style={{ fontSize: "15px", border: 0 }}
-                          onClick={Projecttoggle}
+                            fontWeight: "bold",
+                          }}
                         >
-                          MODIFIER
-                        </button>
+                          {data.project.title}
+                        </h4>
+                        <p>{data.project.general_description}</p>
                       </div>
+                      <p style={{ marginLeft: "2rem", marginTop: "4.5rem" }}>
+                        {data.project.address ? data.project.address.city : ""}{" "}
+                        {`(${
+                          data.project.address
+                            ? data.project.address.zipCode
+                            : ""
+                        })`}
+                      </p>
                     </div>
-                  ) : (
-                    ""
-                  )}
-                  <p style={{ marginTop: "0.7rem", marginRight: "2.1rem" }}>
-                    {like == 1 ? (
-                      <i
-                        className="fas fa-heart "
-                        style={{ color: "red" }}
-                        onClick={ProjectLike}
-                      />
-                    ) : (
-                      <i className="fas fa-heart " onClick={ProjectLike} />
-                    )}
-                    <span
-                      style={{
-                        marginTop: "-2rem",
-                        marginLeft: "0.5rem",
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                      }}
-                    >
-                      {like == 1
-                        ? data.project.likedBy.length + like
-                        : data.project.likedBy.length}
-                    </span>
-                    {/* <span class="ml-2 " id="span2" >21%</span> */}
-                  </p>
-                  <p style={{ marginTop: "8.4rem", marginRight: "1.4rem" }}>
-                    <i className="fas fa-circle " />
-                    <span
-                      style={{
-                        marginTop: "-2rem",
-                        marginLeft: "0.5rem",
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                      }}
-                    >
-                      {data.project.progress}
-                    </span>
-                    {/* <span class="ml-2 " id="span2" >21%</span> */}
-                  </p>
-                </div>
-              </div>
-              <div
-                className="row text-left"
-                style={{ marginTop: "1rem", marginLeft: "1rem" }}
-              >
-                <div
-                  className=" text-right"
-                  style={{ width: "15%", background: "#fcfcfc" }}
-                >
-                  <div id="userImage">
-                    <img
-                      className="proj-img"
-                      src={
-                        data.project.project_owner
-                          ? `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
-                          : DefaultImage
-                      }
-                      alt="alternative"
-                    />
                   </div>
-                </div>
-                <div className="text-left" style={{ width: "20%" }}>
-                  <div id="userDetail">
-                    <h5>{data.project.project_owner.username}</h5>
-                    <p style={{ marginTop: "1.5rem" }}>
-                      <i
-                        className="fas fa-phone-volume fa-lg "
-                        style={{ color: "#0d2456" }}
-                      />
-                      <span className="ml-2">
-                        {data.project.project_owner.phone}
-                      </span>
-                    </p>
-                    <p style={{ marginTop: "1.5rem" }}>
-                      <i
-                        className="fas fa-camera fa-lg "
-                        style={{ color: "#0d2456" }}
-                      />
-                      <span className="ml-2">
-                        {data.project.project_owner.email}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <div className="text-left" style={{ width: "65%" }}>
-                  <div style={{ marginLeft: "1rem", marginTop: "1.5rem" }}>
-                    <Link to={`/profile/${data.project.project_owner._id}`}>
-                      <button
-                        type="button"
-                        id="userButton"
-                        className="btn btn-block"
-                      >
-                        Voir le profil
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              {/* end of col */}
-            </div>
-
-            <div className="container">
-              <div className="row" style={{ marginTop: "2rem" }}>
-                <div
-                  className="col-lg-12 text-left  pt-1"
-                  style={{
-                    background: "#fcfcfc",
-                    margin: "auto",
-                    position: "relative",
-                  }}
-                >
-                  <h4
-                    className=" ml-3 "
+                  <div
+                    className="  text-right"
                     style={{
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      color: "#707070",
+                      width: "25%",
+                      background: "#fcfcfc",
+                      paddingRight: "1rem",
+                      height: "15.2rem",
+                      // background: "red",
                     }}
                   >
-                    ETAPES DE REALISATION
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div className="container">
-              {data.project.implementation_steps
-                ? data.project.implementation_steps.map((step) => (
-                    <div
-                      className="row text-left"
-                      style={{ marginTop: "2rem" }}
-                      id="projectPage"
-                    >
-                      <div className=" text-left" style={{ width: "60%" }}>
-                        <div style={{ marginLeft: "2rem" }}>
-                          <p>
-                            <i className="fas fa-circle fa-lg mr-3 text-secondary" />
-                            <span
-                              style={{
-                                fontSize: "16px",
-                                color: "#707070",
-                              }}
-                            >
-                              {step.name}
-                            </span>
-                          </p>
-                          <div className="row" style={{ marginTop: "-0.7rem" }}>
-                            <p style={{ width: "56%", marginLeft: "3.3rem" }}>
-                              {console.log(step.skills, "ste.skills")}
-                              {step.skills ? (
-                                Object.entries(step.skills).length > 0 ? (
-                                  <p
-                                    style={{
-                                      color: "#707070",
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        fontWeight: "unset",
-                                        fontSize: "13px",
-                                      }}
-                                    >
-                                      {" "}
-                                      Field
-                                    </span>{" "}
-                                    :
-                                    <span
-                                      className="ml-1"
-                                      style={{
-                                        fontWeight: "unset",
-                                        fontSize: "12px",
-                                      }}
-                                    >
-                                      {step.skills.skillField.skillField}
-                                    </span>
-                                  </p>
-                                ) : (
-                                  ""
-                                )
-                              ) : (
-                                ""
-                              )}
-                              {step.material ? (
-                                Object.entries(step.material).length > 0 ? (
-                                  <p
-                                    style={{
-                                      color: "#707070",
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        fontWeight: "unset",
-                                        fontSize: "13px",
-                                      }}
-                                    >
-                                      {" "}
-                                      Material
-                                    </span>{" "}
-                                    :
-                                    <span
-                                      className="ml-1"
-                                      style={{
-                                        fontWeight: "unset",
-                                        fontSize: "12px",
-                                      }}
-                                    >
-                                      {step.material.name}
-                                    </span>
-                                  </p>
-                                ) : (
-                                  ""
-                                )
-                              ) : (
-                                ""
-                              )}
-                              <p
-                                style={{
-                                  color: "#707070",
-                                  marginTop: "-1rem",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    fontWeight: "unset",
-                                    fontSize: "13px",
-                                  }}
-                                >
-                                  {" "}
-                                  Description
-                                </span>{" "}
-                                :
-                                <span
-                                  className="ml-1"
-                                  style={{
-                                    fontWeight: "unset",
-                                    fontSize: "12px",
-                                  }}
-                                >
-                                  {step.description}
-                                </span>
-                              </p>
-                            </p>
-                            {getUser()._id ===
-                            data.project.project_owner._id ? (
-                              <p id="entapeSearch">
-                                {step.skills &&
-                                Object.entries(step.skills).length > 0 ? (
-                                  <i
-                                    className="fas fa-search fa-lg  text-secondary"
-                                    onClick={() =>
-                                      toggle(
-                                        "skills",
-                                        step.skills.skillField._id,
-                                        step._id
-                                      )
-                                    }
-                                  />
-                                ) : step.material ? (
-                                  <i
-                                    className="fas fa-search fa-lg  text-secondary"
-                                    onClick={() =>
-                                      toggle(
-                                        "material",
-                                        step.material._id,
-                                        step._id
-                                      )
-                                    }
-                                  />
-                                ) : (
-                                  ""
-                                )}
-                              </p>
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="  text-left" style={{ width: "25%" }}>
-                        {step.contributing_user ? (
-                          <>
-                            <p style={{ color: "rgb(112, 112, 112)" }}>
-                              Collaborateurs:{" "}
-                            </p>
-
-                            <p>
-                              {step.contributing_user.map((cont) => (
-                                <img
-                                  onClick={() => DeletContributor(step._id)}
-                                  className="project-image-sm"
-                                  src={
-                                    cont.profile_picture
-                                      ? `http://localhost:3000/views/uploads/${cont.profile_picture}`
-                                      : DefaultImage
-                                  }
-                                  alt="alternative"
-                                />
-                              ))}
-                            </p>
-                          </>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div style={{ width: "15%" }}>
-                        {getUser()._id === data.project.project_owner._id ? (
+                    {getUser()._id === data.project.project_owner._id ? (
+                      <div className="row">
+                        <div className="col ">
                           <button
-                            onClick={() => Steptoggle(step._id)}
+                            onClick={DeleteProject}
                             type="button"
-                            // id="modifyButton"
-                            style={{ maxWidth: "90%" }}
-                            className="btn btn-block ml-1 mt-3"
+                            className="btn btn-block"
+                            style={{ fontSize: "15px", border: 0 }}
+                          >
+                            Delete Projet
+                          </button>
+                        </div>
+
+                        <div className="col">
+                          <button
+                            type="button"
+                            className="btn btn-block"
+                            style={{ fontSize: "15px", border: 0 }}
+                            onClick={Projecttoggle}
                           >
                             MODIFIER
                           </button>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              ShowInterest(data.project.category._id)
-                            }
-                            type="button"
-                            // id="modifyButton"
-                            style={{ maxWidth: "80%" }}
-                            className="btn btn-block ml-1 mt-3"
-                          >
-                            Show Interest
-                          </button>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                  ))
-                : ""}
-
-              {/*  */}
-
-              {/*  */}
-            </div>
-            {/* end of row */}
-            {/* end of row */}
-            <div className="container">
-              <div className="row" style={{ marginTop: "2rem" }}>
+                    ) : (
+                      ""
+                    )}
+                    <p style={{ marginTop: "0.7rem", marginRight: "2.1rem" }}>
+                      {like == 1 ? (
+                        <i
+                          className="fas fa-heart "
+                          style={{ color: "red" }}
+                          onClick={ProjectLike}
+                        />
+                      ) : (
+                        <i className="fas fa-heart " onClick={ProjectLike} />
+                      )}
+                      <span
+                        style={{
+                          marginTop: "-2rem",
+                          marginLeft: "0.5rem",
+                          fontFamily: "Arial, Helvetica, sans-serif",
+                        }}
+                      >
+                        {like == 1
+                          ? data.project.likedBy.length + like
+                          : data.project.likedBy.length}
+                      </span>
+                      {/* <span class="ml-2 " id="span2" >21%</span> */}
+                    </p>
+                    <p style={{ marginTop: "8.4rem", marginRight: "1.4rem" }}>
+                      <i className="fas fa-circle " />
+                      <span
+                        style={{
+                          marginTop: "-2rem",
+                          marginLeft: "0.5rem",
+                          fontFamily: "Arial, Helvetica, sans-serif",
+                        }}
+                      >
+                        {data.project.progress}
+                      </span>
+                      {/* <span class="ml-2 " id="span2" >21%</span> */}
+                    </p>
+                  </div>
+                </div>
                 <div
-                  className="col-lg-12 text-left  p-1"
-                  style={{
-                    background: "#fcfcfc",
-                    margin: "auto",
-                    position: "relative",
-                  }}
+                  className="row text-left"
+                  style={{ marginTop: "1rem", marginLeft: "1rem" }}
                 >
-                  <h4 className="mt-1 ml-3 " style={{ fontWeight: "bold" }}>
-                    COMMENTAIRIES
-                  </h4>
+                  <div
+                    className=" text-right"
+                    style={{ width: "15%", background: "#fcfcfc" }}
+                  >
+                    <div id="userImage">
+                      <img
+                        className="proj-img"
+                        src={
+                          data.project.project_owner
+                            ? `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
+                            : DefaultImage
+                        }
+                        alt="alternative"
+                      />
+                    </div>
+                  </div>
+                  <div className="text-left" style={{ width: "20%" }}>
+                    <div id="userDetail">
+                      <h5>{data.project.project_owner.username}</h5>
+                      <p style={{ marginTop: "1.5rem" }}>
+                        <i
+                          className="fas fa-phone-volume fa-lg "
+                          style={{ color: "#0d2456" }}
+                        />
+                        <span className="ml-2">
+                          {data.project.project_owner.phone}
+                        </span>
+                      </p>
+                      <p style={{ marginTop: "1.5rem" }}>
+                        <i
+                          className="fas fa-camera fa-lg "
+                          style={{ color: "#0d2456" }}
+                        />
+                        <span className="ml-2">
+                          {data.project.project_owner.email}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-left" style={{ width: "65%" }}>
+                    <div style={{ marginLeft: "1rem", marginTop: "1.5rem" }}>
+                      <Link to={`/profile/${data.project.project_owner._id}`}>
+                        <button
+                          type="button"
+                          id="userButton"
+                          className="btn btn-block"
+                        >
+                          Voir le profil
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
+                {/* end of col */}
               </div>
 
-              {data.project.comments && data.project.comments.length > 0
-                ? data.project.comments.map((comment) => (
-                    <div
-                      className="row text-left"
-                      style={{ marginTop: "2rem" }}
+              <div className="container">
+                <div className="row" style={{ marginTop: "2rem" }}>
+                  <div
+                    className="col-lg-12  text-left  pt-1"
+                    style={{
+                      background: "#fcfcfc",
+                      margin: "auto",
+                      padding: "12px",
+                      position: "relative",
+                    }}
+                  >
+                    {/* <div className="row">
+                      <div className="col-3 "> */}
+                    <h4
+                      className=" ml-3 mt-3 "
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                        color: "#707070",
+                      }}
                     >
-                      <div className="text-right" style={{ width: "10%" }}>
-                        <img
-                          className="com-image"
-                          src={
-                            data.project.project_owner.profile_picture
-                              ? `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
-                              : DefaultImage
+                      ETAPES DE REALISATION
+                    </h4>
+                    {/* </div> */}
+                    {/* <div className="col">
+                        <button
+                          type="button"
+                          onClick={addStepToggle}
+                          // id="userButton"
+                          id="AddmodalButton"
+                          style={
+                            {
+                              // marginTop: "2.7rem",
+                              // marginLeft: "1rem",
+                            }
                           }
-                          alt="alternative"
-                        />
-                      </div>
-                      <div className="text-left" style={{ width: "90%" }}>
-                        <div style={{ marginLeft: "2rem" }}>
-                          <h5>
-                            {getUser() ? getUser().username : ""}
-                            <small className="ml-2">
-                              {
-                                new Date(comment.createdAt)
-                                  .toString()
-                                  .split(" ")[2]
-                              }
-                              {"/"}
-                              {new Date(comment.createdAt).getMonth()}
-                              {"/"}
-                              {new Date(comment.createdAt).getFullYear()}
-                            </small>
-                          </h5>
-                          <p className="mt-2" style={{ fontWeight: "bold" }}>
-                            {comment.comment}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                : ""}
-              {commentArray.length > 0
-                ? commentArray.map((comment) => (
-                    <div
-                      className="row text-left"
-                      style={{ marginTop: "2rem" }}
-                    >
-                      <div className="text-right" style={{ width: "10%" }}>
-                        <img
-                          className="com-image"
-                          src={
-                            comment.profile_picture
-                              ? `http://localhost:3000/views/uploads/${comment.profile_picture}`
-                              : DefaultImage
-                          }
-                          alt="alternative"
-                        />
-                      </div>
-                      <div className="text-left" style={{ width: "75%" }}>
-                        <div style={{ marginLeft: "2rem" }}>
-                          <h5>
-                            {getUser() ? getUser().username : ""}
-                            <small className="ml-2">
-                              {new Date(comment.date).toString().split(" ")[2]}
-                              {"/"}
-                              {new Date(comment.date).getMonth()}
-                              {"/"}
-                              {new Date(comment.date).getFullYear()}
-                            </small>
-                          </h5>
-                          <p className="mt-2" style={{ fontWeight: "bold" }}>
-                            {comment.comment}
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <ClearOutlinedIcon
-                          onClick={() => DeleteComment(comment.comment)}
-                        />
-                      </div>
-                    </div>
-                  ))
-                : ""}
-            </div>
-            <div className="container ">
-              <div
-                className="row"
-                style={{ marginTop: "2rem", marginLeft: "3rem" }}
-              >
-                <div style={{ width: "90%" }} className="text-right">
-                  <textarea
-                    name="comment"
-                    value={comment}
-                    onChange={handleCommentChange}
-                    cols={110}
-                    rows={3}
-                    style={{ width: "90%" }}
-                    placeholder="  Add a coment"
-                  />
+                          className="btn "
+                        >
+                          Add Step
+                        </button>
+                      </div> */}
+                    {/* </div> */}
+                  </div>
                 </div>
-                <div style={{ width: "10%" }} className="text-center">
-                  {isLoading === true ? (
-                    <center>
-                      <div className={useStyles.root}>
-                        <CircularProgress disableShrink />
+              </div>
+              <div className="container">
+                {data.project.implementation_steps
+                  ? data.project.implementation_steps.map((step) => (
+                      <div
+                        className="row text-left"
+                        style={{ marginTop: "2rem" }}
+                        id="projectPage"
+                      >
+                        <div className=" text-left" style={{ width: "60%" }}>
+                          <div style={{ marginLeft: "2rem" }}>
+                            <p>
+                              <i
+                                className="fas fa-circle fa-lg mr-3 "
+                                style={{
+                                  color: `${
+                                    step.status === '"NoProgress"'
+                                      ? "#fff"
+                                      : step.status === "InProgress"
+                                      ? "green"
+                                      : "#000"
+                                  }`,
+                                }}
+                              />
+                              <span
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#707070",
+                                }}
+                              >
+                                {step.name}
+                              </span>
+                            </p>
+                            <div
+                              className="row"
+                              style={{ marginTop: "-0.7rem" }}
+                            >
+                              <p style={{ width: "56%", marginLeft: "3.3rem" }}>
+                                {console.log(step.skills, "ste.skills")}
+                                {step.skills ? (
+                                  Object.entries(step.skills).length > 0 ? (
+                                    <p
+                                      style={{
+                                        color: "#707070",
+                                      }}
+                                    >
+                                      <span
+                                        style={{
+                                          fontWeight: "unset",
+                                          fontSize: "13px",
+                                        }}
+                                      >
+                                        {" "}
+                                        Field
+                                      </span>{" "}
+                                      :
+                                      <span
+                                        className="ml-1"
+                                        style={{
+                                          fontWeight: "unset",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        {step.skills.skillField.skillField}
+                                      </span>
+                                    </p>
+                                  ) : (
+                                    ""
+                                  )
+                                ) : (
+                                  ""
+                                )}
+                                {step.material ? (
+                                  Object.entries(step.material).length > 0 ? (
+                                    <p
+                                      style={{
+                                        color: "#707070",
+                                      }}
+                                    >
+                                      <span
+                                        style={{
+                                          fontWeight: "unset",
+                                          fontSize: "13px",
+                                        }}
+                                      >
+                                        {" "}
+                                        Material
+                                      </span>{" "}
+                                      :
+                                      <span
+                                        className="ml-1"
+                                        style={{
+                                          fontWeight: "unset",
+                                          fontSize: "12px",
+                                        }}
+                                      >
+                                        {step.material.name}
+                                      </span>
+                                    </p>
+                                  ) : (
+                                    ""
+                                  )
+                                ) : (
+                                  ""
+                                )}
+                                <p
+                                  style={{
+                                    color: "#707070",
+                                    marginTop: "-1rem",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      fontWeight: "unset",
+                                      fontSize: "13px",
+                                    }}
+                                  >
+                                    {" "}
+                                    Description
+                                  </span>{" "}
+                                  :
+                                  <span
+                                    className="ml-1"
+                                    style={{
+                                      fontWeight: "unset",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    {step.description}
+                                  </span>
+                                </p>
+                              </p>
+                              {getUser()._id ===
+                              data.project.project_owner._id ? (
+                                <p id="entapeSearch">
+                                  {step.skills &&
+                                  Object.entries(step.skills).length > 0 ? (
+                                    <i
+                                      className="fas fa-search fa-lg  text-secondary"
+                                      onClick={() =>
+                                        toggle(
+                                          "skills",
+                                          step.skills.skillField._id,
+                                          step._id
+                                        )
+                                      }
+                                    />
+                                  ) : step.material ? (
+                                    <i
+                                      className="fas fa-search fa-lg  text-secondary"
+                                      onClick={() =>
+                                        toggle(
+                                          "material",
+                                          step.material._id,
+                                          step._id
+                                        )
+                                      }
+                                    />
+                                  ) : (
+                                    ""
+                                  )}
+                                </p>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="  text-left" style={{ width: "25%" }}>
+                          {step.contributing_user ? (
+                            <>
+                              <p style={{ color: "rgb(112, 112, 112)" }}>
+                                Collaborateurs:{" "}
+                              </p>
+
+                              <p>
+                                {step.contributing_user.map((cont) => (
+                                  <img
+                                    onClick={() => DeletContributor(step._id)}
+                                    className="project-image-sm"
+                                    src={
+                                      cont.profile_picture
+                                        ? `http://localhost:3000/views/uploads/${cont.profile_picture}`
+                                        : DefaultImage
+                                    }
+                                    alt="alternative"
+                                  />
+                                ))}
+                              </p>
+                            </>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div style={{ width: "15%" }}>
+                          {getUser()._id === data.project.project_owner._id ? (
+                            <button
+                              onClick={() => Steptoggle(step._id)}
+                              type="button"
+                              // id="modifyButton"
+                              style={{ maxWidth: "90%" }}
+                              className="btn btn-block ml-1 mt-3"
+                            >
+                              MODIFIER
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => ShowInterest(step._id)}
+                              type="button"
+                              // id="modifyButton"
+                              style={{ maxWidth: "80%" }}
+                              className="btn btn-block ml-1 mt-3"
+                            >
+                              Show Interest
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </center>
-                  ) : comment !== "" ? (
-                    <button
-                      type="button"
-                      className="btn btn-block mt-4 ml-2"
-                      style={{ maxWidth: "80%", padding: "6px 16px" }}
-                      onClick={onAdd}
-                    >
-                      Send
-                    </button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      disabled
-                      name="add"
-                      style={{ maxWidth: "80%", textTransform: "capitalize" }}
-                      className="submitAdd btn btn-block mt-4"
-                    >
-                      Send
-                    </Button>
-                  )}
+                    ))
+                  : ""}
+
+                {/*  */}
+
+                {/*  */}
+              </div>
+              {/* end of row */}
+              {/* end of row */}
+              <div className="container">
+                <div className="row" style={{ marginTop: "2rem" }}>
+                  <div
+                    className="col-lg-12 text-left  p-1"
+                    style={{
+                      background: "#fcfcfc",
+                      margin: "auto",
+                      position: "relative",
+                    }}
+                  >
+                    <h4 className="mt-1 ml-3 " style={{ fontWeight: "bold" }}>
+                      COMMENTAIRIES
+                    </h4>
+                  </div>
+                </div>
+
+                {data.project.comments && data.project.comments.length > 0
+                  ? data.project.comments.map((comment) => (
+                      <div
+                        className="row text-left"
+                        style={{ marginTop: "2rem" }}
+                      >
+                        <div className="text-right" style={{ width: "10%" }}>
+                          <img
+                            className="com-image"
+                            src={
+                              data.project.project_owner.profile_picture
+                                ? `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
+                                : DefaultImage
+                            }
+                            alt="alternative"
+                          />
+                        </div>
+                        <div className="text-left" style={{ width: "90%" }}>
+                          <div style={{ marginLeft: "2rem" }}>
+                            <h5>
+                              {getUser() ? getUser().username : ""}
+                              <small className="ml-2">
+                                {
+                                  new Date(comment.createdAt)
+                                    .toString()
+                                    .split(" ")[2]
+                                }
+                                {"/"}
+                                {new Date(comment.createdAt).getMonth()}
+                                {"/"}
+                                {new Date(comment.createdAt).getFullYear()}
+                              </small>
+                            </h5>
+                            <p className="mt-2" style={{ fontWeight: "bold" }}>
+                              {comment.comment}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  : ""}
+                {commentArray.length > 0
+                  ? commentArray.map((comment) => (
+                      <div
+                        className="row text-left"
+                        style={{ marginTop: "2rem" }}
+                      >
+                        <div className="text-right" style={{ width: "10%" }}>
+                          <img
+                            className="com-image"
+                            src={
+                              comment.profile_picture
+                                ? `http://localhost:3000/views/uploads/${comment.profile_picture}`
+                                : DefaultImage
+                            }
+                            alt="alternative"
+                          />
+                        </div>
+                        <div className="text-left" style={{ width: "75%" }}>
+                          <div style={{ marginLeft: "2rem" }}>
+                            <h5>
+                              {getUser() ? getUser().username : ""}
+                              <small className="ml-2">
+                                {
+                                  new Date(comment.date)
+                                    .toString()
+                                    .split(" ")[2]
+                                }
+                                {"/"}
+                                {new Date(comment.date).getMonth()}
+                                {"/"}
+                                {new Date(comment.date).getFullYear()}
+                              </small>
+                            </h5>
+                            <p className="mt-2" style={{ fontWeight: "bold" }}>
+                              {comment.comment}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <ClearOutlinedIcon
+                            onClick={() => DeleteComment(comment.comment)}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  : ""}
+              </div>
+              <div className="container ">
+                <div
+                  className="row"
+                  style={{ marginTop: "2rem", marginLeft: "3rem" }}
+                >
+                  <div style={{ width: "90%" }} className="text-right">
+                    <textarea
+                      name="comment"
+                      value={comment}
+                      onChange={handleCommentChange}
+                      cols={110}
+                      rows={3}
+                      style={{ width: "90%" }}
+                      placeholder="  Add a coment"
+                    />
+                  </div>
+                  <div style={{ width: "10%" }} className="text-center">
+                    {isLoading === true ? (
+                      <center>
+                        <div className={useStyles.root}>
+                          <CircularProgress disableShrink />
+                        </div>
+                      </center>
+                    ) : comment !== "" ? (
+                      <button
+                        type="button"
+                        className="btn btn-block mt-4 ml-2"
+                        style={{ maxWidth: "80%", padding: "6px 16px" }}
+                        onClick={onAdd}
+                      >
+                        Send
+                      </button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        disabled
+                        name="add"
+                        style={{ maxWidth: "80%", textTransform: "capitalize" }}
+                        className="submitAdd btn btn-block mt-4"
+                      >
+                        Send
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <h1 className="text-center">No Project Found</h1>
-        )}
+          ) : (
+            <h1 className="text-center">No Project Found</h1>
+          )}
 
-        {/* end of row */}
-        {/* end of container */}
-        {/* Details 1 */}
-        {/* end of basic-1 */}
-        {/* end of details 1 */}
-        {/* Details 2 */}
-        {/* end of basic-2 */}
-        {/* end of details 2 */}
-        {/* Details Lightboxes */}
-        {/* Details Lightbox 1 */}
-        {/* Footer */}
-        <Footer />
-      </div>
-    );
+          {/* end of row */}
+          {/* end of container */}
+          {/* Details 1 */}
+          {/* end of basic-1 */}
+          {/* end of details 1 */}
+          {/* Details 2 */}
+          {/* end of basic-2 */}
+          {/* end of details 2 */}
+          {/* Details Lightboxes */}
+          {/* Details Lightbox 1 */}
+          {/* Footer */}
+          <Footer />
+        </div>
+      );
+    }
+  } else {
+    return <Redirect to="/Login" />;
   }
 }

@@ -19,8 +19,6 @@ import { useStyles } from "../Theme/styles";
 import { names } from "./Data";
 const ModalExample = (props) => {
   const {
-    buttonLabel,
-    className,
     stepformData,
     onSubmit,
     isLoading,
@@ -37,7 +35,13 @@ const ModalExample = (props) => {
     formDataSkillField,
     onStepAdd,
     data,
+    tempstepId,
   } = props;
+  // const [stepdata, setstepdata] = useState("");
+  // useEffect(() => {
+  //   const array = data.filter((dt) => dt._id == tempstepId);
+  //   setstepdata(array);
+  // }, [tempstepId]);
   const handleStep = (e) => {
     if (e.target.name === "Field") {
       const array = [];
@@ -46,13 +50,12 @@ const ModalExample = (props) => {
 
     setstepType(e.target.value);
   };
-  // console.log(data, "data from step ");
+  // console.log(stepdata, "data from step ");
   return (
     <div id="Profilemodal">
       <Modal
         isOpen={props.modal}
         toggle={props.toggle}
-        className={className}
         style={{ width: "70%", borderRadius: "4rem" }}
         className="modal-xl"
       >
@@ -84,6 +87,8 @@ const ModalExample = (props) => {
                     value={stepformData.status}
                     onChange={handleStepChange}
                   >
+                    <option value="NoProgress">{stepformData.status}</option>
+
                     <option value="NoProgress">NoProgress</option>
 
                     <option value="completed">completed</option>
@@ -162,8 +167,6 @@ const ModalExample = (props) => {
                         value={formDataSkillField.skill}
                         onChange={handleSkillChange}
                       >
-                        <option value="">Select skillField</option>
-
                         <option value="">Select skill</option>
 
                         {skillList
@@ -203,38 +206,6 @@ const ModalExample = (props) => {
                     placeholder="Description"
                   />
                 </FormGroup>
-              </Col>
-              <Col md={4} className="text-left">
-                {stepformData.description ? (
-                  <button
-                    type="button"
-                    onClick={onStepAdd}
-                    // id="userButton"
-                    id="modalButton"
-                    style={{
-                      marginTop: "2.7rem",
-                      marginLeft: "1rem",
-                    }}
-                    className="btn "
-                  >
-                    Add
-                  </button>
-                ) : (
-                  <button
-                    disabled
-                    type="button"
-                    style={{
-                      marginTop: "2.7rem",
-                      marginLeft: "1rem",
-                      // background: "rgba(0, 0, 0, 0.26)",
-                    }}
-                    // id="userButton"
-                    id="modalButton"
-                    className="btn "
-                  >
-                    Add
-                  </button>
-                )}
               </Col>
             </Row>
 

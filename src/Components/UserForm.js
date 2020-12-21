@@ -28,17 +28,43 @@ export default function UserForm({
   onskillAdd,
   ChipArray,
   SkillChipArray,
-  errormessage,
   isLoading,
   useStyles,
   CircularProgress,
   onSubmit,
   setskillArrayData,
   setmaterialArrayData,
+  addToast,
 }) {
   return (
     <Form>
       <Row form>
+        <Col md={4}>
+          <FormGroup>
+            <Label for="exampleEmail">First_name*</Label>
+            <Input
+              type="text"
+              name="firstName"
+              id="firstName"
+              value={formData.firstName}
+              placeholder="firstName"
+              onChange={handleChange}
+            />
+          </FormGroup>
+        </Col>
+        <Col md={4}>
+          <FormGroup>
+            <Label for="exampleEmail">Last_name*</Label>
+            <Input
+              type="text"
+              name="lastName"
+              id="lastName"
+              value={formData.lastName}
+              placeholder="lastName"
+              onChange={handleChange}
+            />
+          </FormGroup>
+        </Col>
         <Col md={4}>
           <FormGroup>
             <Label for="exampleEmail">User_name*</Label>
@@ -52,7 +78,19 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-
+        {/* <Col md={4}>
+          <FormGroup>
+            <Label for="exampleEmail">Email*</Label>
+            <Input
+              type="text"
+              name="email"
+              id="email"
+              value={formData.email}
+              placeholder="email"
+              onChange={handleChange}
+            />
+          </FormGroup>
+        </Col> */}
         <Col md={4}>
           <FormGroup>
             <Label for="exampleEmail">City*</Label>
@@ -127,6 +165,48 @@ export default function UserForm({
         </Col>
         <Col md={4}>
           <FormGroup>
+            <Label for="exampleAddress">Facebook</Label>
+            <Input
+              type="text"
+              name="facebook"
+              id="facebook"
+              value={formData.facebook}
+              placeholder="facebook"
+              onChange={handleChange}
+              onpaste={handleChange}
+            />
+          </FormGroup>
+        </Col>
+        <Col md={4}>
+          <FormGroup>
+            <Label for="exampleAddress">Instagram</Label>
+            <Input
+              type="text"
+              name="instagram"
+              id="instagram"
+              value={formData.instagram}
+              placeholder="instagram"
+              onChange={handleChange}
+              onpaste={handleChange}
+            />
+          </FormGroup>
+        </Col>
+        <Col md={4}>
+          <FormGroup>
+            <Label for="exampleAddress">Youtube</Label>
+            <Input
+              type="text"
+              name="youtube"
+              id="youtube"
+              value={formData.youtube}
+              placeholder="youtube"
+              onChange={handleChange}
+              onpaste={handleChange}
+            />
+          </FormGroup>
+        </Col>
+        <Col md={4}>
+          <FormGroup>
             <Label for="examplePassword">Profile_picture*</Label>
             <Input
               type="file"
@@ -157,17 +237,6 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        {/* <Col md={4}>
-<img
-className="editproject-image"
-src={
-  profilePreview
-    ? profilePreview
-    : `http://localhost:3000/views/uploads/${data.data.profile_picture}`
-}
-alt="alternative"
-/>
-</Col> */}
       </Row>
       <hr />
       <h5 style={{ fontWeight: "bold" }}>Skills*</h5>
@@ -304,6 +373,8 @@ alt="alternative"
           )}
         </Col>
       </Row>
+      <hr />
+
       <Row>
         <Col md={4}>
           {materialArrayData && materialArrayData.length > 0 ? (
@@ -314,6 +385,7 @@ alt="alternative"
                   materialArrayData={materialArrayData ? materialArrayData : ""}
                   setmaterialArrayData={setmaterialArrayData}
                   materialList={materialList}
+                  addToast={addToast}
                 />
               </Col>
             </>
@@ -321,7 +393,6 @@ alt="alternative"
             ""
           )}
         </Col>
-
         <Col md={8}>
           {skillArrayData && skillArrayData.length > 0 ? (
             <>
@@ -331,6 +402,7 @@ alt="alternative"
                   skillArrayData={skillArrayData ? skillArrayData : ""}
                   setskillArrayData={setskillArrayData}
                   skillFieldList={skillFieldList}
+                  addToast={addToast}
                 />
               </Col>
             </>
@@ -340,10 +412,7 @@ alt="alternative"
         </Col>
       </Row>
 
-      <Col className="mt-5">
-        {errormessage !== "" ? <p className="error"> {errormessage}</p> : ""}
-      </Col>
-      <Col className="text-right">
+      <Col className="text-right mt-4">
         {isLoading === true ? (
           <center>
             <div className={useStyles.root}>

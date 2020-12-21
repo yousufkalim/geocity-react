@@ -8,85 +8,54 @@ import axios from "axios";
 import ChipArray from "../shared/Chip";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
-
+import {
+  signupData,
+  signupstepData,
+  signupaboutRequired,
+  signupskillRequired,
+} from "../shared/Data";
 import { Redirect } from "react-router-dom";
+import SignupForm from "../Components/SignupForm";
 function Signup() {
   const { addToast } = useToasts();
 
-  const signupData = {
-    username: "",
-    email: "",
-    city: "",
-    password: "",
-    availability: "",
-    confirm_password: "",
-    profile_picture: "",
-    profile_description: "",
-    phone: "",
-    address: "",
-    zipCode: "",
-    latitude: "",
-    longitude: "",
-    // name:""
-    // skills:[],
-    // material:[],
-  };
-  const stepData = {
-    skillField: "",
-    skill: "",
-    specialization: "",
-    score: "",
-  };
-  const skillRequired = {
-    skillField: "",
-    skill: "",
-    specialization: "",
-    score: "",
-  };
-  const aboutRequired = {
-    username: "",
-    email: "",
-    city: "",
-    password: "",
-    availability: "",
-    confirm_password: "",
-    profile_picture: "",
-    profile_description: "",
-    phone: "",
-    address: "",
-  };
   // states start ************************************
-  const [skillformData, setskillFormData] = useState(stepData);
 
+  // formdata & arrayData states
+  const [skillformData, setskillFormData] = useState(signupstepData);
   const [formData, setFormData] = useState(signupData);
 
-  const [address, setAddress] = useState("");
-  const [material, setMaterial] = useState("");
-  const [isSuccess, setisSuccess] = useState(false);
-
-  const [isLoading, setisLoading] = useState(false);
-  const [photo, setPhoto] = useState("");
-
-  const [items, setItems] = useState([]);
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
-  const [materialList, setMaterialList] = useState("");
-  const [userList, setuserList] = useState("");
-  const [error, setError] = useState("");
+  // *************
 
+  // Single States
+  const [address, setAddress] = useState("");
+  const [material, setMaterial] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [photo, setPhoto] = useState("");
+  const [isSuccess, setisSuccess] = useState("");
+
+  //List States
+  const [items, setItems] = useState([]);
+  const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
   const [skillFieldList, setskillFieldList] = useState("");
+  // **************
 
-  const [materialformData, setmaterialFormData] = useState([]);
-  const [aboutRequiredFields, setAboutRequiredFields] = useState(aboutRequired);
-  const [skillRequiredFields, setskillRequiredFields] = useState(skillRequired);
+  // Required Fields states*****************
+  const [aboutRequiredFields, setAboutRequiredFields] = useState(
+    signupaboutRequired
+  );
+  const [skillRequiredFields, setskillRequiredFields] = useState(
+    signupskillRequired
+  );
+
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
     error: "",
   });
-  console.log(skillRequiredFields, "formData");
-  // console.log(materialformData,"materialformData")
-
+  // *************************
   // states end ***************************
 
   // validation start*************************
@@ -146,16 +115,11 @@ function Signup() {
     return true;
   };
   const ValidateSkillField = () => {
-    // alert(skillformData.skillField);
-
     if (skillformData.skillField) {
       const msg = "";
-
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
-
       return true;
     } else if (!skillformData.skillField) {
-      // alert("hello");
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return false;
@@ -165,7 +129,6 @@ function Signup() {
   const ValidateSkill = () => {
     if (skillformData.skill) {
       const msg = "";
-
       setskillRequiredFields({ ...skillRequiredFields, skill: msg });
       return true;
     } else if (!skillformData.skill) {
@@ -177,9 +140,10 @@ function Signup() {
 
   const validateProfileDesc = () => {
     if (formData.profile_description) {
+      const msg = "";
       setAboutRequiredFields({
         ...aboutRequiredFields,
-        profile_description: "",
+        profile_description: msg,
       });
       return true;
     } else if (!formData.profile_description) {
@@ -191,39 +155,75 @@ function Signup() {
       return false;
     }
   };
+  const validateFirstName = () => {
+    // debugger;
+    if (formData.firstname.length >= 4 && formData.firstname.length < 20) {
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, firstname: msg });
+    } else if (formData.firstname.trim().length < 5) {
+      const msg = "firstname needs to be at least 5 characters";
+      setAboutRequiredFields({ ...aboutRequiredFields, firstname: msg });
+      return false;
+    } else if (formData.firstname.trim().length > 20) {
+      const msg = "firstname must be less than or equal to 20 characters long";
+      setAboutRequiredFields({ ...aboutRequiredFields, firstname: msg });
+      return false;
+    } else if (!formData.firstname.length) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, firstname: msg });
+      return false;
+    }
+
+    return true;
+  };
+  const validateLastName = () => {
+    if (formData.lastname.length >= 4 && formData.lastname.length < 20) {
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, lastname: msg });
+    } else if (formData.lastname.trim().length < 5) {
+      const msg = "lastname needs to be at least 5 characters";
+      setAboutRequiredFields({ ...aboutRequiredFields, lastname: msg });
+      return false;
+    } else if (formData.lastname.trim().length > 20) {
+      const msg = "lastname must be less than or equal to 20 characters long";
+      setAboutRequiredFields({ ...aboutRequiredFields, lastname: msg });
+      return false;
+    } else if (!formData.lastname.length) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, lastname: msg });
+      return false;
+    }
+    return true;
+  };
 
   const validateScore = () => {
     if (skillformData.score === 5) {
-      setskillRequiredFields({ ...skillRequiredFields, score: "" });
-      // setFNErr("Please Enter Name");
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, score: msg });
       return false;
     } else if (skillformData.score >= 5) {
       const msg = "Score needs to be equal 5 or less";
       setskillRequiredFields({ ...skillRequiredFields, score: msg });
-      // setFNErr("Please Enter Name");
+
       return false;
     } else if (!skillformData.score.length) {
-      // alert("hello")
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, score: msg });
-      // setFNErr("Please Enter Name");
       return false;
     }
     const num = parseInt(skillformData.score);
-    setskillRequiredFields({ ...skillRequiredFields, score: "" });
-
+    const msg = "";
+    setskillRequiredFields({ ...skillRequiredFields, score: msg });
     return true;
   };
 
   const validatePhoto = () => {
     if (formData.profile_picture) {
-      // alert("hello h1");
       const msg = "";
       setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: msg });
 
       return true;
     } else if (!formData.profile_picture) {
-      // alert("hello");
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, profile_picture: msg });
       return false;
@@ -231,7 +231,6 @@ function Signup() {
   };
   const validateCity = () => {
     if (formData.city) {
-      // alert("hello");
       const msg = "";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
       return false;
@@ -265,18 +264,15 @@ function Signup() {
     } else if (formData.password.trim().length < 5) {
       const msg = "Passowrd needs to be at least 6 characters";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
-      // setFNErr("Please Enter Name");
+
       return false;
     } else if (formData.password.trim().length > 20) {
       const msg = "Passowrd needs to be  100 characters long";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
-      // setFNErr("Please Enter Name");
       return false;
     } else if (!formData.password.length) {
-      // alert("hello")
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
-      // setFNErr("Please Enter Name");
       return false;
     }
   };
@@ -297,37 +293,31 @@ function Signup() {
     } else if (formData.confirm_password.trim().length < 5) {
       const msg = "Confirm_Password needs to be at least 6 characters";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
-      // setFNErr("Please Enter Name");
       return false;
     } else if (!formData.confirm_password.length) {
-      // alert("hello")
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, confirm_password: msg });
-      // setFNErr("Please Enter Name");
       return false;
     }
   };
 
   const ValidateUsername = () => {
-    if (formData.username.length === 4 && formData.username.length < 20) {
-      // alert("hello h1");
-      setAboutRequiredFields({ ...aboutRequiredFields, username: "" });
+    if (formData.username.length >= 4 && formData.username.length < 20) {
+      const msg = "";
+
+      setAboutRequiredFields({ ...aboutRequiredFields, username: msg });
       setFormData({ ...formData, username: formData.username });
     } else if (formData.username.trim().length < 5) {
-      // alert("hello");
       const msg = "Username needs to be at least 5 characters";
       setAboutRequiredFields({ ...aboutRequiredFields, username: msg });
-      // setFNErr("Please Enter Name");
       return false;
     } else if (formData.username.trim().length > 20) {
       const msg = "Username must be less than or equal to 20 characters long";
       setAboutRequiredFields({ ...aboutRequiredFields, username: msg });
-      // setFNErr("Please Enter Name");
       return false;
     } else if (!formData.username.length) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, username: msg });
-      // setFNErr("Please Enter Name");
       return false;
     }
 
@@ -350,7 +340,6 @@ function Signup() {
         .get("http://localhost:3000/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
-          // console.log(res, "res material");
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
@@ -370,15 +359,11 @@ function Signup() {
     }
   }, []);
   const onMaterialChange = (e) => {
-    // debugger;
-
     setMaterial(e.target.value);
-    console.log(materialArrayData, "material aray dat from onchange");
     if (e.target.value !== "") {
       if (Object.keys(materialArrayData).length > 0) {
         materialArrayData.map((mat) => {
           if (mat !== e.target.value) {
-            // alert(e.target.value);
             const array = materialArrayData.filter(
               (mat) => mat !== e.target.value
             );
@@ -391,7 +376,6 @@ function Signup() {
               ...materialRequiredFields,
               error: msg,
             });
-            // setmaterialArrayData((prevState) => [...prevState, e.target.value]);
           } else {
             const msg = "value already existed";
             setmaterialRequiredFields({
@@ -407,7 +391,6 @@ function Signup() {
           }
         });
       } else {
-        // setmaterialArrayData([...materialArrayData, e.target.value]);
         setmaterialArrayData((prevState) => [...prevState, e.target.value]);
       }
     }
@@ -416,6 +399,10 @@ function Signup() {
     let value = e.target.value;
 
     switch (e.target.name) {
+      case "firstName":
+        validateFirstName();
+      case "lastName":
+        validateLastName();
       case "username":
         ValidateUsername();
         break;
@@ -451,37 +438,25 @@ function Signup() {
         [e.target.name]: e.target.value.replace(/\D/g, ""),
       });
       // }
+    } else if (e.target.name === "firstName") {
+      setFormData({ ...formData, ["firstName"]: e.target.value });
+    } else if (e.target.name === "lastName") {
+      setFormData({ ...formData, ["lastName"]: e.target.value });
     } else {
+      // console.log(value, "value");
       setFormData({ ...formData, [e.target.name]: value });
     }
   };
-  // else if (e.target.name === "profile_picture") {
-  //   // form_data.append("profile_picture", e.target.files[0]);
-  //   const file = e.target.files[0];
-  //   console.log(e.target.files[0], "1");
-  //   setFile(e.target.files[0]);
-  //   // console.log(form_data.getAll("profile_picture"), "profile_pic");
-  // }
 
-  // handle cahnge end
-  // const handleMaterialChange = (e) => {
-  //   let value = e.target.value;
-  //   setmaterialFormData({ ...materialformData, [e.target.name]: value });
-  // };
-  // console.log(skillList, "skillList");
   const handleSkillChange = async (e) => {
-    // alert("yooo")
     let value = e.target.value;
 
     if (e.target.name === "skillField") {
-      // alert("hello");
       setskillFormData({ ...skillformData, [e.target.name]: value });
 
       skillFieldList.map((skill) =>
         skill._id === e.target.value ? setskillList(skill.skill) : ""
       );
-
-      // alert(e.target.value);
     } else if (e.target.name === "score") {
       setskillFormData({
         ...skillformData,
@@ -511,62 +486,22 @@ function Signup() {
   };
 
   const onskillAdd = () => {
-    console.log(skillRequiredFields, "skillRequiredFields ");
-    console.log(skillformData, "skillformData ");
-
-    // console.log(
-    //   Object.values(skillRequiredFields).map((val) => {
-    //     if (val === "Required") {
-    //       console.log("hello oy");
-    //     } else {
-    //       console.log("oy");
-    //     }
-    //   }),
-    //   "msg"
-    // );
     checkValidateForm2();
     validateScore();
-    // debugger;
-    // setskillArrayData((prevState) => [...prevState, skillformData]);
-    Object.values(skillformData).map((obj) => {
-      if (obj !== "") {
-        // alert("hello oy");
-        setskillArrayData([...skillArrayData, skillformData]);
 
-        setskillFormData(stepData);
-        setskillRequiredFields(skillRequired);
+    const check = Object.values(skillformData).map((obj) => {
+      if (obj !== "") {
+        return true;
+      } else {
+        return false;
       }
     });
-
-    // console.log("skil", skillArrayData);
+    if (check[0] === true) {
+      setskillArrayData([...skillArrayData, skillformData]);
+      setskillFormData(signupstepData);
+      setskillRequiredFields(signupskillRequired);
+    }
   };
-
-  const onMaterialAdd = () => {
-    debugger;
-    setmaterialArrayData((prevState) => [...prevState, material]);
-  };
-
-  // set get
-
-  // const getSkill = (e) => {
-  //   // setAddress(e.target.value);
-  //   const headers = {
-  //     headers: {
-  //       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjI3NTYyOTU0MTU1MTNjODc0ZmYyNiIsImlhdCI6MTYwNTU4OTg3NSwiZXhwIjoxNjA4MTgxODc1fQ.8Xrmxf3EyPQLsCKMJdJ6XJwuoVj7B1NfHLsTEc-7lW8`,
-  //     },
-  //   };
-  //   try {
-  //     axios
-  //       .get("http://localhost:3000/api/v1/admin/skillList", headers)
-  //       .then((res) => {
-  //         setskillList(res.data.skills.skill);
-  //         // console.log(res, "res material");
-  //       })
-  //       .catch((err) => console.log(" error =>", err));
-  //   } catch (error) {
-  //     console.log(error, "error catch");
-  //   }
-  // };
 
   // ************
   const getAddress = (e) => {
@@ -594,7 +529,6 @@ function Signup() {
           });
         }
         if (addressToSet.length === responseJson.features.length) {
-          // setFormData({ ...formData,items:addressToSet })
           setItems(addressToSet);
         }
       })
@@ -605,12 +539,9 @@ function Signup() {
       });
   };
   const SetAddress = (item) => {
-    // console.log(item,'item')
     setAddress(item);
-    // this.setState({ address: item });
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
-        // debugger;
         var city = items[i].city;
         var zipCode = items[i].PostalCode;
         var lat = items[i].lat.toString();
@@ -622,25 +553,19 @@ function Signup() {
           city: city,
           latitude: lat,
           longitude: lng,
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          facebook: formData.facebook,
+          youtube: formData.youtube,
+          instagram: formData.instagram,
           username: formData.username,
           email: formData.email,
           password: formData.password,
           confirm_password: formData.confirm_password,
           availability: formData.availability,
         });
-        // this.setState({
-        //   address: newAddress[0],
-        //   zip: zipCode,
-        //   city: city,
-        //   lat: lat,
-        //   lng: lng,
-        //   zipError: "",
-        // });
-        // this.validationCheckforAddress(formData);
-        // this.handleValidationCheckForButtonEnable();
       }
     }
-    // validateCity();
   };
   // city_end
 
@@ -659,15 +584,10 @@ function Signup() {
     if (!reqFields) {
       setAboutRequiredFields(obj);
 
-      // validatePortfolioThumbnail()
-      // validatePortfolioFiles()
-
-      // const flashData = { type: "error", text: "Fill the required fields." }
-      // props.addFlashMessage(flashData)
       return false;
     } else {
       // alert("hello");
-      setAboutRequiredFields(aboutRequired);
+      setAboutRequiredFields(signupaboutRequired);
       return true;
     }
   };
@@ -683,7 +603,6 @@ function Signup() {
     });
     // debugger;
     if (!reqFields) {
-      // console.log(obj, "obj");
       const msg = "Required";
 
       setskillRequiredFields((prevState) => {
@@ -691,61 +610,25 @@ function Signup() {
       });
       return false;
     } else {
-      // alert("hello");
-      // setskillRequiredFields(skillRequired);
-      setskillRequiredFields(skillRequired);
+      setskillRequiredFields(signupskillRequired);
       return true;
     }
-    console.log(skillRequiredFields);
   };
 
-  // const checkValidateForm3 = () => {
-  //   let obj = {};
-  //   let reqFields = true;
-  //   Object.keys(materialformData).map((key) => {
-  //     if (materialformData[key] === "") {
-  //       obj[key] = "Required";
-  //       reqFields = false;
-  //     }
-  //     return obj;
-  //   });
-
-  //   setmaterialRequiredFields(obj);
-
-  //   if (!reqFields) {
-  //     // validatePortfolioThumbnail()
-  //     // validatePortfolioFiles()
-  //     const msg = "Required";
-  //     // const flashData = { type: "error", text: "Fill the required fields." }
-  //     // props.addFlashMessage(flashData)
-  //     return false;
-  //   } else {
-  //     setmaterialRequiredFields({});
-
-  //     return true;
-  //   }
-  // };
-
   // ******************
-  console.log(aboutRequiredFields, "aboutRequiredFields form");
   console.log(formData, "formData form");
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
-
     checkValidateForm();
-
     validateMaterial();
-    // const form_data = new FormData();
-    // const data = form_data.getAll("profile_picture");
-    // const Signup = formData;
-    // Signup.skills = skillArrayData;
-    // Signup.material = materialArrayData;
-
+    // social links
+    console.log(formData.firstName, "formData.firstName");
+    // ****
     const newFormData = new FormData();
-    // console.log(file, "profile data");
-
+    newFormData.append("firstName", formData.firstname);
+    newFormData.append("lastName", formData.lastname);
     newFormData.append("username", formData.username);
     newFormData.append("availability", formData.availability);
     newFormData.append("city", formData.city);
@@ -758,19 +641,13 @@ function Signup() {
     newFormData.append("profile_description", formData.profile_description);
     newFormData.append("profile_picture", photo);
     newFormData.append("zipCode", formData.zipCode);
-    // console.log("asfjlas", JSON.stringify(skillArrayData));
+
+    newFormData.append("facebook", formData.facebook);
+    newFormData.append("instagram", formData.instagram);
+    newFormData.append("youtube", formData.youtube);
+
     newFormData.append("skills", JSON.stringify(skillArrayData));
     newFormData.append("material", JSON.stringify(materialArrayData));
-
-    // if (userList.length > 0) {
-    //   userList.map((user) => {
-    //     if (user.email === Signup.email) {
-    //       setError("Email Already Existed");
-    //     }
-    //   });
-    // }
-
-    console.log(Signup, "signup on sumbit");
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -783,12 +660,11 @@ function Signup() {
           setisLoading(false);
           setFormData(signupData);
           setisSuccess(true);
-          addToast("Success", {
+          addToast("User Registered SuccessFully!", {
             appearance: "success",
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
-          // console.log(res, "res");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -796,16 +672,20 @@ function Signup() {
           }, 1000);
           if (err.response.data) {
             if (err.response.data.message) {
-              setError(err.response.data.message);
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
             } else {
-              setError(err.response.data);
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 1000,
+              });
             }
           }
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
+
           console.log(" error signup =>", err.response.data);
         });
     } catch (error) {
@@ -815,410 +695,66 @@ function Signup() {
       }, 1000);
     }
   };
-  // }
-  // console.log(skillList, "skillList");
   if (isSuccess === true) {
     return <Redirect to="/Login" />;
   } else {
     return (
       <div className="main">
         <div className="containerProject">
-          <form method="POST" className="appointmentform" id="appointment-form">
-            <h2>Sign Up form</h2>
-            <div className="form-group-1">
-              <label className="label-agree-term">User Name*</label>
+          <SignupForm
+            // HandleChange
+            handleChange={handleChange}
+            handleSkillChange={handleSkillChange}
+            onMaterialChange={onMaterialChange}
+            address={address}
+            getAddress={getAddress}
+            SetAddress={SetAddress}
+            setPhoto={setPhoto}
+            // formData
+            isLoading={isLoading}
+            skillformData={skillformData}
+            formData={formData}
+            //********** */
+            skillArrayData={skillArrayData}
+            materialArrayData={materialArrayData}
+            setmaterialArrayData={setmaterialArrayData}
+            //Validation Required
+            skillRequiredFields={skillRequiredFields}
+            aboutRequiredFields={aboutRequiredFields}
+            materialRequiredFields={materialRequiredFields}
+            validateAvailability={validateAvailability}
+            validateConfirmPassword={validateConfirmPassword}
+            validateEmail={validateEmail}
+            validatePassword={validatePassword}
+            validatePhoneNumber={validatePhoneNumber}
+            validateProfileDesc={validateProfileDesc}
+            validateScore={validateScore}
+            ValidateSkillField={ValidateSkillField}
+            ValidateUsername={ValidateUsername}
+            validateFirstName={validateFirstName}
+            validateLastName={validateLastName}
+            // ***********
+            // Components
+            CircularProgress={CircularProgress}
+            Autocomplete={Autocomplete}
+            ChipArray={ChipArray}
+            useStyles={useStyles}
+            Link={Link}
+            addToast={addToast}
+            Button={Button}
+            // *********
 
-              <input
-                type="text"
-                name="username"
-                id="username"
-                value={formData.username}
-                placeholder="Username"
-                onChange={handleChange}
-                onFocus={ValidateUsername}
-                onfocusout={ValidateUsername}
-              />
-              {aboutRequiredFields.username !== "" ? (
-                <p className="error"> {aboutRequiredFields.username}</p>
-              ) : (
-                ""
-              )}
-
-              <label className="label-agree-term">Email *</label>
-
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                onFocus={validateEmail}
-              />
-              {aboutRequiredFields.email !== "" ? (
-                <p className="error"> {aboutRequiredFields.email}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Password*</label>
-
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                onFocus={validatePassword}
-              />
-              {aboutRequiredFields.password !== "" ? (
-                <p className="error"> {aboutRequiredFields.password}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Confirm Password*</label>
-
-              <input
-                type="password"
-                name="confirm_password"
-                id="confirm_password"
-                placeholder="Confirm_Password"
-                value={formData.confirm_password}
-                onChange={handleChange}
-                onFocus={validateConfirmPassword}
-              />
-              {aboutRequiredFields.confirm_password !== "" ? (
-                <p className="error"> {aboutRequiredFields.confirm_password}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">City</label>
-
-              <Autocomplete
-                items={items}
-                // shouldItemRender={(item, value) =>
-                //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
-                // }
-                getItemValue={(item) => item.label}
-                renderItem={(item, highlighted) => (
-                  <div
-                    key={item.id}
-                    style={{
-                      backgroundColor: highlighted ? "#eee" : "transparent",
-                    }}
-                  >
-                    {item.label}
-                  </div>
-                )}
-                wrapperStyle={{
-                  display: "block",
-                }}
-                menuStyle={{
-                  zIndex: "1",
-                  position: "static",
-                  borderRadius: "3px",
-                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                  background: "rgba(255, 255, 255, 0.9)",
-                  padding: "2px 12px",
-                  fontSize: "90%",
-                  color: "#000",
-                  overflow: "auto",
-                  maxHeight: "50%",
-                }}
-                inputProps={{
-                  className: "form-control",
-                  placeholder: "Enter City ",
-                }}
-                value={address}
-                name="address"
-                onChange={getAddress}
-                onSelect={SetAddress}
-              />
-              {aboutRequiredFields.city !== "" ? (
-                <p className="error"> {aboutRequiredFields.city}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Profile Picture*</label>
-
-              <input
-                type="file"
-                name="profile_picture"
-                id="profile_picture"
-                // value={formData.profile_picture}
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  console.log(file, "photo1");
-
-                  setPhoto(file);
-                }}
-                // onFocus={validatePhoto}
-              />
-              {aboutRequiredFields.profile_picture !== "" ? (
-                <p className="error"> {aboutRequiredFields.profile_picture}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Profile Description*</label>
-
-              <input
-                type="text"
-                name="profile_description"
-                id="profile_description"
-                placeholder="Profile_description"
-                value={formData.profile_description}
-                onChange={handleChange}
-                onFocus={validateProfileDesc}
-              />
-              {aboutRequiredFields.profile_description !== "" ? (
-                <p className="error">
-                  {" "}
-                  {aboutRequiredFields.profile_description}
-                </p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Phone Number*</label>
-
-              <input
-                type="text"
-                name="phone"
-                id="phone"
-                placeholder="Phone_number"
-                value={formData.phone}
-                onChange={handleChange}
-                onFocus={validatePhoneNumber}
-              />
-              {aboutRequiredFields.phone !== "" ? (
-                <p className="error"> {aboutRequiredFields.phone}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Availability*</label>
-
-              <input
-                type="text"
-                name="availability"
-                id="availability"
-                placeholder="Enter Availability"
-                value={formData.availability}
-                onChange={handleChange}
-                onFocus={validateAvailability}
-              />
-              {aboutRequiredFields.availability !== "" ? (
-                <p className="error"> {aboutRequiredFields.availability}</p>
-              ) : (
-                ""
-              )}
-            </div>
-            <div className="form-group-2">
-              <h3>Skills</h3>
-              <label className="label-agree-term">Skill Field*</label>
-
-              <div className="select-list">
-                <select
-                  name="skillField"
-                  id="skillField"
-                  value={skillformData.skillField}
-                  onChange={handleSkillChange}
-                  onFocus={ValidateSkillField}
-                >
-                  <option>Select SelectField</option>
-
-                  {skillFieldList
-                    ? skillFieldList.map((skill) => (
-                        <option value={skill._id}>{skill.skillField}</option>
-                      ))
-                    : ""}
-                </select>
-              </div>
-              {skillRequiredFields.skillField !== "" ? (
-                <p className="error"> {skillRequiredFields.skillField}</p>
-              ) : (
-                ""
-              )}
-              {skillList.length > 0 ? (
-                <>
-                  <label className="label-agree-term">Skill*</label> <br />
-                  <div className="select-list">
-                    <select
-                      name="skill"
-                      id="skill"
-                      value={skillformData.skill}
-                      onChange={handleSkillChange}
-                      onFocus={ValidateSkillField}
-                    >
-                      <option>Select Select</option>
-
-                      {skillList.map((skill) => (
-                        <option value={skill}>{skill}</option>
-                      ))}
-                    </select>
-                  </div>
-                  {skillRequiredFields.skill !== "" ? (
-                    <p className="error"> {skillRequiredFields.skill}</p>
-                  ) : (
-                    ""
-                  )}
-                </>
-              ) : (
-                ""
-              )}
-
-              <label className="label-agree-term">Specialization*</label>
-
-              <input
-                type="text"
-                onChange={handleSkillChange}
-                // onFocus={ValidateSpecialization}
-                name="specialization"
-                id="specialization"
-                placeholder="Enter Specialization"
-                value={skillformData.specialization}
-              />
-              {skillRequiredFields.specialization !== "" ? (
-                <p className="error"> {skillRequiredFields.specialization}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Score*</label>
-
-              <input
-                type="text"
-                onChange={handleSkillChange}
-                onFocus={validateScore}
-                name="score"
-                id="score"
-                placeholder="Enter Score"
-                value={skillformData.score}
-              />
-              {skillRequiredFields.score !== "" ? (
-                <p className="error"> {skillRequiredFields.score}</p>
-              ) : (
-                ""
-              )}
-              {Object.values(skillformData).length > 0 ? (
-                <Button
-                  variant="contained"
-                  onClick={onskillAdd}
-                  name="add"
-                  className="submitAdd"
-                >
-                  Add
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  disabled
-                  name="add"
-                  className="submitAdd"
-                >
-                  Add
-                </Button>
-              )}
-            </div>
-            <div className="form-group-2">
-              <h3>Material*</h3>
-              <div className="select-list">
-                <select
-                  name="material"
-                  id="material"
-                  value={material}
-                  onChange={onMaterialChange}
-                  // onFocus={validateMaterial}
-                >
-                  <option value="">Select Material</option>
-
-                  {materialList
-                    ? materialList.map((mat) => (
-                        <option value={mat._id}>{mat.name}</option>
-                      ))
-                    : ""}
-                </select>
-              </div>
-              {materialRequiredFields.name !== "" ? (
-                <p className="error"> {materialRequiredFields.name}</p>
-              ) : (
-                ""
-              )}
-              {materialArrayData.length > 0 ? (
-                <div className="mt-2 mb-3">
-                  <ChipArray
-                    materialArrayData={materialArrayData}
-                    materialList={materialList}
-                    setmaterialArrayData={setmaterialArrayData}
-                  />
-                  {materialRequiredFields.error !== "" ? (
-                    <p className="error"> {materialRequiredFields.error}</p>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
-              {/* {material.length > 0 ? (
-                <Button
-                  variant="contained"
-                  onClick={onMaterialAdd}
-                  name="add"
-                  className="submitAdd"
-                >
-                  Add
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  disabled
-                  name="add"
-                  className="submitAdd"
-                >
-                  Add
-                </Button>
-              )} */}
-            </div>
-            {error !== "" ? <p className="error"> {error}</p> : ""}
-
-            <div>
-              {isLoading === true ? (
-                <center>
-                  <div className={useStyles.root}>
-                    <CircularProgress disableShrink />
-                  </div>
-                </center>
-              ) : materialArrayData.length > 0 && skillArrayData.length > 0 ? (
-                <Button
-                  variant="contained"
-                  onClick={onSubmit}
-                  name="add"
-                  className="submit"
-                >
-                  Submit
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  disabled
-                  name="add"
-                  className="submit"
-                >
-                  Submit
-                </Button>
-              )}
-            </div>
-
-            <p className="text-left ml-1 mt-3">
-              <span style={{ opacity: 0.5 }}> Already have an account? </span>
-              <Link to="/Login">
-                <span
-                  style={{ fontSize: "15px", color: "#77b5dd" }}
-                  id="register"
-                >
-                  Login
-                </span>
-              </Link>
-            </p>
-          </form>
+            // List
+            items={items}
+            materialList={materialList}
+            skillFieldList={skillFieldList}
+            skillList={skillList}
+            material={material}
+            // ***********
+            // onSubmit
+            onskillAdd={onskillAdd}
+            onSubmit={onSubmit}
+          />
         </div>
       </div>
     );

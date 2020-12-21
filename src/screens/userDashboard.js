@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Nav, Row, Col, Tab, Container } from "react-bootstrap";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
-import "../Theme/css/main.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
 import Autocomplete from "react-autocomplete";
@@ -11,17 +10,27 @@ import { useToasts } from "react-toast-notifications";
 
 import Header from "../Components/header";
 import axios from "axios";
-import UserTable from "../shared/UserTable";
+import UserTable from "../shared/ProjectsTable";
+import InviteTable from "../shared/InviteTable";
+
 import UserForm from "../Components/UserForm";
 export default function UserDashboard(props) {
   const { addToast } = useToasts();
 
   const projectData = {
-    title: "",
-    type: "",
-    general_photo: "",
-    general_description: "",
-    category: "",
+    firstName: "",
+    lastName: "",
+    username: "",
+    city: "",
+    zipCode: "",
+    latitude: "",
+    longitude: "",
+    phone: "",
+    availability: "",
+    profile_description: "",
+    facebook: "",
+    instagram: "",
+    youtube: "",
   };
   const stepData = {
     skillField: "",
@@ -42,19 +51,15 @@ export default function UserDashboard(props) {
   const [photo, setPhoto] = useState("");
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
-  const [tempmaterialArrayData, settempmaterialArrayData] = useState([]);
 
   const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
-  const [errormessage, seterrorMessage] = useState("");
 
   const [skillFieldList, setskillFieldList] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
   const [CategoryList, setCategoryList] = useState("");
-  const [successmessage, setsuccessMessage] = useState("");
-  const [show, setShow] = useState(false);
   const [key, setKey] = useState("first");
   // functions
 
@@ -144,7 +149,7 @@ export default function UserDashboard(props) {
         autoDismiss: true,
         autoDismissTimeout: 1000,
       });
-      seterrorMessage("You can only add upto 3 skills  or less");
+      // seterrorMessage("You can only add upto 3 skills  or less");
     } else {
       setskillArrayData([...skillArrayData, skillformData]);
       setskillFormData(stepData);
@@ -155,43 +160,45 @@ export default function UserDashboard(props) {
   };
 
   // *** skill end
+  console.log(formData, "formData");
+
   const onSubmit = async (e) => {
     e.preventDefault();
-    setShow(true);
 
     const newFormData = new FormData();
     if (!photo || photo === "default.png") {
       // alert("hello");
-      seterrorMessage("Photo is required");
+      addToast("Photo is required", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 1000,
+      });
+      // seterrorMessage("Photo is required");
     } else {
-      console.log(photo, "profile data");
-
+      newFormData.append("firstName", formData.firstName);
+      newFormData.append("lastName", formData.lastName);
       newFormData.append("username", formData.username);
       newFormData.append("availability", formData.availability);
       newFormData.append("city", formData.city);
-      // newFormData.append("confirm_password", formData.confirm_password);
       // newFormData.append("email", formData.email);
       newFormData.append("latitude", formData.latitude);
       newFormData.append("longitude", formData.longitude);
-      // newFormData.append("password", formData.password);
       newFormData.append("phone", formData.phone);
       newFormData.append("profile_description", formData.profile_description);
       newFormData.append("profile_picture", photo);
       newFormData.append("zipCode", formData.zipCode);
-      // console.log("asfjlas", JSON.stringify(skillArrayData));
+
+      newFormData.append("facebook", formData.facebook);
+      newFormData.append("instagram", formData.instagram);
+      newFormData.append("youtube", formData.youtube);
       if (skillArrayData.length > 0 && materialArrayData.length > 0) {
-        // alert("hello");
         newFormData.append("skills", JSON.stringify(skillArrayData));
         newFormData.append("material", JSON.stringify(materialArrayData));
       } else {
-        // alert("hello");
         newFormData.append("skills", JSON.stringify(formData.skills));
         newFormData.append("material", JSON.stringify(formData.material));
       }
       setisLoading(true);
-      // console.log(newFormData.getAll("general_photo"), "formdata");
-
-      // console.log(items,"items")
 
       try {
         const headers = {
@@ -205,30 +212,49 @@ export default function UserDashboard(props) {
             newFormData,
             headers
           )
-          .then((res) => {
+          .then((response) => {
             setisLoading(false);
-            setFormData(projectData);
+
             setprofileModal(false);
-            setsuccessMessage("User updated successfully");
-            seterrorMessage("");
-            addToast("Success", {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
-            });
+
+            if (response.data) {
+              if (response.data.message) {
+                addToast(`${response.data.message}`, {
+                  appearance: "success",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              } else {
+                addToast(`${response.data}`, {
+                  appearance: "success",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              }
+            }
+
             // console.log(res,"res")
           })
           .catch((err) => {
             setTimeout(() => {
               setisLoading(false);
             }, 1000);
-            seterrorMessage("User updated false");
-            setsuccessMessage("");
-            addToast("Error", {
-              appearance: "error",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
-            });
+
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              }
+            }
             // console.log(" error =>", err);
           });
       } catch (error) {
@@ -241,9 +267,20 @@ export default function UserDashboard(props) {
   };
 
   const handleChange = (e) => {
-    let value = e.target.value;
-
-    setFormData({ ...formData, [e.target.name]: value });
+    // var value = e.target.value;
+    // if (e.target.name === "firstName") {
+    //   // alert(value);
+    //   setFormData({ ...formData, ["firstName"]: e.target.value });
+    // } else if (e.target.name === "lastName") {
+    //   setFormData({ ...formData, ["lastName"]: e.target.value });
+    // } else if (e.target.name === "facebook") {
+    //   setFormData({ ...formData, ["facebook"]: e.target.value });
+    // } else if (e.target.name === "instagram") {
+    //   setFormData({ ...formData, ["instagram"]: e.target.value });
+    // } else if (e.target.name === "youtube") {
+    //   setFormData({ ...formData, ["youtube"]: e.target.value });
+    // } else {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSkillChange = async (e) => {
     // alert("yooo")
@@ -289,7 +326,7 @@ export default function UserDashboard(props) {
     // debugger;
 
     setMaterial(e.target.value);
-    console.log(materialArrayData, "material aray dat from onchange");
+    // console.log(materialArrayData, "material aray dat from onchange");
     if (Object.keys(materialArrayData).length > 0) {
       materialArrayData.map((mat) => {
         if (mat !== e.target.value) {
@@ -369,7 +406,7 @@ export default function UserDashboard(props) {
         .get("http://localhost:3000/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
-          // console.log(res.data, "res owened projects");
+          console.log(res.data, "res owened projects");
         })
         .catch((err) => {
           console.log(" error projects =>", err);
@@ -387,7 +424,7 @@ export default function UserDashboard(props) {
           // const obj = { ...res.data };
 
           setData({ ["data"]: res.data.user });
-          TempData(res.data.user);
+          UserData(res.data.user);
           console.log(res.data, "res data user");
         })
         .catch((err) => {
@@ -396,8 +433,21 @@ export default function UserDashboard(props) {
     } catch (error) {
       // console.log(error, "error catch");
     }
-  }, []);
-  const TempData = (data) => {
+    try {
+      axios
+        .get("http://localhost:3000/api/v1/profile/myProjects", headers)
+        .then((res) => {
+          setProjectdataList(res.data.ownedProjects);
+          // console.log(res.data, "res owened projects");
+        })
+        .catch((err) => {
+          console.log(" error projects =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+    }
+  }, [props.match.params.id, key]);
+  const UserData = (data) => {
     const tempskillArray = [];
     // skills
     // let skillData = "";
@@ -423,10 +473,10 @@ export default function UserDashboard(props) {
 
     // *****
 
-    console.log(tempskillArray, "tempSkills");
-    // console.log(data.skills, "data.skills");
-
+    // **************
     const projectData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
       username: data.username,
       // email: data.email,
       city: data.city,
@@ -434,12 +484,16 @@ export default function UserDashboard(props) {
       latitude: data.latitude,
       longitude: data.longitude,
       phone: data.phone,
-
+      facebook: data.facebook,
+      instagram: data.instagram,
+      youtube: data.youtube,
       availability: data.availability,
       profile_description: data.profile_description,
       skills: tempskillArray,
       material: tempMaterial,
     };
+    // console.log(projectData.socialLinks, "project data");
+    // projectData.socialLinks = socialData;
     setmaterialArrayData(tempMaterial);
     setskillArrayData(tempskillArray);
 
@@ -486,14 +540,14 @@ export default function UserDashboard(props) {
                         <UserForm
                           setmaterialArrayData={setmaterialArrayData}
                           setskillArrayData={setskillArrayData}
-                          onSubmit={onsubmit}
+                          onSubmit={onSubmit}
                           formData={formData}
                           skillformData={skillformData}
                           handleSkillChange={handleSkillChange}
                           skillArrayData={skillArrayData}
                           materialArrayData={materialArrayData}
                           handleChange={handleChange}
-                          SetAddress={setAddress}
+                          SetAddress={SetAddress}
                           getAddress={getAddress}
                           items={items}
                           skillList={skillList}
@@ -502,6 +556,7 @@ export default function UserDashboard(props) {
                           Form={Form}
                           Row={Row}
                           Col={Col}
+                          addToast={addToast}
                           FormGroup={FormGroup}
                           Input={Input}
                           Label={Label}
@@ -511,9 +566,9 @@ export default function UserDashboard(props) {
                           material={material}
                           onMaterialChange={onMaterialChange}
                           onskillAdd={onskillAdd}
+                          address={address}
                           ChipArray={ChipArray}
                           SkillChipArray={SkillChipArray}
-                          errormessage={errormessage}
                           isLoading={isLoading}
                           useStyles={useStyles}
                           CircularProgress={CircularProgress}
@@ -522,24 +577,25 @@ export default function UserDashboard(props) {
                       <Tab.Pane eventKey="second">
                         {Object.keys(data) ? (
                           <div>
-                            <UserTable data={data} />
+                            <UserTable
+                              data={data}
+                              addToast={addToast}
+                              materialList={materialList}
+                              skillFieldList={skillFieldList}
+                            />
                           </div>
                         ) : (
                           ""
                         )}
                       </Tab.Pane>
                       <Tab.Pane eventKey="third">
-                        <div>
-                          When to the sessions of sweet silent thought I summon
-                          up remembrance of things past, I sigh the lack of many
-                          a thing I sought, And with old woes new wail my dear
-                          time's waste: Then can I drown an eye, unused to flow,
-                          For precious friends hid in death's dateless night,
-                          And weep afresh love's long since cancell'd woe, And
-                          moan the expense of many a vanish'd sight: Then can I
-                          grieve at grievances foregone, And heavily from woe to
-                          woe tell o'er
-                        </div>
+                        {Object.keys(data) ? (
+                          <div>
+                            <InviteTable data={data} addToast={addToast} />
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </Tab.Pane>
                     </Tab.Content>
                   </Col>

@@ -2138,7 +2138,7 @@ a:hover.back-to-top {
 @media (min-width: 1200px) {
   /* Navigation */
   .navbar-custom {
-    padding: 1.125rem 4rem 0.7rem 0rem;
+    padding: 1.4rem 2rem 2.125rem 5rem;
   }
   /* .navbar-custom .navbar-nav span{
 		padding-left: 2rem;
