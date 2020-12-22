@@ -1,27 +1,30 @@
 import React, { useState } from "react";
-
-export default function RecommendUser({
-  skill,
-  RecommendUser,
-  PopoverBody,
+import {
   UncontrolledPopover,
-}) {
-  const [like, setlike] = useState(0);
+  PopoverHeader,
+  PopoverBody,
+  Popover,
+} from "reactstrap";
 
+export default function RecommendUser({ skill, RecommendUser, i }) {
+  const [like, setlike] = useState(0);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const toggle = () => setPopoverOpen(!popoverOpen);
   const RecommendedUser = (id) => {
     setlike(like + 1);
     RecommendUser(id, like, setlike);
   };
   return (
-    <div className=" ml-2  " id="iconRow" style={{ marginTop: "-0.3rem" }}>
+    <>
       <p>
         <small>{skill.skillField.skillField} - </small>
         {skill.skill}
-        {console.log(skill.specialization, "samalsk specilaizarion")}
+
         {skill.specialization ? (
           <>
             <i
-              id="PopoverLegacy"
+              id="Popover1"
               type="button"
               class="fas fa-info-circle fa-xs"
               style={{
@@ -30,13 +33,15 @@ export default function RecommendUser({
                 color: "#c1c1c1",
               }}
             />
-            <UncontrolledPopover
-              trigger="legacy"
+            <Popover
               placement="bottom"
-              target="PopoverLegacy"
+              isOpen={popoverOpen}
+              target="Popover1"
+              toggle={toggle}
             >
+              <PopoverHeader>Specialization</PopoverHeader>
               <PopoverBody>{skill.specialization}</PopoverBody>
-            </UncontrolledPopover>
+            </Popover>
           </>
         ) : (
           ""
@@ -76,6 +81,6 @@ export default function RecommendUser({
           </>
         )}
       </p>
-    </div>
+    </>
   );
 }

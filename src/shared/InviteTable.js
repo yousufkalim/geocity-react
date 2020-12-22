@@ -88,14 +88,14 @@ export default function UserTable({ data, addToast }) {
         .then((res) => {
           if (res.data.message) {
             addToast(`${res.data.message}`, {
-              appearance: "success",
+              appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
             setcheckDecision(true);
           } else {
             addToast(`Error`, {
-              appearance: "success",
+              appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
@@ -125,7 +125,7 @@ export default function UserTable({ data, addToast }) {
   const AcceptRequestToView = async (
     setcheckDecision,
     projectId,
-    stepId,
+    sender,
     decision,
     invitation
   ) => {
@@ -138,8 +138,8 @@ export default function UserTable({ data, addToast }) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
-          { step: stepId, decision: decision, invitation: invitation },
+          `http://localhost:3000/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          { sender: sender, decision: decision, invitation: invitation },
           headers
         )
         .then((res) => {
@@ -186,7 +186,7 @@ export default function UserTable({ data, addToast }) {
   const DeclineRequestToView = async (
     setcheckDecision,
     projectId,
-    stepId,
+    sender,
     decision,
     invitation
   ) => {
@@ -199,20 +199,20 @@ export default function UserTable({ data, addToast }) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
-          { step: stepId, decision: decision, invitation: invitation },
+          `http://localhost:3000/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          { sender: sender, decision: decision, invitation: invitation },
           headers
         )
         .then((res) => {
           if (res.data.message) {
             addToast(`${res.data.message}`, {
-              appearance: "success",
+              appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
           } else {
             addToast(`Success`, {
-              appearance: "success",
+              appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
@@ -326,13 +326,13 @@ export default function UserTable({ data, addToast }) {
         .then((res) => {
           if (res.data.message) {
             addToast(`${res.data.message}`, {
-              appearance: "success",
+              appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
           } else {
             addToast(`Success`, {
-              appearance: "success",
+              appearance: "error",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
@@ -383,6 +383,7 @@ export default function UserTable({ data, addToast }) {
                 project={project}
                 DeclineFunc={DeclineRequestToCollaborate}
                 data={data}
+                type={project.type}
                 AcceptFunc={AcceptRequestToCollaborate}
               />
             ) : project.type === "inviteCollaborator" ? (
@@ -390,7 +391,16 @@ export default function UserTable({ data, addToast }) {
                 project={project}
                 DeclineFunc={DeclineInviteCollaborator}
                 data={data}
+                type={project.type}
                 AcceptFunc={AcceptInviteCollaborator}
+              />
+            ) : project.type === "viewProject" ? (
+              <InviteTableRow
+                project={project}
+                DeclineFunc={DeclineRequestToView}
+                data={data}
+                type={project.type}
+                AcceptFunc={AcceptRequestToView}
               />
             ) : (
               ""

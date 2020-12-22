@@ -35,6 +35,7 @@ export const signupskillRequired = {
   skill: "",
   specialization: "",
   score: "",
+  otherSKill: "",
 };
 export const signupaboutRequired = {
   firstname: "",
@@ -96,4 +97,5 @@ export const projectskillRequired = {
   skillField: "",
   speciality: "",
   skill: "",
+  otherSKill: "",
 };

@@ -187,8 +187,7 @@ textarea:focus {
   padding: 50px 60px 70px 60px;
 }
 
-.appointmentform input,
-select {
+.appointmentform input {
   width: 100%;
   display: block;
   border: none;
@@ -196,6 +195,16 @@ select {
   padding: 5px 0;
   color: #222;
   margin-bottom: 31px;
+  font-family: "Roboto Slab";
+}
+.appointmentform select {
+  width: 100%;
+  display: block;
+  border: none;
+  border-bottom: 2px solid #ebebeb;
+  padding: 5px 0;
+  color: #222;
+  margin-bottom: 20px;
   font-family: "Roboto Slab";
 }
 .appointmentform input:focus,

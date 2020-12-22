@@ -35,6 +35,7 @@ function Signup() {
   const [isLoading, setisLoading] = useState(false);
   const [photo, setPhoto] = useState("");
   const [isSuccess, setisSuccess] = useState("");
+  const [otherSKill, setotherSkill] = useState("");
 
   //List States
   const [items, setItems] = useState([]);
@@ -134,6 +135,17 @@ function Signup() {
     } else if (!skillformData.skill) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return false;
+    }
+  };
+  const ValidateOtherSkill = () => {
+    if (otherSKill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return true;
+    } else if (!otherSKill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
       return false;
     }
   };
@@ -343,7 +355,7 @@ function Signup() {
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
 
     try {
@@ -351,16 +363,21 @@ function Signup() {
         .get("http://localhost:3000/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
-          console.log(res, "res skill");
+          // console.log(res, "res skill");
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
   }, []);
   const onMaterialChange = (e) => {
     setMaterial(e.target.value);
     if (e.target.value !== "") {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        name: msg,
+      });
       if (Object.keys(materialArrayData).length > 0) {
         materialArrayData.map((mat) => {
           if (mat !== e.target.value) {
@@ -386,7 +403,7 @@ function Signup() {
             const array = materialArrayData.filter(
               (mat) => mat !== e.target.value
             );
-            console.log(array, "array mat");
+            // console.log(array, "array mat");
             setmaterialArrayData(array);
           }
         });
@@ -484,10 +501,16 @@ function Signup() {
         break;
     }
   };
-
+  console.log(skillArrayData, "skillArrayData");
   const onskillAdd = () => {
+    // debugger;
     checkValidateForm2();
     validateScore();
+    validateMaterial();
+    if (otherSKill !== "") {
+      skillformData.skill = otherSKill;
+    }
+    // debugger;
 
     const check = Object.values(skillformData).map((obj) => {
       if (obj !== "") {
@@ -535,7 +558,7 @@ function Signup() {
       .catch((error) => {
         const msg = "Required";
         setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-        console.error(error);
+        // console.error(error);
       });
   };
   const SetAddress = (item) => {
@@ -604,11 +627,23 @@ function Signup() {
     // debugger;
     if (!reqFields) {
       const msg = "Required";
-
-      setskillRequiredFields((prevState) => {
-        Object.assign(skillRequiredFields, obj);
-      });
-      return false;
+      if (otherSKill !== "") {
+        obj.skill = "";
+        setskillRequiredFields((prevState) => {
+          Object.assign(skillRequiredFields, obj);
+        });
+        return false;
+      } else if (obj.specialization === "required") {
+        obj.specialization = "";
+        setskillRequiredFields((prevState) => {
+          Object.assign(skillRequiredFields, obj);
+        });
+      } else {
+        setskillRequiredFields((prevState) => {
+          Object.assign(skillRequiredFields, obj);
+        });
+        return false;
+      }
     } else {
       setskillRequiredFields(signupskillRequired);
       return true;
@@ -624,7 +659,7 @@ function Signup() {
     checkValidateForm();
     validateMaterial();
     // social links
-    console.log(formData.firstName, "formData.firstName");
+    // console.log(formData.firstName, "formData.firstName");
     // ****
     const newFormData = new FormData();
     newFormData.append("firstName", formData.firstname);
@@ -686,10 +721,10 @@ function Signup() {
             }
           }
 
-          console.log(" error signup =>", err.response.data);
+          // console.log(" error signup =>", err.response.data);
         });
     } catch (error) {
-      console.log(error, "error signup catch");
+      // console.log(error, "error signup catch");
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
@@ -730,9 +765,11 @@ function Signup() {
             validateProfileDesc={validateProfileDesc}
             validateScore={validateScore}
             ValidateSkillField={ValidateSkillField}
+            ValidateSkill={ValidateSkill}
             ValidateUsername={ValidateUsername}
             validateFirstName={validateFirstName}
             validateLastName={validateLastName}
+            ValidateOtherSkill={ValidateOtherSkill}
             // ***********
             // Components
             CircularProgress={CircularProgress}
@@ -750,6 +787,8 @@ function Signup() {
             skillFieldList={skillFieldList}
             skillList={skillList}
             material={material}
+            otherSKill={otherSKill}
+            setotherSkill={setotherSkill}
             // ***********
             // onSubmit
             onskillAdd={onskillAdd}

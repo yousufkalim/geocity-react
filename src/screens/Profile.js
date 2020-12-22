@@ -13,66 +13,30 @@ import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import UserProjectList from "../Components/userprojectList";
-import RequestView from "../Components/request";
-import InvitationRequest from "../Components/Invitation";
-import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
-import ProfileModal from "../shared/ProfileModal";
-import MarkImage from "../Theme/images/mark.png";
+
 import LikeUser from "../Components/RecommendUser";
 import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 
 import facebook from "../Theme/images/facebook.png";
 import instagram from "../Theme/images/instagram.png";
 import youtube from "../Theme/images/youtube.png";
 import { useToasts } from "react-toast-notifications";
 import Notifications from "../Components/Notifications";
+import CommentsFromDB from "../Components/CommentsFromDB";
+import Comments from "../Components/Comments";
+import LoadedClients from "../shared/Loaders";
 export default function Profile(props) {
   const { addToast } = useToasts();
-
-  const projectData = {
-    title: "",
-    type: "",
-    general_photo: "",
-    general_description: "",
-    category: "",
-
-    // implementation_steps: "",
-    // progress: "",
-  };
-  const stepData = {
-    skillField: "",
-    skill: "",
-    specialization: "",
-    score: "",
-  };
-
   // states start ************************************
-  const [skillformData, setskillFormData] = useState(stepData);
 
-  const [formData, setFormData] = useState(projectData);
   const [data, setData] = useState({ data: "" });
   const [ProjectdataList, setProjectdataList] = useState([]);
-  const [profilemodal, setprofileModal] = useState(false);
-  const [address, setAddress] = useState("");
-  const [items, setItems] = useState([]);
-  const [photo, setPhoto] = useState("");
-  const [skillArrayData, setskillArrayData] = useState([]);
-  const [materialArrayData, setmaterialArrayData] = useState([]);
-  const [tempmaterialArrayData, settempmaterialArrayData] = useState([]);
-
-  const [materialList, setMaterialList] = useState("");
-  const [skillList, setskillList] = useState("");
-  const [material, setMaterial] = useState("");
+  const [commentArray, setCommentArray] = useState([]);
 
   const [comment, setComment] = useState("");
-  // const [likeCount, setLikeCount] = useState(false);
-  const [skillFieldList, setskillFieldList] = useState("");
-
   const [isLoading, setisLoading] = useState(false);
-  const [CategoryList, setCategoryList] = useState("");
-
-  const [commentArray, setCommentArray] = useState([]);
-  // console.log(commentArray, "commentArray");
+  // *************
   const onAdd = async () => {
     const date = new Date();
     const obj = {};
@@ -126,75 +90,8 @@ export default function Profile(props) {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
-  // skill
-  const handleSkillChange = async (e) => {
-    // alert("yooo")
-    let value = e.target.value;
 
-    if (e.target.name === "skillField") {
-      // alert("hello");
-      setskillFormData({ ...skillformData, [e.target.name]: value });
-
-      skillFieldList.map((skill) =>
-        skill._id === e.target.value ? setskillList(skill.skill) : ""
-      );
-
-      // alert(e.target.value);
-    } else if (e.target.name === "score") {
-      setskillFormData({
-        ...skillformData,
-        [e.target.name]: e.target.value.replace(/\D/g, ""),
-      });
-      // }
-    } else {
-      setskillFormData({ ...skillformData, [e.target.name]: value });
-    }
-    // switch (e.target.name) {
-    //   case "skillField":
-    //     ValidateSkillField();
-    //     break;
-    //   case "skill":
-    //     ValidateSkill();
-    //     break;
-    //   case "specialization":
-    //     ValidateSpecialization();
-    //     break;
-    //   case "score":
-    //     validateScore();
-    //     break;
-
-    //   default:
-    //     break;
-    // }
-  };
-  const onskillAdd = () => {
-    // checkValidateForm2();
-    // debugger;
-    // setskillArrayData((prevState) => [...prevState, skillformData]);
-
-    if (skillArrayData.length === 3) {
-      // alert(skillArrayData.length);
-      addToast("You can only add upto 3 skills  or less", {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 1000,
-      });
-    } else {
-      setskillArrayData([...skillArrayData, skillformData]);
-      setskillFormData(stepData);
-    }
-
-    // setskillRequiredFields(skillRequiredFields);
-    // console.log("skil", skillArrayData);
-  };
-
-  // *** skill end
-
-  // onSubmit end
   const RecommendUser = async (skillField, like, setlike) => {
-    // if (recommendstatus === true) {
-    // }
-
     if (like === 0) {
       try {
         const headers = {
@@ -235,163 +132,12 @@ export default function Profile(props) {
   };
   const DeleteComment = (comment) => {
     const array = commentArray.filter((com) => com.comment !== comment.trim());
-    // console.log(array, "array");
     setCommentArray(array);
-  };
-  // console.log(commentArray, "commentArray");
-  // get set  address
-
-  const getAddress = (e) => {
-    setAddress(e.target.value);
-    fetch(
-      "https://api-adresse.data.gouv.fr/search/?q=" +
-        e.target.value +
-        "&type=housenumber&autocomplete=1&limit=10"
-    )
-      .then((response) => response.json())
-      .then((responseJson) => {
-        // const msg = "";
-        // setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-        // console.log("res address", responseJson);
-        var addressToSet = [];
-        // debugger;
-        for (var i = 0; i < responseJson.features.length; i++) {
-          addressToSet.push({
-            id: i,
-            label: responseJson.features[i].properties.label,
-            city: responseJson.features[i].properties.city,
-            PostalCode: responseJson.features[i].properties.postcode,
-            lat: responseJson.features[0].geometry.coordinates[1],
-            lng: responseJson.features[0].geometry.coordinates[0],
-          });
-        }
-        if (addressToSet.length === responseJson.features.length) {
-          // setFormData({ ...formData,items:addressToSet })
-          setItems(addressToSet);
-        }
-      })
-      .catch((error) => {
-        const msg = "Required";
-        // setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-        // console.error(error);
-      });
-  };
-  const SetAddress = (item) => {
-    // console.log(item,'item')
-    setAddress(item);
-    // this.setState({ address: item });
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].label === item) {
-        // debugger;
-        var city = items[i].city;
-        var zipCode = items[i].PostalCode;
-        var lat = items[i].lat.toString();
-        var lng = items[i].lng.toString();
-        var newAddress = items[i].label.split(String(zipCode));
-        setFormData({
-          address: newAddress[0],
-          zipCode: zipCode,
-          city: city,
-          latitude: lat,
-          longitude: lng,
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          confirm_password: formData.confirm_password,
-          availability: formData.availability,
-        });
-        // this.setState({
-        //   address: newAddress[0],
-        //   zip: zipCode,
-        //   city: city,
-        //   lat: lat,
-        //   lng: lng,
-        //   zipError: "",
-        // });
-        // this.validationCheckforAddress(formData);
-        // this.handleValidationCheckForButtonEnable();
-      }
-    }
-    // validateCity();
   };
 
   // *****
-  // profile toggle
-
-  const Profiletoggle = () => {
-    if (profilemodal === false) {
-      // debugger;
-      const tempskillArray = [];
-      // skills
-      // let skillData = "";
-      // let tempSkills=""
-      data.data.skills.map((skill, i) => {
-        let skillData = skill.skillField._id;
-        let skillsObj = skill;
-        let tempSkills = { ...skillsObj };
-        tempSkills.skillField = skillData;
-        delete tempSkills.recommendedBy;
-        delete tempSkills._id;
-        tempskillArray.push(tempSkills);
-      });
-
-      // const skillData = data.data.skills[0].skillField._id;
-      // const skillsObj = data.data.skills[0];
-      // const tempSkills = { ...skillsObj };
-      // tempSkills.skillField = skillData;
-      // delete tempSkills.recommendedBy;
-      // delete tempSkills._id;
-      // tempskillArray.push(tempSkills);
-      // *****
-
-      delete data.data.email;
-      // material
-
-      const materialArray = [];
-      var tempMaterial = data.data.material;
-      tempMaterial.map((mat) => {
-        materialArray.push(mat._id);
-      });
-      tempMaterial = materialArray;
-
-      // *****
-
-      console.log(tempskillArray, "tempSkills");
-      // console.log(data.data.skills, "data.data.skills");
-
-      const projectData = {
-        username: data.data.username,
-        // email: data.data.email,
-        city: data.data.city,
-        zipCode: data.data.zipCode,
-        latitude: data.data.latitude,
-        longitude: data.data.longitude,
-        phone: data.data.phone,
-
-        availability: data.data.availability,
-        profile_description: data.data.profile_description,
-        skills: tempskillArray,
-        material: tempMaterial,
-      };
-      setmaterialArrayData(tempMaterial);
-      setskillArrayData(tempskillArray);
-
-      // setPhoto(data.data.profile_picture);
-      setAddress(data.data.city);
-      setFormData({ ...projectData });
-    }
-    setprofileModal(!profilemodal);
-  };
-  // console.log(formData, "formDat from database");
-  //profile toggle end
-  const handleChange = (e) => {
-    let value = e.target.value;
-
-    setFormData({ ...formData, [e.target.name]: value });
-  };
 
   const projectLike = (id, like, setlike) => {
-    // alert(id);
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -427,41 +173,7 @@ export default function Profile(props) {
       setlike(0);
     }
   };
-  const onMaterialChange = (e) => {
-    // debugger;
 
-    setMaterial(e.target.value);
-    console.log(materialArrayData, "material aray dat from onchange");
-    if (Object.keys(materialArrayData).length > 0) {
-      materialArrayData.map((mat) => {
-        if (mat !== e.target.value) {
-          // alert(e.target.value);
-          const array = materialArrayData.filter(
-            (mat) => mat !== e.target.value
-          );
-          if (e.target.value) {
-            array.push(e.target.value);
-          }
-          setmaterialArrayData(array);
-          const msg = "";
-          // setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
-          // setmaterialArrayData((prevState) => [...prevState, e.target.value]);
-        } else {
-          const msg = "value already existed";
-          // setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
-          // alert("msg");
-          const array = materialArrayData.filter(
-            (mat) => mat !== e.target.value
-          );
-          console.log(array, "array mat");
-          setmaterialArrayData(array);
-        }
-      });
-    } else {
-      setmaterialArrayData([...materialArrayData, e.target.value]);
-      // setmaterialArrayData(e.target.value);
-    }
-  };
   // Toast
 
   const DeleteProfile = () => {
@@ -506,40 +218,7 @@ export default function Profile(props) {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    try {
-      axios
-        .get("http://localhost:3000/api/v1/auth/materialList")
-        .then((res) => {
-          setMaterialList(res.data.materials);
-          // console.log(res, "res material");
-        })
-        .catch((err) => console.log(" error =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
 
-    try {
-      axios
-        .get("http://localhost:3000/api/v1/auth/skillList")
-        .then((res) => {
-          setskillFieldList(res.data.skills);
-          // console.log(res, "res skill");
-        })
-        .catch((err) => console.log(" error =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
-    try {
-      axios
-        .get("http://localhost:3000/api/v1/auth/categoryList")
-        .then((res) => {
-          setCategoryList(res.data.category);
-          // console.log(res, "response category");
-        })
-        .catch((err) => console.log(" error category =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
     try {
       Axios.get("http://localhost:3000/api/v1/profile/myProjects", headers)
         .then((res) => {
@@ -563,14 +242,9 @@ export default function Profile(props) {
           setData({ ["data"]: res.data.user });
           console.log(res.data, "res data user");
         })
-        .catch((err) => {
-          // console.log(" error =>", err);
-        });
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+        .catch((err) => {});
+    } catch (error) {}
   }, []);
-  // console.log(data, "user data list");
   if (Object.keys(data)) {
     return (
       <div>
@@ -583,7 +257,6 @@ export default function Profile(props) {
                   Ne soyez plus seul pour realiser vos projects, soyez entoures
                   des meilleurs !
                 </h4>
-                {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div>
               <div style={{ width: "50%" }}>
                 <p
@@ -593,41 +266,43 @@ export default function Profile(props) {
                   Lorem ipsum, or lipsum as it is sometimes known, is dummy text
                   used in laying out print, graphic or web designs.
                 </p>
-                {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div>
               {/* end of col */}
             </div>{" "}
-            {/* end of row */}
-            {/* end of row */}
           </div>{" "}
-          {/* end of container */}
         </div>{" "}
-        {/* end of cardSection */}
-        {/* end of services */}
         <div id="Cardservices" className="cardSection">
           <div className="container ">
             <div className="row pt-4" style={{ background: "#fcfcfc" }}>
               <div className="col-lg-1 text-center">
                 <span>
-                  <img
-                    alt="facebook"
-                    src={facebook}
-                    style={{ width: "25px", height: "25px" }}
-                  />
+                  <a href={`${data.data.facebook ? data.data.facebook : "#"}`}>
+                    <img
+                      alt="facebook"
+                      src={facebook}
+                      style={{ width: "25px", height: "25px" }}
+                    />
+                  </a>
                 </span>
                 <div className="mt-4">
-                  <img
-                    alt="instagram"
-                    src={instagram}
-                    style={{ width: "25px", height: "25px" }}
-                  />
+                  <a
+                    href={`${data.data.instagram ? data.data.instagram : "#"}`}
+                  >
+                    <img
+                      alt="instagram"
+                      src={instagram}
+                      style={{ width: "25px", height: "25px" }}
+                    />
+                  </a>
                 </div>
                 <div className="mt-4">
-                  <img
-                    alt="youtube"
-                    src={youtube}
-                    style={{ width: "25px", height: "25px" }}
-                  />
+                  <a href={`${data.data.youtube ? data.data.youtube : "#"}`}>
+                    <img
+                      alt="youtube"
+                      src={youtube}
+                      style={{ width: "25px", height: "25px" }}
+                    />
+                  </a>
                 </div>
                 {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div>
@@ -643,7 +318,6 @@ export default function Profile(props) {
                     alt="alternative"
                   />
                 </div>
-                {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div>
               <div className="col-lg-9  text-left">
                 <div>
@@ -651,7 +325,6 @@ export default function Profile(props) {
                   <hr style={{ border: "2px solid #c4bec2" }} />
                 </div>
                 <p className="mt-2">{data.data.profile_description}</p>
-                {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
               </div>
               {/* end of col */}
             </div>
@@ -695,18 +368,6 @@ export default function Profile(props) {
                   </div>
                   <div className="col-4  ">
                     {getUser()._id === data.data._id ? (
-                      // <button
-                      //   onClick={Profiletoggle}
-                      //   type="button"
-                      //   style={{
-                      //     // fontWeight: "lighter",
-                      //     marginLeft: "4rem",
-                      //     maxWidth: "40%",
-                      //   }}
-                      //   className="btn btn-block mt-1"
-                      // >
-                      //   Modifier
-                      // </button>
                       <div className="row">
                         <div className="col ">
                           <button
@@ -733,7 +394,6 @@ export default function Profile(props) {
                                 border: 0,
                                 maxWidth: "90%",
                               }}
-                              // onClick={Profiletoggle}
                             >
                               MODIFIER
                             </button>
@@ -779,13 +439,15 @@ export default function Profile(props) {
               </div>
               <div className="col-lg-6" style={{ marginTop: "-0.8rem" }}>
                 {data.data.skills
-                  ? data.data.skills.map((skill) => (
-                      <LikeUser
-                        skill={skill}
-                        RecommendUser={RecommendUser}
-                        UncontrolledPopover={UncontrolledPopover}
-                        PopoverBody={PopoverBody}
-                      />
+                  ? data.data.skills.map((skill, i) => (
+                      <div
+                        className=" ml-2  "
+                        key={i}
+                        id="iconRow"
+                        style={{ marginTop: "-0.3rem" }}
+                      >
+                        <LikeUser skill={skill} RecommendUser={RecommendUser} />
+                      </div>
                     ))
                   : ""}
               </div>
@@ -818,93 +480,6 @@ export default function Profile(props) {
               ""
             )}
 
-            {/* end of row */}
-            {/* end of row */}
-            {/* <div className="row " style={{ marginTop: "2rem" }}>
-              <div
-                className="col-lg-12 text-left  p-1"
-                style={{
-                  background: "#fcfcfc",
-                  margin: "auto",
-                  position: "relative",
-                }}
-              >
-                <h4 className="mt-1 ml-4 text-bold">
-                  Requests For View Projet
-                </h4>
-              </div>
-            </div>
-            {data.data && data.data.invitation.length > 0
-              ? data.data.invitation.map((data, i) =>
-                  data.hasOwnProperty("skillID") ? (
-                    ""
-                  ) : data.sender ? (
-                    <>
-                      <RequestView
-                        data={data}
-                        i={i}
-                        DefaultImage={DefaultImage}
-                      />
-                    </>
-                  ) : (
-                    ""
-                  )
-                )
-              : ""}
-            <div className="row " style={{ marginTop: "2rem" }}>
-              <div
-                className="col-lg-12 text-left  p-1"
-                style={{
-                  background: "#fcfcfc",
-                  margin: "auto",
-                  position: "relative",
-                }}
-              >
-                <h4 className="mt-1 ml-4 text-bold">
-                  Requests For Collaboration
-                </h4>
-              </div>
-            </div> */}
-            {/* {data.data && data.data.invitation.length > 0
-              ? data.data.invitation.map((data, i) =>
-                  data.hasOwnProperty("skillID") ? (
-                    data.sender ? (
-                      <>
-                        <InvitationRequest
-                          data={data}
-                          i={i}
-                          DefaultImage={DefaultImage}
-                        />
-                      </>
-                    ) : (
-                      ""
-                    )
-                  ) : (
-                    ""
-                  )
-                )
-              : ""}
-            <div className="row " style={{ marginTop: "2rem" }}>
-              <div
-                className="col-lg-12 text-left  p-1"
-                style={{
-                  background: "#fcfcfc",
-                  margin: "auto",
-                  position: "relative",
-                }}
-              >
-                <h4 className="mt-1 ml-4 text-bold">Notifications</h4>
-              </div>
-            </div>
-            {data.data && data.data.notifications.length > 0
-              ? data.data.notifications.map((data, i) =>
-                  data.hasOwnProperty("projectID") ? (
-                    <Notifications data={data} i={i} DefaultImage={MarkImage} />
-                  ) : (
-                    ""
-                  )
-                )
-              : ""} */}
             <div className="row" style={{ marginTop: "2rem" }}>
               <div
                 className="col-lg-12 text-left  p-1"
@@ -921,77 +496,24 @@ export default function Profile(props) {
             </div>
             {data.data.comments && data.data.comments.length > 0
               ? data.data.comments.map((comment) => (
-                  <div className="row text-left" style={{ marginTop: "2rem" }}>
-                    <div className="text-right" style={{ width: "10%" }}>
-                      <img
-                        className="com-image"
-                        src={
-                          data.data.profile_picture
-                            ? `http://localhost:3000/views/uploads/${data.data.profile_picture}`
-                            : DefaultImage
-                        }
-                        alt="alternative"
-                      />
-                    </div>
-                    <div className="text-left" style={{ width: "90%" }}>
-                      <div style={{ marginLeft: "2rem" }}>
-                        <h5>
-                          {getUser() ? getUser().username : ""}
-                          <small className="ml-2">
-                            {
-                              new Date(comment.createdAt)
-                                .toString()
-                                .split(" ")[2]
-                            }
-                            {"/"}
-                            {new Date(comment.createdAt).getMonth()}
-                            {"/"}
-                            {new Date(comment.createdAt).getFullYear()}
-                          </small>
-                        </h5>
-                        <p className="mt-2" style={{ fontWeight: "bold" }}>
-                          {comment.comment}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <CommentsFromDB
+                    comment={comment}
+                    getUser={getUser}
+                    data={data}
+                    DefaultImage={DefaultImage}
+                  />
                 ))
               : ""}
             {commentArray.length > 0
               ? commentArray.map((comment) => (
-                  <div className="row text-left" style={{ marginTop: "2rem" }}>
-                    <div className="text-right" style={{ width: "10%" }}>
-                      <img
-                        className="com-image"
-                        src={
-                          comment.profile_picture
-                            ? `http://localhost:3000/views/uploads/${comment.profile_picture}`
-                            : DefaultImage
-                        }
-                        alt="alternative"
-                      />
-                    </div>
-                    <div className="text-left" style={{ width: "75%" }}>
-                      <div style={{ marginLeft: "2rem" }}>
-                        <h5>
-                          {getUser() ? getUser().username : ""}
-                          <small className="ml-2">
-                            {new Date(comment.date).toString().split(" ")[2]}{" "}
-                            {new Date(comment.date).toString().split(" ")[1]}{" "}
-                            {new Date(comment.date).getFullYear()}
-                          </small>
-                        </h5>
-                        <p className="mt-2" style={{ fontWeight: "bold" }}>
-                          {comment.comment}
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <ClearOutlinedIcon
-                        onClick={() => DeleteComment(comment.comment)}
-                      />
-                    </div>
-                  </div>
+                  <Comments
+                    comment={comment}
+                    data={data}
+                    DefaultImage={DefaultImage}
+                    DeleteComment={DeleteComment}
+                    ClearOutlinedIcon={ClearOutlinedIcon}
+                    getUser={getUser}
+                  />
                 ))
               : ""}
 
@@ -1047,24 +569,11 @@ export default function Profile(props) {
           </div>
           {/* end of row */}
         </div>{" "}
-        {/* end of container */}
-        {/* Details 1 */}
-        {/* end of basic-1 */}
-        {/* end of details 1 */}
-        {/* Details 2 */}
-        {/* end of basic-2 */}
-        {/* end of details 2 */}
-        {/* Details Lightboxes */}
-        {/* Details Lightbox 1 */}
         {/* Footer */}
         <Footer />
       </div>
     );
   } else {
-    return (
-      <div>
-        <h1>loading....</h1>
-      </div>
-    );
+    return <LoadedClients />;
   }
 }

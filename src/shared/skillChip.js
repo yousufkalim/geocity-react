@@ -57,9 +57,11 @@ export default function ChipsArray({
                         //   icon={icon}
                         label={`SkillField: ${" "} ${
                           mat.skillField
-                        } Skill: ${" "}${data.skill} Specialization: ${" "}${
+                        } Skill: ${" "}${data.skill} ${
                           data.specialization
-                        }`}
+                            ? `Specialization: ${data.specialization}`
+                            : ""
+                        } `}
                         onDelete={() => handleDelete(data.skillField)}
                         className={classes.chip}
                       />

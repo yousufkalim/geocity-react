@@ -28,6 +28,8 @@ export default function SignupForm({
   ValidateUsername,
   validateFirstName,
   validateLastName,
+  ValidateSkill,
+  ValidateOtherSkill,
   //   *********
   materialList,
   CircularProgress,
@@ -41,6 +43,8 @@ export default function SignupForm({
   getAddress,
   SetAddress,
   setPhoto,
+  otherSKill,
+  setotherSkill,
   // **********
   material,
   setmaterialArrayData,
@@ -305,29 +309,55 @@ export default function SignupForm({
           </select>
         </div>
         {skillRequiredFields.skillField !== "" ? (
-          <p className="error"> {skillRequiredFields.skillField}</p>
+          <p className="error mt-2"> {skillRequiredFields.skillField}</p>
         ) : (
           ""
         )}
         {skillList.length > 0 ? (
           <>
-            <label className="label-agree-term">Skill*</label> <br />
-            <div className="select-list">
-              <select
+            <label className="label-agree-term ">Skill*</label> <br />
+            {skillformData.skill === "Other" ? (
+              ""
+            ) : (
+              <div className="select-list">
+                <select
+                  name="skill"
+                  id="skill"
+                  value={skillformData.skill}
+                  onChange={handleSkillChange}
+                  onBlur={ValidateSkill}
+                >
+                  <option>Select Skill</option>
+                  {skillList.map((skill) => (
+                    <option value={skill}>{skill}</option>
+                  ))}
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            )}
+            {skillformData.skill === "Other" ? (
+              <input
+                type="text"
                 name="skill"
                 id="skill"
-                value={skillformData.skill}
-                onChange={handleSkillChange}
-                onBlur={ValidateSkillField}
-              >
-                <option>Select Select</option>
-
-                {skillList.map((skill) => (
-                  <option value={skill}>{skill}</option>
-                ))}
-              </select>
-            </div>
-            {skillRequiredFields.skill !== "" ? (
+                placeholder="Enter your Skill"
+                value={otherSKill}
+                onChange={(e) => {
+                  ValidateOtherSkill();
+                  setotherSkill(e.target.value);
+                }}
+                onBlur={ValidateOtherSkill}
+              />
+            ) : (
+              ""
+            )}
+            {skillformData.skill === "Other" ? (
+              skillRequiredFields.otherSKill !== "" ? (
+                <p className="error"> {skillRequiredFields.otherSKill}</p>
+              ) : (
+                ""
+              )
+            ) : skillRequiredFields.skill !== "" ? (
               <p className="error"> {skillRequiredFields.skill}</p>
             ) : (
               ""
@@ -389,7 +419,7 @@ export default function SignupForm({
           </select>
         </div>
         {materialRequiredFields.name !== "" ? (
-          <p className="error"> {materialRequiredFields.name}</p>
+          <p className="error mt-2"> {materialRequiredFields.name}</p>
         ) : (
           ""
         )}
@@ -415,12 +445,17 @@ export default function SignupForm({
             variant="contained"
             onClick={onskillAdd}
             name="add"
-            className="submitAdd"
+            className="submitAdd mt-4"
           >
             Add
           </Button>
         ) : (
-          <Button variant="contained" disabled name="add" className="submitAdd">
+          <Button
+            variant="contained"
+            disabled
+            name="add"
+            className="submitAdd mt-2"
+          >
             Add
           </Button>
         )}

@@ -87,8 +87,7 @@ const ModalExample = (props) => {
                     value={stepformData.status}
                     onChange={handleStepChange}
                   >
-                    <option value="NoProgress">{stepformData.status}</option>
-
+                    <option value={""}>Select status</option>
                     <option value="NoProgress">NoProgress</option>
 
                     <option value="completed">completed</option>
@@ -106,7 +105,7 @@ const ModalExample = (props) => {
                     type="select"
                     onChange={handleStep}
                   >
-                    <option>Select StepType</option>
+                    <option value="">Select StepType</option>
                     {names
                       ? names.map((mat) => <option value={mat}>{mat}</option>)
                       : ""}

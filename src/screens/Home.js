@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
-import "../Theme/css/styles.css";
+// import "../Theme/css/styles.css";
 import Footer from "../Components/footer";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import { Link } from "react-router-dom";
+import lightbulb from "../Theme/images/light-bulb.svg";
+import deal from "../Theme/images/deal.svg";
+import rocket from "../Theme/images/rocket.svg";
+import magnifier from "../Theme/images/magnifier.svg";
+import paperPlane from "../Theme/images/paper-plane.svg";
+import target from "../Theme/images/target.svg";
+
 export default class Home extends React.Component {
   render() {
     return (
@@ -133,7 +140,7 @@ export default class Home extends React.Component {
                 <div className="card">
                   <img
                     className="card-image"
-                    src="images/light-bulb.svg"
+                    src={lightbulb}
                     alt="alternative"
                   />
                   <div className="card-body">
@@ -144,11 +151,7 @@ export default class Home extends React.Component {
                 {/* end of card */}
                 {/* Card */}
                 <div className="card">
-                  <img
-                    className="card-image"
-                    src="images/deal.svg"
-                    alt="alternative"
-                  />
+                  <img className="card-image" src={deal} alt="alternative" />
                   <div className="card-body">
                     <h4 className="card-title">Trouvez vos collaborateurs</h4>
                     {/* <p>Once the market analysis process is completed our staff will search for opportunities that are in reach</p> */}
@@ -157,11 +160,7 @@ export default class Home extends React.Component {
                 {/* end of card */}
                 {/* Card */}
                 <div className="card">
-                  <img
-                    className="card-image"
-                    src="images/rocket.svg"
-                    alt="alternative"
-                  />
+                  <img className="card-image" src={rocket} alt="alternative" />
                   <div className="card-body">
                     <h4 className="card-title">Realisez votre projet !</h4>
                     {/* <p>With all the information in place you will be presented with an action plan that your company needs to follow</p> */}
@@ -180,7 +179,7 @@ export default class Home extends React.Component {
                 <div className="card">
                   <img
                     className="card-image"
-                    src="images/magnifier.svg"
+                    src={magnifier}
                     alt="alternative"
                   />
                   <div className="card-body">
@@ -193,7 +192,7 @@ export default class Home extends React.Component {
                 <div className="card">
                   <img
                     className="card-image"
-                    src="images/paper-plane.svg"
+                    src={paperPlane}
                     alt="alternative"
                   />
                   <div className="card-body">
@@ -206,11 +205,7 @@ export default class Home extends React.Component {
                 {/* end of card */}
                 {/* Card */}
                 <div className="card">
-                  <img
-                    className="card-image"
-                    src="images/target.svg"
-                    alt="alternative"
-                  />
+                  <img className="card-image" src={target} alt="alternative" />
                   <div className="card-body">
                     <h4 className="card-title">Apportez votre contribution</h4>
                     {/* <p>With all the information in place you will be presented with an action plan that your company needs to follow</p> */}

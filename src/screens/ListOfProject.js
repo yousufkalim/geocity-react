@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../Theme/css/list.css";
+// import "../Theme/css/list.css";
 import axios from "axios";
 import Header from "../Components/header";
 import Footer from "../Components/footer";
@@ -10,7 +10,7 @@ import { isAuthenticated, getUser } from "../Auth/Index";
 import { Redirect } from "react-router-dom";
 import SelectBox from "../shared/select";
 import { useToasts } from "react-toast-notifications";
-
+import Loaders from "../shared/Loaders";
 export default function List() {
   const { addToast } = useToasts();
   const filterData = {
@@ -133,62 +133,77 @@ export default function List() {
     }
   };
   // handleCategoryChange **************************
+
   const handleCategoryChange = (e) => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-    setfilterFormData({ ...filterFormData, ["category"]: e.value });
-    try {
-      axios
-        .post(
-          "http://localhost:3000/api/v1/project/search/category",
-          { category: e.value },
-          headers
-        )
-        .then((res) => {
-          setFilter(true);
-          if (res.data.length > 0) {
-            setfilteredArray(res.data);
-          }
-        })
-        .catch((err) => {
-          setFilter(false);
-        });
-    } catch (error) {
+    if (e === null) {
+      // alert("onClose");
       setFilter(false);
+      setfilteredArray([]);
+      setfilterFormData({ ...filterFormData, ["category"]: "" });
+    } else {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      setfilterFormData({ ...filterFormData, ["category"]: e.value });
+      try {
+        axios
+          .post(
+            "http://localhost:3000/api/v1/project/search/category",
+            { category: e.value },
+            headers
+          )
+          .then((res) => {
+            setFilter(true);
+            if (res.data.length > 0) {
+              setfilteredArray(res.data);
+            }
+          })
+          .catch((err) => {
+            setFilter(false);
+          });
+      } catch (error) {
+        setFilter(false);
+      }
     }
   };
   // *********
   // handleFieldChange
   const handleFieldChange = (e) => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-    setfilterFormData({ ...filterFormData, ["skillField"]: e.value });
-    try {
-      axios
-        .post(
-          "http://localhost:3000/api/v1/project/search/skill",
-          { skill: e.value },
-          headers
-        )
-        .then((res) => {
-          setFilter(true);
-          if (res.data) {
-            setfilteredArray(res.data.projects);
-          } else {
-            setfilteredArray([]);
-          }
-        })
-        .catch((err) => {
-          setFilter(false);
-        });
-    } catch (error) {
+    if (e === null) {
+      // alert("onClose");
       setFilter(false);
+      setfilteredArray([]);
+      setfilterFormData({ ...filterFormData, ["skillField"]: "" });
+    } else {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      setfilterFormData({ ...filterFormData, ["skillField"]: e.value });
+      try {
+        axios
+          .post(
+            "http://localhost:3000/api/v1/project/search/skill",
+            { skill: e.value },
+            headers
+          )
+          .then((res) => {
+            setFilter(true);
+            if (res.data) {
+              setfilteredArray(res.data.projects);
+            } else {
+              setfilteredArray([]);
+            }
+          })
+          .catch((err) => {
+            setFilter(false);
+          });
+      } catch (error) {
+        setFilter(false);
+      }
     }
   };
   // getAddress
@@ -307,53 +322,55 @@ export default function List() {
               <div className="col-lg-2 " id="selectbox2">
                 <SelectBox
                   name="skillField"
-                  id="category"
+                  id="skillField"
                   CategoryList={skillfieldList}
                   value={filterFormData.category}
                   onChange={handleFieldChange}
                 />
               </div>
               <div className="col-lg-3" id="selectbox3">
-                <Autocomplete
-                  items={items}
-                  wrapperProps={<i className="fas fa-heart " />}
-                  getItemValue={(item) => item.label}
-                  renderItem={(item, highlighted) => (
-                    <div
-                      key={item.id}
-                      style={{
-                        backgroundColor: highlighted ? "#eee" : "transparent",
-                      }}
-                    >
-                      {item.label}
-                    </div>
-                  )}
-                  wrapperStyle={{
-                    display: "block",
-                  }}
-                  menuStyle={{
-                    zIndex: "1",
-                    position: "static",
-                    borderRadius: "3px",
-                    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                    background: "rgba(255, 255, 255, 0.9)",
-                    padding: "2px 12px",
-                    fontSize: "90%",
-                    color: "#000",
-                    overflow: "auto",
-                    maxHeight: "50%",
-                  }}
-                  inputProps={{
-                    className: "form-control",
-                    placeholder: "Enter City ",
-                  }}
-                  value={address}
-                  name="address"
-                  onChange={getAddress}
-                  onSelect={SetAddress}
-                />
+                <div className="mt-1">
+                  <Autocomplete
+                    items={items}
+                    wrapperProps={<i className="fas fa-heart " />}
+                    getItemValue={(item) => item.label}
+                    renderItem={(item, highlighted) => (
+                      <div
+                        key={item.id}
+                        style={{
+                          backgroundColor: highlighted ? "#eee" : "transparent",
+                        }}
+                      >
+                        {item.label}
+                      </div>
+                    )}
+                    wrapperStyle={{
+                      display: "block",
+                    }}
+                    menuStyle={{
+                      zIndex: "1",
+                      position: "static",
+                      borderRadius: "3px",
+                      boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                      background: "rgba(255, 255, 255, 0.9)",
+                      padding: "2px 12px",
+                      fontSize: "90%",
+                      color: "#000",
+                      overflow: "auto",
+                      maxHeight: "50%",
+                    }}
+                    inputProps={{
+                      className: "form-control",
+                      placeholder: "Enter City ",
+                    }}
+                    value={address}
+                    name="address"
+                    onChange={getAddress}
+                    onSelect={SetAddress}
+                  />
+                </div>
               </div>
-              <div className="col-lg-3" />
+              <div className="col-lg-3"></div>
               {/* end of col */}
             </div>
             {/* row 1 */}
@@ -372,9 +389,7 @@ export default function List() {
                     ))}
                 </div>
               ) : (
-                <center>
-                  <h1>No project found</h1>
-                </center>
+                <Loaders />
               )
             ) : typeof filteredArray !== typeof "" ? (
               filteredArray ? (
@@ -390,9 +405,7 @@ export default function List() {
                     ))}
                 </div>
               ) : (
-                <center>
-                  <h1>No project found</h1>
-                </center>
+                <Loaders />
               )
             ) : (
               <center>

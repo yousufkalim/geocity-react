@@ -24,6 +24,10 @@ function Form({
   validateGenralDesc,
   validateMaterial,
   validateStepType,
+  ValidateOtherSkill,
+  ValidateSkillField,
+  ValidateSkill,
+  validatePhoto,
   // validator
   setmaterialArrayData,
   skillRequiredFields,
@@ -37,6 +41,8 @@ function Form({
   setstepType,
   material,
   formDataSkillField,
+  otherSKill,
+  setotherSkill,
   // list
   materialList,
   skillfieldList,
@@ -86,7 +92,7 @@ function Form({
               onChange={handleChange}
               onBlur={validateProjectType}
             >
-              <option value=""></option>
+              <option value="">Select type</option>
               <option value="Public">Public</option>
               <option value="Private">Private</option>
             </select>
@@ -148,10 +154,11 @@ function Form({
             type="file"
             name="general_photo"
             id="file"
+            onFocus={validatePhoto}
             onChange={(e) => {
               const file = e.target.files[0];
-              console.log(file, "photo1");
-
+              // console.log(file, "photo1");
+              validatePhoto(file);
               setPhoto(file);
             }}
           />
@@ -161,22 +168,29 @@ function Form({
             ""
           )}
           <label className="label-agree-term">General Description*</label>
-          <input
+          <textarea
+            rows={3}
+            cols={5}
             type="text"
             name="general_description"
-            id="general_description"
+            className="form-control "
+            id="title"
             value={formData.general_description}
+            placeholder="Description"
             onChange={handleChange}
             onBlur={validateGenralDesc}
-            placeholder="Description"
-          />
+          ></textarea>
+
           {aboutRequiredFields.general_description !== "" ? (
-            <p className="error"> {aboutRequiredFields.general_description}</p>
+            <p className="error mt-2">
+              {" "}
+              {aboutRequiredFields.general_description}
+            </p>
           ) : (
             ""
           )}
 
-          <label className="label-agree-term">Category*</label>
+          <label className="label-agree-term mt-3">Category*</label>
 
           <div className="select-list">
             <select
@@ -186,7 +200,7 @@ function Form({
               onChange={handleChange}
               onBlur={validateCategory}
             >
-              <option value=""></option>
+              <option value="">Select category</option>
 
               {CategoryList
                 ? CategoryList.map((cat) => (
@@ -239,7 +253,7 @@ function Form({
             </select>
           </div>
           {stepRequiredFields.stepType !== "" ? (
-            <p className="error"> {stepRequiredFields.stepType}</p>
+            <p className="error mt-2"> {stepRequiredFields.stepType}</p>
           ) : (
             ""
           )}
@@ -256,6 +270,8 @@ function Form({
                   onChange={handleStepChange}
                   onBlur={validateMaterial}
                 >
+                  <option value="">Select Material</option>
+
                   {materialList
                     ? materialList.map((mat) => (
                         <option value={mat._id}>{mat.name}</option>
@@ -264,14 +280,14 @@ function Form({
                 </select>
               </div>
               {stepRequiredFields.material !== "" ? (
-                <p className="error"> {stepRequiredFields.material}</p>
+                <p className="error mt-2"> {stepRequiredFields.material}</p>
               ) : (
                 ""
               )}
             </>
           ) : stepType === "Field" ? (
             <>
-              <label className="label-agree-term">Skill Field*</label>
+              <label className="label-agree-term ">Skill Field*</label>
 
               <div className="select-list">
                 <select
@@ -279,7 +295,7 @@ function Form({
                   id="skillField"
                   value={formDataSkillField.skillField}
                   onChange={handleSkillChange}
-                  // onBlur={validateStepType}
+                  onBlur={ValidateSkillField}
                 >
                   <option value="">Select skillField</option>
 
@@ -290,24 +306,67 @@ function Form({
                     : ""}
                 </select>
               </div>
-              <label className="label-agree-term">Skill*</label>
-              <div className="select-list">
-                <select
-                  name="skill"
-                  id="skill"
-                  value={formDataSkillField.skill}
-                  onChange={handleSkillChange}
-                  // onBlur={validateStepType}
-                >
-                  <option value="">Select skill</option>
+              {skillRequiredFields.skillField !== "" ? (
+                <p className="error "> {skillRequiredFields.skillField}</p>
+              ) : (
+                ""
+              )}
+              {skillList.length > 0 ? (
+                formDataSkillField.skill === "Other" ? (
+                  ""
+                ) : (
+                  <>
+                    <label className="label-agree-term ">Skill*</label>
+                    <div className="select-list">
+                      <select
+                        name="skill"
+                        id="skill"
+                        value={formDataSkillField.skill}
+                        onChange={handleSkillChange}
+                        onBlur={ValidateSkill}
+                      >
+                        <option value="">Select skill</option>
 
-                  {skillList
-                    ? skillList.map((mat) => <option value={mat}>{mat}</option>)
-                    : ""}
-                </select>
-              </div>
-
-              <label className="label-agree-term">Speciality*</label>
+                        {skillList
+                          ? skillList.map((mat) => (
+                              <option value={mat}>{mat}</option>
+                            ))
+                          : ""}
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    {skillRequiredFields.skill !== "" ? (
+                      <p className="error "> {skillRequiredFields.skill}</p>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                )
+              ) : (
+                ""
+              )}
+              {formDataSkillField.skill === "Other" ? (
+                <input
+                  type="text"
+                  name="otherSKill"
+                  id="otherSKill"
+                  placeholder="Enter your Skill"
+                  value={otherSKill}
+                  onChange={(e) => {
+                    ValidateOtherSkill();
+                    setotherSkill(e.target.value);
+                  }}
+                  onBlur={ValidateOtherSkill}
+                />
+              ) : (
+                ""
+              )}
+              {skillRequiredFields.otherSKill !== "" ? (
+                <p className="error mt-2"> {skillRequiredFields.otherSKill}</p>
+              ) : (
+                ""
+              )}
+              <label className="label-agree-term ">Speciality*</label>
               <input
                 type="text"
                 name="speciality"
@@ -328,7 +387,7 @@ function Form({
           )}
 
           {stepRequiredFields.error !== "" ? (
-            <p className="error"> {stepRequiredFields.error}</p>
+            <p className="error mt-2"> {stepRequiredFields.error}</p>
           ) : (
             ""
           )}
@@ -344,7 +403,7 @@ function Form({
               onChange={handleStepChange}
               onBlur={validateStatus}
             >
-              <option value=""></option>
+              <option value="">Select status</option>
 
               <option value="completed">completed</option>
               <option value="InProgress">InProgress</option>
@@ -352,7 +411,7 @@ function Form({
             </select>
           </div>
           {stepRequiredFields.status !== "" ? (
-            <p className="error"> {stepRequiredFields.status}</p>
+            <p className="error mt-2"> {stepRequiredFields.status}</p>
           ) : (
             ""
           )}

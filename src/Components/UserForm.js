@@ -34,7 +34,15 @@ export default function UserForm({
   onSubmit,
   setskillArrayData,
   setmaterialArrayData,
+  skillRequiredFields,
   addToast,
+  ValidateSkillField,
+  ValidateSpecialization,
+  validateScore,
+  ValidateSkill,
+  ValidateOtherSkill,
+  otherSKill,
+  setotherSkill,
 }) {
   return (
     <Form>
@@ -249,6 +257,7 @@ export default function UserForm({
               id="skillField"
               type="select"
               value={skillformData.skillField}
+              onBlur={ValidateSkillField}
               onChange={handleSkillChange}
             >
               <option>Select SelectField</option>
@@ -260,6 +269,11 @@ export default function UserForm({
                 : ""}
             </Input>
           </FormGroup>
+          {skillRequiredFields.skillField !== "" ? (
+            <p className="error mt-2"> {skillRequiredFields.skillField}</p>
+          ) : (
+            ""
+          )}
         </Col>
 
         <Col md={4}>
@@ -271,9 +285,15 @@ export default function UserForm({
               id="specialization"
               value={skillformData.specialization}
               placeholder="Specialization"
+              // onBlur={ValidateSpecialization}
               onChange={handleSkillChange}
             />
           </FormGroup>
+          {skillRequiredFields.specialization !== "" ? (
+            <p className="error mt-2"> {skillRequiredFields.specialization}</p>
+          ) : (
+            ""
+          )}
         </Col>
         <Col md={4}>
           <FormGroup>
@@ -282,42 +302,100 @@ export default function UserForm({
               type="text"
               name="score"
               id="score"
+              onBlur={validateScore}
               value={skillformData.score}
               placeholder="Score"
               onChange={handleSkillChange}
             />
           </FormGroup>
+          {skillRequiredFields.score !== "" ? (
+            <p className="error mt-2"> {skillRequiredFields.score}</p>
+          ) : (
+            ""
+          )}
         </Col>
         {skillList.length > 0 ? (
-          <Col md={4}>
-            <FormGroup>
-              <>
-                <Label for="exampleAddress">Skills*</Label>
+          skillformData.skill === "Other" ? (
+            ""
+          ) : (
+            <Col md={4}>
+              <FormGroup>
+                <>
+                  <Label for="exampleAddress">Skills*</Label>
 
-                <Input
-                  name="skill"
-                  id="skill"
-                  type="select"
-                  value={skillformData.skill}
-                  onChange={handleSkillChange}
-                >
-                  <option>Select Select</option>
+                  <Input
+                    name="skill"
+                    id="skill"
+                    type="select"
+                    value={skillformData.skill}
+                    onChange={handleSkillChange}
+                    onBlur={ValidateSkill}
+                  >
+                    <option>Select Skill</option>
 
-                  {skillList.map((skill) => (
-                    <option value={skill}>{skill}</option>
-                  ))}
+                    {skillList.map((skill) => (
+                      <option value={skill}>{skill}</option>
+                    ))}
+                    <option value="Other">Other</option>
 
-                  {CategoryList
+                    {/* {CategoryList
                     ? CategoryList.map((cat) => (
                         <option value={cat._id} key={cat._id}>
                           {cat.name}
                         </option>
                       ))
-                    : ""}
-                </Input>
-              </>
-            </FormGroup>
-          </Col>
+                    : ""} */}
+                  </Input>
+                </>
+              </FormGroup>
+              {skillRequiredFields.skill !== "" ? (
+                <p className="error mt-2"> {skillRequiredFields.skill}</p>
+              ) : (
+                ""
+              )}
+            </Col>
+          )
+        ) : (
+          ""
+        )}
+        {skillformData.skill === "Other" ? (
+          <>
+            <Col md={4}>
+              <FormGroup>
+                <Label for="exampleAddress2">Skill*</Label>
+                <Input
+                  type="text"
+                  name="skill"
+                  id="skill"
+                  onBlur={ValidateOtherSkill}
+                  value={otherSKill}
+                  placeholder="Enter your skill"
+                  onChange={(e) => {
+                    ValidateOtherSkill();
+                    setotherSkill(e.target.value);
+                  }}
+                />
+              </FormGroup>
+              {skillRequiredFields.otherSKill !== "" ? (
+                <p className="error mt-2"> {skillRequiredFields.otherSKill}</p>
+              ) : (
+                ""
+              )}
+            </Col>
+
+            {/* <input
+                type="text"
+                name="skill"
+                id="skill"
+                placeholder="Enter your Skill"
+                value={otherSKill}
+                onChange={(e) => {
+                  ValidateOtherSkill();
+                  setotherSkill(e.target.value);
+                }}
+                onBlur={ValidateOtherSkill}
+              /> */}
+          </>
         ) : (
           ""
         )}

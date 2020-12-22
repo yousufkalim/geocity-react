@@ -7,7 +7,7 @@ import Autocomplete from "react-autocomplete";
 import ChipArray from "../shared/Chip";
 import SkillChipArray from "../shared/skillChip";
 import { useToasts } from "react-toast-notifications";
-
+import { signupskillRequired } from "../shared/Data";
 import Header from "../Components/header";
 import axios from "axios";
 import UserTable from "../shared/ProjectsTable";
@@ -51,10 +51,13 @@ export default function UserDashboard(props) {
   const [photo, setPhoto] = useState("");
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
-
+  const [skillRequiredFields, setskillRequiredFields] = useState(
+    signupskillRequired
+  );
   const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
+  const [otherSKill, setotherSkill] = useState("");
 
   const [skillFieldList, setskillFieldList] = useState("");
 
@@ -98,6 +101,7 @@ export default function UserDashboard(props) {
         // console.error(error);
       });
   };
+
   const SetAddress = (item) => {
     // console.log(item,'item')
     setAddress(item);
@@ -122,46 +126,160 @@ export default function UserDashboard(props) {
           confirm_password: formData.confirm_password,
           availability: formData.availability,
         });
-        // this.setState({
-        //   address: newAddress[0],
-        //   zip: zipCode,
-        //   city: city,
-        //   lat: lat,
-        //   lng: lng,
-        //   zipError: "",
-        // });
-        // this.validationCheckforAddress(formData);
-        // this.handleValidationCheckForButtonEnable();
       }
     }
     // validateCity();
   };
 
-  const onskillAdd = () => {
-    // checkValidateForm2();
-    // debugger;
-    // setskillArrayData((prevState) => [...prevState, skillformData]);
+  // *** skill end
 
-    if (skillArrayData.length === 3) {
-      // alert(skillArrayData.length);
-      addToast("skills length must be 3 or less", {
+  // validation
+  const ValidateOtherSkill = () => {
+    if (otherSKill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return true;
+    } else if (!otherSKill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return false;
+    }
+  };
+  const checkValidateForm2 = () => {
+    let obj = {};
+    let reqFields = true;
+    Object.keys(skillformData).map((key) => {
+      if (skillformData[key] === "") {
+        obj[key] = "Required";
+        reqFields = false;
+      }
+      return obj;
+    });
+    debugger;
+    console.log(skillRequiredFields, ":obj");
+
+    if (!reqFields) {
+      if (otherSKill !== "") {
+        obj.skill = "";
+        setskillRequiredFields(obj);
+
+        return false;
+      } else if (obj.specialization === "Required") {
+        obj.specialization = "";
+        setskillRequiredFields(obj);
+
+        return false;
+      } else {
+        // setskillRequiredFields((prevState) => {
+        //   Object.assign(skillRequiredFields, obj);
+        // });
+        setskillRequiredFields(obj);
+
+        return false;
+      }
+      // setskillRequiredFields((prevState) => {
+      //   Object.assign(skillRequiredFields, obj);
+      // });
+      return false;
+    } else {
+      setskillRequiredFields(signupskillRequired);
+      return true;
+    }
+  };
+  const validateScore = () => {
+    if (skillformData.score === 5) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, score: msg });
+      return false;
+    } else if (skillformData.score >= 5) {
+      const msg = "Score needs to be equal 5 or less";
+      setskillRequiredFields({ ...skillRequiredFields, score: msg });
+
+      return false;
+    } else if (!skillformData.score.length) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, score: msg });
+      return false;
+    }
+    const num = parseInt(skillformData.score);
+    const msg = "";
+    setskillRequiredFields({ ...skillRequiredFields, score: msg });
+    return true;
+  };
+  const ValidateSpecialization = () => {
+    if (skillformData.specialization) {
+      setskillRequiredFields({ ...skillRequiredFields, specialization: "" });
+
+      return true;
+    } else if (!skillformData.specialization) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, specialization: msg });
+      return false;
+    }
+  };
+  const ValidateSkillField = () => {
+    if (skillformData.skillField) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
+    } else if (!skillformData.skillField) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return false;
+    }
+  };
+
+  const ValidateSkill = () => {
+    if (skillformData.skill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return true;
+    } else if (!skillformData.skill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return false;
+    }
+  };
+
+  // ***************
+  const onskillAdd = () => {
+    checkValidateForm2();
+    validateScore();
+
+    const check = Object.values(skillformData).map((obj) => {
+      if (obj !== "") {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (check[1] === true && check[0] === true) {
+      if (skillArrayData.length === 3) {
+        // alert(skillArrayData.length);
+        addToast("skills length must be 3 or less", {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 1000,
+        });
+        // seterrorMessage("You can only add upto 3 skills  or less");
+      } else {
+        if (otherSKill !== "") {
+          skillformData.skill = otherSKill;
+        }
+        setskillArrayData([...skillArrayData, skillformData]);
+        setskillFormData(stepData);
+      }
+    } else {
+      addToast(`Please fill all fields`, {
         appearance: "error",
         autoDismiss: true,
         autoDismissTimeout: 1000,
       });
-      // seterrorMessage("You can only add upto 3 skills  or less");
-    } else {
-      setskillArrayData([...skillArrayData, skillformData]);
-      setskillFormData(stepData);
     }
 
     // setskillRequiredFields(skillRequiredFields);
     // console.log("skil", skillArrayData);
   };
-
-  // *** skill end
-  console.log(formData, "formData");
-
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -175,6 +293,8 @@ export default function UserDashboard(props) {
       });
       // seterrorMessage("Photo is required");
     } else {
+      setisLoading(true);
+
       newFormData.append("firstName", formData.firstName);
       newFormData.append("lastName", formData.lastName);
       newFormData.append("username", formData.username);
@@ -198,7 +318,6 @@ export default function UserDashboard(props) {
         newFormData.append("skills", JSON.stringify(formData.skills));
         newFormData.append("material", JSON.stringify(formData.material));
       }
-      setisLoading(true);
 
       try {
         const headers = {
@@ -213,7 +332,9 @@ export default function UserDashboard(props) {
             headers
           )
           .then((response) => {
-            setisLoading(false);
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
 
             setprofileModal(false);
 
@@ -267,19 +388,6 @@ export default function UserDashboard(props) {
   };
 
   const handleChange = (e) => {
-    // var value = e.target.value;
-    // if (e.target.name === "firstName") {
-    //   // alert(value);
-    //   setFormData({ ...formData, ["firstName"]: e.target.value });
-    // } else if (e.target.name === "lastName") {
-    //   setFormData({ ...formData, ["lastName"]: e.target.value });
-    // } else if (e.target.name === "facebook") {
-    //   setFormData({ ...formData, ["facebook"]: e.target.value });
-    // } else if (e.target.name === "instagram") {
-    //   setFormData({ ...formData, ["instagram"]: e.target.value });
-    // } else if (e.target.name === "youtube") {
-    //   setFormData({ ...formData, ["youtube"]: e.target.value });
-    // } else {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSkillChange = async (e) => {
@@ -304,23 +412,23 @@ export default function UserDashboard(props) {
     } else {
       setskillFormData({ ...skillformData, [e.target.name]: value });
     }
-    // switch (e.target.name) {
-    //   case "skillField":
-    //     ValidateSkillField();
-    //     break;
-    //   case "skill":
-    //     ValidateSkill();
-    //     break;
-    //   case "specialization":
-    //     ValidateSpecialization();
-    //     break;
-    //   case "score":
-    //     validateScore();
-    //     break;
+    switch (e.target.name) {
+      case "skillField":
+        ValidateSkillField();
+        break;
+      case "skill":
+        ValidateSkill();
+        break;
+      case "specialization":
+        ValidateSpecialization();
+        break;
+      case "score":
+        validateScore();
+        break;
 
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+    }
   };
   const onMaterialChange = (e) => {
     // debugger;
@@ -572,6 +680,14 @@ export default function UserDashboard(props) {
                           isLoading={isLoading}
                           useStyles={useStyles}
                           CircularProgress={CircularProgress}
+                          skillRequiredFields={skillRequiredFields}
+                          ValidateSkillField={ValidateSkillField}
+                          ValidateSpecialization={ValidateSpecialization}
+                          validateScore={validateScore}
+                          ValidateSkill={ValidateSkill}
+                          ValidateOtherSkill={ValidateOtherSkill}
+                          otherSKill={otherSKill}
+                          setotherSkill={setotherSkill}
                         />
                       </Tab.Pane>
                       <Tab.Pane eventKey="second">

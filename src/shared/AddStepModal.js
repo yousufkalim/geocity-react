@@ -75,6 +75,8 @@ const ModalExample = (props) => {
                     value={stepformData.status}
                     onChange={handleStepChange}
                   >
+                    <option value="">Select status</option>
+
                     <option value="NoProgress">NoProgress</option>
 
                     <option value="completed">completed</option>

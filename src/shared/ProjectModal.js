@@ -101,6 +101,7 @@ const ModalExample = (props) => {
                     value={formData.category}
                     onChange={handleChange}
                   >
+                    <option value="">Select category</option>
                     {CategoryList
                       ? CategoryList.map((cat) =>
                           cat._id === formData.category ? (
@@ -131,13 +132,10 @@ const ModalExample = (props) => {
                     value={formData.type}
                     onChange={handleChange}
                   >
-                    <option value={formData.type ? formData.type : ""}>
-                      {formData.type ? formData.type : "Select type"}
-                    </option>
+                    <option value={""}>Select type</option>
 
-                    <option value="Private">
-                      {formData.type === "Public" ? "Private" : "Public"}
-                    </option>
+                    <option value="Private">Private</option>
+                    <option value="Public">Public</option>
                   </Input>
                 </FormGroup>
               </Col>

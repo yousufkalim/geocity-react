@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "react-select";
+import Select, { components } from "react-select";
 
 const colourOptions = [
   { value: "red", label: "Red" },
@@ -44,15 +44,31 @@ const colourStyles = {
     return { ...provided, opacity, transition, color: "#fff" };
   },
 };
+const controlStyles = {
+  borderRadius: "1px solid #000",
+  padding: "5px",
+  background: "#fff",
+  color: "#fff",
+};
+const ControlComponent = (props) => (
+  <div style={controlStyles}>
+    <components.Control {...props} />
+  </div>
+);
 
-export default function SelectBox({ CategoryList, value, onChange, name }) {
+export default function SelectBox({ CategoryList, value, onChange, name, id }) {
   return (
     <Select
-      name={name}
-      defaultValue={`Select ${name}`}
-      placeholder={`Select ${name}`}
+      isClearable
+      components={{ Control: ControlComponent }}
+      isSearchable
+      // name={name}
+      key={`my_unique_select_key__${id}`}
+      // defaultValue={`Select ${name}`}
+      // placeholder={`Select ${name}`}
       options={CategoryList}
-      value={value}
+      // onInputChange={onChange}
+      // value={value}
       styles={colourStyles}
       onChange={onChange}
       theme={(theme) => ({

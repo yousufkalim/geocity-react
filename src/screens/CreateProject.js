@@ -42,6 +42,8 @@ function CreateProject() {
   const [stepType, setstepType] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [photo, setPhoto] = useState("");
+  const [otherSKill, setotherSkill] = useState("");
+
   // **********
 
   // Required Fields States
@@ -57,6 +59,40 @@ function CreateProject() {
   // *************
 
   // validation start
+  const ValidateSkillField = () => {
+    if (formDataSkillField.skillField) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
+    } else if (!formDataSkillField.skillField) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return false;
+    }
+  };
+
+  const ValidateSkill = () => {
+    if (formDataSkillField.skill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return true;
+    } else if (!formDataSkillField.skill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return false;
+    }
+  };
+  const ValidateOtherSkill = () => {
+    if (otherSKill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return true;
+    } else if (!otherSKill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return false;
+    }
+  };
   const validateStepType = () => {
     if (stepType) {
       const msg = "";
@@ -134,14 +170,14 @@ function CreateProject() {
       return false;
     }
   };
-  const validatePhoto = () => {
-    if (formData.general_photo) {
+  const validatePhoto = (file) => {
+    if (file) {
       const msg = "";
 
       setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
 
       return true;
-    } else if (!formData.general_photo) {
+    } else if (!file) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
       return false;
@@ -201,7 +237,7 @@ function CreateProject() {
     const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
       stepformData.name.trim()
     );
-    if (stepformData.name.length <= 4 && stepformData.name.length < 20) {
+    if (stepformData.name.length >= 4 && stepformData.name.length < 20) {
       const msg = "";
 
       setstepRequiredFields({ ...stepRequiredFields, name: msg });
@@ -228,7 +264,7 @@ function CreateProject() {
     );
     if (
       stepformData.description.length >= 4 &&
-      stepformData.description.length < 20
+      stepformData.description.length < 150
     ) {
       setstepRequiredFields({ ...stepRequiredFields, description: "" });
       setstepFormData({
@@ -285,7 +321,6 @@ function CreateProject() {
     if (!reqFields || stepType === "") {
       obj.stepType = "Required";
       setstepRequiredFields(obj);
-
       return false;
     } else {
       setstepRequiredFields(projectstepRequired);
@@ -303,10 +338,18 @@ function CreateProject() {
       }
       return obj;
     });
-    console.log(obj, "validate 2 check");
     // debugger;
     if (!reqFields) {
-      setskillRequiredFields(obj);
+      if (otherSKill !== "") {
+        obj.skill = "";
+        setstepRequiredFields(obj);
+        return false;
+      } else {
+        obj.speciality = "";
+
+        setstepRequiredFields(obj);
+      }
+      // console.log(obj, "validate 2 check");
 
       return false;
     } else {
@@ -315,6 +358,7 @@ function CreateProject() {
       return true;
     }
   };
+
   // validation end************************************
 
   // useEffect
@@ -434,9 +478,7 @@ function CreateProject() {
       case "address":
         validateCity();
         break;
-      case "general_photo":
-        validatePhoto();
-        break;
+
       case "general_description":
         validateGenralDesc();
         break;
@@ -463,6 +505,21 @@ function CreateProject() {
         ...formDataSkillField,
         [e.target.name]: e.target.value,
       });
+    }
+    switch (e.target.name) {
+      case "skillField":
+        ValidateSkillField();
+        break;
+      case "skill":
+        ValidateSkill();
+        break;
+
+      case "status":
+        validateStatus();
+        break;
+
+      default:
+        break;
     }
   };
   const handleStepChange = async (e) => {
@@ -499,6 +556,9 @@ function CreateProject() {
 
   // Add Functions start
   const onAdd = () => {
+    if (otherSKill !== "") {
+      formDataSkillField.skill = otherSKill;
+    }
     if (stepType !== "") {
       checkValidateForm3();
     }
@@ -511,28 +571,41 @@ function CreateProject() {
         return false;
       }
     });
-    console.log(check[0], "check on Add");
+    // console.log(check[0], "check on Add");
     if (check[0] === true) {
-      if (material !== "") {
-        stepformData.material = material;
-      }
-      if (
-        Object.keys(formDataSkillField).length > 0 &&
-        formDataSkillField.skillField !== ""
-      ) {
+      const formObj = Object.values(formDataSkillField).map((obj) => {
+        if (obj !== "") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (formObj[0] === true && formObj[2] === true) {
         const skills = {};
         skills.speciality = formDataSkillField.speciality;
         skills.skill = formDataSkillField.skill;
         skills.skillField = formDataSkillField.skillField;
         stepformData.skills = skills;
+        setstepArrayData((prevState) => [...prevState, stepformData]);
+        setstepFormData(projectstepData);
+        setFormDataSkillField(projectskillData);
+        setstepType("");
+      } else if (material !== "") {
+        stepformData.material = material;
+        setstepArrayData((prevState) => [...prevState, stepformData]);
+        setstepFormData(projectstepData);
+        setFormDataSkillField(projectskillData);
+        setstepType("");
+      } else {
+        addToast(`Please add All step fields`, {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 1000,
+        });
       }
-      setstepArrayData((prevState) => [...prevState, stepformData]);
-      setstepFormData(projectstepData);
-      setFormDataSkillField(projectskillData);
-      setstepType("");
     }
   };
-
+  console.log(stepArrayData, "stepArrayData");
   // onSubmit
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -614,6 +687,9 @@ function CreateProject() {
           validateProjectType={validateProjectType}
           validatePhoto={validatePhoto}
           validateMaterial={validateMaterial}
+          ValidateSkillField={ValidateSkillField}
+          ValidateSkill={ValidateSkill}
+          ValidateOtherSkill={ValidateOtherSkill}
           // ***********
           // Required Fields
           stepRequiredFields={stepRequiredFields}
@@ -649,6 +725,8 @@ function CreateProject() {
           SetAddress={SetAddress}
           setPhoto={setPhoto}
           isLoading={isLoading}
+          otherSKill={otherSKill}
+          setotherSkill={setotherSkill}
           // *******
           // Actions
           onAdd={onAdd}

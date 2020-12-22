@@ -211,7 +211,7 @@ const ModalExample = (props) => {
                     value={skillformData.skillField}
                     onChange={handleSkillChange}
                   >
-                    <option>Select SelectField</option>
+                    <option value="">Select SkillField</option>
 
                     {skillFieldList
                       ? skillFieldList.map((skill) => (
@@ -261,7 +261,7 @@ const ModalExample = (props) => {
                         value={skillformData.skill}
                         onChange={handleSkillChange}
                       >
-                        <option>Select Select</option>
+                        <option value="">Select Skill</option>
 
                         {skillList.map((skill) => (
                           <option value={skill}>{skill}</option>

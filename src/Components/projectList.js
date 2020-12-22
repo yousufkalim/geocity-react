@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { getUser } from "../Auth/Index";
@@ -14,7 +14,12 @@ export default function ProjectList({
 }) {
   const [check, setcheck] = useState(false);
   const [modal, setModal] = useState(false);
+  const [privateFilter, setprivateFilter] = useState("");
 
+  useEffect(() => {
+    var checkPrivate = data.usersToView.some((user) => user === getUser()._id);
+    setprivateFilter(checkPrivate);
+  }, []);
   const onRequestToView = (id) => {
     RequestToView(id);
   };
@@ -23,20 +28,27 @@ export default function ProjectList({
   };
   const CheckRedirect = () => {
     if (filter === true) {
-      if (getUser()._id !== data.project_owner && data.type === "Private") {
+      if (
+        getUser()._id !== data.project_owner &&
+        data.type === "Private" &&
+        privateFilter === false
+      ) {
         setModal(!modal);
       } else {
         setcheck(true);
       }
     } else {
-      if (getUser()._id !== data.project_owner && data.type === "Private") {
+      if (
+        getUser()._id !== data.project_owner &&
+        data.type === "Private" &&
+        privateFilter === false
+      ) {
         setModal(!modal);
       } else {
         setcheck(true);
       }
     }
   };
-
   if (filter === true && data.project) {
     if (check == true) {
       return <Redirect to={`/SingleProject/${data._id}`} />;
@@ -48,6 +60,7 @@ export default function ProjectList({
           <div className="col-lg-3 ">
             <div className="card">
               {/* <Link to={`/SingleProject/${data.project._id}`}> */}
+
               <img
                 onClick={CheckRedirect}
                 className="card-image"
@@ -62,7 +75,8 @@ export default function ProjectList({
                 }}
                 src={
                   data.project.type === "Private" &&
-                  getUser()._id !== data.project.project_owner
+                  getUser()._id !== data.project.project_owner &&
+                  privateFilter === false
                     ? DefaultImage
                     : data.project.general_photo
                     ? `http://localhost:3000/views/uploads/${data.project.general_photo}`
@@ -80,14 +94,16 @@ export default function ProjectList({
                   />
                   <h6 className="card-title ml-3">
                     {data.project.type === "Private" &&
-                    getUser()._id !== data.project.project_owner
+                    getUser()._id !== data.project.project_owner &&
+                    privateFilter === false
                       ? data.project.type
                       : data.project.title}
                   </h6>
                 </span>
                 <p>
                   {data.project.type === "Private" &&
-                  getUser()._id !== data.project.project_owner
+                  getUser()._id !== data.project.project_owner &&
+                  privateFilter === false
                     ? "This project is private"
                     : data.project.general_description}
                 </p>
@@ -116,7 +132,8 @@ export default function ProjectList({
                       {data.project.type === "Private" &&
                       getUser()._id !== data.project.project_owner
                         ? ""
-                        : data.project.progress}
+                        : parseInt(data.project.progress)}
+                      %
                     </span>
                   </span>
                 </div>
@@ -150,12 +167,8 @@ export default function ProjectList({
                 }}
                 src={
                   data.type === "Private" &&
-                  getUser()._id !== data.project_owner
-                    ? DefaultImage
-                    : data.type === "Private" &&
-                      data.usersToView.map((user) => {
-                        return user;
-                      }) == getUser()._id
+                  getUser()._id !== data.project_owner &&
+                  privateFilter === false
                     ? DefaultImage
                     : data.general_photo
                     ? `http://localhost:3000/views/uploads/${data.general_photo}`
@@ -173,43 +186,23 @@ export default function ProjectList({
                   />
                   <h6 className="card-title ml-3">
                     {data.type === "Private" &&
-                    getUser()._id !== data.project_owner
-                      ? data.type
-                      : data.type === "Private" &&
-                        data.usersToView.map((user) => {
-                          return user;
-                        }) == getUser()._id
+                    getUser()._id !== data.project_owner &&
+                    privateFilter === false
                       ? data.type
                       : data.title}
                   </h6>
                 </span>
                 <p>
                   {data.type === "Private" &&
-                  getUser()._id !== data.project_owner
-                    ? "This Project is private"
-                    : data.type === "Private" &&
-                      data.usersToView.map((user) => {
-                        return user;
-                      }) == getUser()._id
+                  getUser()._id !== data.project_owner &&
+                  privateFilter === false
                     ? "This Project is private"
                     : data.general_description}
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   {data.type === "Private" &&
-                  getUser()._id !== data.project_owner ? (
-                    <button
-                      type="button"
-                      style={{ fontSize: "0.9rem" }}
-                      id="modalButton"
-                      className="btn  ml-1"
-                      onClick={() => onRequestToView(data._id)}
-                    >
-                      Request To View
-                    </button>
-                  ) : data.type === "Private" &&
-                    data.usersToView.map((user) => {
-                      return user;
-                    }) == getUser()._id ? (
+                  getUser()._id !== data.project_owner &&
+                  privateFilter === false ? (
                     <button
                       type="button"
                       style={{ fontSize: "0.9rem" }}
@@ -230,7 +223,7 @@ export default function ProjectList({
                       <span id="second">
                         <i className="far fa-circle" />
                         <span className="ml-2 " id="span2">
-                          {data.progress}
+                          {parseInt(data.progress)}%
                         </span>
                       </span>
                     </>

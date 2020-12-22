@@ -1,7 +1,3 @@
-import jwtDecode from "jwt-decode";
-// import store from '../redux/index';
-// import {Logout} from '../redux/actions/index'
-import axios from "axios";
 export const isAuthenticated = () => {
   const token = localStorage.getItem("jwt");
   if (token) {
