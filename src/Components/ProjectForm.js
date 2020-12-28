@@ -1,10 +1,11 @@
 import React from "react";
-import Autocomplete from "react-autocomplete";
+import AutoComplete from "./AutoComplete";
 
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { names } from "../shared/Data";
 import { useStyles } from "../Theme/styles";
+import StepCard from "../shared/StepCard";
 function Form({
   address,
   onAdd,
@@ -28,6 +29,7 @@ function Form({
   ValidateSkillField,
   ValidateSkill,
   validatePhoto,
+  validateCity,
   // validator
   setmaterialArrayData,
   skillRequiredFields,
@@ -53,6 +55,7 @@ function Form({
   stepformData,
   formData,
   stepArrayData,
+  HandleStepDelete,
 }) {
   const handleStep = (e) => {
     if (e.target.name === "Field") {
@@ -67,7 +70,14 @@ function Form({
       <form method="POST" className="appointmentform" id="appointment-form">
         <h2>Create A Project</h2>
         <div className="form-group-1">
-          <label className="label-agree-term">Project Title*</label>
+          <label className="label-agree-term row">
+            Project Title*
+            {aboutRequiredFields.title !== "" ? (
+              <p className="error"> {aboutRequiredFields.title}</p>
+            ) : (
+              ""
+            )}
+          </label>
           <input
             type="text"
             name="title"
@@ -77,12 +87,15 @@ function Form({
             onChange={handleChange}
             onBlur={validateTitle}
           />
-          {aboutRequiredFields.title !== "" ? (
-            <p className="error"> {aboutRequiredFields.title}</p>
-          ) : (
-            ""
-          )}
-          <label className="label-agree-term">Project Type*</label>
+
+          <label className="label-agree-term row">
+            Project Type*
+            {aboutRequiredFields.type !== "" ? (
+              <p className="errorselect"> {aboutRequiredFields.type}</p>
+            ) : (
+              ""
+            )}
+          </label>
 
           <div className="select-list">
             <select
@@ -97,77 +110,51 @@ function Form({
               <option value="Private">Private</option>
             </select>
           </div>
-          {aboutRequiredFields.type !== "" ? (
-            <p className="error"> {aboutRequiredFields.type}</p>
-          ) : (
-            ""
-          )}
 
-          <label className="label-agree-term">City*</label>
-
-          <Autocomplete
-            items={items}
-            getItemValue={(item) => item.label}
-            renderItem={(item, highlighted) => (
-              <div
-                key={item.id}
-                style={{
-                  backgroundColor: highlighted ? "#eee" : "transparent",
-                }}
-              >
-                {item.label}
-              </div>
+          <label className="label-agree-term row">
+            Address*
+            {aboutRequiredFields.city !== "" ? (
+              <p className="error "> {aboutRequiredFields.city}</p>
+            ) : (
+              ""
             )}
-            wrapperStyle={{
-              display: "block",
-            }}
-            menuStyle={{
-              zIndex: "1",
-              position: "static",
-              borderRadius: "3px",
-              boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-              background: "rgba(255, 255, 255, 0.9)",
-              padding: "2px 12px",
-              fontSize: "90%",
-              color: "#000",
-              overflow: "auto",
-              maxHeight: "50%",
-            }}
-            inputProps={{
-              className: "form-control",
-              placeholder: "Enter City ",
-            }}
-            value={address}
-            name="address"
-            onChange={getAddress}
-            onSelect={SetAddress}
+          </label>
+          <AutoComplete
+            items={items}
+            SetAddress={SetAddress}
+            getAddress={getAddress}
+            address={address}
+            validateCity={validateCity}
           />
-          {aboutRequiredFields.address !== "" ? (
-            <p className="error"> {aboutRequiredFields.address}</p>
-          ) : (
-            ""
-          )}
-
-          <label className="label-agree-term">General Photo*</label>
+          <label className="label-agree-term">General Photo</label>
 
           <input
             type="file"
             name="general_photo"
             id="file"
-            onFocus={validatePhoto}
+            // onFocus={validatePhoto}
             onChange={(e) => {
               const file = e.target.files[0];
-              // console.log(file, "photo1");
+              console.log(file, "photo1");
               validatePhoto(file);
               setPhoto(file);
             }}
           />
-          {aboutRequiredFields.general_photo !== "" ? (
+          {/* {aboutRequiredFields.general_photo !== "" ? (
             <p className="error"> {aboutRequiredFields.general_photo}</p>
           ) : (
             ""
-          )}
-          <label className="label-agree-term">General Description*</label>
+          )} */}
+          <label className="label-agree-term row">
+            General Description*
+            {aboutRequiredFields.general_description !== "" ? (
+              <p className="error ">
+                {aboutRequiredFields.general_description}
+              </p>
+            ) : (
+              ""
+            )}
+          </label>
           <textarea
             rows={3}
             cols={5}
@@ -181,16 +168,14 @@ function Form({
             onBlur={validateGenralDesc}
           ></textarea>
 
-          {aboutRequiredFields.general_description !== "" ? (
-            <p className="error mt-2">
-              {" "}
-              {aboutRequiredFields.general_description}
-            </p>
-          ) : (
-            ""
-          )}
-
-          <label className="label-agree-term mt-3">Category*</label>
+          <label className="label-agree-term row">
+            Category*
+            {aboutRequiredFields.category !== "" ? (
+              <p className="errorselect"> {aboutRequiredFields.category}</p>
+            ) : (
+              ""
+            )}
+          </label>
 
           <div className="select-list">
             <select
@@ -211,17 +196,19 @@ function Form({
                 : ""}
             </select>
           </div>
-          {aboutRequiredFields.category !== "" ? (
-            <p className="error"> {aboutRequiredFields.category}</p>
-          ) : (
-            ""
-          )}
         </div>
         {/* form1 end */}
         {/* form 2 */}
         <div className="form-group-2">
           <h3>Implementation Steps </h3>
-          <label className="label-agree-term">Step Name*</label>
+          <label className="label-agree-term row">
+            Step Name*
+            {stepRequiredFields.name !== "" ? (
+              <p className="error"> {stepRequiredFields.name}</p>
+            ) : (
+              ""
+            )}
+          </label>
           <input
             type="text"
             name="name"
@@ -230,13 +217,15 @@ function Form({
             onChange={handleStepChange}
             onBlur={validateStepName}
           />
-          {stepRequiredFields.name !== "" ? (
-            <p className="error"> {stepRequiredFields.name}</p>
-          ) : (
-            ""
-          )}
 
-          <label className="label-agree-term">Step Type*</label>
+          <label className="label-agree-term row">
+            Step Type*
+            {stepRequiredFields.stepType !== "" ? (
+              <p className="errorselect "> {stepRequiredFields.stepType}</p>
+            ) : (
+              ""
+            )}
+          </label>
 
           <div className="select-list">
             <select
@@ -246,21 +235,24 @@ function Form({
               onChange={handleStep}
               onBlur={validateStepType}
             >
-              <option>Select StepType</option>
+              <option value="">Select StepType</option>
               {names.map((mat) => (
                 <option value={mat}>{mat}</option>
               ))}
             </select>
           </div>
-          {stepRequiredFields.stepType !== "" ? (
-            <p className="error mt-2"> {stepRequiredFields.stepType}</p>
-          ) : (
-            ""
-          )}
 
           {stepType === "Material" ? (
             <>
-              <label className="label-agree-term">{stepType}</label>
+              <label className="label-agree-term row">
+                {stepType}
+
+                {stepRequiredFields.material !== "" ? (
+                  <p className="errorselect"> {stepRequiredFields.material}</p>
+                ) : (
+                  ""
+                )}
+              </label>
 
               <div className="select-list">
                 <select
@@ -279,15 +271,20 @@ function Form({
                     : ""}
                 </select>
               </div>
-              {stepRequiredFields.material !== "" ? (
-                <p className="error mt-2"> {stepRequiredFields.material}</p>
-              ) : (
-                ""
-              )}
             </>
           ) : stepType === "Field" ? (
             <>
-              <label className="label-agree-term ">Skill Field*</label>
+              <label className="label-agree-term row">
+                Skill Field*
+                {skillRequiredFields.skillField !== "" ? (
+                  <p className="errorselect ">
+                    {" "}
+                    {skillRequiredFields.skillField}
+                  </p>
+                ) : (
+                  ""
+                )}
+              </label>
 
               <div className="select-list">
                 <select
@@ -306,67 +303,86 @@ function Form({
                     : ""}
                 </select>
               </div>
-              {skillRequiredFields.skillField !== "" ? (
-                <p className="error "> {skillRequiredFields.skillField}</p>
-              ) : (
-                ""
-              )}
-              {skillList.length > 0 ? (
-                formDataSkillField.skill === "Other" ? (
-                  ""
-                ) : (
-                  <>
-                    <label className="label-agree-term ">Skill*</label>
-                    <div className="select-list">
-                      <select
-                        name="skill"
-                        id="skill"
-                        value={formDataSkillField.skill}
-                        onChange={handleSkillChange}
-                        onBlur={ValidateSkill}
-                      >
-                        <option value="">Select skill</option>
 
-                        {skillList
-                          ? skillList.map((mat) => (
-                              <option value={mat}>{mat}</option>
-                            ))
-                          : ""}
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
+              {skillList.length > 0 ? (
+                <>
+                  <label className="label-agree-term row ">
+                    Skill*{" "}
                     {skillRequiredFields.skill !== "" ? (
-                      <p className="error "> {skillRequiredFields.skill}</p>
+                      <p className="errorselect ">
+                        {" "}
+                        {skillRequiredFields.skill}
+                      </p>
                     ) : (
                       ""
                     )}
-                  </>
-                )
+                  </label>
+                  <div className="select-list">
+                    <select
+                      name="skill"
+                      id="skill"
+                      value={formDataSkillField.skill}
+                      onChange={handleSkillChange}
+                      onBlur={ValidateSkill}
+                    >
+                      <option value="">Select skill</option>
+
+                      {skillList
+                        ? skillList.map((mat) => (
+                            <option value={mat}>{mat}</option>
+                          ))
+                        : ""}
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </>
               ) : (
                 ""
               )}
+
               {formDataSkillField.skill === "Other" ? (
-                <input
-                  type="text"
-                  name="otherSKill"
-                  id="otherSKill"
-                  placeholder="Enter your Skill"
-                  value={otherSKill}
-                  onChange={(e) => {
-                    ValidateOtherSkill();
-                    setotherSkill(e.target.value);
-                  }}
-                  onBlur={ValidateOtherSkill}
-                />
+                <>
+                  <label className="label-agree-term row ">
+                    Other{" "}
+                    {skillRequiredFields.otherSKill !== "" ? (
+                      <p className="error mt-2">
+                        {" "}
+                        {skillRequiredFields.otherSKill}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </label>
+                  <input
+                    type="text"
+                    name="otherSKill"
+                    id="otherSKill"
+                    placeholder="Enter your Skill"
+                    value={otherSKill}
+                    onChange={(e) => {
+                      ValidateOtherSkill();
+                      setotherSkill(e.target.value);
+                    }}
+                    onBlur={ValidateOtherSkill}
+                  />
+                </>
               ) : (
                 ""
               )}
-              {skillRequiredFields.otherSKill !== "" ? (
-                <p className="error mt-2"> {skillRequiredFields.otherSKill}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term ">Speciality*</label>
+
+              <label className="label-agree-term row">
+                Speciality*
+                {skillRequiredFields.speciality !== "" ? (
+                  <p className="error"> {skillRequiredFields.speciality}</p>
+                ) : (
+                  ""
+                )}
+                {stepRequiredFields.error !== "" ? (
+                  <p className="error mt-2"> {stepRequiredFields.error}</p>
+                ) : (
+                  ""
+                )}
+              </label>
               <input
                 type="text"
                 name="speciality"
@@ -376,24 +392,21 @@ function Form({
                 onChange={handleSkillChange}
                 onBlur={validateSpeciality}
               />
-              {skillRequiredFields.speciality !== "" ? (
-                <p className="error"> {skillRequiredFields.speciality}</p>
-              ) : (
-                ""
-              )}
             </>
           ) : (
             ""
           )}
 
-          {stepRequiredFields.error !== "" ? (
-            <p className="error mt-2"> {stepRequiredFields.error}</p>
-          ) : (
-            ""
-          )}
           <br />
 
-          <label className="label-agree-term">Project Status*</label>
+          <label className="label-agree-term row">
+            Project Status*
+            {stepRequiredFields.status !== "" ? (
+              <p className="errorselect"> {stepRequiredFields.status}</p>
+            ) : (
+              ""
+            )}
+          </label>
 
           <div className="select-list">
             <select
@@ -410,12 +423,15 @@ function Form({
               <option value="NoProgress">NoProgress</option>
             </select>
           </div>
-          {stepRequiredFields.status !== "" ? (
-            <p className="error mt-2"> {stepRequiredFields.status}</p>
-          ) : (
-            ""
-          )}
-          <label className="label-agree-term">Description*</label>
+
+          <label className="label-agree-term row">
+            Description*
+            {stepRequiredFields.description !== "" ? (
+              <p className="error mt-1"> {stepRequiredFields.description}</p>
+            ) : (
+              ""
+            )}
+          </label>
           <textarea
             rows={3}
             cols={5}
@@ -437,50 +453,51 @@ function Form({
             onChange={handleStepChange}
             onBlur={validateDescription}
           /> */}
-          {stepRequiredFields.description !== "" ? (
-            <p className="error mt-3"> {stepRequiredFields.description}</p>
-          ) : (
-            ""
-          )}
 
-          {Object.values(stepformData).length > 0 ? (
-            <Button
-              variant="contained"
-              onClick={onAdd}
-              name="add"
-              className="submitAdd mt-3"
-            >
-              Add
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              disabled
-              name="add"
-              className="submitAdd mt-3"
-            >
-              Add
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            onClick={onAdd}
+            name="add"
+            className="submitAdd mt-3"
+          >
+            Add
+          </Button>
         </div>
-        <div className="form-submit mt-3">
+        <div
+          className={
+            stepArrayData
+              ? stepArrayData.length > 0
+                ? " mt-3 stepDiv"
+                : ""
+              : ""
+          }
+        >
+          {stepArrayData
+            ? stepArrayData.map((step, i) => (
+                <StepCard
+                  i={i}
+                  step={step}
+                  HandleStepDelete={HandleStepDelete}
+                  materialList={materialList}
+                  skillfieldList={skillfieldList}
+                />
+              ))
+            : ""}
+        </div>
+        <div className="form-submit ">
           {isLoading === true ? (
             <center>
               <div className={useStyles.root}>
                 <CircularProgress disableShrink />
               </div>
             </center>
-          ) : stepArrayData.length > 0 ? (
+          ) : (
             <Button
               variant="contained"
               onClick={onSubmit}
               name="add"
               className="submit"
             >
-              Submit
-            </Button>
-          ) : (
-            <Button variant="contained" disabled name="add" className="submit">
               Submit
             </Button>
           )}

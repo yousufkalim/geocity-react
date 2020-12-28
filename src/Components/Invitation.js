@@ -1,15 +1,10 @@
-import React, { memo } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import axios from "axios";
 import { useToasts } from "react-toast-notifications";
 
 export default function UserprojectList({ data, i, DefaultImage }) {
   const { addToast } = useToasts();
 
-  //   const onLikeClick = (id) => {
-  //     projectLike(id);
-  //   };
-  //   console.log(data, "data from invitation");
   const AcceptFunc = async (projectId, stepId, decision, invitation) => {
     // alert(sender);
     try {

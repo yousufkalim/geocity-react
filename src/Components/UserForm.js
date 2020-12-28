@@ -1,4 +1,5 @@
 import React from "react";
+import Autocomplete from "react-autocomplete";
 
 export default function UserForm({
   formData,
@@ -26,6 +27,7 @@ export default function UserForm({
   material,
   onMaterialChange,
   onskillAdd,
+  onMaterialAdd,
   ChipArray,
   SkillChipArray,
   isLoading,
@@ -34,13 +36,32 @@ export default function UserForm({
   onSubmit,
   setskillArrayData,
   setmaterialArrayData,
-  skillRequiredFields,
   addToast,
-  ValidateSkillField,
-  ValidateSpecialization,
+  //   ************
+  //   RequiredField States
+  aboutRequiredFields,
+
+  skillRequiredFields,
+  materialRequiredFields,
+  //   ***********
+  //   validation
+  validateAvailability,
+  validateConfirmPassword,
+  validateEmail,
+  validatePassword,
+  validatePhoneNumber,
+  validateProfileDesc,
   validateScore,
+  ValidateSkillField,
+  ValidateUsername,
+  validateFirstName,
+  validateLastName,
   ValidateSkill,
   ValidateOtherSkill,
+  validatePhoto,
+  validateMaterial,
+  validateCity,
+  // ****
   otherSKill,
   setotherSkill,
 }) {
@@ -49,33 +70,56 @@ export default function UserForm({
       <Row form>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleEmail">First_name*</Label>
+            <Label for="exampleEmail " className="row label">
+              First_name*
+              {aboutRequiredFields.firstname !== "" ? (
+                <p className="error"> {aboutRequiredFields.firstname}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               type="text"
-              name="firstName"
+              name="firstname"
               id="firstName"
-              value={formData.firstName}
-              placeholder="firstName"
+              value={formData.firstname}
+              placeholder="First Name"
               onChange={handleChange}
+              onBlur={validateFirstName}
             />
           </FormGroup>
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleEmail">Last_name*</Label>
+            <Label for="exampleEmail" className="row label">
+              Last_name*{" "}
+              {aboutRequiredFields.lastname !== "" ? (
+                <p className="error"> {aboutRequiredFields.lastname}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               type="text"
-              name="lastName"
+              name="lastname"
               id="lastName"
-              value={formData.lastName}
-              placeholder="lastName"
+              value={formData.lastname}
+              placeholder="Last Name"
               onChange={handleChange}
+              onBlur={validateLastName}
             />
           </FormGroup>
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleEmail">User_name*</Label>
+            <Label for="exampleEmail" className="row label">
+              User_name*{" "}
+              {aboutRequiredFields.username !== "" ? (
+                <p className="error"> {aboutRequiredFields.username}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               type="text"
               name="username"
@@ -83,6 +127,7 @@ export default function UserForm({
               value={formData.username}
               placeholder="username"
               onChange={handleChange}
+              onBlur={ValidateUsername}
             />
           </FormGroup>
         </Col>
@@ -101,7 +146,14 @@ export default function UserForm({
         </Col> */}
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleEmail">City*</Label>
+            <Label for="exampleEmail" className="row label">
+              City*{" "}
+              {aboutRequiredFields.city !== "" ? (
+                <p className="error"> {aboutRequiredFields.city}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Autocomplete
               items={items}
               // shouldItemRender={(item, value) =>
@@ -125,55 +177,76 @@ export default function UserForm({
                 zIndex: "1",
                 position: "static",
                 borderRadius: "3px",
-                boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                // boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
                 background: "rgba(255, 255, 255, 0.9)",
                 padding: "2px 12px",
                 fontSize: "90%",
                 color: "#000",
                 overflow: "auto",
                 maxHeight: "50%",
+                marginTop: "0px",
               }}
               inputProps={{
                 className: "form-control",
-                placeholder: "Enter City ",
+                placeholder: "e.g Sas Van Genstraete 59270 Bailleul",
+                onBlur: validateCity,
               }}
               value={address}
               name="address"
               onChange={getAddress}
               onSelect={SetAddress}
+              // selectOnBlur={validateCity}
             />
           </FormGroup>
         </Col>
 
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress">Phone_number*</Label>
+            <Label for="exampleAddress" className="row label">
+              Phone Number*(10 digit only){" "}
+              {aboutRequiredFields.phone !== "" ? (
+                <p className="error"> {aboutRequiredFields.phone}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               type="text"
               name="phone"
               id="phone"
               value={formData.phone}
-              placeholder="phone"
+              placeholder="e.g 3017614142"
               onChange={handleChange}
+              onBlur={validatePhoneNumber}
             />
           </FormGroup>
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress">Availability*</Label>
+            <Label for="exampleAddress" className="row label">
+              Availability*(Days per week)
+              {aboutRequiredFields.availability !== "" ? (
+                <p className="error"> {aboutRequiredFields.availability}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
-              type="text"
+              type="number"
               name="availability"
               id="availability"
               value={formData.availability}
               placeholder="Availability"
               onChange={handleChange}
+              onBlur={validateAvailability}
             />
           </FormGroup>
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress">Facebook</Label>
+            <Label for="exampleAddress" className="row label">
+              Facebook
+            </Label>
             <Input
               type="text"
               name="facebook"
@@ -187,7 +260,9 @@ export default function UserForm({
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress">Instagram</Label>
+            <Label for="exampleAddress" className="row label">
+              Instagram
+            </Label>
             <Input
               type="text"
               name="instagram"
@@ -201,7 +276,9 @@ export default function UserForm({
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress">Youtube</Label>
+            <Label for="exampleAddress" className="row label">
+              Youtube
+            </Label>
             <Input
               type="text"
               name="youtube"
@@ -215,7 +292,9 @@ export default function UserForm({
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="examplePassword">Profile_picture*</Label>
+            <Label for="examplePassword" className="row label">
+              Profile_picture
+            </Label>
             <Input
               type="file"
               name="profile_picture"
@@ -233,7 +312,17 @@ export default function UserForm({
 
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress2">Description</Label>
+            <Label for="exampleAddress2" className="row label">
+              Description*{" "}
+              {aboutRequiredFields.profile_description !== "" ? (
+                <p className="error">
+                  {" "}
+                  {aboutRequiredFields.profile_description}
+                </p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               type="textarea"
               rows={3}
@@ -242,6 +331,7 @@ export default function UserForm({
               value={formData.profile_description}
               onChange={handleChange}
               placeholder="Description"
+              onBlur={validateProfileDesc}
             />
           </FormGroup>
         </Col>
@@ -251,7 +341,14 @@ export default function UserForm({
       <Row form className="mt-3">
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress">Skill_field*</Label>
+            <Label for="exampleAddress" className="row label">
+              Skill_field*{" "}
+              {skillRequiredFields.skillField !== "" ? (
+                <p className="errorselect"> {skillRequiredFields.skillField}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               name="skillField"
               id="skillField"
@@ -260,7 +357,7 @@ export default function UserForm({
               onBlur={ValidateSkillField}
               onChange={handleSkillChange}
             >
-              <option>Select SelectField</option>
+              <option value="">Select SelectField</option>
 
               {skillFieldList
                 ? skillFieldList.map((skill) => (
@@ -269,16 +366,13 @@ export default function UserForm({
                 : ""}
             </Input>
           </FormGroup>
-          {skillRequiredFields.skillField !== "" ? (
-            <p className="error mt-2"> {skillRequiredFields.skillField}</p>
-          ) : (
-            ""
-          )}
         </Col>
 
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress2">Specialization*</Label>
+            <Label for="exampleAddress2" className="row label">
+              Specialization
+            </Label>
             <Input
               type="text"
               name="specialization"
@@ -289,17 +383,21 @@ export default function UserForm({
               onChange={handleSkillChange}
             />
           </FormGroup>
-          {skillRequiredFields.specialization !== "" ? (
-            <p className="error mt-2"> {skillRequiredFields.specialization}</p>
-          ) : (
-            ""
-          )}
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress2">Score*</Label>
+            <Label for="exampleAddress2" className="row label">
+              Rate Your Skill( 1 to 5)*{" "}
+              {skillRequiredFields.score !== "" ? (
+                <p className="error "> {skillRequiredFields.score}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
-              type="text"
+              min={1}
+              max={5}
+              type="number"
               name="score"
               id="score"
               onBlur={validateScore}
@@ -308,79 +406,110 @@ export default function UserForm({
               onChange={handleSkillChange}
             />
           </FormGroup>
-          {skillRequiredFields.score !== "" ? (
-            <p className="error mt-2"> {skillRequiredFields.score}</p>
-          ) : (
-            ""
-          )}
         </Col>
         {skillList.length > 0 ? (
-          skillformData.skill === "Other" ? (
-            ""
-          ) : (
-            <Col md={4}>
-              <FormGroup>
-                <>
-                  <Label for="exampleAddress">Skills*</Label>
+          <Col md={4}>
+            <FormGroup>
+              <>
+                <Label for="exampleAddress" className="row label">
+                  Skills*{" "}
+                  {skillRequiredFields.skill !== "" ? (
+                    <p className="error "> {skillRequiredFields.skill}</p>
+                  ) : (
+                    ""
+                  )}
+                </Label>
 
-                  <Input
-                    name="skill"
-                    id="skill"
-                    type="select"
-                    value={skillformData.skill}
-                    onChange={handleSkillChange}
-                    onBlur={ValidateSkill}
-                  >
-                    <option>Select Skill</option>
+                <Input
+                  name="skill"
+                  id="skill"
+                  type="select"
+                  value={skillformData.skill}
+                  onChange={handleSkillChange}
+                  onBlur={ValidateSkill}
+                >
+                  <option>Select Skill</option>
 
-                    {skillList.map((skill) => (
-                      <option value={skill}>{skill}</option>
-                    ))}
-                    <option value="Other">Other</option>
+                  {skillList.map((skill) => (
+                    <option value={skill}>{skill}</option>
+                  ))}
+                  <option value="Other">Other</option>
 
-                    {/* {CategoryList
+                  {/* {CategoryList
                     ? CategoryList.map((cat) => (
                         <option value={cat._id} key={cat._id}>
                           {cat.name}
                         </option>
                       ))
                     : ""} */}
-                  </Input>
-                </>
-              </FormGroup>
-              {skillRequiredFields.skill !== "" ? (
-                <p className="error mt-2"> {skillRequiredFields.skill}</p>
-              ) : (
-                ""
-              )}
-            </Col>
-          )
+                </Input>
+              </>
+            </FormGroup>
+          </Col>
         ) : (
-          ""
+          <Col md={4}>
+            <FormGroup>
+              <>
+                <Label for="exampleAddress" className="row label">
+                  Skills*{" "}
+                  {skillRequiredFields.skill !== "" ? (
+                    <p className="error "> {skillRequiredFields.skill}</p>
+                  ) : (
+                    ""
+                  )}
+                </Label>
+
+                <Input
+                  disabled
+                  name="skill"
+                  id="skill"
+                  type="select"
+                  value={skillformData.skill}
+                  onChange={handleSkillChange}
+                  onBlur={ValidateSkill}
+                >
+                  <option>Select Skill</option>
+
+                  {/* {CategoryList
+                  ? CategoryList.map((cat) => (
+                      <option value={cat._id} key={cat._id}>
+                        {cat.name}
+                      </option>
+                    ))
+                  : ""} */}
+                </Input>
+              </>
+            </FormGroup>
+          </Col>
         )}
         {skillformData.skill === "Other" ? (
           <>
             <Col md={4}>
               <FormGroup>
-                <Label for="exampleAddress2">Skill*</Label>
+                <Label for="exampleAddress2" className="row label">
+                  Other*{" "}
+                  {skillRequiredFields.otherSKill !== "" ? (
+                    <p className="error mt-2">
+                      {" "}
+                      {skillRequiredFields.otherSKill}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </Label>
                 <Input
                   type="text"
                   name="skill"
                   id="skill"
                   onBlur={ValidateOtherSkill}
                   value={otherSKill}
-                  placeholder="Enter your skill"
+                  placeholder="Enter your other skill"
                   onChange={(e) => {
-                    ValidateOtherSkill();
+                    // ValidateOtherSkill();
                     setotherSkill(e.target.value);
                   }}
                 />
               </FormGroup>
-              {skillRequiredFields.otherSKill !== "" ? (
-                <p className="error mt-2"> {skillRequiredFields.otherSKill}</p>
-              ) : (
-                ""
-              )}
             </Col>
 
             {/* <input
@@ -399,15 +528,88 @@ export default function UserForm({
         ) : (
           ""
         )}
+        {skillArrayData.length < 3 ? (
+          <Col md={4} className="text-left">
+            <button
+              type="button"
+              onClick={onskillAdd}
+              // id="userButton"
+              id="modalButton"
+              style={{
+                marginTop: "1.9rem",
+              }}
+              className="btn text-uppercase "
+            >
+              Add Skill
+            </button>
+          </Col>
+        ) : (
+          <Col md={4} className="text-left">
+            <button
+              disabled
+              type="button"
+              // onClick={onskillAdd}
+              // id="userButton"
+              id="modalButton"
+              style={{
+                marginTop: "1.9rem",
+              }}
+              className="btn text-uppercase "
+            >
+              Add Skill
+            </button>
+          </Col>
+        )}
+      </Row>
+      <Row className="mb-2 mt-3">
+        <Col md={8}>
+          {skillArrayData && skillArrayData.length > 0 ? (
+            <>
+              {/* <Col className="mb-3">Skills:</Col> */}
+              <Col>
+                {skillArrayData
+                  ? skillArrayData.map((step, i) => (
+                      <SkillChipArray
+                        skillArrayData={skillArrayData ? skillArrayData : ""}
+                        setskillArrayData={setskillArrayData}
+                        skillFieldList={skillFieldList}
+                        addToast={addToast}
+                        step={step}
+                        i={i}
+                      />
+                    ))
+                  : ""}
+              </Col>
+            </>
+          ) : (
+            ""
+          )}
+        </Col>
+      </Row>
+
+      <Row className="mt-4">
         <Col md={6}>
           <FormGroup>
-            <Label for="exampleAddress">Material*</Label>
+            <Label for="exampleAddress" className="row label">
+              Material*{" "}
+              {materialRequiredFields.name !== "" ? (
+                <p className="errorselect"> {materialRequiredFields.name}</p>
+              ) : (
+                ""
+              )}
+              {materialRequiredFields.error !== "" ? (
+                <p className="error "> {materialRequiredFields.error}</p>
+              ) : (
+                ""
+              )}
+            </Label>
             <Input
               type="select"
               name="material"
               id="material"
               value={material}
               onChange={onMaterialChange}
+              onBlur={validateMaterial}
             >
               <option value="">Select Material</option>
 
@@ -420,44 +622,25 @@ export default function UserForm({
           </FormGroup>
         </Col>
         <Col md={4} className="text-left">
-          {skillList.length > 0 ? (
-            <button
-              type="button"
-              onClick={onskillAdd}
-              // id="userButton"
-              id="modalButton"
-              style={{
-                marginTop: "1.9rem",
-              }}
-              className="btn "
-            >
-              Add
-            </button>
-          ) : (
-            <button
-              disabled
-              type="button"
-              style={{
-                marginTop: "1.9rem",
-                background: "rgba(0, 0, 0, 0.26)",
-              }}
-              // id="userButton"
-              id="modalButton"
-              style={{ marginTop: "1.9rem" }}
-              className="btn "
-            >
-              Add
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={onMaterialAdd}
+            // id="userButton"
+            id="modalButton"
+            style={{
+              marginTop: "1.9rem",
+            }}
+            className="btn text-uppercase "
+          >
+            Add
+          </button>
         </Col>
       </Row>
-      <hr />
-
-      <Row>
-        <Col md={4}>
+      <Row className="mb-2 mt-3">
+        <Col md={8}>
           {materialArrayData && materialArrayData.length > 0 ? (
             <>
-              <Col className="mb-3">Material:</Col>
+              {/* <Col className="mb-3">Material:</Col> */}
               <Col>
                 <ChipArray
                   materialArrayData={materialArrayData ? materialArrayData : ""}
@@ -471,25 +654,7 @@ export default function UserForm({
             ""
           )}
         </Col>
-        <Col md={8}>
-          {skillArrayData && skillArrayData.length > 0 ? (
-            <>
-              <Col className="mb-3">Skills:</Col>
-              <Col>
-                <SkillChipArray
-                  skillArrayData={skillArrayData ? skillArrayData : ""}
-                  setskillArrayData={setskillArrayData}
-                  skillFieldList={skillFieldList}
-                  addToast={addToast}
-                />
-              </Col>
-            </>
-          ) : (
-            ""
-          )}
-        </Col>
       </Row>
-
       <Col className="text-right mt-4">
         {isLoading === true ? (
           <center>
@@ -503,7 +668,7 @@ export default function UserForm({
             type="button"
             // id="userButton"
             id="modalButton"
-            className="btn "
+            className="btn text-uppercase"
           >
             Submit
           </button>

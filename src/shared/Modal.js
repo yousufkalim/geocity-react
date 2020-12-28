@@ -19,7 +19,7 @@ const ModalExample = (props) => {
     SearchByMaterials,
     InviteId,
   } = props;
-  console.log(MaterialData, "skill field data");
+  // console.log(MaterialData, "skill field data");
   const [CategoryData, setCategoryData] = useState("");
   // console.log(MaterialData, "MaterialData");
   const SearchByCategory = async () => {
@@ -40,19 +40,19 @@ const ModalExample = (props) => {
         .then((res) => {
           setCategoryData(res.data);
 
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-            placement: "bottom-right",
-          });
+          // addToast("Success", {
+          //   appearance: "success",
+          //   autoDismiss: true,
+          //   autoDismissTimeout: 1000,
+          //   placement: "bottom-right",
+          // });
           // console.log(res,"res")
         })
         .catch((err) => {
           addToast("Error", {
             appearance: "error",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
 
           console.log(" error =>", err);

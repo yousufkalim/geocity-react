@@ -10,8 +10,28 @@ export const signupData = {
   email: "",
   city: "",
   password: "",
-  availability: "",
+  availability: "0",
   confirm_password: "",
+  profile_picture: "",
+  profile_description: "",
+  phone: "",
+  address: "",
+  zipCode: "",
+  latitude: "",
+  longitude: "",
+  facebook: "",
+  instagram: "",
+  youtube: "",
+};
+export const editProfileData = {
+  firstname: "",
+  lastname: "",
+  username: "",
+  // email: "",
+  city: "",
+  // password: "",
+  availability: "0",
+  // confirm_password: "",
   profile_picture: "",
   profile_description: "",
   phone: "",
@@ -27,7 +47,7 @@ export const signupstepData = {
   skillField: "",
   skill: "",
   specialization: "",
-  score: "",
+  score: "1",
 };
 
 export const signupskillRequired = {
@@ -38,6 +58,20 @@ export const signupskillRequired = {
   otherSKill: "",
 };
 export const signupaboutRequired = {
+  firstname: "",
+  lastname: "",
+  username: "",
+  email: "",
+  city: "",
+  password: "",
+  availability: "",
+  confirm_password: "",
+  profile_picture: "",
+  profile_description: "",
+  phone: "",
+  address: "",
+};
+export const editProfileRequired = {
   firstname: "",
   lastname: "",
   username: "",

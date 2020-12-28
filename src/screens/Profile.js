@@ -6,7 +6,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Axios from "axios";
 import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
-import ChipArray from "../shared/Chip";
+import ChipArray from "../shared/MaterialChip";
 import axios from "axios";
 import { getUser, SignOut } from "../Auth/Index";
 import Popover from "@material-ui/core/Popover";
@@ -36,55 +36,63 @@ export default function Profile(props) {
 
   const [comment, setComment] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [commentError, setCommentError] = useState("");
+
   // *************
   const onAdd = async () => {
-    const date = new Date();
-    const obj = {};
-    obj.comment = comment;
-    obj.date = date;
-    obj.profile_picture = getUser().profile_picture;
+    if (!comment) {
+      setCommentError("Required");
+    } else {
+      setCommentError("");
 
-    setCommentArray([...commentArray, obj]);
+      const date = new Date();
+      const obj = {};
+      obj.comment = comment;
+      obj.date = date;
+      obj.profile_picture = getUser().profile_picture;
 
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
+      setCommentArray([...commentArray, obj]);
 
-      await Axios.post(
-        `http://localhost:3000/api/v1/profile/view-profile/comment?id=${
-          getUser()._id
-        }`,
-        { comment: comment },
-        headers
-      )
-        .then((res) => {
-          setComment("");
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-          setisLoading(false);
-        })
-        .catch((err) => {
-          setTimeout(() => {
+      try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+
+        await Axios.post(
+          `http://localhost:3000/api/v1/profile/view-profile/comment?id=${
+            getUser()._id
+          }`,
+          { comment: comment },
+          headers
+        )
+          .then((res) => {
+            setComment("");
+            addToast("Success", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
             setisLoading(false);
-          }, 1000);
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            addToast("Error", {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            // console.log(" error =>", err);
           });
-          // console.log(" error =>", err);
-        });
-    } catch (error) {
-      // console.log(error, "error catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
+      } catch (error) {
+        // console.log(error, "error catch");
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
     }
   };
   const handleCommentChange = (e) => {
@@ -111,14 +119,14 @@ export default function Profile(props) {
             addToast("User recommended successfully", {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           })
           .catch((err) => {
             addToast("Error", {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
 
             // console.log(" error recommend=>", err);
@@ -151,10 +159,10 @@ export default function Profile(props) {
           headers
         )
           .then((res) => {
-            addToast("Success", {
+            addToast("Project like successfully", {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
             // console.log(res, "res like");
           })
@@ -162,7 +170,7 @@ export default function Profile(props) {
             addToast("Error", {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
             // console.log(" error projects =>", err);
           });
@@ -190,10 +198,10 @@ export default function Profile(props) {
           headers
         )
         .then((res) => {
-          addToast("Success", {
+          addToast("Profile Deleted Success", {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           SignOut();
           // console.log(res, "res material");
@@ -202,7 +210,7 @@ export default function Profile(props) {
           addToast("Error", {
             appearance: "error",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           console.log(" error =>", err);
         });
@@ -453,7 +461,7 @@ export default function Profile(props) {
               </div>
             </div>
 
-            {ProjectdataList && typeof ProjectdataList !== typeof "" ? (
+            {data.data && typeof data.data !== typeof "" ? (
               <>
                 <div className="row " style={{ marginTop: "2rem" }}>
                   <div
@@ -467,7 +475,7 @@ export default function Profile(props) {
                     <h4 className="mt-1 ml-4 text-bold">PROJETS</h4>
                   </div>
                 </div>
-                {ProjectdataList.map((data, i) => (
+                {data.data.projects.map((data, i) => (
                   <UserProjectList
                     data={data}
                     i={i}
@@ -477,7 +485,9 @@ export default function Profile(props) {
                 ))}
               </>
             ) : (
-              ""
+              <center>
+                <h1>No project found</h1>
+              </center>
             )}
 
             <div className="row" style={{ marginTop: "2rem" }}>
@@ -534,6 +544,17 @@ export default function Profile(props) {
                     style={{ width: "90%" }}
                     placeholder="  Add a coment"
                   />
+                  {commentError !== "" ? (
+                    <p
+                      className="error text-left"
+                      style={{ marginLeft: "6rem" }}
+                    >
+                      {" "}
+                      {commentError}
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
                 <div style={{ width: "10%" }} className="text-center">
@@ -543,25 +564,15 @@ export default function Profile(props) {
                         <CircularProgress disableShrink />
                       </div>
                     </center>
-                  ) : comment !== "" ? (
+                  ) : (
                     <button
                       type="button"
                       className="btn btn-block mt-4 ml-2"
                       style={{ maxWidth: "80%", padding: "6px 16px" }}
                       onClick={onAdd}
                     >
-                      Send
+                      SEND
                     </button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      disabled
-                      name="add"
-                      style={{ maxWidth: "80%", textTransform: "capitalize" }}
-                      className="submitAdd btn btn-block mt-4"
-                    >
-                      Send
-                    </Button>
                   )}
                 </div>
               </div>

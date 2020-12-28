@@ -1,9 +1,11 @@
 import React from "react";
+import SkillChipArray from "../shared/skillChip";
+import AutoComplete from "./AutoComplete";
 export default function SignupForm({
-  aboutRequiredFields,
   handleChange,
   handleSkillChange,
   onMaterialChange,
+  onMaterialAdd,
   // FOrmData
   formData,
   skillformData,
@@ -13,6 +15,8 @@ export default function SignupForm({
   skillList,
   //   ************
   //   RequiredField States
+  aboutRequiredFields,
+
   skillRequiredFields,
   materialRequiredFields,
   //   ***********
@@ -30,6 +34,9 @@ export default function SignupForm({
   validateLastName,
   ValidateSkill,
   ValidateOtherSkill,
+  validatePhoto,
+  validateMaterial,
+  validateCity,
   //   *********
   materialList,
   CircularProgress,
@@ -37,7 +44,6 @@ export default function SignupForm({
   onskillAdd,
   onSubmit,
   ChipArray,
-  Autocomplete,
   items,
   address,
   getAddress,
@@ -45,6 +51,7 @@ export default function SignupForm({
   setPhoto,
   otherSKill,
   setotherSkill,
+  setskillArrayData,
   // **********
   material,
   setmaterialArrayData,
@@ -57,7 +64,14 @@ export default function SignupForm({
     <form method="POST" className="appointmentform" id="appointment-form">
       <h2>Sign Up form</h2>
       <div className="form-group-1">
-        <label className="label-agree-term">First Name*</label>
+        <label className="label-agree-term row">
+          First Name*
+          {aboutRequiredFields.firstname !== "" ? (
+            <p className="error"> {aboutRequiredFields.firstname}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
           type="text"
@@ -67,14 +81,17 @@ export default function SignupForm({
           placeholder="First name"
           onChange={handleChange}
           onBlur={validateFirstName}
-          onFocus={validateFirstName}
+          // onFocus={validateFirstName}
         />
-        {aboutRequiredFields.firstname !== "" ? (
-          <p className="error"> {aboutRequiredFields.firstname}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Last Name*</label>
+
+        <label className="label-agree-term row">
+          Last Name*
+          {aboutRequiredFields.lastname !== "" ? (
+            <p className="error"> {aboutRequiredFields.lastname}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
           type="text"
@@ -84,34 +101,39 @@ export default function SignupForm({
           placeholder="Last name"
           onChange={handleChange}
           onBlur={validateLastName}
-          onFocus={validateLastName}
+          // onFocus={validateLastName}
         />
-        {aboutRequiredFields.lastname !== "" ? (
-          <p className="error"> {aboutRequiredFields.lastname}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">User Name*</label>
+
+        <label className="label-agree-term row">
+          User Name*
+          {aboutRequiredFields.username !== "" ? (
+            <p className="error"> {aboutRequiredFields.username}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
           type="text"
           name="username"
           id="username"
           value={formData.username}
-          placeholder="Username"
+          placeholder="e.g John123"
           onChange={handleChange}
-          onFocus={ValidateUsername}
+          onBlur={ValidateUsername}
         />
-        {aboutRequiredFields.username !== "" ? (
-          <p className="error"> {aboutRequiredFields.username}</p>
-        ) : (
-          ""
-        )}
 
-        <label className="label-agree-term">Email *</label>
+        <label className="label-agree-term row">
+          Email*
+          {aboutRequiredFields.email !== "" ? (
+            <p className="error"> {aboutRequiredFields.email}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
-          type="email"
+          type="text"
           name="email"
           id="email"
           placeholder="Email"
@@ -119,12 +141,15 @@ export default function SignupForm({
           onChange={handleChange}
           onBlur={validateEmail}
         />
-        {aboutRequiredFields.email !== "" ? (
-          <p className="error"> {aboutRequiredFields.email}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Password*</label>
+
+        <label className="label-agree-term row">
+          Password*
+          {aboutRequiredFields.password !== "" ? (
+            <p className="error"> {aboutRequiredFields.password}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
           type="password"
@@ -135,12 +160,15 @@ export default function SignupForm({
           onChange={handleChange}
           onBlur={validatePassword}
         />
-        {aboutRequiredFields.password !== "" ? (
-          <p className="error"> {aboutRequiredFields.password}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Confirm Password*</label>
+
+        <label className="label-agree-term row">
+          Confirm Password*
+          {aboutRequiredFields.confirm_password !== "" ? (
+            <p className="error"> {aboutRequiredFields.confirm_password}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
           type="password"
@@ -151,59 +179,25 @@ export default function SignupForm({
           onChange={handleChange}
           onBlur={validateConfirmPassword}
         />
-        {aboutRequiredFields.confirm_password !== "" ? (
-          <p className="error"> {aboutRequiredFields.confirm_password}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">City</label>
 
-        <Autocomplete
-          items={items}
-          // shouldItemRender={(item, value) =>
-          //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
-          // }
-          getItemValue={(item) => item.label}
-          renderItem={(item, highlighted) => (
-            <div
-              key={item.id}
-              style={{
-                backgroundColor: highlighted ? "#eee" : "transparent",
-              }}
-            >
-              {item.label}
-            </div>
+        <label className="label-agree-term row">
+          Address*
+          {aboutRequiredFields.city !== "" ? (
+            <p className="errorcity">{aboutRequiredFields.city}</p>
+          ) : (
+            ""
           )}
-          wrapperStyle={{
-            display: "block",
-          }}
-          menuStyle={{
-            zIndex: "1",
-            position: "static",
-            borderRadius: "3px",
-            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-            background: "rgba(255, 255, 255, 0.9)",
-            padding: "2px 12px",
-            fontSize: "90%",
-            color: "#000",
-            overflow: "auto",
-            maxHeight: "50%",
-          }}
-          inputProps={{
-            className: "form-control",
-            placeholder: "Enter City ",
-          }}
-          value={address}
-          name="address"
-          onChange={getAddress}
-          onSelect={SetAddress}
+        </label>
+
+        <AutoComplete
+          items={items}
+          SetAddress={SetAddress}
+          getAddress={getAddress}
+          address={address}
+          validateCity={validateCity}
         />
-        {aboutRequiredFields.city !== "" ? (
-          <p className="error"> {aboutRequiredFields.city}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Profile Picture*</label>
+
+        <label className="label-agree-term">Profile Picture</label>
 
         <input
           type="file"
@@ -212,49 +206,60 @@ export default function SignupForm({
           onChange={(e) => {
             const file = e.target.files[0];
             console.log(file, "photo1");
+            // validatePhoto(file);
 
             setPhoto(file);
           }}
         />
-        {aboutRequiredFields.profile_picture !== "" ? (
-          <p className="error"> {aboutRequiredFields.profile_picture}</p>
-        ) : (
-          ""
-        )}
 
-        <label className="label-agree-term">Phone Number*</label>
+        <label className="label-agree-term row">
+          Phone Number*(10 digit only){" "}
+          {aboutRequiredFields.phone !== "" ? (
+            <p className="error"> {aboutRequiredFields.phone}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
           type="text"
           name="phone"
           id="phone"
-          placeholder="Phone_number"
+          placeholder="e.g 3017614142"
           value={formData.phone}
           onChange={handleChange}
           onBlur={validatePhoneNumber}
         />
-        {aboutRequiredFields.phone !== "" ? (
-          <p className="error"> {aboutRequiredFields.phone}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Availability*</label>
+
+        <label className="label-agree-term row">
+          Availability(Days per week)*{" "}
+          {aboutRequiredFields.availability !== "" ? (
+            <p className="error"> {aboutRequiredFields.availability}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <input
-          type="text"
+          type="number"
           name="availability"
           id="availability"
-          placeholder="Enter Availability"
           value={formData.availability}
           onChange={handleChange}
           onBlur={validateAvailability}
         />
-        {aboutRequiredFields.availability !== "" ? (
-          <p className="error"> {aboutRequiredFields.availability}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Profile Description*</label>
+
+        <label className="label-agree-term row">
+          Profile Description*{" "}
+          {aboutRequiredFields.profile_description !== "" ? (
+            <p className="error mt-1">
+              {" "}
+              {aboutRequiredFields.profile_description}
+            </p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <textarea
           rows={3}
@@ -268,28 +273,18 @@ export default function SignupForm({
           onChange={handleChange}
           onBlur={validateProfileDesc}
         ></textarea>
-        {/* <input
-  type="text"
-  name="profile_description"
-  id="profile_description"
-  placeholder="Profile_description"
-  value={formData.profile_description}
-  onChange={handleChange}
-  onBlur={validateProfileDesc}
-/> */}
-        {aboutRequiredFields.profile_description !== "" ? (
-          <p className="error mt-3">
-            {" "}
-            {aboutRequiredFields.profile_description}
-          </p>
-        ) : (
-          ""
-        )}
       </div>
 
       <div className="form-group-2">
         <h3>Skills</h3>
-        <label className="label-agree-term">Skill Field*</label>
+        <label className="label-agree-term row">
+          Skill Field*
+          {skillRequiredFields.skillField !== "" ? (
+            <p className="errorselect"> {skillRequiredFields.skillField}</p>
+          ) : (
+            ""
+          )}
+        </label>
 
         <div className="select-list">
           <select
@@ -308,57 +303,59 @@ export default function SignupForm({
               : ""}
           </select>
         </div>
-        {skillRequiredFields.skillField !== "" ? (
-          <p className="error mt-2"> {skillRequiredFields.skillField}</p>
-        ) : (
-          ""
-        )}
+
         {skillList.length > 0 ? (
           <>
-            <label className="label-agree-term ">Skill*</label> <br />
-            {skillformData.skill === "Other" ? (
-              ""
-            ) : (
-              <div className="select-list">
-                <select
-                  name="skill"
-                  id="skill"
-                  value={skillformData.skill}
-                  onChange={handleSkillChange}
-                  onBlur={ValidateSkill}
-                >
-                  <option>Select Skill</option>
-                  {skillList.map((skill) => (
-                    <option value={skill}>{skill}</option>
-                  ))}
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            )}
-            {skillformData.skill === "Other" ? (
-              <input
-                type="text"
-                name="skill"
-                id="skill"
-                placeholder="Enter your Skill"
-                value={otherSKill}
-                onChange={(e) => {
-                  ValidateOtherSkill();
-                  setotherSkill(e.target.value);
-                }}
-                onBlur={ValidateOtherSkill}
-              />
-            ) : (
-              ""
-            )}
-            {skillformData.skill === "Other" ? (
-              skillRequiredFields.otherSKill !== "" ? (
-                <p className="error"> {skillRequiredFields.otherSKill}</p>
+            <label className="label-agree-term row">
+              Skill*
+              {skillRequiredFields.skill !== "" ? (
+                <p className="errorselect"> {skillRequiredFields.skill}</p>
               ) : (
                 ""
-              )
-            ) : skillRequiredFields.skill !== "" ? (
-              <p className="error"> {skillRequiredFields.skill}</p>
+              )}
+            </label>{" "}
+            {/* <br /> */}
+            <div className="select-list">
+              <select
+                name="skill"
+                id="skill"
+                value={skillformData.skill}
+                onChange={handleSkillChange}
+                onBlur={ValidateSkill}
+              >
+                <option>Select Skill</option>
+                {skillList.map((skill) => (
+                  <option value={skill}>{skill}</option>
+                ))}
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            {skillformData.skill === "Other" ? (
+              <>
+                <label className="label-agree-term row ">
+                  Other*
+                  {skillRequiredFields.otherSKill !== "" ? (
+                    <p className="errorselect">
+                      {" "}
+                      ({skillRequiredFields.otherSKill})
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </label>
+                <input
+                  type="text"
+                  name="skill"
+                  id="skill"
+                  placeholder="Other"
+                  value={otherSKill}
+                  onChange={(e) => {
+                    ValidateOtherSkill();
+                    setotherSkill(e.target.value);
+                  }}
+                  onBlur={ValidateOtherSkill}
+                />
+              </>
             ) : (
               ""
             )}
@@ -367,7 +364,7 @@ export default function SignupForm({
           ""
         )}
 
-        <label className="label-agree-term">Specialization*</label>
+        <label className="label-agree-term">Specialization</label>
 
         <input
           type="text"
@@ -375,20 +372,18 @@ export default function SignupForm({
           // onBlur={ValidateSpecialization}
           name="specialization"
           id="specialization"
-          placeholder="Enter Specialization"
+          placeholder="e.g Frontend developer"
           value={skillformData.specialization}
         />
-        {skillRequiredFields.specialization !== "" ? (
-          <p className="error"> {skillRequiredFields.specialization}</p>
-        ) : (
-          ""
-        )}
-        <label className="label-agree-term">Score*</label>
+
+        <label className="label-agree-term ">Rate Your Skill( 1 to 5)*</label>
 
         <input
-          type="text"
+          type="number"
+          min={1}
+          max={5}
           onChange={handleSkillChange}
-          onBlur={validateScore}
+          // onBlur={validateScore}
           name="score"
           id="score"
           placeholder="Enter Score"
@@ -399,71 +394,97 @@ export default function SignupForm({
         ) : (
           ""
         )}
-        <label className="label-agree-term">Material*</label>
-
-        <div className="select-list">
-          <select
-            name="material"
-            id="material"
-            value={material}
-            onChange={onMaterialChange}
-            // onBlur={validateMaterial}
-          >
-            <option value="">Select Material</option>
-
-            {materialList
-              ? materialList.map((mat) => (
-                  <option value={mat._id}>{mat.name}</option>
+        {skillArrayData && skillArrayData.length > 0 ? (
+          <div className="mt-2 mb-2">
+            {skillArrayData
+              ? skillArrayData.map((step, i) => (
+                  <SkillChipArray
+                    skillArrayData={skillArrayData ? skillArrayData : ""}
+                    setskillArrayData={setskillArrayData}
+                    skillFieldList={skillFieldList}
+                    addToast={addToast}
+                    step={step}
+                    i={i}
+                  />
                 ))
               : ""}
-          </select>
-        </div>
-        {materialRequiredFields.name !== "" ? (
-          <p className="error mt-2"> {materialRequiredFields.name}</p>
-        ) : (
-          ""
-        )}
-        {materialArrayData.length > 0 ? (
-          <div className="mt-2 mb-3">
-            <ChipArray
-              materialArrayData={materialArrayData}
-              materialList={materialList}
-              setmaterialArrayData={setmaterialArrayData}
-              addToast={addToast}
-            />
-            {materialRequiredFields.error !== "" ? (
-              <p className="error"> {materialRequiredFields.error}</p>
-            ) : (
-              ""
-            )}
           </div>
         ) : (
           ""
         )}
-        {Object.values(skillformData).length > 0 ? (
+        {skillArrayData.length < 3 ? (
           <Button
             variant="contained"
             onClick={onskillAdd}
             name="add"
-            className="submitAdd mt-4"
+            className="submit "
           >
-            Add
+            Add Skill
           </Button>
         ) : (
-          <Button
-            variant="contained"
-            disabled
-            name="add"
-            className="submitAdd mt-2"
-          >
-            Add
+          <Button variant="contained" disabled name="add" className="submit ">
+            Add Skill
           </Button>
         )}
       </div>
 
+      <label className="label-agree-term row">
+        Material*{" "}
+        {materialRequiredFields.name !== "" ? (
+          <p className="errorselect"> {materialRequiredFields.name}</p>
+        ) : (
+          ""
+        )}
+        {materialRequiredFields.error !== "" ? (
+          <p className="error "> {materialRequiredFields.error}</p>
+        ) : (
+          ""
+        )}
+      </label>
+
+      <div className="select-list">
+        <select
+          name="material"
+          id="material"
+          value={material}
+          onChange={onMaterialChange}
+          onBlur={validateMaterial}
+        >
+          <option value="">Select Material</option>
+
+          {materialList
+            ? materialList.map((mat) => (
+                <option value={mat._id}>{mat.name}</option>
+              ))
+            : ""}
+        </select>
+      </div>
+
+      {materialArrayData.length > 0 ? (
+        <div className="mt-2 mb-3">
+          <ChipArray
+            materialArrayData={materialArrayData}
+            materialList={materialList}
+            setmaterialArrayData={setmaterialArrayData}
+            addToast={addToast}
+          />
+        </div>
+      ) : (
+        ""
+      )}
+
+      <Button
+        variant="contained"
+        onClick={onMaterialAdd}
+        name="add"
+        className="submit "
+      >
+        Add Material
+      </Button>
+
       <div className="form-group-2">
         <h3>Social Links</h3>
-        <label className="label-agree-term">Facebook*</label>
+        <label className="label-agree-term">Facebook</label>
         <input
           type="text"
           name="facebook"
@@ -473,7 +494,7 @@ export default function SignupForm({
           onChange={handleChange}
           onpaste={handleChange}
         />
-        <label className="label-agree-term">Instgram*</label>
+        <label className="label-agree-term">Instgram</label>
 
         <input
           type="text"
@@ -484,7 +505,7 @@ export default function SignupForm({
           onChange={handleChange}
           onpaste={handleChange}
         />
-        <label className="label-agree-term">Youtube*</label>
+        <label className="label-agree-term">Youtube</label>
 
         <input
           type="text"
@@ -503,17 +524,13 @@ export default function SignupForm({
               <CircularProgress disableShrink />
             </div>
           </center>
-        ) : materialArrayData.length > 0 && skillArrayData.length > 0 ? (
+        ) : (
           <Button
             variant="contained"
             onClick={onSubmit}
             name="add"
             className="submit"
           >
-            Submit
-          </Button>
-        ) : (
-          <Button variant="contained" disabled name="add" className="submit">
             Submit
           </Button>
         )}

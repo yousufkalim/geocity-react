@@ -58,7 +58,7 @@ export default function InviteTableRow({
                 // onClick={() => DeleteContributerUser(skill._id)}
                 type="button"
                 id="modalButton1"
-                className="btn  btn-primary text-white "
+                className="btn  btn-primary text-white text-uppercase"
               >
                 Accept
               </button>
@@ -73,7 +73,7 @@ export default function InviteTableRow({
                 }
                 type="button"
                 id="modalButton1"
-                className="btn btn-primary text-white ml-4"
+                className="btn btn-primary text-white ml-4 text-uppercase"
               >
                 Decline
               </button>
@@ -94,7 +94,7 @@ export default function InviteTableRow({
                 // onClick={() => DeleteContributerUser(skill._id)}
                 type="button"
                 id="modalButton1"
-                className="btn  btn-primary text-white "
+                className="btn  btn-primary text-white text-uppercase"
               >
                 Accept
               </button>
@@ -109,7 +109,7 @@ export default function InviteTableRow({
                 }
                 type="button"
                 id="modalButton1"
-                className="btn btn-primary text-white ml-4"
+                className="btn btn-primary text-white ml-4 text-uppercase"
               >
                 Decline
               </button>

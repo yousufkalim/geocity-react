@@ -18,7 +18,7 @@ const ModalExample = (props) => {
             type="button"
             // id="userButton"
             id="modalButton"
-            className="btn "
+            className="btn text-uppercase"
           >
             Cancel
           </button>

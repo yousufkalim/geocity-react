@@ -33,9 +33,19 @@ const ModalExample = (props) => {
     handleSkillChange,
     material,
     formDataSkillField,
+    stepRequiredFields,
+    skillRequiredFields,
     onStepAdd,
     data,
     tempstepId,
+    validateMaterial,
+    validateStepType,
+    validateStepName,
+    validateStatus,
+    validateSpeciality,
+    validateDescription,
+    ValidateSkillField,
+    ValidateSkill,
   } = props;
   // const [stepdata, setstepdata] = useState("");
   // useEffect(() => {
@@ -67,25 +77,44 @@ const ModalExample = (props) => {
             <Row form>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="exampleEmail">Step Name</Label>
+                  <Label for="exampleEmail" className="row label">
+                    Step Name*{" "}
+                    {stepRequiredFields.name !== "" ? (
+                      <p className="error"> {stepRequiredFields.name}</p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     type="text"
                     name="name"
                     value={stepformData.name}
                     placeholder="Step name"
                     onChange={handleStepChange}
+                    onBlur={validateStepName}
                   />
                 </FormGroup>
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="examplePassword">Project Status</Label>
+                  <Label for="examplePassword" className="row label">
+                    Project Status*{" "}
+                    {stepRequiredFields.status !== "" ? (
+                      <p className="errorselect">
+                        {" "}
+                        {stepRequiredFields.status}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     type="select"
                     name="status"
                     id="Type"
                     value={stepformData.status}
                     onChange={handleStepChange}
+                    onBlur={validateStatus}
                   >
                     <option value={""}>Select status</option>
                     <option value="NoProgress">NoProgress</option>
@@ -97,13 +126,25 @@ const ModalExample = (props) => {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="exampleAddress">Step Type</Label>
+                  <Label for="exampleAddress" className="row label">
+                    Step Type*
+                    {stepRequiredFields.stepType !== "" ? (
+                      <p className="errorselect ">
+                        {" "}
+                        {stepRequiredFields.stepType}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     name="stepType"
                     id="stepType"
                     value={stepType}
                     type="select"
+                    disabled
                     onChange={handleStep}
+                    onBlur={validateStepType}
                   >
                     <option value="">Select StepType</option>
                     {names
@@ -117,15 +158,26 @@ const ModalExample = (props) => {
               {stepType === "Material" ? (
                 <Col md={4}>
                   <FormGroup>
-                    <Label for="exampleAddress">{stepType}</Label>
+                    <Label for="exampleAddress" className="row label">
+                      {stepType}{" "}
+                      {stepRequiredFields.material !== "" ? (
+                        <p className="errorselect">
+                          {" "}
+                          {stepRequiredFields.material}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                    </Label>
                     <Input
                       type="select"
                       name="material"
                       id="material"
                       value={material}
+                      onBlur={validateMaterial}
                       onChange={handleStepChange}
                     >
-                      <option>Select Material</option>
+                      <option>Select Material*</option>
                       {materialList
                         ? materialList.map((mat) => (
                             <option value={mat._id}>{mat.name}</option>
@@ -138,15 +190,26 @@ const ModalExample = (props) => {
                 <>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="exampleAddress">{stepType}</Label>
+                      <Label for="exampleAddress" className="row label">
+                        {stepType}{" "}
+                        {skillRequiredFields.skillField !== "" ? (
+                          <p className="errorselect ">
+                            {" "}
+                            {skillRequiredFields.skillField}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
                       <Input
                         type="select"
                         name="skillField"
                         id="skillField"
                         value={formDataSkillField.skillField}
                         onChange={handleSkillChange}
+                        onBlur={ValidateSkillField}
                       >
-                        <option value="">Select skillField</option>
+                        <option value="">Select skillField*</option>
 
                         {skillfieldList
                           ? skillfieldList.map((mat) => (
@@ -158,13 +221,24 @@ const ModalExample = (props) => {
                   </Col>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="exampleAddress">Skill</Label>
+                      <Label for="exampleAddress" className="row label">
+                        Skill*{" "}
+                        {skillRequiredFields.skill !== "" ? (
+                          <p className="errorselect ">
+                            {" "}
+                            {skillRequiredFields.skill}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
                       <Input
                         type="select"
                         name="skill"
                         id="skill"
                         value={formDataSkillField.skill}
                         onChange={handleSkillChange}
+                        onBlur={ValidateSkill}
                       >
                         <option value="">Select skill</option>
 
@@ -178,7 +252,17 @@ const ModalExample = (props) => {
                   </Col>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="exampleAddress">Speciality</Label>
+                      <Label for="exampleAddress" className="row label">
+                        Speciality*{" "}
+                        {skillRequiredFields.speciality !== "" ? (
+                          <p className="error">
+                            {" "}
+                            {skillRequiredFields.speciality}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
                       <Input
                         type="text"
                         name="speciality"
@@ -186,6 +270,7 @@ const ModalExample = (props) => {
                         value={formDataSkillField.speciality}
                         placeholder="Speciality"
                         onChange={handleSkillChange}
+                        onBlur={validateSpeciality}
                       />
                     </FormGroup>
                   </Col>
@@ -195,7 +280,17 @@ const ModalExample = (props) => {
               )}
               <Col md={4}>
                 <FormGroup>
-                  <Label for="exampleAddress2">Description</Label>
+                  <Label for="exampleAddress2" className="row label">
+                    Description*{" "}
+                    {stepRequiredFields.description !== "" ? (
+                      <p className="error mt-1">
+                        {" "}
+                        {stepRequiredFields.description}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     type="textarea"
                     name="description"
@@ -203,6 +298,7 @@ const ModalExample = (props) => {
                     value={stepformData.description}
                     onChange={handleStepChange}
                     placeholder="Description"
+                    onBlur={validateDescription}
                   />
                 </FormGroup>
               </Col>
@@ -222,7 +318,7 @@ const ModalExample = (props) => {
                   type="button"
                   // id="userButton"
                   id="modalButton"
-                  className="btn "
+                  className="btn text-uppercase"
                 >
                   Submit
                 </button>

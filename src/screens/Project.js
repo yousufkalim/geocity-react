@@ -15,7 +15,11 @@ import Modal from "../shared/Modal";
 import ProjectModal from "../shared/ProjectModal";
 import StepModal from "../shared/StepModal";
 import AddStepModal from "../shared/AddStepModal";
-
+import {
+  projectaboutRequired,
+  projectstepRequired,
+  projectskillRequired,
+} from "../shared/Data";
 import CommentsFromDB from "../Components/CommentsFromDB";
 import Comments from "../Components/Comments";
 import ImplementationStep from "../Components/ImpementationStep";
@@ -41,6 +45,8 @@ export default function Project(props) {
   };
   const [data, setData] = useState("");
   const [comment, setComment] = useState("");
+  const [commentError, setCommentError] = useState("");
+
   const [skillFieldData, setSkillFieldData] = useState("");
   const [MaterialData, setMaterialData] = useState("");
 
@@ -59,6 +65,7 @@ export default function Project(props) {
   const [addstepmodal, setaddstepModal] = useState(false);
 
   // ***
+
   const [isLoading, setisLoading] = useState(false);
   const [CategoryList, setCategoryList] = useState("");
   const [stepId, setstepId] = useState("");
@@ -82,55 +89,68 @@ export default function Project(props) {
   const [skillList, setskillList] = useState("");
   const [stepArrayData, setstepArrayData] = useState([]);
   const [tempstepId, settempstepId] = useState("");
-
+  const [aboutRequiredFields, setAboutRequiredFields] = useState(
+    projectaboutRequired
+  );
+  const [stepRequiredFields, setstepRequiredFields] = useState(
+    projectstepRequired
+  );
+  const [skillRequiredFields, setskillRequiredFields] = useState(
+    projectskillRequired
+  );
   // ***********************************************
 
   const onAdd = async () => {
     // setCommentArray([...commentArray, comment]);
-    const date = new Date();
-    const obj = {};
-    obj.comment = comment;
-    obj.date = date;
-    obj.profile_picture = getUser().profile_picture;
-    setCommentArray([...commentArray, obj]);
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
+    if (!comment) {
+      setCommentError("Required");
+    } else {
+      setCommentError("");
+      const date = new Date();
+      const obj = {};
+      obj.comment = comment;
+      obj.date = date;
+      obj.profile_picture = getUser().profile_picture;
+      setCommentArray([...commentArray, obj]);
+      try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
 
-      await axios
-        .post(
-          `http://localhost:3000/api/v1/project/view-project/comment?id=${props.match.params.id}`,
-          { comment: comment },
-          headers
-        )
-        .then((res) => {
-          setComment("");
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-          setisLoading(false);
-        })
-        .catch((err) => {
-          setTimeout(() => {
+        await axios
+          .post(
+            `http://localhost:3000/api/v1/project/view-project/comment?id=${props.match.params.id}`,
+            { comment: comment },
+            headers
+          )
+          .then((res) => {
+            setComment("");
+            addToast("Comment Added Successfully", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
             setisLoading(false);
-          }, 1000);
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            addToast("Error", {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            // console.log(" error =>", err);
           });
-          // console.log(" error =>", err);
-        });
-    } catch (error) {
-      // console.log(error, "error catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
+      } catch (error) {
+        // console.log(error, "error catch");
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
     }
   };
   const handleCommentChange = (e) => {
@@ -143,7 +163,7 @@ export default function Project(props) {
     addToast("Success", {
       appearance: "success",
       autoDismiss: true,
-      autoDismissTimeout: 1000,
+      autoDismissTimeout: 3000,
     });
   };
 
@@ -152,10 +172,210 @@ export default function Project(props) {
 
     setFormData({ ...formData, [e.target.name]: value });
   };
+  // validation
+
+  const validateTitle = () => {
+    if (!formData.title) {
+      const msg = "Required";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        title: msg,
+      });
+      return false;
+    } else if (formData.title.length < 5) {
+      const msg = "Title  needs to be atleast  5 characters long";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        title: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        title: msg,
+      });
+      return true;
+    }
+  };
+  const validateGenralDesc = () => {
+    if (!formData.general_description) {
+      const msg = "Required";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        general_description: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        general_description: msg,
+      });
+
+      return true;
+    }
+  };
+  const validateProjectType = () => {
+    if (formData.type) {
+      setAboutRequiredFields({ ...aboutRequiredFields, type: "" });
+
+      return true;
+    } else if (!formData.type) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, type: msg });
+      return false;
+    }
+  };
+
+  const validateCategory = () => {
+    if (!formData.category) {
+      const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, category: msg });
+      return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, category: msg });
+      return true;
+    }
+  };
+  const validateStepName = () => {
+    if (!stepformData.name.length) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
+      return false;
+    } else {
+      const msg = "";
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
+      return true;
+    }
+  };
+
+  const validateDescription = () => {
+    if (!formData.description) {
+      const msg = "Required";
+      setstepRequiredFields({
+        ...stepRequiredFields,
+        description: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setstepRequiredFields({
+        ...stepRequiredFields,
+        description: msg,
+      });
+
+      return true;
+    }
+  };
+  const validateSpeciality = () => {
+    if (formDataSkillField.speciality) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, speciality: msg });
+
+      return true;
+    } else if (!formDataSkillField.speciality) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, speciality: msg });
+      return false;
+    }
+  };
+  const validateStatus = () => {
+    if (stepformData.status) {
+      setstepRequiredFields({ ...stepRequiredFields, status: "" });
+
+      return true;
+    } else if (!stepformData.status) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, status: msg });
+      return false;
+    }
+  };
+  const validateStepType = () => {
+    if (!stepType) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, stepType: msg });
+      return false;
+    } else {
+      const msg = "";
+
+      setstepRequiredFields({ ...stepRequiredFields, stepType: msg });
+
+      return true;
+    }
+  };
+  const ValidateSkillField = () => {
+    if (formDataSkillField.skillField) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
+    } else if (!formDataSkillField.skillField) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return false;
+    }
+  };
+
+  const ValidateSkill = () => {
+    if (formDataSkillField.skill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return true;
+    } else if (!formDataSkillField.skill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return false;
+    }
+  };
+
+  const checkValidateForm = () => {
+    let obj = {};
+    let reqFields = true;
+    Object.keys(formData).map((key) => {
+      if (formData[key] === "") {
+        obj[key] = "Required";
+        reqFields = false;
+      }
+      return obj;
+    });
+    // debugger;
+    if (!reqFields) {
+      setAboutRequiredFields(obj);
+
+      return false;
+    } else {
+      setAboutRequiredFields(projectaboutRequired);
+
+      return true;
+    }
+  };
+  const checkValidateForm2 = () => {
+    let obj = {};
+    let reqFields = true;
+    Object.keys(stepformData).map((key) => {
+      if (stepformData[key] === "") {
+        obj[key] = "Required";
+        reqFields = false;
+      }
+      return obj;
+    });
+    // console.log(obj, "obj");
+    if (!reqFields) {
+      // obj.stepType = "Required";
+      setstepRequiredFields(obj);
+      return false;
+    } else {
+      setstepRequiredFields(projectstepRequired);
+      return true;
+    }
+  };
+
+  // ***
   const onSubmit = async (e) => {
     e.preventDefault();
+    checkValidateForm();
     setisLoading(true);
-
     const newFormData = new FormData();
     newFormData.append("title", formData.title);
     newFormData.append("type", formData.type);
@@ -184,10 +404,10 @@ export default function Project(props) {
           }, 1000);
           setFormData(projectData);
           setProfileModal(false);
-          addToast("Success", {
+          addToast("Project updated sucessfully", {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
             placement: "bottom-right",
           });
           // console.log(res,"res")
@@ -202,13 +422,13 @@ export default function Project(props) {
               addToast(`${err.response.data.message}`, {
                 appearance: "error",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
             } else {
               addToast(`${err.response.data}`, {
                 appearance: "error",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
             }
           }
@@ -304,18 +524,18 @@ export default function Project(props) {
         .then((res) => {
           // setProjectdataList(res.data.ownedProjects);
           setSkillFieldData(res.data);
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
+          // addToast("Success", {
+          //   appearance: "success",
+          //   autoDismiss: true,
+          //   autoDismissTimeout: 3000,
+          // });
           // console.log(res.data, "res skill search data");
         })
         .catch((err) => {
           addToast("Error", {
             appearance: "error",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           console.log(" error projects =>", err);
         });
@@ -344,18 +564,18 @@ export default function Project(props) {
         .then((res) => {
           // setProjectdataList(res.data.ownedProjects);
           setMaterialData(res.data.users);
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
+          // addToast("Success", {
+          //   appearance: "success",
+          //   autoDismiss: true,
+          //   autoDismissTimeout: 3000,
+          // });
           // console.log(res.data, "res material search data");
         })
         .catch((err) => {
           addToast("Error", {
             appearance: "error",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           // console.log(" error projects =>", err);
         });
@@ -409,10 +629,10 @@ export default function Project(props) {
             .then((res) => {
               setlike(like + 1);
 
-              addToast("Success", {
+              addToast("Project like successfully", {
                 appearance: "success",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
 
               // setProjectdataList(res.data.ownedProjects);
@@ -424,7 +644,7 @@ export default function Project(props) {
                   addToast(`${err.response.data.message}`, {
                     appearance: "error",
                     autoDismiss: true,
-                    autoDismissTimeout: 1000,
+                    autoDismissTimeout: 3000,
                   });
                 } else {
                   addToast(`${err.response.data}`, {
@@ -483,7 +703,7 @@ export default function Project(props) {
           addToast("Success", {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           // console.log(res.data, "res invite sent");
         })
@@ -495,13 +715,13 @@ export default function Project(props) {
               addToast(`${err.response.data.message}`, {
                 appearance: "error",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
             } else {
               addToast(`${err.response.data}`, {
                 appearance: "error",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
             }
           }
@@ -546,6 +766,7 @@ export default function Project(props) {
 
     setstepFormData({ ...stepformData, [e.target.name]: value });
   };
+
   const onStepAdd = () => {
     if (material !== "") {
       stepformData.material = material;
@@ -568,108 +789,119 @@ export default function Project(props) {
 
   const onStepSubmit = (e) => {
     e.preventDefault();
-    setisLoading(true);
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-    // debugger;
-    if (
-      Object.keys(stepformData).length > 0 &&
-      stepformData.material === undefined &&
-      Object.keys(formDataSkillField).length > 0
-    ) {
-      // alert("hello");
-      let array = [];
-      const obj1 = { ...formDataSkillField };
-      const obj2 = { ...stepformData };
-      obj2.skills = obj1;
-      // stepformData.skills = formDataSkillField;
-      // let merge = { ...stepformData, ...formDataSkillField };
-      array.push(obj2);
-      console.log(array, "array on submit");
-      axios
-        .post(
-          `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
-          { id: tempstepId, step: obj2 },
-          headers
-        )
-        .then((res) => {
-          setisLoading(false);
-          setstepModal(false);
+    const checkForm = checkValidateForm2();
+    if (checkForm == true) {
+      setisLoading(true);
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      // debugger;
+      if (
+        Object.keys(stepformData).length > 0 &&
+        stepformData.material === undefined &&
+        Object.keys(formDataSkillField).length > 0
+      ) {
+        const formObj = Object.values(formDataSkillField).map((obj) => {
+          if (obj !== "") {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        if (formObj[0] === true && formObj[2] === true) {
+          // alert("hello");
+          let array = [];
+          const obj1 = { ...formDataSkillField };
+          const obj2 = { ...stepformData };
+          obj2.skills = obj1;
+          // stepformData.skills = formDataSkillField;
+          // let merge = { ...stepformData, ...formDataSkillField };
+          array.push(obj2);
+          // console.log(array, "array on submit");
+          axios
+            .post(
+              `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
+              { id: tempstepId, step: obj2 },
+              headers
+            )
+            .then((res) => {
+              setisLoading(false);
+              setstepModal(false);
 
-          addToast("Step Update Successfully", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
+              addToast("Step Update Successfully", {
+                appearance: "success",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
-            } else {
-              addToast(`${err.response.data}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
+            })
+            .catch((err) => {
+              setTimeout(() => {
+                setisLoading(false);
+              }, 1000);
+              if (err.response.data) {
+                if (err.response.data.message) {
+                  addToast(`${err.response.data.message}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                } else {
+                  addToast(`${err.response.data}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                }
+              }
+              // console.log(" error =>", err);
+            });
+        }
+      } else if (stepformData.material !== "") {
+        // alert("oy hoy");
+        // console.log(stepformData, "stepformdata");
+        axios
+          .post(
+            `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
+            { id: tempstepId, step: stepformData },
+            headers
+          )
+          .then((res) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            setstepModal(false);
+            addToast("Step updated Successfully", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            // // console.log(res,"res")
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
             }
-          }
-          // console.log(" error =>", err);
-        });
-    } else if (stepformData.material !== "") {
-      // alert("oy hoy");
-      // console.log(stepformData, "stepformdata");
-      axios
-        .post(
-          `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
-          { id: tempstepId, step: stepformData },
-          headers
-        )
-        .then((res) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
-          setstepModal(false);
-          addToast("Step updated Successfully", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
+            // console.log(" error =>", err);
           });
-          // // console.log(res,"res")
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
-            } else {
-              addToast(`${err.response.data}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
-            }
-          }
-          // console.log(" error =>", err);
-        });
+      }
     }
-
     // console.log(merge, "merge object");
   };
 
@@ -692,15 +924,15 @@ export default function Project(props) {
           addToast("You have successfully shown interest ", {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
-          console.log(res, "response interest");
+          // console.log(res, "response interest");
         })
         .catch((err) => {
           addToast(`${err.response.data.message}`, {
             appearance: "error",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           console.log(" error interest =>", err.response);
         });
@@ -726,7 +958,7 @@ export default function Project(props) {
           addToast("Success", {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           setdeleteCheck(true);
           // console.log(res, "res material");
@@ -735,7 +967,7 @@ export default function Project(props) {
           addToast("Error", {
             appearance: "error",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           console.log(" error =>", err);
         });
@@ -757,7 +989,7 @@ export default function Project(props) {
         .get("http://localhost:3000/api/v1/auth/categoryList")
         .then((res) => {
           setCategoryList(res.data.category);
-          console.log(res, "response category");
+          // console.log(res, "response category");
         })
         .catch((err) => console.log(" error category =>", err));
     } catch (error) {
@@ -888,6 +1120,11 @@ export default function Project(props) {
             modal={Profilemodal}
             toggle={Projecttoggle}
             CategoryList={CategoryList}
+            aboutRequiredFields={aboutRequiredFields}
+            validateCategory={validateCategory}
+            validateGenralDesc={validateGenralDesc}
+            validateProjectType={validateProjectType}
+            validateTitle={validateTitle}
             formData={formData}
             isLoading={isLoading}
             DefaultImage={DefaultImage}
@@ -935,6 +1172,15 @@ export default function Project(props) {
             skillList={skillList}
             formDataSkillField={formDataSkillField}
             handleSkillChange={handleSkillChange}
+            ValidateSkillField={ValidateSkillField}
+            ValidateSkill={ValidateSkill}
+            validateStatus={validateStatus}
+            validateSpeciality={validateSpeciality}
+            validateDescription={validateDescription}
+            validateStepType={validateStepType}
+            validateStepName={validateStepName}
+            stepRequiredFields={stepRequiredFields}
+            skillRequiredFields={skillRequiredFields}
           />
           <Header />
 
@@ -1154,7 +1400,7 @@ export default function Project(props) {
                         <button
                           type="button"
                           id="userButton"
-                          className="btn btn-block"
+                          className="btn btn-block text-uppercase"
                         >
                           Voir le profil
                         </button>
@@ -1285,6 +1531,17 @@ export default function Project(props) {
                       style={{ width: "90%" }}
                       placeholder="  Add a coment"
                     />
+                    {commentError !== "" ? (
+                      <p
+                        className="error text-left"
+                        style={{ marginLeft: "7rem" }}
+                      >
+                        {" "}
+                        {commentError}
+                      </p>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div style={{ width: "10%" }} className="text-center">
                     {isLoading === true ? (
@@ -1293,25 +1550,15 @@ export default function Project(props) {
                           <CircularProgress disableShrink />
                         </div>
                       </center>
-                    ) : comment !== "" ? (
+                    ) : (
                       <button
                         type="button"
                         className="btn btn-block mt-4 ml-2"
                         style={{ maxWidth: "80%", padding: "6px 16px" }}
                         onClick={onAdd}
                       >
-                        Send
+                        SEND
                       </button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        disabled
-                        name="add"
-                        style={{ maxWidth: "80%", textTransform: "capitalize" }}
-                        className="submitAdd btn btn-block mt-4"
-                      >
-                        Send
-                      </Button>
                     )}
                   </div>
                 </div>

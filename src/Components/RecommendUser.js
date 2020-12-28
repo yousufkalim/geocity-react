@@ -5,9 +5,10 @@ import {
   PopoverBody,
   Popover,
 } from "reactstrap";
-
+import Rating from "@material-ui/lab/Rating";
 export default function RecommendUser({ skill, RecommendUser, i }) {
   const [like, setlike] = useState(0);
+  const [value, setValue] = React.useState(skill.score);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const toggle = () => setPopoverOpen(!popoverOpen);
@@ -30,7 +31,7 @@ export default function RecommendUser({ skill, RecommendUser, i }) {
               style={{
                 marginLeft: 2,
                 position: "absolute",
-                color: "#c1c1c1",
+                color: "#ccc",
               }}
             />
             <Popover
@@ -47,13 +48,21 @@ export default function RecommendUser({ skill, RecommendUser, i }) {
           ""
         )}
         <br />
+
         <span>
-          <i className="fas fa-star fa-sm " style={{ color: "#ffe500" }} />
+          <Rating
+            name="simple-controlled"
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
+          />
+          {/* <i className="fas fa-star fa-sm " style={{ color: "#ffe500" }} />
 
           <i className="fas fa-star fa-sm " style={{ color: "#ffe500" }} />
           <i className="fas fa-star fa-sm " style={{ color: "#ffe500" }} />
           <i className="fas fa-star fa-sm " />
-          <i className="fas fa-star fa-sm " />
+          <i className="fas fa-star fa-sm " /> */}
         </span>
       </p>
 

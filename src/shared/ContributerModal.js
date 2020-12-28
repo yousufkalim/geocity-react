@@ -77,7 +77,7 @@ const ModalExample = (props) => {
                         <button
                           type="button"
                           id="modalButton1"
-                          className="btn btn-primary text-white"
+                          className="btn btn-primary text-white text-uppercase"
                         >
                           See profile
                         </button>
@@ -86,7 +86,7 @@ const ModalExample = (props) => {
                         onClick={() => ContributorDelete(skill._id)}
                         type="button"
                         id="modalButton2"
-                        className="btn btn-primary text-white ml-4"
+                        className="btn btn-primary text-white ml-4 text-uppercase"
                       >
                         Delete
                       </button>
@@ -102,7 +102,7 @@ const ModalExample = (props) => {
         <ModalFooter>
           <Button
             id="modalButton"
-            className="btn "
+            className="btn text-uppercase"
             color="secondary"
             onClick={props.toggle}
           >

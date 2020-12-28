@@ -17,7 +17,9 @@ export default function ProjectList({
   const [privateFilter, setprivateFilter] = useState("");
 
   useEffect(() => {
-    var checkPrivate = data.usersToView.some((user) => user === getUser()._id);
+    var checkPrivate = data.usersToView
+      ? data.usersToView.some((user) => user === getUser()._id)
+      : "";
     setprivateFilter(checkPrivate);
   }, []);
   const onRequestToView = (id) => {
@@ -57,7 +59,7 @@ export default function ProjectList({
         <>
           <PrivateModal toggle={CheckRedirect} modal={modal} />
 
-          <div className="col-lg-3 ">
+          <div className="col-lg-3 " key={data._id}>
             <div className="card">
               {/* <Link to={`/SingleProject/${data.project._id}`}> */}
 
@@ -151,7 +153,7 @@ export default function ProjectList({
       return (
         <>
           <PrivateModal toggle={CheckRedirect} modal={modal} />
-          <div className="col-lg-3 ">
+          <div className="col-lg-3 " key={data._id}>
             <div className="card">
               <img
                 onClick={CheckRedirect}
@@ -181,7 +183,15 @@ export default function ProjectList({
                 <span className="row ml-2">
                   <img
                     id="ImageSmall"
-                    src="images/aefa0b8fbb9463895a3d34f90bf6888ad4d7774a.png"
+                    src={
+                      data.type === "Private" &&
+                      getUser()._id !== data.project_owner &&
+                      privateFilter === false
+                        ? DefaultImage
+                        : data.general_photo
+                        ? `http://localhost:3000/views/uploads/${data.general_photo}`
+                        : DefaultImage
+                    }
                     alt="alternative"
                   />
                   <h6 className="card-title ml-3">
@@ -205,9 +215,9 @@ export default function ProjectList({
                   privateFilter === false ? (
                     <button
                       type="button"
-                      style={{ fontSize: "0.9rem" }}
+                      style={{ fontSize: "0.7rem", fontWeight: "bold" }}
                       id="modalButton"
-                      className="btn  ml-1"
+                      className="btn  ml-1 text-uppercase"
                       onClick={() => onRequestToView(data._id)}
                     >
                       Request To View

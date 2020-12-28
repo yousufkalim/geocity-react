@@ -13,7 +13,7 @@ const Example = ({
   const onSendInvite = (receiver) => {
     sendInvite(receiver);
   };
-  console.log(CategoryData, "CategoryData");
+  // console.log(CategoryData, "CategoryData");
   if (
     skillFieldData &&
     typeof skillFieldData !== typeof "" &&

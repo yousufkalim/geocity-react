@@ -9,6 +9,8 @@ import rocket from "../Theme/images/rocket.svg";
 import magnifier from "../Theme/images/magnifier.svg";
 import paperPlane from "../Theme/images/paper-plane.svg";
 import target from "../Theme/images/target.svg";
+import bulbMen from "../Theme/images/bulb-men.png";
+import Group2 from "../Theme/images/Group2.png";
 
 export default class Home extends React.Component {
   render() {
@@ -224,14 +226,27 @@ export default class Home extends React.Component {
           <div className="container">
             <div className="row">
               <div className="col-lg-4">
-                <div className="image-container">
+                <div className="row image-container">
                   <img
                     className="img-fluid"
                     style={{
-                      width: "351px",
-                      height: "278px",
+                      width: "280px",
+                      height: "291px",
+                      marginLeft: "6rem",
+                      // left: "36%",
                     }}
-                    src="https://img.freepik.com/free-photo/business-man-holding-bright-light-bulb-hand_28629-1091.jpg?size=626&ext=jpg"
+                    src={Group2}
+                    alt="alternative"
+                  />
+                  <img
+                    className="img-fluid"
+                    style={{
+                      width: "157px",
+                      height: "274px",
+                      position: "absolute",
+                      left: "36%",
+                    }}
+                    src={bulbMen}
                     alt="alternative"
                   />
                 </div>{" "}

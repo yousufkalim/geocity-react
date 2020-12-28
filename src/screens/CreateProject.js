@@ -94,16 +94,16 @@ function CreateProject() {
     }
   };
   const validateStepType = () => {
-    if (stepType) {
+    if (!stepType) {
+      const msg = "Required";
+      setstepRequiredFields({ ...stepRequiredFields, stepType: msg });
+      return false;
+    } else {
       const msg = "";
 
       setstepRequiredFields({ ...stepRequiredFields, stepType: msg });
 
       return true;
-    } else if (!stepType) {
-      const msg = "Required";
-      setstepRequiredFields({ ...stepRequiredFields, stepType: msg });
-      return false;
     }
   };
   const validateMaterial = () => {
@@ -142,7 +142,14 @@ function CreateProject() {
     }
   };
   const validateGenralDesc = () => {
-    if (formData.general_description) {
+    if (!formData.general_description) {
+      const msg = "Required";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        general_description: msg,
+      });
+      return false;
+    } else {
       const msg = "";
       setAboutRequiredFields({
         ...aboutRequiredFields,
@@ -150,13 +157,6 @@ function CreateProject() {
       });
 
       return true;
-    } else if (!formData.general_description) {
-      const msg = "Required";
-      setAboutRequiredFields({
-        ...aboutRequiredFields,
-        general_description: msg,
-      });
-      return false;
     }
   };
   const validateProjectType = () => {
@@ -184,107 +184,82 @@ function CreateProject() {
     }
   };
   const validateCity = () => {
-    if (formDataCity.city) {
-      const msg = "";
-
-      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
-      return false;
-    } else if (!formDataCity.city) {
+    // debugger;
+    if (address === "") {
       let msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
       return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      return true;
     }
   };
 
   const validateCategory = () => {
-    if (formData.category) {
-      setAboutRequiredFields({ ...aboutRequiredFields, category: "" });
-
-      return true;
-    } else if (!formData.category) {
+    if (!formData.category) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, category: msg });
       return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({ ...aboutRequiredFields, category: msg });
+      return true;
     }
   };
 
   const validateTitle = () => {
-    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(formData.title);
-    if (formData.title.length >= 4 && formData.title.length < 20) {
-      const msg = "";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
-      setFormData({ ...formData, title: formData.title.trim() });
-      return true;
-    } else if (formData.title.trim() && !isValid) {
-      const msg = "Title should not contain any digit or special characters";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
-      return false;
-    } else if (formData.title.trim().length < 5) {
-      const msg = "Title needs to be at least 5 characters";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
-      return false;
-    } else if (formData.title.trim().length > 20) {
-      const msg = "Title needs to be less than  20 characters long";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
-      return false;
-    } else if (!formData.title.length) {
+    if (!formData.title) {
       const msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, title: msg });
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        title: msg,
+      });
       return false;
+    } else if (formData.title.length < 5) {
+      const msg = "Title  needs to be atleast  5 characters long";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        title: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        title: msg,
+      });
+      return true;
     }
   };
   const validateStepName = () => {
-    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-      stepformData.name.trim()
-    );
-    if (stepformData.name.length >= 4 && stepformData.name.length < 20) {
-      const msg = "";
-
-      setstepRequiredFields({ ...stepRequiredFields, name: msg });
-      setstepFormData({ ...stepformData, name: stepformData.name.trim() });
-      return true;
-    } else if (stepformData.name.trim() && !isValid) {
-      const msg = "Name should not contain any digit or special characters";
-      setstepRequiredFields({ ...stepRequiredFields, name: msg });
-      return false;
-    } else if (stepformData.name.trim().length > 20) {
-      const msg = "Name needs to be less than  20 characters long";
-      setstepRequiredFields({ ...stepRequiredFields, name: msg });
-      return false;
-    } else if (!stepformData.name.length) {
+    if (!stepformData.name.length) {
       const msg = "Required";
       setstepRequiredFields({ ...stepRequiredFields, name: msg });
       return false;
+    } else {
+      const msg = "";
+      setstepRequiredFields({ ...stepRequiredFields, name: msg });
+      return true;
     }
   };
 
   const validateDescription = () => {
-    const isValid = /^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/i.test(
-      stepformData.description.trim()
-    );
-    if (
-      stepformData.description.length >= 4 &&
-      stepformData.description.length < 150
-    ) {
-      setstepRequiredFields({ ...stepRequiredFields, description: "" });
-      setstepFormData({
-        ...stepformData,
-        description: stepformData.description.trim(),
-      });
-      return true;
-    } else if (stepformData.description.trim() && !isValid) {
-      const msg =
-        "description should not contain any digit or special characters";
-      setstepRequiredFields({ ...stepRequiredFields, description: msg });
-      return false;
-    } else if (stepformData.description.trim().length > 150) {
-      const msg = "description needs to be less than 150 characters";
-      setstepRequiredFields({ ...stepRequiredFields, description: msg });
-      return false;
-    } else if (!stepformData.description.length) {
+    if (!stepformData.description) {
       const msg = "Required";
-      setstepRequiredFields({ ...stepRequiredFields, description: msg });
+      setstepRequiredFields({
+        ...stepRequiredFields,
+        description: msg,
+      });
       return false;
+    } else {
+      const msg = "";
+      setstepRequiredFields({
+        ...stepRequiredFields,
+        description: msg,
+      });
+
+      return true;
     }
   };
   const checkValidateForm = () => {
@@ -297,7 +272,7 @@ function CreateProject() {
       }
       return obj;
     });
-
+    // debugger;
     if (!reqFields) {
       setAboutRequiredFields(obj);
 
@@ -308,6 +283,8 @@ function CreateProject() {
       return true;
     }
   };
+  // console.log(aboutRequiredFields, "obj");
+
   const checkValidateForm2 = () => {
     let obj = {};
     let reqFields = true;
@@ -318,10 +295,16 @@ function CreateProject() {
       }
       return obj;
     });
-    if (!reqFields || stepType === "") {
-      obj.stepType = "Required";
-      setstepRequiredFields(obj);
-      return false;
+    if (stepArrayData.length >= 0) {
+      if (!reqFields || stepType === "") {
+        obj.stepType = "Required";
+        setstepRequiredFields(obj);
+        return false;
+      } else {
+        setstepRequiredFields(projectstepRequired);
+
+        return true;
+      }
     } else {
       setstepRequiredFields(projectstepRequired);
 
@@ -338,20 +321,26 @@ function CreateProject() {
       }
       return obj;
     });
-    // debugger;
-    if (!reqFields) {
-      if (otherSKill !== "") {
-        obj.skill = "";
-        setstepRequiredFields(obj);
+    if (stepArrayData.length >= 0) {
+      // debugger;
+      if (!reqFields) {
+        if (otherSKill !== "") {
+          obj.skill = "";
+          setstepRequiredFields(obj);
+          return false;
+        } else {
+          obj.speciality = "";
+
+          setstepRequiredFields(obj);
+        }
+        // console.log(obj, "validate 2 check");
+
         return false;
       } else {
-        obj.speciality = "";
+        setskillRequiredFields(projectskillRequired);
 
-        setstepRequiredFields(obj);
+        return true;
       }
-      // console.log(obj, "validate 2 check");
-
-      return false;
     } else {
       setskillRequiredFields(projectskillRequired);
 
@@ -411,6 +400,8 @@ function CreateProject() {
 
   const getAddress = (e) => {
     setAddress(e.target.value);
+    validateCity();
+
     fetch(
       "https://api-adresse.data.gouv.fr/search/?q=" +
         e.target.value +
@@ -418,8 +409,6 @@ function CreateProject() {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        const msg = "";
-        setAboutRequiredFields({ ...aboutRequiredFields, address: msg });
         var addressToSet = [];
         for (var i = 0; i < responseJson.features.length; i++) {
           addressToSet.push({
@@ -439,6 +428,8 @@ function CreateProject() {
   };
   const SetAddress = (item) => {
     setAddress(item);
+    const msg = "";
+    setAboutRequiredFields({ ...aboutRequiredFields, address: msg });
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
         var city = items[i].city;
@@ -468,26 +459,7 @@ function CreateProject() {
   // handle change
   const handleChange = (e) => {
     let value = e.target.value;
-    switch (e.target.name) {
-      case "title":
-        validateTitle();
-        break;
-      case "type":
-        validateProjectType();
-        break;
-      case "address":
-        validateCity();
-        break;
 
-      case "general_description":
-        validateGenralDesc();
-        break;
-      case "category":
-        validateCategory();
-        break;
-      default:
-        break;
-    }
     setFormData({ ...formData, [e.target.name]: value });
   };
 
@@ -506,59 +478,31 @@ function CreateProject() {
         [e.target.name]: e.target.value,
       });
     }
-    switch (e.target.name) {
-      case "skillField":
-        ValidateSkillField();
-        break;
-      case "skill":
-        ValidateSkill();
-        break;
-
-      case "status":
-        validateStatus();
-        break;
-
-      default:
-        break;
-    }
   };
   const handleStepChange = async (e) => {
     let value = e.target.value;
     if (e.target.name === "material") {
       setMaterial(e.target.value);
     }
-    switch (e.target.name) {
-      case "name":
-        validateStepName();
-        break;
-      case "skillField":
-        validateStepType();
-        break;
-      case "material":
-        validateMaterial();
-        break;
-      case "description":
-        validateDescription();
-        break;
-      case "status":
-        validateStatus();
-        break;
-      case "speciality":
-        validateSpeciality();
-        break;
 
-      default:
-        break;
-    }
     setstepFormData({ ...stepformData, [e.target.name]: value });
   };
   // handle change end ******************
 
   // Add Functions start
+  const HandleStepDelete = (chipToDelete) => {
+    // alert(chipToDelete);
+    const ChipsArray = stepArrayData.filter(
+      (chip) => chip.name !== chipToDelete
+    );
+    console.log(ChipsArray, "chipsArray");
+    setstepArrayData(ChipsArray);
+  };
   const onAdd = () => {
     if (otherSKill !== "") {
       formDataSkillField.skill = otherSKill;
     }
+
     if (stepType !== "") {
       checkValidateForm3();
     }
@@ -611,62 +555,76 @@ function CreateProject() {
     e.preventDefault();
     setisLoading(true);
     checkValidateForm();
-    console.log(photo, "photo");
-    const newFormData = new FormData();
-    newFormData.append("title", formData.title);
-    newFormData.append("type", formData.type);
-    newFormData.append("general_photo", photo);
-    newFormData.append("general_description", formData.general_description);
-    newFormData.append("category", formData.category);
-    newFormData.append("address", JSON.stringify(formDataCity));
-    newFormData.append("implementation_steps", JSON.stringify(stepArrayData));
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-      await axios
-        .post(
-          "http://localhost:3000/api/v1/project/CreateProject",
-          newFormData,
-          headers
-        )
-        .then((response) => {
-          setisLoading(false);
-          setFormData(projectData);
-          setPhoto("");
-          setAddress("");
-          addToast(`Project created Successfully`, {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 1000,
-          });
-        })
-        .catch((err) => {
-          setTimeout(() => {
+    const checkForm = checkValidateForm2();
+    if (checkForm == true || stepArrayData.length > 0) {
+      // validateCity();
+
+      // console.log(photo, "photo");
+      const newFormData = new FormData();
+      newFormData.append("title", formData.title);
+      newFormData.append("type", formData.type);
+      newFormData.append("general_photo", photo);
+      newFormData.append("general_description", formData.general_description);
+      newFormData.append("category", formData.category);
+      newFormData.append("address", JSON.stringify(formDataCity));
+      newFormData.append("implementation_steps", JSON.stringify(stepArrayData));
+      try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+        await axios
+          .post(
+            "http://localhost:3000/api/v1/project/CreateProject",
+            newFormData,
+            headers
+          )
+          .then((response) => {
             setisLoading(false);
-          }, 1000);
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
-            } else {
-              addToast(`${err.response.data}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 1000,
-              });
+            setFormData(projectData);
+            setPhoto("");
+            setAddress("");
+            addToast(`Project created Successfully`, {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
             }
-          }
-        });
-    } catch (error) {
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
+    } else {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
+      addToast(`Please add atleast one implementation_step `, {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
     }
   };
   // *****************
@@ -731,6 +689,7 @@ function CreateProject() {
           // Actions
           onAdd={onAdd}
           onSubmit={onSubmit}
+          HandleStepDelete={HandleStepDelete}
           //*** */
         />
       </div>

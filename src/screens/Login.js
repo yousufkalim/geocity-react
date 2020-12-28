@@ -24,31 +24,36 @@ function Login() {
 
   // validation start ******************
   const validateEmail = () => {
-    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+    const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-z]+)*$/.test(
+      formData.email
+    );
     if (!formData.email) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
       return false;
-    } else if (formData.email && !isValid) {
-      const msg = "You have entered an invalid email address!";
-      setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
-      return false;
-    } else {
+    } else if (formData.email) {
+      if (formData.email && !isValid) {
+        const msg = "You have entered an invalid email address!";
+        setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
+        return false;
+      }
       setAboutRequiredFields({ ...aboutRequiredFields, email: "" });
       return true;
     }
   };
   const validatePassword = () => {
-    if (formData.password.length <= 4) {
-      const msg = "Password length must be at least 6 characters long";
-      setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
-      return false;
-    } else if (!formData.password) {
+    if (!formData.password.length) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
       return false;
+    } else if (formData.password.length < 6) {
+      const msg = "Passowrd needs to be at least 6 characters";
+      setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
+
+      return false;
     } else {
       setAboutRequiredFields({ ...aboutRequiredFields, password: "" });
+      setFormData({ ...formData, password: formData.password });
       return true;
     }
   };
@@ -78,11 +83,7 @@ function Login() {
 
   const handleChange = (e) => {
     let value = e.target.value;
-    if (e.target.name === "email") {
-      validateEmail();
-    } else if (e.target.name === "password") {
-      validatePassword();
-    }
+
     setFormData({ ...formData, [e.target.name]: value });
   };
 
@@ -104,7 +105,7 @@ function Login() {
           addToast(`Login Successfully`, {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
         })
         .catch((err) => {
@@ -113,13 +114,13 @@ function Login() {
               addToast(`${err.response.data.message}`, {
                 appearance: "error",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
             } else {
               addToast(`${err.response.data}`, {
                 appearance: "error",
                 autoDismiss: true,
-                autoDismissTimeout: 1000,
+                autoDismissTimeout: 3000,
               });
             }
           }
@@ -146,7 +147,14 @@ function Login() {
           <form method="POST" className="appointmentform" id="appointment-form">
             <h2>Login Form</h2>
             <div className="form-group-1">
-              <label className="label-agree-term">Email*</label>
+              <label className="label-agree-term row">
+                Email*{" "}
+                {aboutRequiredFields.email !== "" ? (
+                  <p className="error"> {aboutRequiredFields.email}</p>
+                ) : (
+                  ""
+                )}
+              </label>
 
               <input
                 type="email"
@@ -156,14 +164,16 @@ function Login() {
                 value={formData.email}
                 onFocus={validateEmail}
                 onChange={handleChange}
-                onPaste={handleChange}
               />
-              {aboutRequiredFields.email !== "" ? (
-                <p className="error"> {aboutRequiredFields.email}</p>
-              ) : (
-                ""
-              )}
-              <label className="label-agree-term">Password*</label>
+
+              <label className="label-agree-term row">
+                Password*
+                {aboutRequiredFields.password !== "" ? (
+                  <p className="error"> {aboutRequiredFields.password}</p>
+                ) : (
+                  ""
+                )}
+              </label>
 
               <input
                 type="password"
@@ -172,14 +182,8 @@ function Login() {
                 placeholder="Password"
                 onFocus={validatePassword}
                 onChange={handleChange}
-                onPaste={handleChange}
                 value={formData.password}
               />
-              {aboutRequiredFields.password !== "" ? (
-                <p className="error"> {aboutRequiredFields.password}</p>
-              ) : (
-                ""
-              )}
             </div>
 
             <div className="form-submit ">
