@@ -11,6 +11,7 @@ import {
   projectaboutRequired,
   projectstepRequired,
   projectskillRequired,
+  cityaboutRequired,
 } from "../shared/Data";
 function CreateProject() {
   const { addToast } = useToasts();
@@ -56,6 +57,13 @@ function CreateProject() {
   const [skillRequiredFields, setskillRequiredFields] = useState(
     projectskillRequired
   );
+  const [cityRequiredFields, setcityRequiredFields] = useState(
+    cityaboutRequired
+  );
+  const [materialRequiredFields, setmaterialRequiredFields] = useState({
+    name: "",
+    error: "",
+  });
   // *************
 
   // validation start
@@ -108,15 +116,15 @@ function CreateProject() {
     }
   };
   const validateMaterial = () => {
-    if (material) {
+    if (!material) {
+      const msg = "Required";
+      setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
+      return false;
+    } else {
       const msg = "";
-      setstepRequiredFields({ ...stepRequiredFields, material: msg });
+      setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
 
       return true;
-    } else if (!material) {
-      const msg = "Required";
-      setstepRequiredFields({ ...stepRequiredFields, material: msg });
-      return false;
     }
   };
   const validateSpeciality = () => {
@@ -188,11 +196,16 @@ function CreateProject() {
     // debugger;
     if (address === "") {
       let msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      setcityRequiredFields({ ...cityRequiredFields, city: msg });
+
       return false;
-    } else {
+    } else if (!formDataCity.city) {
+      let msg = "Please select your complete address from list";
+      setcityRequiredFields({ ...cityRequiredFields, city: msg });
+      return false;
+    } else if (formDataCity.city) {
       const msg = "";
-      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      setcityRequiredFields({ ...cityRequiredFields, city: msg });
       return true;
     }
   };
@@ -296,23 +309,23 @@ function CreateProject() {
       }
       return obj;
     });
-    // debugger;
+
     if (stepArrayData.length >= 0) {
       if (!reqFields) {
         if (stepType === "") {
           obj.stepType = "Required";
           setstepRequiredFields(obj);
-          // return false;
+          return false;
         } else {
           setstepRequiredFields(obj);
+          return false;
         }
         // return false;
       } else {
         setstepRequiredFields(projectstepRequired);
 
-        // return true;
+        return true;
       }
-      return false;
     } else {
       setstepRequiredFields(projectstepRequired);
 
@@ -329,7 +342,6 @@ function CreateProject() {
       }
       return obj;
     });
-    debugger;
     if (stepArrayData.length >= 0) {
       // debugger;
       if (!reqFields) {
@@ -339,8 +351,8 @@ function CreateProject() {
           return false;
         } else {
           setskillRequiredFields(obj);
+          return false;
         }
-        return false;
 
         // console.log(obj, "validate 2 check");
       } else {
@@ -435,8 +447,8 @@ function CreateProject() {
   };
   const SetAddress = (item) => {
     setAddress(item);
-    const msg = "";
-    setAboutRequiredFields({ ...aboutRequiredFields, address: msg });
+    const check = validateCity();
+
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
         var city = items[i].city;
@@ -458,6 +470,10 @@ function CreateProject() {
           category: formData.category,
         });
       }
+    }
+    if (check == true) {
+      const msg = "";
+      setcityRequiredFields({ ...cityRequiredFields, city: msg });
     }
   };
 
@@ -488,11 +504,18 @@ function CreateProject() {
   };
   const handleStepChange = async (e) => {
     let value = e.target.value;
-    if (e.target.name === "material") {
-      setMaterial(e.target.value);
-    }
 
     setstepFormData({ ...stepformData, [e.target.name]: value });
+  };
+  const onMaterialChange = (e) => {
+    setMaterial(e.target.value);
+    if (e.target.value !== "") {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        name: msg,
+      });
+    }
   };
   // handle change end ******************
 
@@ -512,9 +535,13 @@ function CreateProject() {
     // debugger;
 
     if (stepType !== "") {
-      checkValidateForm3();
+      if (stepType === "Field") {
+        var stepCheck2 = checkValidateForm3();
+      } else {
+        validateMaterial();
+      }
     }
-    checkValidateForm2();
+    const stepCheck = checkValidateForm2();
 
     const check = Object.values(stepformData).map((obj) => {
       if (obj !== "") {
@@ -532,28 +559,69 @@ function CreateProject() {
           return false;
         }
       });
-      if (formObj[0] === true && formObj[2] === true) {
-        const skills = {};
-        skills.speciality = formDataSkillField.speciality;
-        skills.skill = formDataSkillField.skill;
-        skills.skillField = formDataSkillField.skillField;
-        stepformData.skills = skills;
-        setstepArrayData((prevState) => [...prevState, stepformData]);
-        setstepFormData(projectstepData);
-        setFormDataSkillField(projectskillData);
-        setstepType("");
-      } else if (material !== "") {
-        stepformData.material = material;
-        setstepArrayData((prevState) => [...prevState, stepformData]);
-        setstepFormData(projectstepData);
-        setFormDataSkillField(projectskillData);
-        setstepType("");
+      debugger;
+      if (stepArrayData.length > 0) {
+        const tempCheck = stepArrayData.find(
+          (cont) => cont.name === stepformData.name
+        );
+
+        if (tempCheck && stepCheck == true) {
+          addToast("Step already existed", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+        } else {
+          if (stepCheck2 == true && stepCheck === true) {
+            const skills = {};
+            skills.speciality = formDataSkillField.speciality;
+            skills.skill = formDataSkillField.skill;
+            skills.skillField = formDataSkillField.skillField;
+            stepformData.skills = skills;
+            setstepArrayData((prevState) => [...prevState, stepformData]);
+            setstepFormData(projectstepData);
+            setFormDataSkillField(projectskillData);
+            setstepType("");
+          } else if (material !== "" && stepCheck === true) {
+            stepformData.material = material;
+            setstepArrayData((prevState) => [...prevState, stepformData]);
+            setstepFormData(projectstepData);
+            setFormDataSkillField(projectskillData);
+            setstepType("");
+            setMaterial("");
+          } else {
+            addToast(`Please add All step fields`, {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
+            });
+          }
+        }
       } else {
-        addToast(`Please add All step fields`, {
-          appearance: "error",
-          autoDismiss: true,
-          autoDismissTimeout: 1000,
-        });
+        if (stepCheck2 == true && stepCheck === true) {
+          const skills = {};
+          skills.speciality = formDataSkillField.speciality;
+          skills.skill = formDataSkillField.skill;
+          skills.skillField = formDataSkillField.skillField;
+          stepformData.skills = skills;
+          setstepArrayData((prevState) => [...prevState, stepformData]);
+          setstepFormData(projectstepData);
+          setFormDataSkillField(projectskillData);
+          setstepType("");
+        } else if (material !== "" && stepCheck === true) {
+          stepformData.material = material;
+          setstepArrayData((prevState) => [...prevState, stepformData]);
+          setstepFormData(projectstepData);
+          setFormDataSkillField(projectskillData);
+          setstepType("");
+          setMaterial("");
+        } else {
+          addToast(`Please add All step fields`, {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+        }
       }
     }
   };
@@ -663,6 +731,8 @@ function CreateProject() {
           stepRequiredFields={stepRequiredFields}
           aboutRequiredFields={aboutRequiredFields}
           skillRequiredFields={skillRequiredFields}
+          cityRequiredFields={cityRequiredFields}
+          materialRequiredFields={materialRequiredFields}
           // Array Data
           formData={formData}
           materialArrayData={materialArrayData}
@@ -695,6 +765,10 @@ function CreateProject() {
           isLoading={isLoading}
           otherSKill={otherSKill}
           setotherSkill={setotherSkill}
+          projectskillData={projectskillData}
+          setFormDataSkillField={setFormDataSkillField}
+          setMaterial={setMaterial}
+          onMaterialChange={onMaterialChange}
           // *******
           // Actions
           onAdd={onAdd}

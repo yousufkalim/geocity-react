@@ -1076,7 +1076,7 @@ textarea:focus {
   /* border-radius: 100%; */
   margin-right: auto;
   margin-bottom: 0.5rem;
-  border: 5px solid #11ce70;
+  /* border: 5px solid #11ce70; */
   margin-left: auto;
 }
 .editproject-image {

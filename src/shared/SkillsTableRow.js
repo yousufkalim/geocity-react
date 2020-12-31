@@ -16,23 +16,33 @@ export default function TableRow({ DeleteSkillField, skillField, Edittoggle }) {
           })}
         </td>
 
-        <td style={{ padding: "0.4rem 0.4rem 0.3rem 0.4rem" }}>
-          <button
-            onClick={() => Edittoggle(skillField._id)}
-            type="button"
-            id="modalButton1"
-            className="btn btn-primary text-white ml-4 text-uppercase"
+        <td>
+          <div
+            className="row"
+            style={{
+              display: "flex",
+              flexWrap: "nowrap",
+              marginRight: "0px",
+              marginLeft: "0px",
+            }}
           >
-            Edit
-          </button>
-          <button
-            onClick={() => DeleteSkillField(skillField._id)}
-            type="button"
-            id="modalButton1"
-            className="btn btn-primary text-white ml-4 text-uppercase"
-          >
-            Delete
-          </button>
+            <button
+              onClick={() => Edittoggle(skillField._id)}
+              type="button"
+              id="modalButton1"
+              className="btn btn-primary text-white ml-4 text-uppercase"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => DeleteSkillField(skillField._id)}
+              type="button"
+              id="modalButton1"
+              className="btn btn-primary text-white ml-4 text-uppercase"
+            >
+              Delete
+            </button>
+          </div>
         </td>
       </tr>
     </>

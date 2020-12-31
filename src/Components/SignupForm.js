@@ -59,8 +59,10 @@ export default function SignupForm({
   useStyles,
   Link,
   addToast,
-  type,
-  showHide,
+  showHide1,
+  type1,
+  type2,
+  showHide2,
 }) {
   return (
     <form method="POST" className="appointmentform" id="appointment-form">
@@ -154,7 +156,7 @@ export default function SignupForm({
         </label>
         <div style={{ display: "flex" }}>
           <input
-            type={type}
+            type={type1}
             name="password"
             id="password"
             placeholder="Password"
@@ -162,18 +164,33 @@ export default function SignupForm({
             onChange={handleChange}
             onBlur={validatePassword}
           />
-          <i
-            onClick={showHide}
-            class="fas fa-eye"
-            style={{
-              color: "#000",
-              fontSize: "15px",
-              position: "absolute",
-              left: "31rem",
-              right: "0px",
-              top: "33.5rem",
-            }}
-          ></i>
+          {type1 === "password" ? (
+            <i
+              onClick={showHide1}
+              class="fas fa-eye"
+              style={{
+                color: "#000",
+                fontSize: "15px",
+                position: "absolute",
+                left: "31rem",
+                right: "0px",
+                top: "33.5rem",
+              }}
+            ></i>
+          ) : (
+            <i
+              onClick={showHide1}
+              class="fas fa-eye-slash"
+              style={{
+                color: "#000",
+                fontSize: "15px",
+                position: "absolute",
+                left: "31rem",
+                right: "0px",
+                top: "33.5rem",
+              }}
+            ></i>
+          )}
         </div>
         <label className="label-agree-term row">
           Confirm Password*
@@ -183,29 +200,44 @@ export default function SignupForm({
             ""
           )}
         </label>
-        {/* <div style={{ display: "flex" }}>
-          <i
-            onClick={showHide}
-            class="fas fa-eye"
-            style={{
-              color: "#000",
-              fontSize: "15px",
-              position: "absolute",
-              left: "31rem",
-              right: "0px",
-              top: "39.2rem",
-            }}
-          ></i> */}
-        <input
-          type="password"
-          name="confirm_password"
-          id="confirm_password"
-          placeholder="Confirm_Password"
-          value={formData.confirm_password}
-          onChange={handleChange}
-          onBlur={validateConfirmPassword}
-        />
-        {/* </div> */}
+        <div style={{ display: "flex" }}>
+          {type2 == "password" ? (
+            <i
+              onClick={showHide2}
+              class="fas fa-eye"
+              style={{
+                color: "#000",
+                fontSize: "15px",
+                position: "absolute",
+                left: "31rem",
+                right: "0px",
+                top: "39.2rem",
+              }}
+            ></i>
+          ) : (
+            <i
+              onClick={showHide2}
+              class="fas fa-eye-slash"
+              style={{
+                color: "#000",
+                fontSize: "15px",
+                position: "absolute",
+                left: "31rem",
+                right: "0px",
+                top: "39.2rem",
+              }}
+            ></i>
+          )}
+          <input
+            type={type2}
+            name="confirm_password"
+            id="confirm_password"
+            placeholder="Confirm_Password"
+            value={formData.confirm_password}
+            onChange={handleChange}
+            onBlur={validateConfirmPassword}
+          />
+        </div>
         <label className="label-agree-term row">
           Address*
           {aboutRequiredFields.city !== "" ? (
@@ -322,7 +354,7 @@ export default function SignupForm({
             onChange={handleSkillChange}
             onBlur={ValidateSkillField}
           >
-            <option>Select SkillField</option>
+            <option value="">Select SkillField</option>
 
             {skillFieldList
               ? skillFieldList.map((skill) => (
@@ -351,7 +383,7 @@ export default function SignupForm({
                 onChange={handleSkillChange}
                 onBlur={ValidateSkill}
               >
-                <option>Select Skill</option>
+                <option value="">Select Skill</option>
                 {skillList.map((skill) => (
                   <option value={skill}>{skill}</option>
                 ))}
@@ -466,11 +498,6 @@ export default function SignupForm({
         ) : (
           ""
         )}
-        {materialRequiredFields.error !== "" ? (
-          <p className="error "> {materialRequiredFields.error}</p>
-        ) : (
-          ""
-        )}
       </label>
 
       <div className="select-list">
@@ -492,7 +519,15 @@ export default function SignupForm({
       </div>
 
       {materialArrayData.length > 0 ? (
-        <div className="mt-2 mb-3">
+        <div
+          className={
+            materialArrayData
+              ? materialArrayData.length > 0
+                ? " mt-3 mb-2 stepDiv"
+                : ""
+              : ""
+          }
+        >
           {materialArrayData
             ? materialArrayData.map((step, i) => (
                 <ChipArray

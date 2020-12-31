@@ -44,41 +44,22 @@ export default function ChipsArray({
 
   // console.log(chipData, "chipData");
   return (
-    // <Paper component="ul" className={classes.root}>
-    //   {materialArrayData
-    //     ? materialArrayData.map((data) => {
-    //         // let icon = <TagFacesIcon />;
-    //         return (
-    //           materialList &&
-    //           materialList.map((mat) => {
-    //             if (mat._id === data) {
-    //               return (
-    //                 <li key={data}>
-    //                   <Chip
-    //                     //   icon={icon}
-    //                     label={mat.name}
-    //                     onDelete={() => handleDelete(data)}
-    //                     className={classes.chip}
-    //                   />
-    //                 </li>
-    //               );
-    //             }
-    //           })
-    //         );
-    //       })
-    //     : ""}
-    // </Paper>
     <Card
       style={{
-        width: "70%",
+        width: "75%",
         position: "relative",
         margin: "auto",
         borderRadius: "0.45rem",
-        padding: "0px",
+        marginTop: "5px",
+        padding: "5px",
+        border: "0.1px solid #ccc",
+        // background: "#c9c9c9",
+
+        // border: "0.1px solid",
       }}
       // className={i == 0 ? "" : "mt-2"}
     >
-      <CardBody style={{ padding: "0.6rem" }}>
+      <CardBody className="text-left">
         <div className=" row">
           <div className="col-10">
             <h5 tag="h5">
@@ -92,7 +73,7 @@ export default function ChipsArray({
                             style={{ fontSize: "15px", fontWeight: "bold" }}
                           >
                             {" "}
-                            SkillField:
+                            Material:
                           </span>{" "}
                           <span
                             style={{

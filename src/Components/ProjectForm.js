@@ -35,6 +35,7 @@ function Form({
   skillRequiredFields,
   handleSkillChange,
   aboutRequiredFields,
+  cityRequiredFields,
   items,
   getAddress,
   SetAddress,
@@ -56,11 +57,20 @@ function Form({
   formData,
   stepArrayData,
   HandleStepDelete,
+  projectskillData,
+  setFormDataSkillField,
+  setMaterial,
+  onMaterialChange,
+
+  materialRequiredFields,
 }) {
   const handleStep = (e) => {
     if (e.target.name === "Field") {
       const array = [];
       setmaterialArrayData(array);
+      setMaterial("");
+    } else {
+      setFormDataSkillField(projectskillData);
     }
 
     setstepType(e.target.value);
@@ -113,8 +123,8 @@ function Form({
 
           <label className="label-agree-term row">
             Address*
-            {aboutRequiredFields.city !== "" ? (
-              <p className="error "> {aboutRequiredFields.city}</p>
+            {cityRequiredFields.city !== "" ? (
+              <p className="error "> {cityRequiredFields.city}</p>
             ) : (
               ""
             )}
@@ -245,10 +255,9 @@ function Form({
           {stepType === "Material" ? (
             <>
               <label className="label-agree-term row">
-                {stepType}
-
-                {stepRequiredFields.material !== "" ? (
-                  <p className="errorselect"> {stepRequiredFields.material}</p>
+                {stepType}*
+                {materialRequiredFields.name !== "" ? (
+                  <p className="errorselect"> {materialRequiredFields.name}</p>
                 ) : (
                   ""
                 )}
@@ -259,7 +268,7 @@ function Form({
                   name="material"
                   id="material"
                   value={material}
-                  onChange={handleStepChange}
+                  onChange={onMaterialChange}
                   onBlur={validateMaterial}
                 >
                   <option value="">Select Material</option>

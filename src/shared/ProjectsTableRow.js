@@ -45,7 +45,7 @@ export default function TableRow({ project, DeleteProject, step }) {
               onClick={() => DeleteProject(project._id)}
               type="button"
               id="modalButton1"
-              className="btn btn-primary text-white ml-4 text-uppercase"
+              className="btn btn-primary text-white  text-uppercase"
             >
               Delete Project
             </button>

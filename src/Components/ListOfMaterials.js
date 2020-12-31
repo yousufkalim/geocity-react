@@ -29,6 +29,7 @@ export default function UserTable(props) {
               <MaterialTableRow
                 material={material}
                 DeleteMaterial={DeleteMaterial}
+                Edittoggle={Edittoggle}
               />
             ))
           ) : (

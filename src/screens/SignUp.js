@@ -35,7 +35,8 @@ function Signup() {
   const [material, setMaterial] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [photo, setPhoto] = useState("");
-  const [type, setType] = useState("password");
+  const [type1, setType1] = useState("password");
+  const [type2, setType2] = useState("password");
 
   const [isSuccess, setisSuccess] = useState("");
   const [otherSKill, setotherSkill] = useState("");
@@ -61,12 +62,20 @@ function Signup() {
   });
   // *************************
   // states end ***************************
-  const showHide = (e) => {
+  const showHide1 = (e) => {
     e.preventDefault();
-    if (type === "password") {
-      setType("input");
+    if (type1 === "password") {
+      setType1("input");
     } else {
-      setType("password");
+      setType1("password");
+    }
+  };
+  const showHide2 = (e) => {
+    e.preventDefault();
+    if (type2 === "password") {
+      setType2("input");
+    } else {
+      setType2("password");
     }
   };
   // validation start*************************
@@ -368,38 +377,33 @@ function Signup() {
     validateMaterial();
     // debugger;
     if (materialArrayData.length > 0) {
-      materialArrayData.map((mat) => {
-        if (mat !== material) {
-          var array = materialArrayData.filter((mat) => mat !== material);
-          if (material) {
-            array.push(material);
-          }
-          setmaterialArrayData(array);
-          // setMaterial("");
-          const msg = "";
-          setmaterialRequiredFields({
-            ...materialRequiredFields,
-            error: msg,
-          });
-        } else {
-          const msg = "Value already existed";
-          setmaterialRequiredFields({
-            ...materialRequiredFields,
-            error: msg,
-          });
+      const tempCheck = materialArrayData.find((cont) => cont === material);
 
-          // alert("msg");
-          // const array = materialArrayData.filter((mat) => mat !== material);
-          // // console.log(array, "array mat");
-          // setmaterialArrayData(array);
-          // setMaterial("");
+      if (tempCheck) {
+        addToast("Material already existed", {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+        setMaterial("");
+      } else {
+        var array = materialArrayData.filter((mat) => mat !== material);
+        if (material) {
+          array.push(material);
         }
-      });
+        setmaterialArrayData(array);
+        // setMaterial("");
+        const msg = "";
+        setmaterialRequiredFields({
+          ...materialRequiredFields,
+          error: msg,
+        });
+        setMaterial("");
+      }
     } else {
       if (material) {
         setmaterialArrayData((prevState) => [...prevState, material]);
         setMaterial("");
-      } else {
       }
     }
   };
@@ -463,11 +467,13 @@ function Signup() {
       // seterrorMessage("You can only add upto 3 skills  or less");
     } else {
       if (e.target.name === "skillField") {
-        setskillFormData({ ...skillformData, [e.target.name]: value });
+        if (e.target.value) {
+          setskillFormData({ ...skillformData, [e.target.name]: value });
 
-        skillFieldList.map((skill) =>
-          skill._id === e.target.value ? setskillList(skill.skill) : ""
-        );
+          skillFieldList.map((skill) =>
+            skill._id === e.target.value ? setskillList(skill.skill) : ""
+          );
+        }
       } else if (e.target.name === "score") {
         var avail = e.target.value.replace(/\D/g, "");
         if (e.target.value <= 5) {
@@ -508,34 +514,82 @@ function Signup() {
     const checkForm = checkValidateForm2();
     // validateScore();
     if (checkForm == true) {
-      if (otherSKill !== "") {
-        skillformData.skill = otherSKill;
-      }
-      // debugger;
-
-      const check = Object.values(skillformData).map((obj) => {
-        if (obj !== "") {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      if (check[0] === true) {
-        if (skillArrayData.length === 3) {
-          // alert(skillArrayData.length);
-          addToast("skills length must be 1 or less than equal to 3", {
+      if (skillArrayData.length > 0) {
+        const tempCheck = skillArrayData.find(
+          (cont) => cont.skillField === skillformData.skillField
+        );
+        const tempCheck2 = skillArrayData.find(
+          (cont) => cont.skill === skillformData.skill
+        );
+        if (tempCheck || tempCheck2) {
+          const msg = "Skill already existed";
+          addToast("Skill already existed", {
             appearance: "error",
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-          // seterrorMessage("You can only add upto 3 skills  or less");
         } else {
           if (otherSKill !== "") {
             skillformData.skill = otherSKill;
           }
-          setskillArrayData([...skillArrayData, skillformData]);
-          setskillFormData(signupstepData);
-          setskillRequiredFields(signupskillRequired);
+          // debugger;
+          const check = Object.values(skillformData).map((obj) => {
+            if (obj !== "") {
+              return true;
+            } else {
+              return false;
+            }
+          });
+          if (check[0] === true) {
+            if (skillArrayData.length === 3) {
+              // alert(skillArrayData.length);
+              addToast("skills length must be 1 or less than equal to 3", {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+              // seterrorMessage("You can only add upto 3 skills  or less");
+            } else {
+              if (otherSKill !== "") {
+                skillformData.skill = otherSKill;
+              }
+
+              setskillArrayData([...skillArrayData, skillformData]);
+              setskillFormData(signupstepData);
+              setskillRequiredFields(signupskillRequired);
+            }
+          }
+        }
+      } else {
+        if (otherSKill !== "") {
+          skillformData.skill = otherSKill;
+        }
+        // debugger;
+        const check = Object.values(skillformData).map((obj) => {
+          if (obj !== "") {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        if (check[0] === true) {
+          if (skillArrayData.length === 3) {
+            // alert(skillArrayData.length);
+            addToast("skills length must be 1 or less than equal to 3", {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            // seterrorMessage("You can only add upto 3 skills  or less");
+          } else {
+            if (otherSKill !== "") {
+              skillformData.skill = otherSKill;
+            }
+
+            setskillArrayData([...skillArrayData, skillformData]);
+            setskillFormData(signupstepData);
+            setskillRequiredFields(signupskillRequired);
+          }
         }
       }
     }
@@ -822,8 +876,10 @@ function Signup() {
             Link={Link}
             addToast={addToast}
             Button={Button}
-            showHide={showHide}
-            type={type}
+            showHide1={showHide1}
+            type1={type1}
+            type2={type2}
+            showHide2={showHide2}
             // *********
 
             // List

@@ -445,7 +445,7 @@ export default function Profile(props) {
             <div className="row " style={{ marginTop: "2rem" }}>
               <div className="col-lg-6">
                 <p style={{ marginLeft: "6rem" }}>
-                  <i className="fas fa-map-marker-alt fa-lg" />
+                  <i className="fas fa-map-marker-alt fa-lg text-dark" />
                   <span className="ml-3">
                     {data.data.city ? data.data.city : "City"}
                   </span>
@@ -453,7 +453,7 @@ export default function Profile(props) {
               </div>
               <div className="col-lg-6">
                 <p>
-                  <i className="fas fa-search fa-lg" />
+                  <i className="fas fa-search fa-lg text-dark" />
                   <span className="ml-3">
                     Interet pour :{" "}
                     {data.data.interests
@@ -535,7 +535,7 @@ export default function Profile(props) {
                 </p>
                 <p style={{ marginTop: "1.5rem" }}>
                   <i
-                    className="fas fa-camera fa-lg "
+                    className="fas fa-envelope fa-lg "
                     style={{ color: "#0d2456" }}
                   />
                   <span className="ml-2">

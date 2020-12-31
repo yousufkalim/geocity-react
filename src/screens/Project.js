@@ -15,6 +15,7 @@ import Modal from "../shared/Modal";
 import ProjectModal from "../shared/ProjectModal";
 import StepModal from "../shared/StepModal";
 import AddStepModal from "../shared/AddStepModal";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
 import {
   projectaboutRequired,
   projectstepRequired,
@@ -1387,13 +1388,18 @@ export default function Project(props) {
                       </span>
                       {/* <span class="ml-2 " id="span2" >21%</span> */}
                     </p>
-                    <p style={{ marginTop: "8.4rem", marginRight: "1.4rem" }}>
-                      <i className="fas fa-circle " />
+                    <p style={{ marginTop: "7.2rem", marginRight: "0rem" }}>
+                      <AutorenewIcon
+                        style={{
+                          fontSize: "1.3rem",
+                        }}
+                      />
                       <span
                         style={{
                           marginTop: "-2rem",
-                          marginLeft: "0.5rem",
+                          marginLeft: "0.3rem",
                           fontFamily: "Arial, Helvetica, sans-serif",
+                          // marginRight: "-17px",
                         }}
                       >
                         {parseInt(data.project.progress)}%
@@ -1436,7 +1442,7 @@ export default function Project(props) {
                       </p>
                       <p style={{ marginTop: "1.5rem" }}>
                         <i
-                          className="fas fa-camera fa-lg "
+                          className="fas fa-envelope fa-lg "
                           style={{ color: "#0d2456" }}
                         />
                         <span className="ml-2">

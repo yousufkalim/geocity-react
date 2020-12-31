@@ -3,6 +3,8 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { getUser } from "../Auth/Index";
 import PrivateModal from "../shared/PrivateModal";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
+
 export default function ProjectList({
   data,
   totalLikes,
@@ -129,7 +131,11 @@ export default function ProjectList({
                     </span>
                   </span>
                   <span id="second">
-                    <i className="far fa-circle" />
+                    <AutorenewIcon
+                      style={{
+                        fontSize: "1.3rem",
+                      }}
+                    />
                     <span className="ml-2 " id="span2">
                       {data.project.type === "Private" &&
                       getUser()._id !== data.project.project_owner
@@ -231,7 +237,11 @@ export default function ProjectList({
                         </span>
                       </span>
                       <span id="second">
-                        <i className="far fa-circle" />
+                        <AutorenewIcon
+                          style={{
+                            fontSize: "1.3rem",
+                          }}
+                        />
                         <span className="ml-2 " id="span2">
                           {parseInt(data.progress)}%
                         </span>

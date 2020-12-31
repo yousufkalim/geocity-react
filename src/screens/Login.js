@@ -195,19 +195,33 @@ function Login() {
                   onChange={handleChange}
                   value={formData.password}
                 />
-
-                <i
-                  onClick={showHide}
-                  class="fas fa-eye"
-                  style={{
-                    color: "#000",
-                    fontSize: "15px",
-                    position: "absolute",
-                    left: "20rem",
-                    right: 0,
-                    top: "16.5rem",
-                  }}
-                ></i>
+                {type === "password" ? (
+                  <i
+                    onClick={showHide}
+                    class="fas fa-eye"
+                    style={{
+                      color: "#000",
+                      fontSize: "15px",
+                      position: "absolute",
+                      left: "20rem",
+                      right: 0,
+                      top: "16.5rem",
+                    }}
+                  ></i>
+                ) : (
+                  <i
+                    onClick={showHide}
+                    class="fas fa-eye-slash"
+                    style={{
+                      color: "#000",
+                      fontSize: "15px",
+                      position: "absolute",
+                      left: "20rem",
+                      right: 0,
+                      top: "16.5rem",
+                    }}
+                  ></i>
+                )}
               </div>
             </div>
 

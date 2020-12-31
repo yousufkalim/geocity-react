@@ -14,8 +14,12 @@ import ListOfUser from "../Components/ListOfUser";
 import ListOfProjects from "../Components/listOfProjects";
 import ListOfSkills from "../Components/listOfSkills";
 import ListOfMaterials from "../Components/ListOfMaterials";
+import ListOfCategories from "../Components/ListOfCategories";
 
 import EditSkillModal from "../shared/EditSkillModal";
+import EditMaterialModal from "../shared/EditMaterialModal";
+import EditCategoryModal from "../shared/EditCategoryModal";
+
 import AddSKillModal from "../shared/AddSKillModal";
 import AddMaterialModal from "../shared/AddMaterialModal";
 
@@ -26,6 +30,11 @@ export default function UserDashboard(props) {
   const [skillformData, setskillFormData] = useState(signupstepData);
 
   const [formData, setFormData] = useState({ skill: "", skillField: "" });
+  const [editformData, seteditFormData] = useState({
+    skill: "",
+    skillField: "",
+  });
+
   const [userdata, setuserData] = useState([]);
   const [projectdata, setprojectData] = useState([]);
   const [skillFieldList, setskillFieldList] = useState([]);
@@ -36,15 +45,21 @@ export default function UserDashboard(props) {
   const [items, setItems] = useState([]);
   const [photo, setPhoto] = useState("");
   const [skillArrayData, setskillArrayData] = useState([]);
+  const [editskillArrayData, seteditskillArrayData] = useState("");
+
   const [materialArrayData, setmaterialArrayData] = useState([]);
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
     skill: "",
     skillField: "",
     error: "",
+    editSkillField: "",
   });
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
     error: "",
+    editname: "",
+    category: "",
+    editcategory: "",
   });
   const [skillRequiredFields, setskillRequiredFields] = useState(
     signupskillRequired
@@ -52,6 +67,11 @@ export default function UserDashboard(props) {
   const [materialList, setMaterialList] = useState([]);
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
+  const [category, setCategory] = useState("");
+  const [editcategory, seteditCategory] = useState("");
+
+  const [editmaterial, seteditMaterial] = useState("");
+
   const [otherSKill, setotherSkill] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
@@ -61,10 +81,27 @@ export default function UserDashboard(props) {
   const [editskillmodal, seteditskillmodal] = useState(false);
   const [addskillmodal, setaddskillmodal] = useState(false);
   const [materialmodal, setmaterialmodal] = useState(false);
+  const [editmaterialmodal, seteditmaterialmodal] = useState(false);
+  const [editcategorymodal, seteditcategorymodal] = useState(false);
 
-  const [skillId, setskillId] = useState("");
+  const [skillFieldId, setskillFieldId] = useState("");
+  const [materialId, setmaterialId] = useState("");
+  const [categoryId, setcategoryId] = useState("");
 
   // functions
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
+  const handleEditCategory = (e) => {
+    seteditCategory(e.target.value);
+  };
+  const AddCategorySubmit = (e) => {
+    alert("hello");
+  };
+  const EditCategorySubmit = (e) => {
+    alert("hello");
+  };
+
   const AddMaterialSubmit = () => {
     setisLoading(true);
     const check = ValidateMaterial();
@@ -142,18 +179,117 @@ export default function UserDashboard(props) {
       }, 1500);
     }
   };
+  const EditMaterialSubmit = () => {
+    setisLoading(true);
+    const check = ValidateEditMaterial();
+
+    if (check == true) {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      try {
+        axios
+          .post(
+            `http://localhost:3000/api/v1/admin/edit-material?id=${materialId}`,
+            { name: editmaterial },
+            headers
+          )
+          .then((res) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            addToast("Material added successfully", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            const msg = "";
+            setmaterialRequiredFields({
+              ...materialRequiredFields,
+              error: msg,
+            });
+            seteditmaterialmodal(!editmaterialmodal);
+            setMaterial("");
+            // console.log(res, "res material");
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1500);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data.message;
+                setmaterialRequiredFields({
+                  ...materialRequiredFields,
+                  error: msg,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data;
+                setmaterialRequiredFields({
+                  ...materialRequiredFields,
+                  error: msg,
+                });
+              }
+            }
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+        // console.log(error, "error catch");
+      }
+    } else {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1500);
+    }
+  };
   const handleMaterial = (e) => {
     setMaterial(e.target.value);
   };
+  const handleEditMaterial = (e) => {
+    seteditMaterial(e.target.value);
+  };
+  const EditCategoryToggle = (categoryId) => {
+    if (editcategorymodal === false) {
+      const fill = CategoryList.filter((cat) => cat._id === categoryId);
+      seteditCategory(fill[0].name);
+      setcategoryId(categoryId);
+    }
+    seteditcategorymodal(!editcategorymodal);
+  };
+
   const MaterialToggle = () => {
     setMaterial("");
     setmaterialmodal(!materialmodal);
   };
+  const EditMaterialToggle = (materialId) => {
+    if (editmaterialmodal === false) {
+      const filter = materialList.filter((dt) => dt._id === materialId);
+      console.log(filter, "filter material");
+      seteditMaterial(filter[0].name);
+      setmaterialId(materialId);
+    }
+    seteditmaterialmodal(!editmaterialmodal);
+  };
+
   const EditSkillSubmit = () => {
+    console.log(editformData.skill.skill, "editformData");
     setisLoading(true);
     ValidateSkillField();
 
-    ValidateSkill();
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -162,14 +298,18 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin/edit-skillField?id=${skillId}`,
-          { skillField: formData.skillField, skill: formData.skill },
+          `http://localhost:3000/api/v1/admin/edit-skillField?id=${skillFieldId}`,
+          {
+            skillField: editformData.skillField,
+            skill: editformData.skill,
+          },
           headers
         )
         .then((res) => {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
+          seteditskillmodal(!editskillmodal);
           addToast("skill updated successfully", {
             appearance: "success",
             autoDismiss: true,
@@ -181,7 +321,21 @@ export default function UserDashboard(props) {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
-          console.log(" error =>", err);
+          if (err.response.data) {
+            if (err.response.data.message) {
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            } else {
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            }
+          }
         });
     } catch (error) {
       setTimeout(() => {
@@ -226,6 +380,7 @@ export default function UserDashboard(props) {
       }
     }
   };
+
   const AddSkillSubmit = () => {
     setisLoading(true);
     ValidateSkillField();
@@ -239,7 +394,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/admin/create-skillField?id=${skillId}`,
+            `http://localhost:3000/api/v1/admin/create-skillField?id=${skillFieldId}`,
             { skillField: formData.skillField, skill: formData.skill },
             headers
           )
@@ -278,9 +433,21 @@ export default function UserDashboard(props) {
     }
   };
   // *****
+  // console.log(editformData, "seteditformData");
   const Edittoggle = (skillId) => {
+    // alert(skillId);
+
     if (editskillmodal === false) {
-      setskillId(skillId);
+      const filter = skillFieldList.filter((skill) => skill._id == skillId);
+
+      console.log(filter, "fileted");
+      seteditskillArrayData(filter[0]);
+      const obj = {
+        skillField: filter[0].skillField,
+        skill: filter[0].skill,
+      };
+      seteditFormData(obj);
+      setskillFieldId(skillId);
     }
 
     seteditskillmodal(!editskillmodal);
@@ -296,9 +463,53 @@ export default function UserDashboard(props) {
 
     setFormData({ ...formData, [e.target.name]: value });
   };
+  const handleChangeEdit = (e) => {
+    let value = e.target.value;
+
+    seteditFormData({ ...editformData, [e.target.name]: value });
+  };
   // *******************
 
   // Validations
+  const ValidateCategory = () => {
+    if (!category) {
+      const msg = "Required";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        category: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        category: msg,
+        error: msg,
+      });
+
+      return true;
+    }
+  };
+  const ValidateEditCategory = () => {
+    if (!editcategory) {
+      const msg = "Required";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        editcategory: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        editcategory: msg,
+        error: msg,
+      });
+
+      return true;
+    }
+  };
+
   const ValidateMaterial = () => {
     if (!material) {
       const msg = "Required";
@@ -313,6 +524,43 @@ export default function UserDashboard(props) {
         ...materialRequiredFields,
         name: msg,
         error: msg,
+      });
+
+      return true;
+    }
+  };
+  const ValidateEditMaterial = () => {
+    if (!editmaterial) {
+      const msg = "Required";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        editname: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        editname: msg,
+        error: msg,
+      });
+
+      return true;
+    }
+  };
+  const ValidateEditSkillField = () => {
+    if (!editformData.skillField) {
+      const msg = "Required";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        editSkillField: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        editSkillField: msg,
       });
 
       return true;
@@ -382,7 +630,7 @@ export default function UserDashboard(props) {
         .get("http://localhost:3000/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
-          console.log(res, "res material");
+          // console.log(res, "res material");
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
@@ -435,7 +683,7 @@ export default function UserDashboard(props) {
         .get(`http://localhost:3000/api/v1/admin/projectslist`, headers)
         .then((res) => {
           setprojectData(res.data.projects);
-          console.log(res.data, "res data projects");
+          // console.log(res.data, "res data projects");
         })
         .catch((err) => {
           console.log(" error =>", err);
@@ -443,7 +691,7 @@ export default function UserDashboard(props) {
     } catch (error) {
       console.log(error, "error catch");
     }
-  }, [props.match.params.id, key]);
+  }, [key]);
   // console.log(data, "data user");
 
   // Delete User
@@ -669,6 +917,61 @@ export default function UserDashboard(props) {
       // console.log(error, "error catch");
     }
   };
+  const DeleteCategory = (id) => {
+    setisLoading(true);
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    try {
+      axios
+        .post(
+          `http://localhost:3000/api/v1/admin/delete-category?id=${id}`,
+          {},
+          headers
+        )
+        .then((res) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 2000);
+          const filter = CategoryList.filter((dt) => dt._id !== id);
+          setCategoryList(filter);
+          addToast("Category has been deleted Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+
+          // console.log(res, "res material");
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          if (err.response.data) {
+            if (err.response.data.message) {
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            } else {
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            }
+          }
+        });
+    } catch (error) {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+      // console.log(error, "error catch");
+    }
+  };
   // ****
   // Edit Skill
 
@@ -679,12 +982,18 @@ export default function UserDashboard(props) {
         modal={editskillmodal}
         toggle={Edittoggle}
         isLoading={isLoading}
-        handleChange={handleChange}
-        formData={formData}
+        editformData={editformData}
         aboutRequiredFields={aboutRequiredFields}
         ValidateSkill={ValidateSkill}
         ValidateSkillField={ValidateSkillField}
         EditSkillSubmit={EditSkillSubmit}
+        AddSkill={AddSkill}
+        AddSkillSubmit={AddSkillSubmit}
+        handleChangeEdit={handleChangeEdit}
+        editskillArrayData={editskillArrayData}
+        seteditFormData={seteditFormData}
+        ValidateEditSkillField={ValidateEditSkillField}
+        seteditskillArrayData={seteditskillArrayData}
       />
       <AddSKillModal
         modal={addskillmodal}
@@ -709,6 +1018,26 @@ export default function UserDashboard(props) {
         ValidateMaterial={ValidateMaterial}
         material={material}
         AddMaterialSubmit={AddMaterialSubmit}
+      />
+      <EditMaterialModal
+        modal={editmaterialmodal}
+        toggle={EditMaterialToggle}
+        isLoading={isLoading}
+        handleMaterial={handleEditMaterial}
+        materialRequiredFields={materialRequiredFields}
+        ValidateMaterial={ValidateEditMaterial}
+        material={editmaterial}
+        AddMaterialSubmit={EditMaterialSubmit}
+      />
+      <EditCategoryModal
+        modal={editcategorymodal}
+        toggle={EditCategoryToggle}
+        isLoading={isLoading}
+        handleMaterial={handleEditCategory}
+        materialRequiredFields={materialRequiredFields}
+        ValidateMaterial={ValidateEditCategory}
+        material={editcategory}
+        AddMaterialSubmit={EditCategorySubmit}
       />
       <div id="services" className="cards-1">
         <div className="container">
@@ -765,6 +1094,9 @@ export default function UserDashboard(props) {
                       <Nav.Item>
                         <Nav.Link eventKey="fourth"> Material List </Nav.Link>
                       </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="fifth"> Category List </Nav.Link>
+                      </Nav.Item>
                     </Nav>
                   </Col>
                   <Col sm={9}>
@@ -801,7 +1133,15 @@ export default function UserDashboard(props) {
                           addToast={addToast}
                           materialList={materialList}
                           DeleteMaterial={DeleteMaterial}
-                          Edittoggle={Edittoggle}
+                          Edittoggle={EditMaterialToggle}
+                        />
+                      </Tab.Pane>
+                      <Tab.Pane eventKey="fifth">
+                        <ListOfCategories
+                          addToast={addToast}
+                          CategoryList={CategoryList}
+                          DeleteCategory={DeleteCategory}
+                          EditCategoryToggle={EditCategoryToggle}
                         />
                       </Tab.Pane>
                     </Tab.Content>

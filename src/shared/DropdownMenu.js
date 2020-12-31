@@ -10,7 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
 import { Link, Redirect } from "react-router-dom";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
-
+import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -56,7 +56,7 @@ export default function MenuListComposition() {
 
   return (
     <div className={classes.root}>
-      <div>
+      <div id="user">
         {/* <Button
           ref={anchorRef}
           aria-controls={open ? "menu-list-grow" : undefined}
@@ -65,28 +65,46 @@ export default function MenuListComposition() {
         >
           Toggle Menu Grow
         </Button> */}
-        <img
+        <div
+          className="row ml-4 userdiv"
           ref={anchorRef}
           aria-controls={open ? "menu-list-grow" : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
-          style={{
-            width: "33px",
-            height: "33px",
-            borderRadius: "100%",
-            // marginRight: "auto",
-            // marginBottom: "0.5rem",
-            // marginLeft: "auto",
-          }}
-          src={
-            getUser().profile_picture
-              ? `http://localhost:3000/views/uploads/${
-                  getUser().profile_picture
-                }`
-              : DefaultImage
-          }
-          alt="alternative"
-        />
+        >
+          <img
+            style={{
+              width: "33px",
+              height: "33px",
+              borderRadius: "100%",
+              // marginRight: "auto",
+              // marginBottom: "0.5rem",
+              // marginLeft: "auto",
+              marginTop: "5px",
+            }}
+            src={
+              getUser().profile_picture
+                ? `http://localhost:3000/views/uploads/${
+                    getUser().profile_picture
+                  }`
+                : DefaultImage
+            }
+            alt="alternative"
+          />
+          <ul className="navbar-nav">
+            <li className="nav-item row">
+              <a className="nav-link ml-3">{getUser().username}</a>
+              <i
+                class="fas fa-caret-down"
+                style={{
+                  fontSize: "22px",
+                  margin: "auto",
+                  color: "#fff",
+                }}
+              ></i>
+            </li>
+          </ul>
+        </div>
         <Popper
           open={open}
           anchorEl={anchorRef.current}
@@ -99,7 +117,7 @@ export default function MenuListComposition() {
               {...TransitionProps}
               style={{
                 transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
+                  placement === "bottom" ? "right top" : "right bottom",
               }}
             >
               <Paper>

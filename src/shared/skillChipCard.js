@@ -80,10 +80,12 @@ export default function ChipsArray({
           margin: "auto",
           borderRadius: "0.45rem",
           padding: "0px",
+          border: "0.1px solid #ccc",
+          marginTop: "5px",
         }}
         // className={i == 0 ? "" : "mt-2"}
       >
-        <CardBody style={{ padding: "0.6rem" }}>
+        <CardBody style={{ padding: "0.6rem" }} className="text-left">
           <div className=" row">
             <div className="col-10">
               <h5 tag="h5">

@@ -16,7 +16,7 @@ import {
 import "../Theme/css/main.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
-
+import EditSkill from "../Components/EditSkillComponent";
 const ModalExample = (props) => {
   const {
     buttonLabel,
@@ -24,14 +24,25 @@ const ModalExample = (props) => {
 
     data,
     EditSkillSubmit,
-    handleChange,
+    handleChangeEdit,
     isLoading,
-    formData,
+    editformData,
     aboutRequiredFields,
     ValidateSkillField,
     ValidateSkill,
+    AddSkill,
+    AddSkillSubmit,
+    editskillArrayData,
+    seteditFormData,
+    ValidateEditSkillField,
+    seteditskillArrayData,
   } = props;
-
+  const updateStates = (value, i) => {
+    const obj = { ...editformData };
+    editformData.skill[i] = value;
+    // seteditFormData({ ...editformData, ["skill"]: obj });
+  };
+  // console.log(editformData, "editformData");
   return (
     <div id="Profilemodal">
       <Modal
@@ -44,13 +55,21 @@ const ModalExample = (props) => {
         <ModalHeader toggle={props.toggle}>Edit Skill</ModalHeader>
         <ModalBody>
           <Form>
-            <Row form>
-              <Col md={6}>
+            <Row
+              style={{
+                marginRight: "0px",
+                marginLeft: "0px",
+              }}
+            >
+              <Col md={4}>
                 <FormGroup>
                   <Label for="exampleEmail" className="row label">
                     Skill Field*
-                    {aboutRequiredFields.skillField !== "" ? (
-                      <p className="error"> {aboutRequiredFields.skillField}</p>
+                    {aboutRequiredFields.editSkillField !== "" ? (
+                      <p className="error">
+                        {" "}
+                        {aboutRequiredFields.editSkillField}
+                      </p>
                     ) : (
                       ""
                     )}
@@ -59,37 +78,53 @@ const ModalExample = (props) => {
                     type="text"
                     name="skillField"
                     id="skillField"
-                    value={formData.skillField}
+                    value={editformData.skillField}
                     placeholder="Enter SkillField"
-                    onChange={handleChange}
-                    onBlur={ValidateSkillField}
+                    onChange={handleChangeEdit}
+                    onBlur={ValidateEditSkillField}
                   />
                 </FormGroup>
               </Col>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="exampleEmail" className="row label">
-                    Skill*
-                    {aboutRequiredFields.skill !== "" ? (
-                      <p className="error"> {aboutRequiredFields.skill}</p>
-                    ) : (
-                      ""
-                    )}
-                  </Label>
-                  <Input
-                    type="text"
-                    name="skill"
-                    id="skill"
-                    value={formData.skill}
-                    placeholder="Enter Skill"
-                    onChange={handleChange}
-                    onBlur={ValidateSkill}
-                  />
-                </FormGroup>
-              </Col>
+              <Col md={4}></Col>
             </Row>
-
-            <Col className="text-right">
+            <Row
+              style={{
+                marginRight: "0px",
+                marginLeft: "0px",
+              }}
+            >
+              {editskillArrayData.skill && editskillArrayData.skill.length > 0
+                ? editskillArrayData.skill.map((sk, i) => (
+                    <EditSkill
+                      Col={Col}
+                      FormGroup={FormGroup}
+                      Label={Label}
+                      sk={sk}
+                      updateStates={updateStates}
+                      Input={Input}
+                      handleChangeEdit={handleChangeEdit}
+                      seteditskillArrayData={seteditFormData}
+                      skillField={editformData.skillField}
+                      i={i}
+                    />
+                  ))
+                : ""}
+            </Row>
+            {/* <Row className="mt-3">
+              <Col md={4} style={{ display: "flex", alignItems: "flex-end" }}>
+                <button
+                  onClick={AddSkill}
+                  type="button"
+                  // id="userButton"
+                  id="modalButton2"
+                  style={{ width: "30%" }}
+                  className="btn text-uppercase"
+                >
+                  Add
+                </button>
+              </Col>
+            </Row> */}
+            <Col className="text-right" style={{ marginTop: "2rem" }}>
               {isLoading === true ? (
                 <center>
                   <div className={useStyles.root}>

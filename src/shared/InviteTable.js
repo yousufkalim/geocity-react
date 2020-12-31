@@ -388,15 +388,17 @@ export default function UserTable({
   // *****************
 
   return (
-    <Table responsive bordered className="text-center">
+    <Table bordered className="text-center">
       <thead>
         <tr>
-          <th style={{ width: "10%" }}>Date of request</th>
-          <th style={{ width: "10%" }}>Invite Type</th>
-          <th style={{ width: "10%" }}>Project name </th>
-          <th style={{ width: "20%" }}>Step name </th>
-          <th style={{ width: "20%" }}>Invite status</th>
-          <th style={{ width: "40%" }}>Actions</th>
+          <th>Date of request</th>
+          <th>Send By</th>
+
+          <th>Invite Type</th>
+          <th>Project name </th>
+          <th>Step name </th>
+          <th>Invite status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -431,14 +433,7 @@ export default function UserTable({
             )
           )
         ) : (
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>No invitation found</td>
-            <td></td>
-            <td></td>
-          </tr>
+          <h5 className="text-dark text-right mt-2">No invitation found</h5>
         )}
       </tbody>
     </Table>

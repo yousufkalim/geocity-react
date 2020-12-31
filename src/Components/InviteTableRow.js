@@ -23,6 +23,7 @@ export default function InviteTableRow({
         {"/"}
         {new Date(project.createdAt).getFullYear()}
       </td>
+      <td>{project.sender.username}</td>
       <td>
         {project.receiver._id === data.data._id
           ? "Received"
@@ -45,79 +46,99 @@ export default function InviteTableRow({
       {project.receiver._id === data.data._id ? (
         type === "viewProject" ? (
           <>
-            <td className="text-left">
-              <button
-                onClick={() =>
-                  AcceptedFunc(
-                    project.projectID._id,
-                    project.sender,
-                    "Accept",
-                    project._id
-                  )
-                }
-                // onClick={() => DeleteContributerUser(skill._id)}
-                type="button"
-                id="modalButton1"
-                className="btn  btn-primary text-white text-uppercase"
+            <td className="text-center">
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  flexWrap: "nowrap",
+                  marginRight: "0px",
+                  marginLeft: "0px",
+                }}
               >
-                Accept
-              </button>
-              <button
-                onClick={() =>
-                  DeclinedFunc(
-                    project.projectID._id,
-                    project.sender,
-                    "Decline",
-                    project._id
-                  )
-                }
-                type="button"
-                id="modalButton1"
-                className="btn btn-primary text-white ml-4 text-uppercase"
-              >
-                Decline
-              </button>
+                <button
+                  onClick={() =>
+                    AcceptedFunc(
+                      project.projectID._id,
+                      project.sender,
+                      "Accept",
+                      project._id
+                    )
+                  }
+                  // onClick={() => DeleteContributerUser(skill._id)}
+                  type="button"
+                  id="modalButton1"
+                  className="btn  btn-primary text-white text-uppercase"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() =>
+                    DeclinedFunc(
+                      project.projectID._id,
+                      project.sender,
+                      "Decline",
+                      project._id
+                    )
+                  }
+                  type="button"
+                  id="modalButton1"
+                  className="btn btn-primary text-white ml-4 text-uppercase"
+                >
+                  Decline
+                </button>
+              </div>
             </td>
           </>
         ) : (
           <>
-            <td className="text-left">
-              <button
-                onClick={() =>
-                  AcceptedFunc(
-                    project.projectID._id,
-                    project.stepID,
-                    "Accepted",
-                    project._id
-                  )
-                }
-                // onClick={() => DeleteContributerUser(skill._id)}
-                type="button"
-                id="modalButton1"
-                className="btn  btn-primary text-white text-uppercase"
+            <td className="text-center ">
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  flexWrap: "nowrap",
+                  marginRight: "0px",
+                  marginLeft: "0px",
+                }}
               >
-                Accept
-              </button>
-              <button
-                onClick={() =>
-                  DeclinedFunc(
-                    project.projectID._id,
-                    project.stepID,
-                    "Decline",
-                    project._id
-                  )
-                }
-                type="button"
-                id="modalButton1"
-                className="btn btn-primary text-white ml-4 text-uppercase"
-              >
-                Decline
-              </button>
+                <button
+                  onClick={() =>
+                    AcceptedFunc(
+                      project.projectID._id,
+                      project.stepID,
+                      "Accepted",
+                      project._id
+                    )
+                  }
+                  // onClick={() => DeleteContributerUser(skill._id)}
+                  type="button"
+                  id="modalButton1"
+                  className="btn ml-2 btn-primary text-white text-uppercase"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() =>
+                    DeclinedFunc(
+                      project.projectID._id,
+                      project.stepID,
+                      "Decline",
+                      project._id
+                    )
+                  }
+                  type="button"
+                  id="modalButton1"
+                  className="btn btn-primary text-white ml-4 mr-2 text-uppercase"
+                >
+                  Decline
+                </button>
+              </div>
             </td>
           </>
         )
       ) : (
-        <td></td>
+        ""
       )}
     </tr>
   );

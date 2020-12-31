@@ -849,10 +849,11 @@ textarea:focus {
 .cardSection #projectPage .project-image {
   width: 130px;
   height: 130px;
-  border: 5px solid #11ce70;
+  /* border: 5px solid #11ce70; */
 
   margin-left: -1rem;
 }
+
 .cardSection #projectPage {
   background: #fcfcfc;
   padding-top: 1rem;

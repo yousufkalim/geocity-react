@@ -118,13 +118,20 @@ export const projectaboutRequired = {
   address: "",
   progress: "",
 };
+export const cityaboutRequired = {
+  zipCode: "",
+  city: "",
+  latitude: "",
+  longitude: "",
+  street: "",
+};
 export const projectstepRequired = {
   name: "",
   description: "",
   speciality: "",
   stepType: "",
   status: "",
-  material: "",
+
   error: "",
 };
 export const projectskillRequired = {

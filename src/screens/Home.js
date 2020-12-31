@@ -80,7 +80,7 @@ export default class Home extends React.Component {
                 ""
               )}
             </div>
-            <div>{!isAuthenticated() ? "" : <DropDown />}</div>
+            <div className="row">{!isAuthenticated() ? "" : <DropDown />}</div>
           </nav>{" "}
           <div className="header-content">
             <div className="container">

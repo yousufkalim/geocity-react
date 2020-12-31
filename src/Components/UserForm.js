@@ -562,11 +562,19 @@ export default function UserForm({
         )}
       </Row>
       <Row className="mb-2 mt-3">
-        <Col md={8}>
+        <Col md={6}>
           {skillArrayData && skillArrayData.length > 0 ? (
             <>
               {/* <Col className="mb-3">Skills:</Col> */}
-              <Col>
+              <div
+                className={
+                  materialArrayData
+                    ? materialArrayData.length > 0
+                      ? "text-center stepDiv"
+                      : ""
+                    : ""
+                }
+              >
                 {skillArrayData
                   ? skillArrayData.map((step, i) => (
                       <SkillChipArray
@@ -579,7 +587,7 @@ export default function UserForm({
                       />
                     ))
                   : ""}
-              </Col>
+              </div>
             </>
           ) : (
             ""
@@ -637,18 +645,32 @@ export default function UserForm({
         </Col>
       </Row>
       <Row className="mb-2 mt-3">
-        <Col md={8}>
+        <Col md={6}>
           {materialArrayData && materialArrayData.length > 0 ? (
             <>
               {/* <Col className="mb-3">Material:</Col> */}
-              <Col>
-                <ChipArray
-                  materialArrayData={materialArrayData ? materialArrayData : ""}
-                  setmaterialArrayData={setmaterialArrayData}
-                  materialList={materialList}
-                  addToast={addToast}
-                />
-              </Col>
+              <div
+                className={
+                  skillArrayData
+                    ? skillArrayData.length > 0
+                      ? " text-center stepDiv"
+                      : ""
+                    : ""
+                }
+              >
+                {materialArrayData
+                  ? materialArrayData.map((step, i) => (
+                      <ChipArray
+                        materialArrayData={materialArrayData}
+                        materialList={materialList}
+                        setmaterialArrayData={setmaterialArrayData}
+                        addToast={addToast}
+                        step={step}
+                        i={i}
+                      />
+                    ))
+                  : ""}
+              </div>
             </>
           ) : (
             ""

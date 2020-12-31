@@ -23,10 +23,10 @@ export default function UserprojectList({
     >
       <div className=" text-right" style={{ width: "20%" }}>
         <img
-          className="project-image"
           style={{
-            border: `5px solid ${data.category.color} !important`,
+            border: `5px solid ${data.category.color}`,
           }}
+          className="project-image"
           src={
             data.general_photo
               ? `http://localhost:3000/views/uploads/${data.general_photo}`
