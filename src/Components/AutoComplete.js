@@ -39,7 +39,7 @@ export default function AutoComplete({
         color: "#000",
         overflow: "auto",
         maxHeight: "50%",
-        marginTop: "-25px",
+        marginTop: "-18px",
       }}
       inputProps={{
         className: "form-control",

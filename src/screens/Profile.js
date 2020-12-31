@@ -33,16 +33,25 @@ export default function Profile(props) {
   const [data, setData] = useState({ data: "" });
   const [ProjectdataList, setProjectdataList] = useState([]);
   const [commentArray, setCommentArray] = useState([]);
+  const [tempcommentArray, settempCommentArray] = useState([]);
 
   const [comment, setComment] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [commentError, setCommentError] = useState("");
 
   // *************
-  const onAdd = async () => {
+  const validateComment = () => {
     if (!comment) {
       setCommentError("Required");
+      return false;
     } else {
+      setCommentError("");
+      return true;
+    }
+  };
+  const onAdd = async () => {
+    const tempCheck = validateComment();
+    if (tempCheck == true) {
       setCommentError("");
 
       const date = new Date();
@@ -51,7 +60,7 @@ export default function Profile(props) {
       obj.date = date;
       obj.profile_picture = getUser().profile_picture;
 
-      setCommentArray([...commentArray, obj]);
+      settempCommentArray([...tempcommentArray, obj]);
 
       try {
         const headers = {
@@ -61,9 +70,7 @@ export default function Profile(props) {
         };
 
         await Axios.post(
-          `http://localhost:3000/api/v1/profile/view-profile/comment?id=${
-            getUser()._id
-          }`,
+          `http://localhost:3000/api/v1/profile/view-profile/comment?id=${props.match.params.id}`,
           { comment: comment },
           headers
         )
@@ -93,6 +100,8 @@ export default function Profile(props) {
           setisLoading(false);
         }, 1000);
       }
+    } else {
+      setCommentError("Required");
     }
   };
   const handleCommentChange = (e) => {
@@ -138,9 +147,98 @@ export default function Profile(props) {
       setlike(0);
     }
   };
-  const DeleteComment = (comment) => {
-    const array = commentArray.filter((com) => com.comment !== comment.trim());
-    setCommentArray(array);
+  const DeleteTempComment = async (commentId) => {
+    if (tempcommentArray && tempcommentArray.length > 0) {
+      const temparray = commentArray.filter((com) => com.comment !== commentId);
+      // console.log(array, "array");
+      settempCommentArray(temparray);
+    }
+
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+
+      await axios
+        .post(
+          `http://localhost:3000/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
+          { commentId: commentId },
+          headers
+        )
+        .then((res) => {
+          // setComment("");
+          addToast("Comment Deleted Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          setisLoading(false);
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // console.log(" error =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+    }
+  };
+  const DeleteComment = async (commentId) => {
+    if (data.data && data.data.comments) {
+      var array = data.data.comments.filter((com) => com._id !== commentId);
+      console.log(array, "array main");
+      setCommentArray(array);
+    }
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+
+      await axios
+        .post(
+          `http://localhost:3000/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
+          { commentId: commentId },
+          headers
+        )
+        .then((res) => {
+          // setComment("");
+          addToast("Comment Deleted Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          setisLoading(false);
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // console.log(" error =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+    }
   };
 
   // *****
@@ -248,11 +346,19 @@ export default function Profile(props) {
           // const obj = { ...res.data };
 
           setData({ ["data"]: res.data.user });
+          setCommentArray(res.data.user.comments);
+
           console.log(res.data, "res data user");
         })
         .catch((err) => {});
     } catch (error) {}
   }, []);
+  // useEffect(() => {
+  //   if (data.data && data.data.comments) {
+  //     setCommentArray(data.data.comments);
+  //   }
+  // }, [comment]);
+  console.log(commentArray, "comemnt array");
   if (Object.keys(data)) {
     return (
       <div>
@@ -504,79 +610,85 @@ export default function Profile(props) {
                 </h4>
               </div>
             </div>
-            {data.data.comments && data.data.comments.length > 0
-              ? data.data.comments.map((comment) => (
+            {commentArray && commentArray.length > 0
+              ? commentArray.map((comment) => (
                   <CommentsFromDB
                     comment={comment}
                     getUser={getUser}
                     data={data}
                     DefaultImage={DefaultImage}
-                  />
-                ))
-              : ""}
-            {commentArray.length > 0
-              ? commentArray.map((comment) => (
-                  <Comments
-                    comment={comment}
-                    data={data}
-                    DefaultImage={DefaultImage}
                     DeleteComment={DeleteComment}
                     ClearOutlinedIcon={ClearOutlinedIcon}
-                    getUser={getUser}
                   />
                 ))
               : ""}
-
-            <div className="container ">
-              <div
-                className="row"
-                style={{ marginTop: "2rem", marginLeft: "3rem" }}
-              >
-                <div style={{ width: "90%" }} className="text-right">
-                  <textarea
-                    name
-                    id
-                    cols={110}
-                    value={comment}
-                    name="comment"
-                    onChange={handleCommentChange}
-                    rows={3}
-                    style={{ width: "90%" }}
-                    placeholder="  Add a coment"
+            {tempcommentArray.length > 0
+              ? tempcommentArray.map((comment) => (
+                  <Comments
+                    comment={comment}
+                    getUser={getUser}
+                    data={data}
+                    DefaultImage={DefaultImage}
+                    DeleteComment={DeleteTempComment}
+                    ClearOutlinedIcon={ClearOutlinedIcon}
                   />
-                  {commentError !== "" ? (
-                    <p
-                      className="error text-left"
-                      style={{ marginLeft: "6rem" }}
-                    >
-                      {" "}
-                      {commentError}
-                    </p>
-                  ) : (
-                    ""
-                  )}
-                </div>
+                ))
+              : ""}
+            {getUser()._id == props.match.params.id ? (
+              ""
+            ) : (
+              <div className="container ">
+                <div
+                  className="row"
+                  style={{ marginTop: "2rem", marginLeft: "3rem" }}
+                >
+                  <div style={{ width: "90%" }} className="text-right">
+                    <textarea
+                      name
+                      id
+                      cols={110}
+                      value={comment}
+                      name="comment"
+                      onChange={handleCommentChange}
+                      rows={3}
+                      style={{ width: "90%" }}
+                      placeholder="  Add a coment"
+                      onBlur={validateComment}
+                    />
+                    {commentError !== "" ? (
+                      <p
+                        className="error text-left"
+                        style={{ marginLeft: "6rem" }}
+                      >
+                        {" "}
+                        {commentError}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
 
-                <div style={{ width: "10%" }} className="text-center">
-                  {isLoading === true ? (
-                    <center>
-                      <div className={useStyles.root}>
-                        <CircularProgress disableShrink />
-                      </div>
-                    </center>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn btn-block mt-4 ml-2"
-                      style={{ maxWidth: "80%", padding: "6px 16px" }}
-                      onClick={onAdd}
-                    >
-                      SEND
-                    </button>
-                  )}
+                  <div style={{ width: "10%" }} className="text-center">
+                    {isLoading === true ? (
+                      <center>
+                        <div className={useStyles.root}>
+                          <CircularProgress disableShrink />
+                        </div>
+                      </center>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-block mt-4 ml-2"
+                        style={{ maxWidth: "80%", padding: "6px 16px" }}
+                        onClick={onAdd}
+                      >
+                        SEND
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
           {/* end of row */}
         </div>{" "}

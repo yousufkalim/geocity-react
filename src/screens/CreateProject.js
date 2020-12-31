@@ -93,6 +93,7 @@ function CreateProject() {
       return false;
     }
   };
+
   const validateStepType = () => {
     if (!stepType) {
       const msg = "Required";
@@ -295,16 +296,23 @@ function CreateProject() {
       }
       return obj;
     });
+    // debugger;
     if (stepArrayData.length >= 0) {
-      if (!reqFields || stepType === "") {
-        obj.stepType = "Required";
-        setstepRequiredFields(obj);
-        return false;
+      if (!reqFields) {
+        if (stepType === "") {
+          obj.stepType = "Required";
+          setstepRequiredFields(obj);
+          // return false;
+        } else {
+          setstepRequiredFields(obj);
+        }
+        // return false;
       } else {
         setstepRequiredFields(projectstepRequired);
 
-        return true;
+        // return true;
       }
+      return false;
     } else {
       setstepRequiredFields(projectstepRequired);
 
@@ -321,21 +329,20 @@ function CreateProject() {
       }
       return obj;
     });
+    debugger;
     if (stepArrayData.length >= 0) {
       // debugger;
       if (!reqFields) {
         if (otherSKill !== "") {
           obj.skill = "";
-          setstepRequiredFields(obj);
+          setskillRequiredFields(obj);
           return false;
         } else {
-          obj.speciality = "";
-
-          setstepRequiredFields(obj);
+          setskillRequiredFields(obj);
         }
-        // console.log(obj, "validate 2 check");
-
         return false;
+
+        // console.log(obj, "validate 2 check");
       } else {
         setskillRequiredFields(projectskillRequired);
 
@@ -502,6 +509,7 @@ function CreateProject() {
     if (otherSKill !== "") {
       formDataSkillField.skill = otherSKill;
     }
+    // debugger;
 
     if (stepType !== "") {
       checkValidateForm3();
@@ -558,6 +566,7 @@ function CreateProject() {
     const checkForm = checkValidateForm2();
     if (checkForm == true || stepArrayData.length > 0) {
       // validateCity();
+      setstepRequiredFields(projectstepRequired);
 
       // console.log(photo, "photo");
       const newFormData = new FormData();
@@ -584,6 +593,7 @@ function CreateProject() {
             setisLoading(false);
             setFormData(projectData);
             setPhoto("");
+            setstepArrayData([]);
             setAddress("");
             addToast(`Project created Successfully`, {
               appearance: "success",

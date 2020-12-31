@@ -56,6 +56,8 @@ export default function Project(props) {
   const [request, setRequest] = useState(false);
 
   const [commentArray, setCommentArray] = useState([]);
+  const [tempcommentArray, settempCommentArray] = useState([]);
+
   const [materialArrayData, setmaterialArrayData] = useState([]);
 
   // modal states
@@ -99,19 +101,26 @@ export default function Project(props) {
     projectskillRequired
   );
   // ***********************************************
-
-  const onAdd = async () => {
-    // setCommentArray([...commentArray, comment]);
+  const validateComment = () => {
     if (!comment) {
       setCommentError("Required");
+      return false;
     } else {
+      setCommentError("");
+      return true;
+    }
+  };
+  const onAdd = async () => {
+    // setCommentArray([...commentArray, comment]);
+    const tempCheck = validateComment();
+    if (tempCheck == true) {
       setCommentError("");
       const date = new Date();
       const obj = {};
       obj.comment = comment;
       obj.date = date;
       obj.profile_picture = getUser().profile_picture;
-      setCommentArray([...commentArray, obj]);
+      settempCommentArray([...tempcommentArray, obj]);
       try {
         const headers = {
           headers: {
@@ -135,6 +144,8 @@ export default function Project(props) {
             setisLoading(false);
           })
           .catch((err) => {
+            setComment("");
+
             setTimeout(() => {
               setisLoading(false);
             }, 1000);
@@ -151,20 +162,58 @@ export default function Project(props) {
           setisLoading(false);
         }, 1000);
       }
+    } else {
+      setCommentError("Required");
     }
   };
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
-  const DeleteComment = (comment) => {
-    const array = commentArray.filter((com) => com.comment !== comment.trim());
-    // console.log(array, "array");
-    setCommentArray(array);
-    addToast("Success", {
-      appearance: "success",
-      autoDismiss: true,
-      autoDismissTimeout: 3000,
-    });
+  const DeleteComment = async (commentId) => {
+    if (data.project && data.project.comments) {
+      var array = data.project.comments.filter((com) => com._id !== commentId);
+      console.log(array, "array main");
+      setCommentArray(array);
+    }
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+
+      await axios
+        .post(
+          `http://localhost:3000/api/v1/project/view-project/delete-comment?id=${props.match.params.id}`,
+          { commentId: commentId },
+          headers
+        )
+        .then((res) => {
+          // setComment("");
+          addToast("Comment Deleted Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          setisLoading(false);
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // console.log(" error =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+    }
   };
 
   const handleChange = (e) => {
@@ -673,6 +722,7 @@ export default function Project(props) {
         general_description: data.project.general_description,
         category: data.project.category._id,
       };
+      setPhoto(data.project.general_photo);
       // setPhoto(data.project.general_photo);
       setFormData({ ...projectData });
     }
@@ -1029,6 +1079,7 @@ export default function Project(props) {
           // const obj = { ...res.data };
 
           setData(res.data);
+          setCommentArray(res.data.project.comments);
 
           console.log(res.data, "res project data");
         })
@@ -1059,7 +1110,7 @@ export default function Project(props) {
     // } catch (error) {
     //   // console.log(error, "error catch");
     // }
-  }, []);
+  }, [Profilemodal, modal, stepmodal]);
   // console.log(skillFieldData, "data skillFieldData");
   useEffect(() => {
     var headers = {
@@ -1493,19 +1544,9 @@ export default function Project(props) {
                   </div>
                 </div>
 
-                {data.project.comments && data.project.comments.length > 0
-                  ? data.project.comments.map((comment) => (
-                      <CommentsFromDB
-                        comment={comment}
-                        getUser={getUser}
-                        data={data}
-                        DefaultImage={DefaultImage}
-                      />
-                    ))
-                  : ""}
                 {commentArray.length > 0
                   ? commentArray.map((comment) => (
-                      <Comments
+                      <CommentsFromDB
                         comment={comment}
                         data={data}
                         DefaultImage={DefaultImage}
@@ -1515,54 +1556,71 @@ export default function Project(props) {
                       />
                     ))
                   : ""}
+                {tempcommentArray.length > 0
+                  ? tempcommentArray.map((comment) => (
+                      <Comments
+                        comment={comment}
+                        getUser={getUser}
+                        data={data}
+                        DefaultImage={DefaultImage}
+                        DeleteComment={DeleteComment}
+                        ClearOutlinedIcon={ClearOutlinedIcon}
+                      />
+                    ))
+                  : ""}
               </div>
-              <div className="container ">
-                <div
-                  className="row"
-                  style={{ marginTop: "2rem", marginLeft: "3rem" }}
-                >
-                  <div style={{ width: "90%" }} className="text-right">
-                    <textarea
-                      name="comment"
-                      value={comment}
-                      onChange={handleCommentChange}
-                      cols={110}
-                      rows={3}
-                      style={{ width: "90%" }}
-                      placeholder="  Add a coment"
-                    />
-                    {commentError !== "" ? (
-                      <p
-                        className="error text-left"
-                        style={{ marginLeft: "7rem" }}
-                      >
-                        {" "}
-                        {commentError}
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                  <div style={{ width: "10%" }} className="text-center">
-                    {isLoading === true ? (
-                      <center>
-                        <div className={useStyles.root}>
-                          <CircularProgress disableShrink />
-                        </div>
-                      </center>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-block mt-4 ml-2"
-                        style={{ maxWidth: "80%", padding: "6px 16px" }}
-                        onClick={onAdd}
-                      >
-                        SEND
-                      </button>
-                    )}
+              {getUser()._id == data.project.project_owner._id ? (
+                ""
+              ) : (
+                <div className="container ">
+                  <div
+                    className="row"
+                    style={{ marginTop: "2rem", marginLeft: "3rem" }}
+                  >
+                    <div style={{ width: "90%" }} className="text-right">
+                      <textarea
+                        name="comment"
+                        value={comment}
+                        onChange={handleCommentChange}
+                        cols={110}
+                        rows={3}
+                        style={{ width: "90%" }}
+                        placeholder="  Add a coment"
+                        onBlur={validateComment}
+                      />
+                      {commentError !== "" ? (
+                        <p
+                          className="error text-left"
+                          style={{ marginLeft: "7rem" }}
+                        >
+                          {" "}
+                          {commentError}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <div style={{ width: "10%" }} className="text-center">
+                      {isLoading === true ? (
+                        <center>
+                          <div className={useStyles.root}>
+                            <CircularProgress disableShrink />
+                          </div>
+                        </center>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-block mt-4 ml-2"
+                          style={{ maxWidth: "80%", padding: "6px 16px" }}
+                          onClick={onAdd}
+                        >
+                          SEND
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           ) : (
             <LoadedClients />

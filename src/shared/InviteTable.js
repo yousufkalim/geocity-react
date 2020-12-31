@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import InviteTableRow from "../Components/InviteTableRow";
 import { projectData } from "./Data";
-export default function UserTable({ data, addToast }) {
+export default function UserTable({
+  data,
+  addToast,
+  invitationData,
+  setinvitationData,
+}) {
   // ******
   // Accept invitation from project owner for collaboration
+
   const AcceptInviteCollaborator = async (
     setcheckDecision,
     projectId,
@@ -14,6 +20,9 @@ export default function UserTable({ data, addToast }) {
     decision,
     invitation
   ) => {
+    var array = invitationData.filter((com) => com._id !== invitation);
+    // console.log(array, "array main");
+    setinvitationData(array);
     // alert(sender);
     try {
       const headers = {
@@ -73,6 +82,9 @@ export default function UserTable({ data, addToast }) {
     decision,
     invitation
   ) => {
+    var array = invitationData.filter((com) => com._id !== invitation);
+    // console.log(array, "array main");
+    setinvitationData(array);
     try {
       const headers = {
         headers: {
@@ -130,6 +142,9 @@ export default function UserTable({ data, addToast }) {
     invitation
   ) => {
     // alert(sender);
+    var array = invitationData.filter((com) => com._id !== invitation);
+    // console.log(array, "array main");
+    setinvitationData(array);
     try {
       const headers = {
         headers: {
@@ -191,6 +206,9 @@ export default function UserTable({ data, addToast }) {
     invitation
   ) => {
     // alert(sender);
+    var array = invitationData.filter((com) => com._id !== invitation);
+    // console.log(array, "array main");
+    setinvitationData(array);
     try {
       const headers = {
         headers: {
@@ -251,6 +269,9 @@ export default function UserTable({ data, addToast }) {
     invitation
   ) => {
     // alert(sender);
+    var array = invitationData.filter((com) => com._id !== invitation);
+    // console.log(array, "array main");
+    setinvitationData(array);
     try {
       const headers = {
         headers: {
@@ -311,6 +332,9 @@ export default function UserTable({ data, addToast }) {
     invitation
   ) => {
     // alert(sender);
+    var array = invitationData.filter((com) => com._id !== invitation);
+    // console.log(array, "array main");
+    setinvitationData(array);
     try {
       const headers = {
         headers: {
@@ -376,8 +400,8 @@ export default function UserTable({ data, addToast }) {
         </tr>
       </thead>
       <tbody>
-        {data && data.data.invitation && data.data.invitation.length > 0 ? (
-          data.data.invitation.map((project) =>
+        {invitationData && invitationData.length > 0 ? (
+          invitationData.map((project) =>
             project.type === "inviteProjectOwner" ? (
               <InviteTableRow
                 project={project}

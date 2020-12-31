@@ -16,6 +16,7 @@ import {
 } from "../shared/Data";
 import { Redirect } from "react-router-dom";
 import SignupForm from "../Components/SignupForm";
+
 function Signup() {
   const { addToast } = useToasts();
 
@@ -34,6 +35,7 @@ function Signup() {
   const [material, setMaterial] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [photo, setPhoto] = useState("");
+  const [type, setType] = useState("password");
 
   const [isSuccess, setisSuccess] = useState("");
   const [otherSKill, setotherSkill] = useState("");
@@ -59,7 +61,14 @@ function Signup() {
   });
   // *************************
   // states end ***************************
-
+  const showHide = (e) => {
+    e.preventDefault();
+    if (type === "password") {
+      setType("input");
+    } else {
+      setType("password");
+    }
+  };
   // validation start*************************
 
   const ValidateSpecialization = () => {
@@ -110,6 +119,10 @@ function Signup() {
   const validateAvailability = () => {
     if (!formData.availability) {
       const msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
+      return false;
+    } else if (formData.availability > 168) {
+      const msg = "Availibilty must be less than equal to 168";
       setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
       return false;
     } else {
@@ -210,6 +223,9 @@ function Signup() {
       const msg = "";
       setskillRequiredFields({ ...skillRequiredFields, score: msg });
       return true;
+    } else if (skillformData.score >= 6) {
+      const msg = "Rating must be less than equal to 5";
+      setskillRequiredFields({ ...skillRequiredFields, score: msg });
     } else {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, score: msg });
@@ -221,6 +237,10 @@ function Signup() {
     // debugger;
     if (address === "") {
       let msg = "Required";
+      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      return false;
+    } else if (!formData.city) {
+      let msg = "Please select your complete address from list";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
       return false;
     } else {
@@ -355,6 +375,7 @@ function Signup() {
             array.push(material);
           }
           setmaterialArrayData(array);
+          // setMaterial("");
           const msg = "";
           setmaterialRequiredFields({
             ...materialRequiredFields,
@@ -366,10 +387,12 @@ function Signup() {
             ...materialRequiredFields,
             error: msg,
           });
+
           // alert("msg");
           // const array = materialArrayData.filter((mat) => mat !== material);
           // // console.log(array, "array mat");
           // setmaterialArrayData(array);
+          // setMaterial("");
         }
       });
     } else {
@@ -393,14 +416,34 @@ function Signup() {
 
       // }
     } else if (e.target.name === "availability") {
+      console.log(e.target, "e.target");
       const avail = e.target.value.replace(/\D/g, "");
-      if (avail !== "") {
-        if (avail.length <= 1 && avail < 8) {
-          setFormData({
-            ...formData,
-            [e.target.name]: avail,
-          });
+      if (e.target.value <= 168) {
+        if (avail !== "") {
+          if (avail.length <= 3 && avail < 169) {
+            setFormData({
+              ...formData,
+              [e.target.name]: avail,
+            });
+          }
+        } else {
+          if (e.target.value) {
+            setFormData({
+              ...formData,
+              [e.target.name]: e.target.value.replace(/\D/g, ""),
+            });
+          } else {
+            setFormData({
+              ...formData,
+              [e.target.name]: "",
+            });
+          }
         }
+        const msg = "";
+        setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
+      } else {
+        const msg = "Availibilty must be less than equal to 168";
+        setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
       }
     } else {
       // console.log(value, "value");
@@ -426,12 +469,34 @@ function Signup() {
           skill._id === e.target.value ? setskillList(skill.skill) : ""
         );
       } else if (e.target.name === "score") {
-        const avail = e.target.value.replace(/\D/g, "");
-        if (avail !== "") {
-          if (avail.length >= 2) {
+        var avail = e.target.value.replace(/\D/g, "");
+        if (e.target.value <= 5) {
+          if (avail !== "") {
+            if (avail.length >= 2 && e.target.value >= 5) {
+            } else {
+              setskillFormData({
+                ...skillformData,
+                [e.target.name]: avail,
+              });
+            }
           } else {
-            setskillFormData({ ...skillformData, [e.target.name]: value });
+            if (e.target.value) {
+              setskillFormData({
+                ...skillformData,
+                [e.target.name]: e.target.value.replace(/\D/g, ""),
+              });
+            } else {
+              setskillFormData({
+                ...skillformData,
+                [e.target.name]: "",
+              });
+            }
           }
+          const msg = "";
+          setskillRequiredFields({ ...skillRequiredFields, score: msg });
+        } else {
+          const msg = "Rating must be less than equal to 5";
+          setskillRequiredFields({ ...skillRequiredFields, score: msg });
         }
       } else {
         setskillFormData({ ...skillformData, [e.target.name]: value });
@@ -440,37 +505,38 @@ function Signup() {
   };
   // console.log(skillArrayData, "skillArrayData");
   const onskillAdd = () => {
-    checkValidateForm2();
+    const checkForm = checkValidateForm2();
     // validateScore();
-
-    if (otherSKill !== "") {
-      skillformData.skill = otherSKill;
-    }
-    // debugger;
-
-    const check = Object.values(skillformData).map((obj) => {
-      if (obj !== "") {
-        return true;
-      } else {
-        return false;
+    if (checkForm == true) {
+      if (otherSKill !== "") {
+        skillformData.skill = otherSKill;
       }
-    });
-    if (check[0] === true) {
-      if (skillArrayData.length === 3) {
-        // alert(skillArrayData.length);
-        addToast("skills length must be 1 or less than equal to 3", {
-          appearance: "error",
-          autoDismiss: true,
-          autoDismissTimeout: 3000,
-        });
-        // seterrorMessage("You can only add upto 3 skills  or less");
-      } else {
-        if (otherSKill !== "") {
-          skillformData.skill = otherSKill;
+      // debugger;
+
+      const check = Object.values(skillformData).map((obj) => {
+        if (obj !== "") {
+          return true;
+        } else {
+          return false;
         }
-        setskillArrayData([...skillArrayData, skillformData]);
-        setskillFormData(signupstepData);
-        setskillRequiredFields(signupskillRequired);
+      });
+      if (check[0] === true) {
+        if (skillArrayData.length === 3) {
+          // alert(skillArrayData.length);
+          addToast("skills length must be 1 or less than equal to 3", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // seterrorMessage("You can only add upto 3 skills  or less");
+        } else {
+          if (otherSKill !== "") {
+            skillformData.skill = otherSKill;
+          }
+          setskillArrayData([...skillArrayData, skillformData]);
+          setskillFormData(signupstepData);
+          setskillRequiredFields(signupskillRequired);
+        }
       }
     }
   };
@@ -487,6 +553,7 @@ function Signup() {
       .then((response) => response.json())
       .then((responseJson) => {
         // console.log("res address", responseJson);
+
         var addressToSet = [];
         // debugger;
         for (var i = 0; i < responseJson.features.length; i++) {
@@ -556,7 +623,6 @@ function Signup() {
 
     if (!reqFields) {
       setAboutRequiredFields(obj);
-
       return false;
     } else {
       // alert("hello");
@@ -570,8 +636,12 @@ function Signup() {
 
     Object.keys(skillformData).map((key) => {
       if (skillformData[key] === "") {
-        obj[key] = "Required";
-        reqFields = false;
+        if (key === "specialization") {
+          obj[key] = "";
+        } else {
+          obj[key] = "Required";
+          reqFields = false;
+        }
       }
       return obj;
     });
@@ -582,6 +652,7 @@ function Signup() {
     //   specialization: "Required",
     //   score: "Required",
     // });
+
     if (!reqFields) {
       const msg = "Required";
       if (otherSKill !== "") {
@@ -592,9 +663,7 @@ function Signup() {
         setskillRequiredFields(obj);
         return false;
       } else {
-        obj.specialization = "";
         setskillRequiredFields(obj);
-
         return false;
       }
     } else {
@@ -610,79 +679,96 @@ function Signup() {
     e.preventDefault();
     setisLoading(true);
     checkValidateForm();
-    validateMaterial();
-    checkValidateForm2();
 
-    // social links
-    // console.log(formData.firstName, "formData.firstName");
-    // ****
-    const newFormData = new FormData();
-    newFormData.append("firstName", formData.firstname);
-    newFormData.append("lastName", formData.lastname);
-    newFormData.append("username", formData.username);
-    newFormData.append("availability", formData.availability);
-    newFormData.append("city", formData.city);
-    newFormData.append("confirm_password", formData.confirm_password);
-    newFormData.append("email", formData.email);
-    newFormData.append("latitude", formData.latitude);
-    newFormData.append("longitude", formData.longitude);
-    newFormData.append("password", formData.password);
-    newFormData.append("phone", formData.phone);
-    newFormData.append("profile_description", formData.profile_description);
-    newFormData.append("profile_picture", photo);
-    newFormData.append("zipCode", formData.zipCode);
+    // checkValidateForm2();
+    if (skillArrayData.length == 0) {
+      addToast(`You must add atleast one skill`, {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+      setisLoading(false);
+    } else if (materialArrayData.length == 0) {
+      addToast(`You must add atleast one material`, {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+      setisLoading(false);
 
-    newFormData.append("facebook", formData.facebook);
-    newFormData.append("instagram", formData.instagram);
-    newFormData.append("youtube", formData.youtube);
+      validateMaterial();
+    } else {
+      // social links
+      // console.log(formData.firstName, "formData.firstName");
+      // ****
+      const newFormData = new FormData();
+      newFormData.append("firstName", formData.firstname);
+      newFormData.append("lastName", formData.lastname);
+      newFormData.append("username", formData.username);
+      newFormData.append("availability", formData.availability);
+      newFormData.append("city", formData.city);
+      newFormData.append("confirm_password", formData.confirm_password);
+      newFormData.append("email", formData.email);
+      newFormData.append("latitude", formData.latitude);
+      newFormData.append("longitude", formData.longitude);
+      newFormData.append("password", formData.password);
+      newFormData.append("phone", formData.phone);
+      newFormData.append("profile_description", formData.profile_description);
+      newFormData.append("profile_picture", photo);
+      newFormData.append("zipCode", formData.zipCode);
 
-    newFormData.append("skills", JSON.stringify(skillArrayData));
-    newFormData.append("material", JSON.stringify(materialArrayData));
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-    try {
-      axios
-        .post("http://localhost:3000/api/v1/auth/register", newFormData)
-        .then((res) => {
-          setisLoading(false);
-          setFormData(signupData);
-          setisSuccess(true);
-          addToast("User Registered SuccessFully!", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-        })
-        .catch((err) => {
-          setTimeout(() => {
+      newFormData.append("facebook", formData.facebook);
+      newFormData.append("instagram", formData.instagram);
+      newFormData.append("youtube", formData.youtube);
+
+      newFormData.append("skills", JSON.stringify(skillArrayData));
+      newFormData.append("material", JSON.stringify(materialArrayData));
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      try {
+        axios
+          .post("http://localhost:3000/api/v1/auth/register", newFormData)
+          .then((res) => {
             setisLoading(false);
-          }, 1000);
-          // if (err.response.data) {
-          //   if (err.response.data.message) {
-          //     addToast(`${err.response.data.message}`, {
-          //       appearance: "error",
-          //       autoDismiss: true,
-          //       autoDismissTimeout: 3000,
-          //     });
-          //   } else {
-          //     addToast(`${err.response.data}`, {
-          //       appearance: "error",
-          //       autoDismiss: true,
-          //       autoDismissTimeout: 3000,
-          //     });
-          //   }
-          // }
+            setFormData(signupData);
+            setisSuccess(true);
+            addToast("User Registered SuccessFully!", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
+            }
 
-          // console.log(" error signup =>", err.response.data);
-        });
-    } catch (error) {
-      // console.log(error, "error signup catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
+            // console.log(" error signup =>", err.response.data);
+          });
+      } catch (error) {
+        // console.log(error, "error signup catch");
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
     }
   };
   if (isSuccess === true) {
@@ -736,6 +822,8 @@ function Signup() {
             Link={Link}
             addToast={addToast}
             Button={Button}
+            showHide={showHide}
+            type={type}
             // *********
 
             // List

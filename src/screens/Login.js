@@ -15,6 +15,8 @@ function Login() {
   const [isLoading, setisLoading] = useState(false);
   const [isSuccess, setisSuccess] = useState(false);
   const [formData, setFormData] = useState(loginData);
+  const [type, setType] = useState("password");
+
   // ********
   // Required Fields states
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
@@ -136,7 +138,16 @@ function Login() {
       }, 1000);
     }
   };
-
+  const showHide = (e) => {
+    e.preventDefault();
+    if (formData.password) {
+      if (type === "password") {
+        setType("input");
+      } else {
+        setType("password");
+      }
+    }
+  };
   // handle actions end ***************
   if (isSuccess === true) {
     return <Redirect to="/" />;
@@ -162,7 +173,7 @@ function Login() {
                 id="email"
                 placeholder="Email"
                 value={formData.email}
-                onFocus={validateEmail}
+                onBlur={validateEmail}
                 onChange={handleChange}
               />
 
@@ -174,16 +185,30 @@ function Login() {
                   ""
                 )}
               </label>
+              <div style={{ display: "flex" }}>
+                <input
+                  type={type}
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  onBlur={validatePassword}
+                  onChange={handleChange}
+                  value={formData.password}
+                />
 
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                onFocus={validatePassword}
-                onChange={handleChange}
-                value={formData.password}
-              />
+                <i
+                  onClick={showHide}
+                  class="fas fa-eye"
+                  style={{
+                    color: "#000",
+                    fontSize: "15px",
+                    position: "absolute",
+                    left: "20rem",
+                    right: 0,
+                    top: "16.5rem",
+                  }}
+                ></i>
+              </div>
             </div>
 
             <div className="form-submit ">

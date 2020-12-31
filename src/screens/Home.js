@@ -11,7 +11,7 @@ import paperPlane from "../Theme/images/paper-plane.svg";
 import target from "../Theme/images/target.svg";
 import bulbMen from "../Theme/images/bulb-men.png";
 import Group2 from "../Theme/images/Group2.png";
-
+import DropDown from "../shared/DropdownMenu";
 export default class Home extends React.Component {
   render() {
     return (
@@ -37,33 +37,28 @@ export default class Home extends React.Component {
             >
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to="/" className="nav-link page-scroll">
+                  <Link to="/" className="nav-link ">
                     Home <span className="sr-only">(current)</span>
                   </Link>
-                  {/* <a className="nav-link page-scroll" href="#header">Home <span className="sr-only">(current)</span></a> */}
+                  {/* <a className="nav-link " href="#header">Home <span className="sr-only">(current)</span></a> */}
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#services">
+                  <a className="nav-link " href="#services">
                     Features
                   </a>
                 </li>
                 <li className="nav-item">
-                  <Link
-                    to={`/profile/${getUser()._id}`}
-                    className="nav-link page-scroll"
-                    href="#pricing"
-                  >
+                  <a href="#" className="nav-link ">
                     About
-                  </Link>
+                  </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#request">
+                  <a className="nav-link " href="#request">
                     Service
                   </a>
                 </li>
-
                 <li className="nav-item">
-                  <a className="nav-link page-scroll" href="#contact">
+                  <a className="nav-link " href="#request">
                     Contact Us
                   </a>
                 </li>
@@ -82,13 +77,10 @@ export default class Home extends React.Component {
                   </span>
                 </>
               ) : (
-                <span className="nav-item" style={{ marginLeft: "1rem" }}>
-                  <Link className="btn-outline-sm" onClick={SignOut}>
-                    LOG OUT
-                  </Link>
-                </span>
+                ""
               )}
             </div>
+            <div>{!isAuthenticated() ? "" : <DropDown />}</div>
           </nav>{" "}
           <div className="header-content">
             <div className="container">
@@ -108,7 +100,7 @@ export default class Home extends React.Component {
                       selon les competences necesseries, et ce pour chaque etape
                       de votre project
                     </p>
-                    <a className="btn-solid-lg page-scroll" href="#services">
+                    <a className="btn-solid-lg " href="#services">
                       En savoir plus{" "}
                     </a>
                   </div>{" "}

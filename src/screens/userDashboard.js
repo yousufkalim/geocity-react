@@ -5,7 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
 import Autocomplete from "react-autocomplete";
 import ChipArray from "../shared/MaterialChip";
-import SkillChipArray from "../shared/skillChip";
+import SkillChipArray from "../shared/skillChipCard";
 import { useToasts } from "react-toast-notifications";
 import {
   signupskillRequired,
@@ -54,6 +54,8 @@ export default function UserDashboard(props) {
   const [isLoading, setisLoading] = useState(false);
   const [CategoryList, setCategoryList] = useState("");
   const [key, setKey] = useState("first");
+  const [invitationData, setinvitationData] = useState("");
+
   // functions
 
   const getAddress = (e) => {
@@ -422,19 +424,22 @@ export default function UserDashboard(props) {
           var array = materialArrayData.filter((mat) => mat !== material);
           if (material) {
             array.push(material);
+            setmaterialArrayData(array);
+
+            const msg = "";
+            setmaterialRequiredFields({
+              ...materialRequiredFields,
+              error: msg,
+            });
+            setMaterial("");
           }
-          setmaterialArrayData(array);
-          const msg = "";
-          setmaterialRequiredFields({
-            ...materialRequiredFields,
-            error: msg,
-          });
         } else {
           const msg = "Value already existed";
           setmaterialRequiredFields({
             ...materialRequiredFields,
             error: msg,
           });
+          setMaterial("");
           // alert("msg");
           // const array = materialArrayData.filter((mat) => mat !== material);
           // // console.log(array, "array mat");
@@ -445,7 +450,6 @@ export default function UserDashboard(props) {
       if (material) {
         setmaterialArrayData((prevState) => [...prevState, material]);
         setMaterial("");
-      } else {
       }
     }
   };
@@ -490,98 +494,112 @@ export default function UserDashboard(props) {
     if (materialArrayData.length == 0) {
       validateMaterial();
     }
-    const newFormData = new FormData();
-
-    setisLoading(true);
-
-    newFormData.append("firstName", formData.firstName);
-    newFormData.append("lastName", formData.lastName);
-    newFormData.append("username", formData.username);
-    newFormData.append("availability", formData.availability);
-    newFormData.append("city", formData.city);
-    // newFormData.append("email", formData.email);
-    newFormData.append("latitude", formData.latitude);
-    newFormData.append("longitude", formData.longitude);
-    newFormData.append("phone", formData.phone);
-    newFormData.append("profile_description", formData.profile_description);
-    newFormData.append("profile_picture", photo);
-    newFormData.append("zipCode", formData.zipCode);
-
-    newFormData.append("facebook", formData.facebook);
-    newFormData.append("instagram", formData.instagram);
-    newFormData.append("youtube", formData.youtube);
-    if (skillArrayData.length > 0 && materialArrayData.length > 0) {
-      newFormData.append("skills", JSON.stringify(skillArrayData));
-      newFormData.append("material", JSON.stringify(materialArrayData));
+    if (skillArrayData.length == 0) {
+      addToast(`You must add atleast one skill`, {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+    } else if (materialArrayData.length == 0) {
+      addToast(`You must add atleast one material`, {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
     } else {
-      newFormData.append("skills", JSON.stringify(formData.skills));
-      newFormData.append("material", JSON.stringify(formData.material));
-    }
+      const newFormData = new FormData();
 
-    try {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-      await axios
-        .post(
-          `http://localhost:3000/api/v1/profile/editProfile?id=${props.match.params.id}`,
-          newFormData,
-          headers
-        )
-        .then((response) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
+      setisLoading(true);
 
-          setprofileModal(false);
+      newFormData.append("firstName", formData.firstName);
+      newFormData.append("lastName", formData.lastName);
+      newFormData.append("username", formData.username);
+      newFormData.append("availability", formData.availability);
+      newFormData.append("city", formData.city);
+      // newFormData.append("email", formData.email);
+      newFormData.append("latitude", formData.latitude);
+      newFormData.append("longitude", formData.longitude);
+      newFormData.append("phone", formData.phone);
+      newFormData.append("profile_description", formData.profile_description);
+      newFormData.append("profile_picture", photo);
+      newFormData.append("zipCode", formData.zipCode);
 
-          if (response.data) {
-            if (response.data.message) {
-              addToast(`${response.data.message}`, {
-                appearance: "success",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            } else {
-              addToast(`${response.data}`, {
-                appearance: "success",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
+      newFormData.append("facebook", formData.facebook);
+      newFormData.append("instagram", formData.instagram);
+      newFormData.append("youtube", formData.youtube);
+      if (skillArrayData.length > 0 && materialArrayData.length > 0) {
+        newFormData.append("skills", JSON.stringify(skillArrayData));
+        newFormData.append("material", JSON.stringify(materialArrayData));
+      } else {
+        newFormData.append("skills", JSON.stringify(formData.skills));
+        newFormData.append("material", JSON.stringify(formData.material));
+      }
+
+      try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+        await axios
+          .post(
+            `http://localhost:3000/api/v1/profile/editProfile?id=${props.match.params.id}`,
+            newFormData,
+            headers
+          )
+          .then((response) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+
+            setprofileModal(false);
+
+            if (response.data) {
+              if (response.data.message) {
+                addToast(`${response.data.message}`, {
+                  appearance: "success",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${response.data}`, {
+                  appearance: "success",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
             }
-          }
 
-          // console.log(res,"res")
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
+            // console.log(res,"res")
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
 
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            } else {
-              addToast(`${err.response.data}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
             }
-          }
-          // console.log(" error =>", err);
-        });
-    } catch (error) {
-      console.log(error, "error catch");
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
+            // console.log(" error =>", err);
+          });
+      } catch (error) {
+        console.log(error, "error catch");
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
     }
   };
 
@@ -633,7 +651,7 @@ export default function UserDashboard(props) {
           } else {
             setskillFormData({
               ...skillformData,
-              [e.target.name]: value.toString(),
+              [e.target.name]: avail.toString(),
             });
           }
         }
@@ -642,40 +660,14 @@ export default function UserDashboard(props) {
       }
     }
   };
-
   const onMaterialChange = (e) => {
-    // debugger;
-
     setMaterial(e.target.value);
-    // console.log(materialArrayData, "material aray dat from onchange");
-    if (Object.keys(materialArrayData).length > 0) {
-      materialArrayData.map((mat) => {
-        if (mat !== e.target.value) {
-          // alert(e.target.value);
-          const array = materialArrayData.filter(
-            (mat) => mat !== e.target.value
-          );
-          if (e.target.value) {
-            array.push(e.target.value);
-          }
-          setmaterialArrayData(array);
-          const msg = "";
-          // setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
-          // setmaterialArrayData((prevState) => [...prevState, e.target.value]);
-        } else {
-          const msg = "value already existed";
-          // setmaterialRequiredFields({ ...materialRequiredFields, error: msg });
-          // alert("msg");
-          const array = materialArrayData.filter(
-            (mat) => mat !== e.target.value
-          );
-          console.log(array, "array mat");
-          setmaterialArrayData(array);
-        }
+    if (e.target.value !== "") {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        name: msg,
       });
-    } else {
-      setmaterialArrayData([...materialArrayData, e.target.value]);
-      // setmaterialArrayData(e.target.value);
     }
   };
   // *******************
@@ -745,6 +737,7 @@ export default function UserDashboard(props) {
           // const obj = { ...res.data };
 
           setData({ ["data"]: res.data.user });
+          setinvitationData(res.data.user.invitation);
           UserData(res.data.user);
           console.log(res.data, "res data user");
         })
@@ -777,6 +770,7 @@ export default function UserDashboard(props) {
       let skillData = skill.skillField._id;
       let skillsObj = skill;
       let tempSkills = { ...skillsObj };
+      tempSkills.score = skill.score.toString();
       tempSkills.skillField = skillData;
       delete tempSkills.recommendedBy;
       delete tempSkills._id;
@@ -813,6 +807,7 @@ export default function UserDashboard(props) {
       skills: tempskillArray,
       material: tempMaterial,
     };
+    setPhoto(data.profile_picture);
     // console.log(projectData.socialLinks, "project data");
     // projectData.socialLinks = socialData;
     setmaterialArrayData(tempMaterial);
@@ -822,6 +817,9 @@ export default function UserDashboard(props) {
     setAddress(data.city);
     setFormData({ ...projectData });
   };
+  console.log(formData, "fomrdata sanksajh");
+  console.log(photo, "fomrdata photo");
+
   return (
     <div>
       <Header />
@@ -935,7 +933,12 @@ export default function UserDashboard(props) {
                       <Tab.Pane eventKey="third">
                         {Object.keys(data) ? (
                           <div>
-                            <InviteTable data={data} addToast={addToast} />
+                            <InviteTable
+                              data={data}
+                              addToast={addToast}
+                              invitationData={invitationData}
+                              setinvitationData={setinvitationData}
+                            />
                           </div>
                         ) : (
                           ""

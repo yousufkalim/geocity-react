@@ -3,7 +3,7 @@ import { Table } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import DeleteModal from "./ContributerModal";
-import TableRow from "../Components/ProjectTableRow";
+import ProjectTableRow from "../Components/ProjectTableRow";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 export default function UserTable(props) {
@@ -50,10 +50,10 @@ export default function UserTable(props) {
           headers
         )
         .then((res) => {
-          addToast("Success", {
+          addToast("Contributor deleted Successfully", {
             appearance: "success",
             autoDismiss: true,
-            autoDismissTimeout: 1000,
+            autoDismissTimeout: 3000,
           });
           setdeletemodal(!deletemodal);
 
@@ -97,7 +97,7 @@ export default function UserTable(props) {
             data.data.projects.map((project) =>
               project.implementation_steps.map((step) => (
                 <>
-                  <TableRow
+                  <ProjectTableRow
                     project={project}
                     step={step}
                     DeletContributor={() =>

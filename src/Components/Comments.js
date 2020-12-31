@@ -33,13 +33,11 @@ export default function comments({
               {new Date(comment.date).getFullYear()}
             </small>
           </h5>
-          <p className="mt-2" style={{ fontWeight: "bold" }}>
-            {comment.comment}
-          </p>
+          <p className="mt-2">{comment.comment}</p>
         </div>
       </div>
       <div>
-        <ClearOutlinedIcon onClick={() => DeleteComment(comment.comment)} />
+        {/* <ClearOutlinedIcon onClick={() => DeleteComment(comment.comment)} /> */}
       </div>
     </div>
   );

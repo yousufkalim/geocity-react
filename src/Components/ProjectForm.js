@@ -62,7 +62,7 @@ function Form({
       const array = [];
       setmaterialArrayData(array);
     }
-    validateStepType();
+
     setstepType(e.target.value);
   };
   return (
@@ -126,13 +126,17 @@ function Form({
             address={address}
             validateCity={validateCity}
           />
-          <label className="label-agree-term">General Photo</label>
-
+          <label className="label-agree-term row">General Photo*</label>
+          {aboutRequiredFields.general_photo !== "" ? (
+            <p className="error"> {aboutRequiredFields.general_photo}</p>
+          ) : (
+            ""
+          )}
           <input
             type="file"
             name="general_photo"
             id="file"
-            // onFocus={validatePhoto}
+            onBlur={validatePhoto}
             onChange={(e) => {
               const file = e.target.files[0];
               console.log(file, "photo1");
@@ -140,11 +144,7 @@ function Form({
               setPhoto(file);
             }}
           />
-          {/* {aboutRequiredFields.general_photo !== "" ? (
-            <p className="error"> {aboutRequiredFields.general_photo}</p>
-          ) : (
-            ""
-          )} */}
+
           <label className="label-agree-term row">
             General Description*
             {aboutRequiredFields.general_description !== "" ? (
@@ -458,9 +458,9 @@ function Form({
             variant="contained"
             onClick={onAdd}
             name="add"
-            className="submitAdd mt-3"
+            className="submit mt-3"
           >
-            Add
+            Add Step
           </Button>
         </div>
         <div
@@ -484,7 +484,10 @@ function Form({
               ))
             : ""}
         </div>
-        <div className="form-submit ">
+        <div
+          className="form-submit mt-2"
+          style={{ display: "flex", alignContent: "flex-end", width: "100%" }}
+        >
           {isLoading === true ? (
             <center>
               <div className={useStyles.root}>
@@ -496,7 +499,12 @@ function Form({
               variant="contained"
               onClick={onSubmit}
               name="add"
-              className="submit"
+              style={{
+                position: "relative",
+                margin: "auto",
+                marginLeft: "21rem",
+              }}
+              className="submit text-right"
             >
               Submit
             </Button>
