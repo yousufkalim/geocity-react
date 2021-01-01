@@ -12,6 +12,8 @@ import target from "../Theme/images/target.svg";
 import bulbMen from "../Theme/images/bulb-men.png";
 import Group2 from "../Theme/images/Group2.png";
 import DropDown from "../shared/DropdownMenu";
+import NotificationMenu from "../shared/NotificationMenu";
+
 export default class Home extends React.Component {
   render() {
     return (
@@ -43,9 +45,9 @@ export default class Home extends React.Component {
                   {/* <a className="nav-link " href="#header">Home <span className="sr-only">(current)</span></a> */}
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link " href="#services">
-                    Features
-                  </a>
+                  <Link className="nav-link" to="/ProjectList">
+                    Projects
+                  </Link>
                 </li>
                 <li className="nav-item">
                   <a href="#" className="nav-link ">
@@ -80,7 +82,12 @@ export default class Home extends React.Component {
                 ""
               )}
             </div>
-            <div className="row">{!isAuthenticated() ? "" : <DropDown />}</div>
+            <div className="row ml-1 mr-1">
+              {!isAuthenticated() ? "" : <NotificationMenu />}
+            </div>
+            <div className="row ml-2">
+              {!isAuthenticated() ? "" : <DropDown />}
+            </div>
           </nav>{" "}
           <div className="header-content">
             <div className="container">

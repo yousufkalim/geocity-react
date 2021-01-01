@@ -7,6 +7,8 @@ import Autocomplete from "react-autocomplete";
 import ChipArray from "../shared/MaterialChip";
 import SkillChipArray from "../shared/skillChipCard";
 import { useToasts } from "react-toast-notifications";
+import { getUser, SignOut } from "../Auth/Index";
+
 import {
   signupskillRequired,
   editProfileRequired,
@@ -286,7 +288,11 @@ export default function UserDashboard(props) {
   const validateMaterial = () => {
     if (!material) {
       let msg = "Required";
-      setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        name: msg,
+        error: "",
+      });
       return false;
     } else {
       let msg = "";
@@ -423,33 +429,38 @@ export default function UserDashboard(props) {
     validateMaterial();
     // debugger;
     if (materialArrayData.length > 0) {
-      materialArrayData.map((mat) => {
-        if (mat !== material) {
-          var array = materialArrayData.filter((mat) => mat !== material);
-          if (material) {
-            array.push(material);
-            setmaterialArrayData(array);
+      const tempCheck = materialArrayData.find((cont) => cont === material);
 
-            const msg = "";
-            setmaterialRequiredFields({
-              ...materialRequiredFields,
-              error: msg,
-            });
-            setMaterial("");
-          }
-        } else {
-          const msg = "Value already existed";
+      if (!tempCheck) {
+        var array = materialArrayData.filter((mat) => mat !== material);
+        if (material) {
+          array.push(material);
+          setmaterialArrayData(array);
+
+          const msg = "";
           setmaterialRequiredFields({
             ...materialRequiredFields,
             error: msg,
           });
           setMaterial("");
-          // alert("msg");
-          // const array = materialArrayData.filter((mat) => mat !== material);
-          // // console.log(array, "array mat");
-          // setmaterialArrayData(array);
         }
-      });
+      } else {
+        const msg = "Value already existed";
+        setmaterialRequiredFields({
+          ...materialRequiredFields,
+          error: msg,
+        });
+        setMaterial("");
+        addToast("Material already existed", {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+        // alert("msg");
+        // const array = materialArrayData.filter((mat) => mat !== material);
+        // // console.log(array, "array mat");
+        // setmaterialArrayData(array);
+      }
     } else {
       if (material) {
         setmaterialArrayData((prevState) => [...prevState, material]);
@@ -605,7 +616,7 @@ export default function UserDashboard(props) {
             setTimeout(() => {
               setisLoading(false);
             }, 1000);
-
+            localStorage.setItem("user", JSON.stringify(response.data.user));
             setprofileModal(false);
 
             if (response.data) {
@@ -669,13 +680,32 @@ export default function UserDashboard(props) {
       // }
     } else if (e.target.name === "availability") {
       const avail = e.target.value.replace(/\D/g, "");
-      if (avail !== "") {
-        if (avail.length <= 1 && avail < 8) {
-          setFormData({
-            ...formData,
-            [e.target.name]: avail,
-          });
+      if (e.target.value <= 168) {
+        if (avail !== "") {
+          if (avail.length <= 3 && avail < 169) {
+            setFormData({
+              ...formData,
+              [e.target.name]: avail,
+            });
+          }
+        } else {
+          if (e.target.value) {
+            setFormData({
+              ...formData,
+              [e.target.name]: e.target.value.replace(/\D/g, ""),
+            });
+          } else {
+            setFormData({
+              ...formData,
+              [e.target.name]: "",
+            });
+          }
         }
+        const msg = "";
+        setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
+      } else {
+        const msg = "Availibilty must be less than equal to 168";
+        setAboutRequiredFields({ ...aboutRequiredFields, availability: msg });
       }
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -699,15 +729,34 @@ export default function UserDashboard(props) {
           skill._id === e.target.value ? setskillList(skill.skill) : ""
         );
       } else if (e.target.name === "score") {
-        const avail = e.target.value.replace(/\D/g, "");
-        if (avail !== "") {
-          if (avail.length >= 2) {
+        var avail = e.target.value.replace(/\D/g, "");
+        if (e.target.value <= 5) {
+          if (avail !== "") {
+            if (avail.length >= 2 && e.target.value >= 5) {
+            } else {
+              setskillFormData({
+                ...skillformData,
+                [e.target.name]: avail,
+              });
+            }
           } else {
-            setskillFormData({
-              ...skillformData,
-              [e.target.name]: avail.toString(),
-            });
+            if (e.target.value) {
+              setskillFormData({
+                ...skillformData,
+                [e.target.name]: e.target.value.replace(/\D/g, ""),
+              });
+            } else {
+              setskillFormData({
+                ...skillformData,
+                [e.target.name]: "",
+              });
+            }
           }
+          const msg = "";
+          setskillRequiredFields({ ...skillRequiredFields, score: msg });
+        } else {
+          const msg = "Rating must be less than equal to 5";
+          setskillRequiredFields({ ...skillRequiredFields, score: msg });
         }
       } else {
         setskillFormData({ ...skillformData, [e.target.name]: value });

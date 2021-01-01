@@ -20,8 +20,9 @@ export default function UserTable(props) {
         <thead>
           <tr className="text-center">
             <th style={{ padding: "0.75rem 0.3rem 0.75rem 0.3rem" }}>
-              Material Name
+              Category Name
             </th>
+            <th style={{ padding: "0.75rem 0.3rem 0.75rem 0.3rem" }}>Color</th>
 
             <th style={{ padding: "0.75rem 0.3rem 0.75rem 0.3rem" }}>
               Actions

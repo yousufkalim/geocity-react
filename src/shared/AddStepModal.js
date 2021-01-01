@@ -15,6 +15,8 @@ import "../Theme/css/main.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
 import { names } from "./Data";
+import StepCard from "./StepCard";
+
 const ModalExample = (props) => {
   const {
     stepformData,
@@ -31,6 +33,11 @@ const ModalExample = (props) => {
     material,
     formDataSkillField,
     onStepAdd,
+    stepArrayData,
+    HandleStepDelete,
+    materialRequiredFields,
+    stepRequiredFields,
+    skillRequiredFields,
   } = props;
 
   const handleStep = (e) => {
@@ -55,7 +62,14 @@ const ModalExample = (props) => {
             <Row form>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="exampleEmail">Step Name</Label>
+                  <Label for="exampleEmail" className="row label">
+                    Step Name*
+                    {stepRequiredFields.name !== "" ? (
+                      <p className="error"> {stepRequiredFields.name}</p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     type="text"
                     name="name"
@@ -67,7 +81,17 @@ const ModalExample = (props) => {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="examplePassword">Project Status</Label>
+                  <Label for="examplePassword" className="row label">
+                    Project Status*
+                    {stepRequiredFields.status !== "" ? (
+                      <p className="errorselect">
+                        {" "}
+                        {stepRequiredFields.status}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     type="select"
                     name="status"
@@ -86,7 +110,17 @@ const ModalExample = (props) => {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="exampleAddress">Step Type</Label>
+                  <Label for="exampleAddress" className="row label">
+                    Step Type*
+                    {stepRequiredFields.stepType !== "" ? (
+                      <p className="errorselect ">
+                        {" "}
+                        {stepRequiredFields.stepType}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     name="stepType"
                     id="stepType"
@@ -106,7 +140,17 @@ const ModalExample = (props) => {
               {stepType === "Material" ? (
                 <Col md={4}>
                   <FormGroup>
-                    <Label for="exampleAddress">{stepType}</Label>
+                    <Label for="exampleAddress" className="row label">
+                      {stepType}*
+                      {materialRequiredFields.name !== "" ? (
+                        <p className="errorselect">
+                          {" "}
+                          {materialRequiredFields.name}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                    </Label>
                     <Input
                       type="select"
                       name="material"
@@ -127,7 +171,17 @@ const ModalExample = (props) => {
                 <>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="exampleAddress">{stepType}</Label>
+                      <Label for="exampleAddress" className="row label">
+                        {stepType}*
+                        {skillRequiredFields.skillField !== "" ? (
+                          <p className="errorselect ">
+                            {" "}
+                            {skillRequiredFields.skillField}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
                       <Input
                         type="select"
                         name="skillField"
@@ -147,7 +201,17 @@ const ModalExample = (props) => {
                   </Col>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="exampleAddress">Skill</Label>
+                      <Label for="exampleAddress" className="row label">
+                        Skill*
+                        {skillRequiredFields.skill !== "" ? (
+                          <p className="errorselect ">
+                            {" "}
+                            {skillRequiredFields.skill}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
                       <Input
                         type="select"
                         name="skill"
@@ -167,7 +231,25 @@ const ModalExample = (props) => {
                   </Col>
                   <Col md={4}>
                     <FormGroup>
-                      <Label for="exampleAddress">Speciality</Label>
+                      <Label for="exampleAddress" className="row label">
+                        Speciality*
+                        {skillRequiredFields.speciality !== "" ? (
+                          <p className="error">
+                            {" "}
+                            {skillRequiredFields.speciality}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                        {stepRequiredFields.error !== "" ? (
+                          <p className="error mt-2">
+                            {" "}
+                            {stepRequiredFields.error}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
                       <Input
                         type="text"
                         name="speciality"
@@ -184,7 +266,17 @@ const ModalExample = (props) => {
               )}
               <Col md={4}>
                 <FormGroup>
-                  <Label for="exampleAddress2">Description</Label>
+                  <Label for="exampleAddress2" className="row label">
+                    Description*
+                    {stepRequiredFields.description !== "" ? (
+                      <p className="error mt-1">
+                        {" "}
+                        {stepRequiredFields.description}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
                   <Input
                     type="textarea"
                     name="description"
@@ -211,7 +303,31 @@ const ModalExample = (props) => {
                 </button>
               </Col>
             </Row>
-
+            <Row>
+              <Col md={6}>
+                <div
+                  className={
+                    stepArrayData
+                      ? stepArrayData.length > 0
+                        ? " mt-3 stepDiv"
+                        : ""
+                      : ""
+                  }
+                >
+                  {stepArrayData
+                    ? stepArrayData.map((step, i) => (
+                        <StepCard
+                          i={i}
+                          step={step}
+                          HandleStepDelete={HandleStepDelete}
+                          materialList={materialList}
+                          skillfieldList={skillfieldList}
+                        />
+                      ))
+                    : ""}
+                </div>
+              </Col>
+            </Row>
             <Col className="text-right">
               {isLoading === true ? (
                 <center>

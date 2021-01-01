@@ -16,12 +16,11 @@ import {
 import "../Theme/css/main.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
-import EditSkill from "../Components/EditSkillComponent";
+import SkillChipCard from "../shared/EditSkillChipCard";
 const ModalExample = (props) => {
   const {
     buttonLabel,
     className,
-
     data,
     EditSkillSubmit,
     handleChangeEdit,
@@ -36,12 +35,18 @@ const ModalExample = (props) => {
     seteditFormData,
     ValidateEditSkillField,
     seteditskillArrayData,
+    skillFieldList,
+    ValidateEditSkill,
+    HandleEditSkill,
+    AddEditSkill,
+    editskill,
+    seteditskill,
+    editcheck,
+    seteditcheck,
+    UpdateSkill,
+    setIndex,
   } = props;
-  const updateStates = (value, i) => {
-    const obj = { ...editformData };
-    editformData.skill[i] = value;
-    // seteditFormData({ ...editformData, ["skill"]: obj });
-  };
+  const EditSkillState = (value, i) => {};
   // console.log(editformData, "editformData");
   return (
     <div id="Profilemodal">
@@ -85,31 +90,92 @@ const ModalExample = (props) => {
                   />
                 </FormGroup>
               </Col>
-              <Col md={4}></Col>
+              {editskill && editcheck == true ? (
+                <>
+                  <Col md={4}>
+                    <FormGroup>
+                      <Label for="exampleEmail" className="row label">
+                        Skill*
+                        {aboutRequiredFields.editSkill !== "" ? (
+                          <p className="error">
+                            {" "}
+                            {aboutRequiredFields.editSkill}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
+                      <Input
+                        type="text"
+                        name="skill"
+                        id="skill"
+                        value={editskill}
+                        placeholder="Enter Skill"
+                        onChange={HandleEditSkill}
+                        onBlur={ValidateEditSkill}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col className="text-left">
+                    {isLoading === true ? (
+                      <center>
+                        <div className={useStyles.root}>
+                          <CircularProgress disableShrink />
+                        </div>
+                      </center>
+                    ) : (
+                      <button
+                        onClick={UpdateSkill}
+                        type="button"
+                        // id="userButton"
+                        id="modalButton1"
+                        style={{ marginTop: "2rem" }}
+                        className="btn text-uppercase"
+                      >
+                        Update Skill
+                      </button>
+                    )}
+                  </Col>
+                </>
+              ) : (
+                ""
+              )}
             </Row>
-            <Row
+            <Col
+              md={8}
               style={{
                 marginRight: "0px",
                 marginLeft: "0px",
               }}
             >
-              {editskillArrayData.skill && editskillArrayData.skill.length > 0
-                ? editskillArrayData.skill.map((sk, i) => (
-                    <EditSkill
-                      Col={Col}
-                      FormGroup={FormGroup}
-                      Label={Label}
-                      sk={sk}
-                      updateStates={updateStates}
-                      Input={Input}
-                      handleChangeEdit={handleChangeEdit}
-                      seteditskillArrayData={seteditFormData}
-                      skillField={editformData.skillField}
-                      i={i}
-                    />
-                  ))
-                : ""}
-            </Row>
+              <div
+                className={
+                  editformData.skill
+                    ? editformData.skill.length > 0
+                      ? "  stepDiv"
+                      : ""
+                    : ""
+                }
+              >
+                {editformData.skill && editformData.skill.length > 0
+                  ? editformData.skill.map((step, i) => (
+                      <SkillChipCard
+                        key={i}
+                        skillArrayData={editformData.skill}
+                        setskillArrayData={seteditFormData}
+                        skillFieldList={skillFieldList}
+                        mat={step}
+                        i={i}
+                        seteditskill={seteditskill}
+                        seteditcheck={seteditcheck}
+                        editcheck={editcheck}
+                        // EditSkillState={EditSkillState}
+                        setIndex={setIndex}
+                      />
+                    ))
+                  : ""}
+              </div>
+            </Col>
             {/* <Row className="mt-3">
               <Col md={4} style={{ display: "flex", alignItems: "flex-end" }}>
                 <button

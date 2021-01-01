@@ -109,7 +109,11 @@ export default function UserTable(props) {
               ))
             )
           ) : (
-            <h5 className="text-dark">No projects found</h5>
+            <tr>
+              <td colSpan={8}>
+                <p className="text-dark text-center mt-2">No projects found</p>
+              </td>
+            </tr>
           )}
         </tbody>
       </Table>

@@ -392,7 +392,8 @@ export default function UserTable({
       <thead>
         <tr>
           <th>Date of request</th>
-          <th>Send By</th>
+          <th>Sent By</th>
+          <th>Invite (For)</th>
 
           <th>Invite Type</th>
           <th>Project name </th>
@@ -433,7 +434,11 @@ export default function UserTable({
             )
           )
         ) : (
-          <h5 className="text-dark text-right mt-2">No invitation found</h5>
+          <tr>
+            <td colSpan={8}>
+              <p className="text-dark text-center mt-2">No invitations found</p>
+            </td>
+          </tr>
         )}
       </tbody>
     </Table>

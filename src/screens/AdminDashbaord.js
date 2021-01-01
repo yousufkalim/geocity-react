@@ -19,6 +19,7 @@ import ListOfCategories from "../Components/ListOfCategories";
 import EditSkillModal from "../shared/EditSkillModal";
 import EditMaterialModal from "../shared/EditMaterialModal";
 import EditCategoryModal from "../shared/EditCategoryModal";
+import AddCategoryModal from "../shared/AddCategoryModal";
 
 import AddSKillModal from "../shared/AddSKillModal";
 import AddMaterialModal from "../shared/AddMaterialModal";
@@ -44,7 +45,10 @@ export default function UserDashboard(props) {
   const [address, setAddress] = useState("");
   const [items, setItems] = useState([]);
   const [photo, setPhoto] = useState("");
+  const [editcheck, seteditcheck] = useState(false);
+
   const [skillArrayData, setskillArrayData] = useState([]);
+
   const [editskillArrayData, seteditskillArrayData] = useState("");
 
   const [materialArrayData, setmaterialArrayData] = useState([]);
@@ -53,13 +57,16 @@ export default function UserDashboard(props) {
     skillField: "",
     error: "",
     editSkillField: "",
+    editSkill: "",
   });
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
+    addcategory: "",
     error: "",
     editname: "",
-    category: "",
+    color: "",
     editcategory: "",
+    editcolor: "",
   });
   const [skillRequiredFields, setskillRequiredFields] = useState(
     signupskillRequired
@@ -67,18 +74,23 @@ export default function UserDashboard(props) {
   const [materialList, setMaterialList] = useState([]);
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
-  const [category, setCategory] = useState("");
+  const [addcategory, setCategory] = useState("");
+  const [color, setColor] = useState("");
+
   const [editcategory, seteditCategory] = useState("");
+  const [editcolor, seteditColor] = useState("");
 
   const [editmaterial, seteditMaterial] = useState("");
 
-  const [otherSKill, setotherSkill] = useState("");
+  const [editskill, seteditskill] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
   const [CategoryList, setCategoryList] = useState("");
   const [key, setKey] = useState("first");
   const [invitationData, setinvitationData] = useState("");
   const [editskillmodal, seteditskillmodal] = useState(false);
+  const [addcategorymodal, setaddcategorymodal] = useState(false);
+
   const [addskillmodal, setaddskillmodal] = useState(false);
   const [materialmodal, setmaterialmodal] = useState(false);
   const [editmaterialmodal, seteditmaterialmodal] = useState(false);
@@ -87,19 +99,192 @@ export default function UserDashboard(props) {
   const [skillFieldId, setskillFieldId] = useState("");
   const [materialId, setmaterialId] = useState("");
   const [categoryId, setcategoryId] = useState("");
+  const [index, setIndex] = useState("");
 
   // functions
   const handleCategory = (e) => {
     setCategory(e.target.value);
   };
+  const handleColor = (e) => {
+    setColor(e.target.value);
+  };
   const handleEditCategory = (e) => {
     seteditCategory(e.target.value);
   };
-  const AddCategorySubmit = (e) => {
+  const handleEditColor = (e) => {
+    seteditColor(e.target.value);
+  };
+  const HandleEditSkill = (e) => {
+    seteditskill(e.target.value);
+  };
+  const UpdateSkill = () => {
+    seteditcheck(false);
+
+    editformData.skill.splice(index, 1, editskill);
+
+    // seteditskill("");
+  };
+  console.log(skillArrayData, "skillArrayData");
+  const AddEditSkill = (e) => {
     alert("hello");
   };
+  const AddCategorySubmit = (e) => {
+    setisLoading(true);
+    const check = ValidateCategory();
+    const check1 = ValidateColor();
+
+    if (check == true && check1 == true) {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      try {
+        axios
+          .post(
+            `http://localhost:3000/api/v1/admin/create-category`,
+            { name: addcategory, color: color },
+            headers
+          )
+          .then((res) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+
+            addToast("Category added successfully", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            const msg = "";
+            setmaterialRequiredFields({
+              ...materialRequiredFields,
+              error: msg,
+            });
+            setaddcategorymodal(!addcategorymodal);
+            setMaterial("");
+            // console.log(res, "res material");
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1500);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data.message;
+                setmaterialRequiredFields({
+                  ...materialRequiredFields,
+                  error: msg,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data;
+                setmaterialRequiredFields({
+                  ...materialRequiredFields,
+                  error: msg,
+                });
+              }
+            }
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+        // console.log(error, "error catch");
+      }
+    } else {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1500);
+    }
+  };
   const EditCategorySubmit = (e) => {
-    alert("hello");
+    setisLoading(true);
+    const check = ValidateEditCategory();
+    const check1 = ValidateEditColor();
+
+    if (check == true && check1 == true) {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      try {
+        axios
+          .post(
+            `http://localhost:3000/api/v1/admin/edit-category?id=${categoryId}`,
+            { name: editcategory, color: editcolor },
+            headers
+          )
+          .then((res) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+
+            addToast("Category updated successfully", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            const msg = "";
+            setmaterialRequiredFields({
+              ...materialRequiredFields,
+              error: msg,
+            });
+            seteditcategorymodal(!editcategorymodal);
+            setMaterial("");
+            // console.log(res, "res material");
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1500);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data.message;
+                setmaterialRequiredFields({
+                  ...materialRequiredFields,
+                  error: msg,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data;
+                setmaterialRequiredFields({
+                  ...materialRequiredFields,
+                  error: msg,
+                });
+              }
+            }
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+        // console.log(error, "error catch");
+      }
+    } else {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1500);
+    }
   };
 
   const AddMaterialSubmit = () => {
@@ -266,9 +451,26 @@ export default function UserDashboard(props) {
     if (editcategorymodal === false) {
       const fill = CategoryList.filter((cat) => cat._id === categoryId);
       seteditCategory(fill[0].name);
+      seteditColor(fill[0].color);
+
       setcategoryId(categoryId);
     }
     seteditcategorymodal(!editcategorymodal);
+  };
+
+  const AddCategoryToggle = () => {
+    setCategory("");
+    setColor("");
+    setmaterialRequiredFields({
+      name: "",
+      addcategory: "",
+      error: "",
+      editname: "",
+      color: "",
+      editcategory: "",
+      editcolor: "",
+    });
+    setaddcategorymodal(!addcategorymodal);
   };
 
   const MaterialToggle = () => {
@@ -278,7 +480,7 @@ export default function UserDashboard(props) {
   const EditMaterialToggle = (materialId) => {
     if (editmaterialmodal === false) {
       const filter = materialList.filter((dt) => dt._id === materialId);
-      console.log(filter, "filter material");
+      // console.log(filter, "filter material");
       seteditMaterial(filter[0].name);
       setmaterialId(materialId);
     }
@@ -286,7 +488,7 @@ export default function UserDashboard(props) {
   };
 
   const EditSkillSubmit = () => {
-    console.log(editformData.skill.skill, "editformData");
+    console.log(editformData, "editformData");
     setisLoading(true);
     ValidateSkillField();
 
@@ -301,7 +503,7 @@ export default function UserDashboard(props) {
           `http://localhost:3000/api/v1/admin/edit-skillField?id=${skillFieldId}`,
           {
             skillField: editformData.skillField,
-            skill: editformData.skill,
+            skills: editformData.skill,
           },
           headers
         )
@@ -373,6 +575,8 @@ export default function UserDashboard(props) {
         }
       } else {
         if (formData.skill) {
+          const array = [];
+          array.push(formData.skill);
           setskillArrayData((prevState) => [...prevState, formData.skill]);
           setFormData({ ...formData, ["skill"]: "" });
         } else {
@@ -383,43 +587,66 @@ export default function UserDashboard(props) {
 
   const AddSkillSubmit = () => {
     setisLoading(true);
-    ValidateSkillField();
-
+    const check = ValidateSkillField();
+    console.log(formData, "formdata");
     if (skillArrayData.length > 0) {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-      try {
-        axios
-          .post(
-            `http://localhost:3000/api/v1/admin/create-skillField?id=${skillFieldId}`,
-            { skillField: formData.skillField, skill: formData.skill },
-            headers
-          )
-          .then((res) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-            addToast("skill added successfully", {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 3000,
+      if (check === true) {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+        try {
+          axios
+            .post(
+              `http://localhost:3000/api/v1/admin/create-skillField`,
+              { skillField: formData.skillField, skills: skillArrayData },
+              headers
+            )
+            .then((res) => {
+              setTimeout(() => {
+                setisLoading(false);
+              }, 1000);
+              addToast("skill added successfully", {
+                appearance: "success",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+              setskillArrayData("");
+              setFormData({ ...formData, ["skillField"]: "" });
+              setaddskillmodal(!addskillmodal);
+              // console.log(res, "res material");
+            })
+            .catch((err) => {
+              setTimeout(() => {
+                setisLoading(false);
+              }, 1000);
+              if (err.response.data) {
+                if (err.response.data.message) {
+                  addToast(`${err.response.data.message}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                } else {
+                  addToast(`${err.response.data}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                }
+              }
             });
-            // console.log(res, "res material");
-          })
-          .catch((err) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-            console.log(" error =>", err);
-          });
-      } catch (error) {
+        } catch (error) {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          // console.log(error, "error catch");
+        }
+      } else {
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
-        // console.log(error, "error catch");
       }
     } else {
       setTimeout(() => {
@@ -440,7 +667,7 @@ export default function UserDashboard(props) {
     if (editskillmodal === false) {
       const filter = skillFieldList.filter((skill) => skill._id == skillId);
 
-      console.log(filter, "fileted");
+      // console.log(filter, "fileted");
       seteditskillArrayData(filter[0]);
       const obj = {
         skillField: filter[0].skillField,
@@ -453,9 +680,10 @@ export default function UserDashboard(props) {
     seteditskillmodal(!editskillmodal);
   };
   const Addtoggle = () => {
-    if (addskillmodal === false) {
-    }
-
+    setFormData({
+      skill: "",
+      skillField: "",
+    });
     setaddskillmodal(!addskillmodal);
   };
   const handleChange = (e) => {
@@ -469,24 +697,41 @@ export default function UserDashboard(props) {
     seteditFormData({ ...editformData, [e.target.name]: value });
   };
   // *******************
-
+  // console.log(CategoryList, "CategoryList");
   // Validations
   const ValidateCategory = () => {
-    if (!category) {
+    debugger;
+    if (addcategory === "" || !addcategory) {
       const msg = "Required";
       setmaterialRequiredFields({
         ...materialRequiredFields,
-        category: msg,
+        addcategory: msg,
       });
       return false;
     } else {
       const msg = "";
       setmaterialRequiredFields({
         ...materialRequiredFields,
-        category: msg,
+        addcategory: msg,
         error: msg,
       });
-
+      return true;
+    }
+  };
+  const ValidateColor = () => {
+    if (!color) {
+      const msg = "Required";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        color: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        color: msg,
+      });
       return true;
     }
   };
@@ -496,6 +741,7 @@ export default function UserDashboard(props) {
       setmaterialRequiredFields({
         ...materialRequiredFields,
         editcategory: msg,
+        error: "",
       });
       return false;
     } else {
@@ -503,6 +749,26 @@ export default function UserDashboard(props) {
       setmaterialRequiredFields({
         ...materialRequiredFields,
         editcategory: msg,
+        error: msg,
+      });
+
+      return true;
+    }
+  };
+  const ValidateEditColor = () => {
+    if (!editcolor) {
+      const msg = "Required";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        editcolor: msg,
+        error: "",
+      });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        editcolor: msg,
         error: msg,
       });
 
@@ -563,6 +829,23 @@ export default function UserDashboard(props) {
         editSkillField: msg,
       });
 
+      return true;
+    }
+  };
+  const ValidateEditSkill = () => {
+    if (!editskill) {
+      const msg = "Required";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        editSkill: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setAboutRequiredFields({
+        ...aboutRequiredFields,
+        editSkill: msg,
+      });
       return true;
     }
   };
@@ -642,7 +925,7 @@ export default function UserDashboard(props) {
         .get("http://localhost:3000/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
-          // console.log(res, "res skill");
+          console.log(res, "res skill");
         })
         .catch((err) => console.log(" error =>", err));
     } catch (error) {
@@ -691,7 +974,15 @@ export default function UserDashboard(props) {
     } catch (error) {
       console.log(error, "error catch");
     }
-  }, [key]);
+  }, [
+    key,
+    addcategorymodal,
+    materialmodal,
+    editcategorymodal,
+    editmaterialmodal,
+    editskillmodal,
+    addskillmodal,
+  ]);
   // console.log(data, "data user");
 
   // Delete User
@@ -994,6 +1285,16 @@ export default function UserDashboard(props) {
         seteditFormData={seteditFormData}
         ValidateEditSkillField={ValidateEditSkillField}
         seteditskillArrayData={seteditskillArrayData}
+        skillFieldList={skillFieldList}
+        ValidateEditSkill={ValidateEditSkill}
+        HandleEditSkill={HandleEditSkill}
+        AddEditSkill={AddEditSkill}
+        editskill={editskill}
+        seteditskill={seteditskill}
+        editcheck={editcheck}
+        seteditcheck={seteditcheck}
+        UpdateSkill={UpdateSkill}
+        setIndex={setIndex}
       />
       <AddSKillModal
         modal={addskillmodal}
@@ -1033,11 +1334,27 @@ export default function UserDashboard(props) {
         modal={editcategorymodal}
         toggle={EditCategoryToggle}
         isLoading={isLoading}
-        handleMaterial={handleEditCategory}
+        handleEditCategory={handleEditCategory}
         materialRequiredFields={materialRequiredFields}
-        ValidateMaterial={ValidateEditCategory}
-        material={editcategory}
-        AddMaterialSubmit={EditCategorySubmit}
+        ValidateEditCategory={ValidateEditCategory}
+        editcategory={editcategory}
+        EditCategorySubmit={EditCategorySubmit}
+        handleEditColor={handleEditColor}
+        editcolor={editcolor}
+        ValidateEditColor={ValidateEditColor}
+      />
+      <AddCategoryModal
+        modal={addcategorymodal}
+        toggle={AddCategoryToggle}
+        isLoading={isLoading}
+        handleCategory={handleCategory}
+        materialRequiredFields={materialRequiredFields}
+        ValidateCategory={ValidateCategory}
+        addcategory={addcategory}
+        AddCategorySubmit={AddCategorySubmit}
+        handleColor={handleColor}
+        color={color}
+        ValidateColor={ValidateColor}
       />
       <div id="services" className="cards-1">
         <div className="container">
@@ -1066,6 +1383,15 @@ export default function UserDashboard(props) {
                     className="btn btn-primary text-white  text-uppercase"
                   >
                     Add Material
+                  </button>
+                ) : key == "fifth" ? (
+                  <button
+                    onClick={AddCategoryToggle}
+                    type="button"
+                    id="modalButton1"
+                    className="btn btn-primary text-white  text-uppercase"
+                  >
+                    Add Category
                   </button>
                 ) : (
                   ""

@@ -122,15 +122,18 @@ const ModalExample = (props) => {
                   className={
                     skillArrayData
                       ? skillArrayData.length > 0
-                        ? " mt-3 stepDiv1"
+                        ? "  stepDiv1"
                         : ""
                       : ""
                   }
                 >
-                  <SkillChip
-                    skillArrayData={skillArrayData}
-                    setskillArrayData={setskillArrayData}
-                  />
+                  {skillArrayData.map((mat) => (
+                    <SkillChip
+                      skillArrayData={skillArrayData}
+                      setskillArrayData={setskillArrayData}
+                      mat={mat}
+                    />
+                  ))}
                 </Col>
               ) : (
                 ""

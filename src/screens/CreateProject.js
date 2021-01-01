@@ -559,7 +559,7 @@ function CreateProject() {
           return false;
         }
       });
-      debugger;
+      // debugger;
       if (stepArrayData.length > 0) {
         const tempCheck = stepArrayData.find(
           (cont) => cont.name === stepformData.name

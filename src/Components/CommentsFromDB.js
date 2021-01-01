@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function CommentsFromDB({
   data,
@@ -8,9 +8,14 @@ export default function CommentsFromDB({
   DeleteComment,
   ClearOutlinedIcon,
 }) {
+  const [show, setShow] = useState(false);
   return (
-    <div className="row text-left" style={{ marginTop: "2rem" }}>
-      <div className="text-right" style={{ width: "10%" }}>
+    <div className="row text-left commentSection" style={{ marginTop: "2rem" }}>
+      <div
+        className="text-right"
+        style={{ width: "10%" }}
+        onMouseOver={() => setShow(!show)}
+      >
         <img
           className="com-image"
           src={
@@ -23,7 +28,7 @@ export default function CommentsFromDB({
           alt="alternative"
         />
       </div>
-      <div className="text-left" style={{ width: "80%" }}>
+      <div onMouseOver={() => setShow(true)} style={{ width: "80%" }}>
         <div style={{ marginLeft: "2rem" }}>
           <h5>
             {comment.user.username}
@@ -40,7 +45,8 @@ export default function CommentsFromDB({
           </p>
         </div>
       </div>
-      <div>
+
+      <div style={{ display: show == true ? "block" : "none" }}>
         {comment.user._id === getUser()._id ? (
           <ClearOutlinedIcon onClick={() => DeleteComment(comment._id)} />
         ) : (

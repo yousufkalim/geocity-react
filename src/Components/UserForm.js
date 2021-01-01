@@ -223,13 +223,12 @@ export default function UserForm({
         </Col>
         <Col md={4}>
           <FormGroup>
-            <Label for="exampleAddress" className="row label">
+            <Label
+              for="exampleAddress"
+              className="row label"
+              style={{ flexWrap: "noWrap" }}
+            >
               Availability*(Days per week)
-              {aboutRequiredFields.availability !== "" ? (
-                <p className="error"> {aboutRequiredFields.availability}</p>
-              ) : (
-                ""
-              )}
             </Label>
             <Input
               type="number"
@@ -240,6 +239,11 @@ export default function UserForm({
               onChange={handleChange}
               onBlur={validateAvailability}
             />
+            {aboutRequiredFields.availability !== "" ? (
+              <p className="error"> {aboutRequiredFields.availability}</p>
+            ) : (
+              ""
+            )}
           </FormGroup>
         </Col>
         <Col md={4}>
@@ -388,11 +392,6 @@ export default function UserForm({
           <FormGroup>
             <Label for="exampleAddress2" className="row label">
               Rate Your Skill( 1 to 5)*{" "}
-              {skillRequiredFields.score !== "" ? (
-                <p className="error "> {skillRequiredFields.score}</p>
-              ) : (
-                ""
-              )}
             </Label>
             <Input
               min={1}
@@ -405,6 +404,11 @@ export default function UserForm({
               placeholder="Score"
               onChange={handleSkillChange}
             />
+            {skillRequiredFields.score !== "" ? (
+              <p className="error "> {skillRequiredFields.score}</p>
+            ) : (
+              ""
+            )}
           </FormGroup>
         </Col>
         {skillList.length > 0 ? (
@@ -428,7 +432,7 @@ export default function UserForm({
                   onChange={handleSkillChange}
                   onBlur={ValidateSkill}
                 >
-                  <option>Select Skill</option>
+                  <option value="">Select Skill</option>
 
                   {skillList.map((skill) => (
                     <option value={skill}>{skill}</option>
@@ -468,7 +472,7 @@ export default function UserForm({
                   onChange={handleSkillChange}
                   onBlur={ValidateSkill}
                 >
-                  <option>Select Skill</option>
+                  <option value="">Select Skill</option>
 
                   {/* {CategoryList
                   ? CategoryList.map((cat) => (

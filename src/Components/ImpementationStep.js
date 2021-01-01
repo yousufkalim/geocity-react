@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 export default function ImpementationStep({
   step,
   getUser,
@@ -137,7 +137,8 @@ export default function ImpementationStep({
                 </span>
               </p>
             </p>
-            {getUser()._id === data.project.project_owner._id ? (
+            {getUser()._id === data.project.project_owner._id &&
+            data.project.progress !== "100%" ? (
               <p id="entapeSearch">
                 {step.skills && Object.entries(step.skills).length > 0 ? (
                   <i
@@ -170,15 +171,17 @@ export default function ImpementationStep({
 
             <p>
               {step.contributing_user.map((cont) => (
-                <img
-                  className="project-image-sm"
-                  src={
-                    cont.profile_picture
-                      ? `http://localhost:3000/views/uploads/${cont.profile_picture}`
-                      : DefaultImage
-                  }
-                  alt="alternative"
-                />
+                <Link to={`/profile/${cont._id}`}>
+                  <img
+                    className="project-image-sm"
+                    src={
+                      cont.profile_picture
+                        ? `http://localhost:3000/views/uploads/${cont.profile_picture}`
+                        : DefaultImage
+                    }
+                    alt="alternative"
+                  />
+                </Link>
               ))}
             </p>
           </>
@@ -187,7 +190,8 @@ export default function ImpementationStep({
         )}
       </div>
       <div style={{ width: "15%" }}>
-        {getUser()._id === data.project.project_owner._id ? (
+        {getUser()._id === data.project.project_owner._id &&
+        data.project.progress !== "100%" ? (
           <button
             onClick={() => Steptoggle(step._id)}
             type="button"
@@ -197,6 +201,9 @@ export default function ImpementationStep({
           >
             MODIFIER
           </button>
+        ) : data.project.progress === "100%" ||
+          step.contributing_user.find((el) => el == getUser()._id) !== "" ? (
+          ""
         ) : (
           <button
             onClick={() => ShowInterest(step._id)}

@@ -2,6 +2,16 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
+import {
+  Card,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Button,
+} from "reactstrap";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +32,7 @@ export default function ChipsArray({
   setskillArrayData,
   materialList,
   addToast,
+  mat,
 }) {
   const classes = useStyles();
 
@@ -32,22 +43,65 @@ export default function ChipsArray({
 
   // console.log(chipData, "chipData");
   return (
-    <Paper component="ul" className={classes.root}>
-      {skillArrayData
-        ? skillArrayData.map((data) => {
-            // let icon = <TagFacesIcon />;
-            return (
-              <li key={data}>
-                <Chip
-                  //   icon={icon}
-                  label={data}
-                  onDelete={() => handleDelete(data)}
-                  className={classes.chip}
-                />
-              </li>
-            );
-          })
-        : ""}
-    </Paper>
+    // <Paper component="ul" className={classes.root}>
+    //   {skillArrayData
+    //     ? skillArrayData.map((data) => {
+    //         // let icon = <TagFacesIcon />;
+    //         return (
+    //           <li key={data}>
+    //             <Chip
+    //               //   icon={icon}
+    //               label={data}
+    //               onDelete={() => handleDelete(data)}
+    //               className={classes.chip}
+    //             />
+    //           </li>
+    //         );
+    //       })
+    //     : ""}
+    // </Paper>
+    <Card
+      style={{
+        width: "80%",
+        position: "relative",
+        margin: "auto",
+        borderRadius: "0.45rem",
+        padding: "0px",
+        border: "0.1px solid #ccc",
+        marginTop: "5px",
+        marginBottom: "5px",
+      }}
+      // className={i == 0 ? "" : "mt-2"}
+    >
+      <CardBody style={{ padding: "0.4rem" }} className="text-left">
+        <div className=" row">
+          <div className="col-9">
+            <h5 tag="h5">
+              <p>
+                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  {" "}
+                  Skill:
+                </span>{" "}
+                <span
+                  style={{
+                    opacity: 0.7,
+                    fontSize: "15px",
+                  }}
+                >
+                  {" "}
+                  {mat}
+                </span>
+              </p>
+            </h5>
+          </div>
+          <div className="col-3">
+            <ClearOutlinedIcon
+              style={{ fill: "#000" }}
+              onClick={() => handleDelete(mat)}
+            />
+          </div>
+        </div>
+      </CardBody>
+    </Card>
   );
 }

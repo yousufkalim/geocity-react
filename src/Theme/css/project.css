@@ -62,12 +62,6 @@ html {
 .cardsProject img {
   object-fit: cover;
 }
-#comments {
-  display: none;
-}
-#comments :hover {
-  display: block;
-}
 
 .modal-content {
   position: relative;
@@ -943,6 +937,12 @@ textarea:focus {
   outline: 0;
   box-shadow: 0 0 0 0.05rem rgba(0, 123, 255, 0.25);
 }
+.stepDiv2 {
+  overflow-y: auto;
+  height: 300px;
+  border: 0.5px solid #ccc;
+  padding: 12px;
+}
 .stepDiv1 {
   overflow-y: auto;
   height: 100px;
@@ -1012,7 +1012,7 @@ textarea:focus {
   justify-content: center;
 }
 #search2 {
-  justify-content: center;
+  justify-content: flex-start;
   margin-left: 6rem;
 }
 #search select {

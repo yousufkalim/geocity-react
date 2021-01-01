@@ -22,12 +22,15 @@ const ModalExample = (props) => {
     buttonLabel,
     className,
 
-    AddMaterialSubmit,
+    EditCategorySubmit,
     isLoading,
     materialRequiredFields,
-    handleMaterial,
-    material,
-    ValidateMaterial,
+    handleEditCategory,
+    editcategory,
+    ValidateEditCategory,
+    handleEditColor,
+    editcolor,
+    ValidateEditColor,
   } = props;
 
   return (
@@ -39,15 +42,14 @@ const ModalExample = (props) => {
         style={{ width: "50%", borderRadius: "2rem" }}
         className="modal-xl"
       >
-        <ModalHeader toggle={props.toggle}>Add Material</ModalHeader>
+        <ModalHeader toggle={props.toggle}>Edit Category</ModalHeader>
         <ModalBody>
           <Form>
             <Row form>
-              <Col md={4}></Col>
-              <Col md={4}>
+              <Col md={5}>
                 <FormGroup>
                   <Label for="exampleEmail" className="row label">
-                    Material*
+                    Category name*
                     {materialRequiredFields.editcategory !== "" ? (
                       <p className="errorselect">
                         {" "}
@@ -69,14 +71,37 @@ const ModalExample = (props) => {
                     type="text"
                     name="material"
                     id="material"
-                    value={material}
-                    placeholder="Enter material"
-                    onChange={handleMaterial}
-                    onBlur={ValidateMaterial}
+                    value={editcategory}
+                    placeholder="Enter category"
+                    onChange={handleEditCategory}
+                    onBlur={ValidateEditCategory}
                   />
                 </FormGroup>
               </Col>
-              <Col md={4}></Col>
+              <Col md={5}>
+                <FormGroup>
+                  <Label for="exampleEmail" className="row label">
+                    Color *
+                    {materialRequiredFields.editcolor !== "" ? (
+                      <p className="errorselect">
+                        {" "}
+                        {materialRequiredFields.editcolor}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </Label>
+                  <Input
+                    type="text"
+                    name="material"
+                    id="material"
+                    value={editcolor}
+                    placeholder="Enter color"
+                    onChange={handleEditColor}
+                    onBlur={ValidateEditColor}
+                  />
+                </FormGroup>
+              </Col>
             </Row>
 
             <Col className="text-right">
@@ -88,7 +113,7 @@ const ModalExample = (props) => {
                 </center>
               ) : (
                 <button
-                  onClick={AddMaterialSubmit}
+                  onClick={EditCategorySubmit}
                   type="button"
                   // id="userButton"
                   id="modalButton"

@@ -25,6 +25,13 @@ export default function InviteTableRow({
       </td>
       <td>{project.sender.username}</td>
       <td>
+        {project.type === "inviteProjectOwner"
+          ? "Shown Interest"
+          : project.type === "inviteCollaborator"
+          ? "Collaboration"
+          : "View private project"}
+      </td>
+      <td>
         {project.receiver._id === data.data._id
           ? "Received"
           : project.sender._id === data.data._id
@@ -83,7 +90,7 @@ export default function InviteTableRow({
                   }
                   type="button"
                   id="modalButton1"
-                  className="btn btn-primary text-white ml-4 text-uppercase"
+                  className="btn btn-primary text-white ml-2  mr-2  text-uppercase"
                 >
                   Decline
                 </button>
@@ -114,7 +121,7 @@ export default function InviteTableRow({
                   // onClick={() => DeleteContributerUser(skill._id)}
                   type="button"
                   id="modalButton1"
-                  className="btn ml-2 btn-primary text-white text-uppercase"
+                  className="btn  btn-primary text-white text-uppercase"
                 >
                   Accept
                 </button>
@@ -129,7 +136,7 @@ export default function InviteTableRow({
                   }
                   type="button"
                   id="modalButton1"
-                  className="btn btn-primary text-white ml-4 mr-2 text-uppercase"
+                  className="btn btn-primary text-white ml-2 mr-1 text-uppercase"
                 >
                   Decline
                 </button>

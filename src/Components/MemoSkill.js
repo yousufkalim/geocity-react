@@ -9,6 +9,7 @@ function EditSkillComponent({
   seteditskillArrayData,
   skillField,
   updateStates,
+  Row,
   i,
 }) {
   const [tempformData, settempFormData] = useState({
@@ -54,7 +55,7 @@ function EditSkillComponent({
   };
   const handleChangeTemp = (e) => {
     let value = e.target.value;
-    updateStates(value, i);
+
     settempFormData({ ...tempformData, [e.target.name]: value });
   };
   useEffect(() => {
@@ -66,34 +67,37 @@ function EditSkillComponent({
       settempFormData(obj);
     }
   }, []);
-
+  const handleSkillFocus = () => [updateStates(tempformData.skill, i)];
   return (
-    <Col md={4} className="mt-2">
-      <FormGroup style={{ marginBottom: "0px" }}>
-        <Label for="exampleEmail" className="row label">
-          Skill {i}*
-          {aboutRequiredFields.skill !== "" ? (
-            <p className="error"> {aboutRequiredFields.skill}</p>
-          ) : (
-            ""
-          )}
-          {aboutRequiredFields.error !== "" ? (
-            <p className="error"> {aboutRequiredFields.error}</p>
-          ) : (
-            ""
-          )}
-        </Label>
-        <Input
-          type="text"
-          name="skill"
-          id="skill"
-          value={tempformData.skill}
-          placeholder="Enter Skill"
-          onChange={handleChangeTemp}
-          onBlur={ValidateSkill}
-        />
-      </FormGroup>
-    </Col>
+    <Row>
+      <Col md={6} className="mt-2">
+        <FormGroup style={{ marginBottom: "0px" }}>
+          <Label for="exampleEmail" className="row label">
+            Skill {i}*
+            {aboutRequiredFields.skill !== "" ? (
+              <p className="error"> {aboutRequiredFields.skill}</p>
+            ) : (
+              ""
+            )}
+            {aboutRequiredFields.error !== "" ? (
+              <p className="error"> {aboutRequiredFields.error}</p>
+            ) : (
+              ""
+            )}
+          </Label>
+          <Input
+            type="text"
+            name="skill"
+            id="skill"
+            value={tempformData.skill}
+            placeholder="Enter Skill"
+            onChange={handleChangeTemp}
+            onBlur={ValidateSkill}
+          />
+        </FormGroup>
+      </Col>
+      <Col md={6}></Col>
+    </Row>
   );
 }
 

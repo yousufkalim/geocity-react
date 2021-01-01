@@ -358,48 +358,52 @@ export default function List() {
               {/* end of col */}
             </div>
             {/* row 1 */}
-            {filter === false ? (
-              projectData.length > 0 ? (
-                <div className="row" id="search2">
-                  {projectData
-                    .slice(0, 12)
-                    .map(({ project: data, totalLikes }) => (
-                      <ProjectList
-                        data={data}
-                        totalLikes={totalLikes}
-                        RequestToView={RequestToView}
-                        DefaultImage={DefaultImage}
-                      />
-                    ))}
-                </div>
-              ) : (
-                <center>
-                  <h1>No project found</h1>
-                </center>
-              )
-            ) : typeof filteredArray !== typeof "" ? (
-              filteredArray ? (
-                <div className="row" id="search2">
-                  {filteredArray &&
-                    filteredArray.map((data) => (
-                      <ProjectList
-                        data={data}
-                        filter={filter}
-                        totalLikes={data.totalLikes}
-                        DefaultImage={DefaultImage}
-                      />
-                    ))}
-                </div>
-              ) : (
-                <center>
-                  <h1>No project found</h1>
-                </center>
-              )
-            ) : (
-              <center>
-                <h1>No project found</h1>
-              </center>
-            )}
+            <div className="row ">
+              <div className="col-lg-12 text-left">
+                {filter === false ? (
+                  projectData.length > 0 ? (
+                    <div className="row" id="search2">
+                      {projectData
+                        .slice(0, 12)
+                        .map(({ project: data, totalLikes }) => (
+                          <ProjectList
+                            data={data}
+                            totalLikes={totalLikes}
+                            RequestToView={RequestToView}
+                            DefaultImage={DefaultImage}
+                          />
+                        ))}
+                    </div>
+                  ) : (
+                    <center>
+                      <h1>No project found</h1>
+                    </center>
+                  )
+                ) : typeof filteredArray !== typeof "" ? (
+                  filteredArray ? (
+                    <div className="row" id="search2">
+                      {filteredArray &&
+                        filteredArray.map((data) => (
+                          <ProjectList
+                            data={data}
+                            filter={filter}
+                            totalLikes={data.totalLikes}
+                            DefaultImage={DefaultImage}
+                          />
+                        ))}
+                    </div>
+                  ) : (
+                    <center>
+                      <h1>No project found</h1>
+                    </center>
+                  )
+                ) : (
+                  <center>
+                    <h1>No project found</h1>
+                  </center>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

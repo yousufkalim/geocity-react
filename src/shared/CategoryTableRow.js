@@ -14,7 +14,9 @@ export default function TableRow({
         <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
           {category.name}
         </td>
-
+        <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
+          {category.color}
+        </td>
         <td style={{ padding: "0.4rem 0.4rem 0.3rem 0.4rem" }}>
           <button
             onClick={() => EditCategoryToggle(category._id)}

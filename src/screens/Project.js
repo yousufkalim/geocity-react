@@ -50,6 +50,7 @@ export default function Project(props) {
 
   const [skillFieldData, setSkillFieldData] = useState("");
   const [MaterialData, setMaterialData] = useState("");
+  const [otherSKill, setotherSkill] = useState("");
 
   const [like, setlike] = useState(0);
   const [searchBy, setsearchBy] = useState("");
@@ -92,6 +93,7 @@ export default function Project(props) {
   const [skillList, setskillList] = useState("");
   const [stepArrayData, setstepArrayData] = useState([]);
   const [tempstepId, settempstepId] = useState("");
+
   const [aboutRequiredFields, setAboutRequiredFields] = useState(
     projectaboutRequired
   );
@@ -101,7 +103,66 @@ export default function Project(props) {
   const [skillRequiredFields, setskillRequiredFields] = useState(
     projectskillRequired
   );
+  const [materialRequiredFields, setmaterialRequiredFields] = useState({
+    name: "",
+    error: "",
+  });
   // ***********************************************
+  const HandleStepDelete = (chipToDelete) => {
+    // alert(chipToDelete);
+    const ChipsArray = stepArrayData.filter(
+      (chip) => chip.name !== chipToDelete
+    );
+    console.log(ChipsArray, "chipsArray");
+    setstepArrayData(ChipsArray);
+  };
+  const validateMaterial = () => {
+    if (!material) {
+      const msg = "Required";
+      setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
+
+      return true;
+    }
+  };
+  const checkValidateForm3 = () => {
+    let obj = {};
+    let reqFields = true;
+    Object.keys(formDataSkillField).map((key) => {
+      if (formDataSkillField[key] === "") {
+        obj[key] = "Required";
+        reqFields = false;
+      }
+      return obj;
+    });
+    if (stepArrayData.length >= 0) {
+      // debugger;
+      if (!reqFields) {
+        if (otherSKill !== "") {
+          obj.skill = "";
+          setskillRequiredFields(obj);
+          return false;
+        } else {
+          setskillRequiredFields(obj);
+          return false;
+        }
+
+        // console.log(obj, "validate 2 check");
+      } else {
+        setskillRequiredFields(projectskillRequired);
+
+        return true;
+      }
+    } else {
+      setskillRequiredFields(projectskillRequired);
+
+      return true;
+    }
+  };
+
   const validateComment = () => {
     if (!comment) {
       setCommentError("Required");
@@ -492,7 +553,76 @@ export default function Project(props) {
       }, 1000);
     }
   };
-  const onAddStepSubmit = () => {
+  const onAddStepSubmit = async (e) => {
+    e.preventDefault();
+    setisLoading(true);
+    checkValidateForm();
+    const checkForm = checkValidateForm2();
+    if (checkForm == true || stepArrayData.length > 0) {
+      // validateCity();
+      setstepRequiredFields(projectstepRequired);
+
+      // console.log(photo, "photo");
+
+      try {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+        await axios
+          .post(
+            `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+            { step: stepArrayData },
+            headers
+          )
+          .then((response) => {
+            setisLoading(false);
+
+            setPhoto("");
+            setstepArrayData([]);
+            setaddstepModal(!addstepmodal);
+            addToast(`Project created Successfully`, {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
+            }
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
+    } else {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+      addToast(`Please add atleast one implementation_step `, {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+    }
     // alert("hello");
   };
   // modal dialoge
@@ -500,6 +630,10 @@ export default function Project(props) {
     // if (addstepmodal === false) {
     //   settempstepId(id);
     // }
+    setstepArrayData([]);
+    setstepFormData(stepData);
+    setFormDataSkillField(skillData);
+    setMaterial("");
     setaddstepModal(!addstepmodal);
   };
   const Steptoggle = (id) => {
@@ -819,23 +953,101 @@ export default function Project(props) {
   };
 
   const onStepAdd = () => {
-    if (material !== "") {
-      stepformData.material = material;
+    if (otherSKill !== "") {
+      formDataSkillField.skill = otherSKill;
     }
-    if (
-      Object.keys(formDataSkillField).length > 0 &&
-      formDataSkillField.skillField !== ""
-    ) {
-      const skills = {};
-      skills.speciality = formDataSkillField.speciality;
-      skills.skill = formDataSkillField.skill;
-      skills.skillField = formDataSkillField.skillField;
-      stepformData.skills = skills;
+    // debugger;
+
+    if (stepType !== "") {
+      if (stepType === "Field") {
+        var stepCheck2 = checkValidateForm3();
+      } else {
+        validateMaterial();
+      }
     }
-    setstepArrayData((prevState) => [...prevState, stepformData]);
-    setstepFormData(stepData);
-    setFormDataSkillField(skillData);
-    setstepType("");
+    const stepCheck = checkValidateForm2();
+
+    const check = Object.values(stepformData).map((obj) => {
+      if (obj !== "") {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    // console.log(check[0], "check on Add");
+    if (check[0] === true) {
+      const formObj = Object.values(formDataSkillField).map((obj) => {
+        if (obj !== "") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      // debugger;
+      if (stepArrayData.length > 0) {
+        const tempCheck = stepArrayData.find(
+          (cont) => cont.name === stepformData.name
+        );
+
+        if (tempCheck && stepCheck == true) {
+          addToast("Step already existed", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+        } else {
+          if (stepCheck2 == true && stepCheck === true) {
+            const skills = {};
+            skills.speciality = formDataSkillField.speciality;
+            skills.skill = formDataSkillField.skill;
+            skills.skillField = formDataSkillField.skillField;
+            stepformData.skills = skills;
+            setstepArrayData((prevState) => [...prevState, stepformData]);
+            setstepFormData(stepData);
+            setFormDataSkillField(skillData);
+            setstepType("");
+          } else if (material !== "" && stepCheck === true) {
+            stepformData.material = material;
+            setstepArrayData((prevState) => [...prevState, stepformData]);
+            setstepFormData(stepData);
+            setFormDataSkillField(skillData);
+            setstepType("");
+            setMaterial("");
+          } else {
+            addToast(`Please add All step fields`, {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 1000,
+            });
+          }
+        }
+      } else {
+        if (stepCheck2 == true && stepCheck === true) {
+          const skills = {};
+          skills.speciality = formDataSkillField.speciality;
+          skills.skill = formDataSkillField.skill;
+          skills.skillField = formDataSkillField.skillField;
+          stepformData.skills = skills;
+          setstepArrayData((prevState) => [...prevState, stepformData]);
+          setstepFormData(stepData);
+          setFormDataSkillField(skillData);
+          setstepType("");
+        } else if (material !== "" && stepCheck === true) {
+          stepformData.material = material;
+          setstepArrayData((prevState) => [...prevState, stepformData]);
+          setstepFormData(stepData);
+          setFormDataSkillField(skillData);
+          setstepType("");
+          setMaterial("");
+        } else {
+          addToast(`Please add All step fields`, {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
+          });
+        }
+      }
+    }
   };
 
   const onStepSubmit = (e) => {
@@ -867,8 +1079,14 @@ export default function Project(props) {
           const obj1 = { ...formDataSkillField };
           const obj2 = { ...stepformData };
           obj2.skills = obj1;
+          const fil = data.project.implementation_steps.find(
+            (el) => el._id == tempstepId
+          );
+          obj2.contributing_user = fil.contributing_user;
+          console.log(fil, "fil oy");
           // stepformData.skills = formDataSkillField;
           // let merge = { ...stepformData, ...formDataSkillField };
+
           array.push(obj2);
           // console.log(array, "array on submit");
           axios
@@ -912,6 +1130,11 @@ export default function Project(props) {
       } else if (stepformData.material !== "") {
         // alert("oy hoy");
         // console.log(stepformData, "stepformdata");
+        const fil = data.project.implementation_steps.find(
+          (el) => el._id == tempstepId
+        );
+        stepformData.contributing_user = fil.contributing_user;
+        // console.log(fil, "fil oy");
         axios
           .post(
             `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
@@ -951,7 +1174,15 @@ export default function Project(props) {
             }
             // console.log(" error =>", err);
           });
+      } else {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
       }
+    } else {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
     }
     // console.log(merge, "merge object");
   };
@@ -1111,7 +1342,7 @@ export default function Project(props) {
     // } catch (error) {
     //   // console.log(error, "error catch");
     // }
-  }, [Profilemodal, modal, stepmodal]);
+  }, [Profilemodal, modal, stepmodal, addstepmodal]);
   // console.log(skillFieldData, "data skillFieldData");
   useEffect(() => {
     var headers = {
@@ -1187,7 +1418,7 @@ export default function Project(props) {
             onSubmit={onSubmit}
             data={Object.keys(data).length > 0 ? data : ""}
           />
-          {/* <AddStepModal
+          <AddStepModal
             modal={addstepmodal}
             toggle={addStepToggle}
             stepformData={stepformData}
@@ -1205,7 +1436,12 @@ export default function Project(props) {
             skillList={skillList}
             formDataSkillField={formDataSkillField}
             handleSkillChange={handleSkillChange}
-          /> */}
+            stepArrayData={stepArrayData}
+            HandleStepDelete={HandleStepDelete}
+            stepRequiredFields={stepRequiredFields}
+            materialRequiredFields={materialRequiredFields}
+            skillRequiredFields={skillRequiredFields}
+          />
           <StepModal
             modal={stepmodal}
             toggle={Steptoggle}
@@ -1388,7 +1624,7 @@ export default function Project(props) {
                       </span>
                       {/* <span class="ml-2 " id="span2" >21%</span> */}
                     </p>
-                    <p style={{ marginTop: "7.2rem", marginRight: "0rem" }}>
+                    <p style={{ marginTop: "7.2rem", marginRight: "1rem" }}>
                       <AutorenewIcon
                         style={{
                           fontSize: "1.3rem",
@@ -1430,7 +1666,9 @@ export default function Project(props) {
                   </div>
                   <div className="text-left" style={{ width: "20%" }}>
                     <div id="userDetail">
-                      <h5>{data.project.project_owner.username}</h5>
+                      <h5 className="ml-3 text-capitalize ">
+                        <b>{data.project.project_owner.username}</b>
+                      </h5>
                       <p style={{ marginTop: "1.5rem" }}>
                         <i
                           className="fas fa-phone-volume fa-lg "
@@ -1479,20 +1717,20 @@ export default function Project(props) {
                       position: "relative",
                     }}
                   >
-                    {/* <div className="row">
-                      <div className="col-3 "> */}
-                    <h4
-                      className=" ml-3 mt-3 "
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: "18px",
-                        color: "#707070",
-                      }}
-                    >
-                      ETAPES DE REALISATION
-                    </h4>
-                    {/* </div> */}
-                    {/* <div className="col">
+                    <div className="row">
+                      <div className="col-3 ">
+                        <h4
+                          className=" ml-3 mt-3 "
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            color: "#707070",
+                          }}
+                        >
+                          ETAPES DE REALISATION
+                        </h4>
+                      </div>
+                      <div className="col">
                         <button
                           type="button"
                           onClick={addStepToggle}
@@ -1508,8 +1746,8 @@ export default function Project(props) {
                         >
                           Add Step
                         </button>
-                      </div> */}
-                    {/* </div> */}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
