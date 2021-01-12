@@ -6,15 +6,22 @@ import {
   Popover,
 } from "reactstrap";
 import Rating from "@material-ui/lab/Rating";
-export default function RecommendUser({ skill, RecommendUser, i }) {
+export default function RecommendUser({
+  skill,
+  RecommendUser,
+  i,
+  UnRecommendUser,
+}) {
   const [like, setlike] = useState(0);
   const [value, setValue] = React.useState(skill.score);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const toggle = () => setPopoverOpen(!popoverOpen);
-  const RecommendedUser = (id) => {
-    setlike(like + 1);
-    RecommendUser(id, like, setlike);
+  const RecommendedUser = (id, recommendedBy) => {
+    RecommendUser(id, like, setlike, recommendedBy);
+  };
+  const UnRecommendedUser = (id, recommendedBy) => {
+    UnRecommendUser(id, like, setlike, recommendedBy);
   };
   return (
     <>
@@ -53,9 +60,9 @@ export default function RecommendUser({ skill, RecommendUser, i }) {
           <Rating
             name="simple-controlled"
             value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-            }}
+            // onChange={(event, newValue) => {
+            //   setValue(newValue);
+            // }}
           />
           {/* <i className="fas fa-star fa-sm " style={{ color: "#ffe500" }} />
 
@@ -67,28 +74,27 @@ export default function RecommendUser({ skill, RecommendUser, i }) {
       </p>
 
       <p>
-        {like == 1 ? (
+        {like >= 1 ? (
           <>
             <i
               className="fas fa-heart "
               style={{ color: "red", cursor: "pointer" }}
-              onClick={() => RecommendedUser(skill.skillField._id)}
+              onClick={() => UnRecommendedUser(skill._id, skill.recommendedBy)}
             />{" "}
-            <span class="ml-1 " style={{ color: "grey" }}>
-              {skill.recommendedBy ? skill.recommendedBy.length + like : ""}
-            </span>
           </>
         ) : (
           <>
             <i
               className="fas fa-heart "
-              onClick={() => RecommendedUser(skill.skillField._id)}
+              onClick={() =>
+                RecommendedUser(skill.skillField._id, skill.recommendedBy)
+              }
             />
-            <span class="ml-1 " style={{ color: "grey" }}>
-              {skill.recommendedBy ? skill.recommendedBy.length + like : ""}
-            </span>
           </>
         )}
+        <span class="ml-1 " style={{ color: "grey" }}>
+          {skill.recommendedBy.length + like}
+        </span>
       </p>
     </>
   );

@@ -4,12 +4,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import InviteTableRow from "../Components/InviteTableRow";
 import { projectData } from "./Data";
-export default function UserTable({
-  data,
-  addToast,
-  invitationData,
-  setinvitationData,
-}) {
+export default function UserTable(props) {
+  const { data, addToast, invitationData, setinvitationData } = props;
   // ******
   // Accept invitation from project owner for collaboration
 
@@ -23,7 +19,7 @@ export default function UserTable({
     var array = invitationData.filter((com) => com._id !== invitation);
     // console.log(array, "array main");
     setinvitationData(array);
-    // alert(sender);
+    // alert("sender");
     try {
       const headers = {
         headers: {
@@ -43,6 +39,16 @@ export default function UserTable({
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
+            if (window.socket) {
+              // alert("hello");
+
+              window.socket.emit(`sendNotification`, {
+                id: data.project.project_owner._id,
+                title: `Invitation Accepted on ${data.project.title}`,
+                description: `Invitation Accepted on ${data.project.title}`,
+                projectID: props.match.params.id,
+              });
+            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -100,14 +106,24 @@ export default function UserTable({
         .then((res) => {
           if (res.data.message) {
             addToast(`${res.data.message}`, {
-              appearance: "error",
+              appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
             setcheckDecision(true);
+            if (window.socket) {
+              // alert("hello");
+
+              window.socket.emit(`sendNotification`, {
+                id: data.project.project_owner._id,
+                title: `Invitation Declined on ${data.project.title}`,
+                description: `Invitation Declined on ${data.project.title}`,
+                projectID: props.match.params.id,
+              });
+            }
           } else {
             addToast(`Error`, {
-              appearance: "error",
+              appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
@@ -164,6 +180,16 @@ export default function UserTable({
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
+            if (window.socket) {
+              // alert("hello");
+
+              window.socket.emit(`sendNotification`, {
+                id: data.project.project_owner._id,
+                title: `Invitation Accepted on ${data.project.title}`,
+                description: `Invitation Accepted on ${data.project.title}`,
+                projectID: props.match.params.id,
+              });
+            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -224,13 +250,23 @@ export default function UserTable({
         .then((res) => {
           if (res.data.message) {
             addToast(`${res.data.message}`, {
-              appearance: "error",
+              appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
+            if (window.socket) {
+              // alert("hello");
+
+              window.socket.emit(`sendNotification`, {
+                id: data.project.project_owner._id,
+                title: `Invitation Declined on ${data.project.title}`,
+                description: `Invitation Declined on ${data.project.title}`,
+                projectID: props.match.params.id,
+              });
+            }
           } else {
             addToast(`Success`, {
-              appearance: "error",
+              appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
@@ -291,6 +327,16 @@ export default function UserTable({
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
+            if (window.socket) {
+              // alert("hello");
+
+              window.socket.emit(`sendNotification`, {
+                id: data.project.project_owner._id,
+                title: `Invitation Accepted on ${data.project.title}`,
+                description: `Invitation Accepted on ${data.project.title}`,
+                projectID: props.match.params.id,
+              });
+            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -350,13 +396,23 @@ export default function UserTable({
         .then((res) => {
           if (res.data.message) {
             addToast(`${res.data.message}`, {
-              appearance: "error",
+              appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
+            if (window.socket) {
+              // alert("hello");
+
+              window.socket.emit(`sendNotification`, {
+                id: data.project.project_owner._id,
+                title: `Invitation Declined on ${data.project.title}`,
+                description: `Invitation Declined on ${data.project.title}`,
+                projectID: props.match.params.id,
+              });
+            }
           } else {
             addToast(`Success`, {
-              appearance: "error",
+              appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });

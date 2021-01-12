@@ -1,3 +1,5 @@
+import socketIOClient from "socket.io-client";
+
 export const isAuthenticated = () => {
   const token = localStorage.getItem("jwt");
   if (token) {
@@ -29,3 +31,4 @@ export const headers = {
     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
   },
 };
+export const socket = socketIOClient("http://localhost:3000");

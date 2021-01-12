@@ -7,7 +7,7 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { makeStyles } from "@material-ui/core/styles";
-import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+import DefaultImage from "../Theme/images/men.png";
 import { Link, Redirect } from "react-router-dom";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import Typography from "@material-ui/core/Typography";
@@ -83,11 +83,11 @@ export default function MenuListComposition() {
               marginTop: "5px",
             }}
             src={
-              getUser().profile_picture
-                ? `http://localhost:3000/views/uploads/${
+              getUser().profile_picture == "default.png"
+                ? DefaultImage
+                : `http://localhost:3000/views/uploads/${
                     getUser().profile_picture
                   }`
-                : DefaultImage
             }
             alt="alternative"
           />

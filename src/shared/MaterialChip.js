@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
@@ -34,6 +34,11 @@ export default function ChipsArray({
   step,
 }) {
   const classes = useStyles();
+  const [random, setrandom] = useState(112213);
+
+  useEffect(() => {
+    setrandom(Math.floor(Math.random() * 101));
+  }, [step]);
 
   const handleDelete = (chipToDelete) => {
     const ChipsArray = materialArrayData.filter(
@@ -68,23 +73,42 @@ export default function ChipsArray({
                   materialList.map((mat) => {
                     if (mat._id === step) {
                       return (
-                        <p>
-                          <span
-                            style={{ fontSize: "15px", fontWeight: "bold" }}
-                          >
-                            {" "}
-                            Material:
-                          </span>{" "}
-                          <span
-                            style={{
-                              opacity: 0.7,
-                              fontSize: "15px",
-                            }}
-                          >
-                            {" "}
-                            {mat.name}
-                          </span>
-                        </p>
+                        <>
+                          <p>
+                            <span
+                              style={{ fontSize: "15px", fontWeight: "bold" }}
+                            >
+                              {" "}
+                              Sr#:
+                            </span>{" "}
+                            <span
+                              style={{
+                                opacity: 0.7,
+                                fontSize: "15px",
+                              }}
+                            >
+                              {" "}
+                              {random}
+                            </span>
+                          </p>
+                          <p>
+                            <span
+                              style={{ fontSize: "15px", fontWeight: "bold" }}
+                            >
+                              {" "}
+                              Material:
+                            </span>{" "}
+                            <span
+                              style={{
+                                opacity: 0.7,
+                                fontSize: "15px",
+                              }}
+                            >
+                              {" "}
+                              {mat.name}
+                            </span>
+                          </p>
+                        </>
                       );
                     }
                   })
@@ -93,7 +117,7 @@ export default function ChipsArray({
           </div>
           <div className="col-2">
             <ClearOutlinedIcon
-              style={{ fill: "#000" }}
+              style={{ fill: "red" }}
               onClick={() => handleDelete(step)}
             />
           </div>

@@ -38,12 +38,32 @@ const ModalExample = (props) => {
     materialRequiredFields,
     stepRequiredFields,
     skillRequiredFields,
+    ValidateSkillField,
+    ValidateSkill,
+    validateStatus,
+    validateSpeciality,
+    validateDescription,
+    validateStepType,
+    validateStepName,
+    validateMaterial,
+    otherSKill,
+    setotherSkill,
+    ValidateOtherSkill,
+    ValidateOtherMaterial,
+    otherMaterial,
+    setotherMaterial,
+    setFormDataSkillField,
+    setMaterial,
+    skillData,
   } = props;
 
   const handleStep = (e) => {
     if (e.target.name === "Field") {
       const array = [];
       setmaterialArrayData(array);
+      setMaterial("");
+    } else {
+      setFormDataSkillField(skillData);
     }
 
     setstepType(e.target.value);
@@ -76,6 +96,7 @@ const ModalExample = (props) => {
                     value={stepformData.name}
                     placeholder="Step name"
                     onChange={handleStepChange}
+                    onBlur={validateStepName}
                   />
                 </FormGroup>
               </Col>
@@ -98,6 +119,7 @@ const ModalExample = (props) => {
                     id="Type"
                     value={stepformData.status}
                     onChange={handleStepChange}
+                    onBlur={validateStatus}
                   >
                     <option value="">Select status</option>
 
@@ -127,8 +149,9 @@ const ModalExample = (props) => {
                     value={stepType}
                     type="select"
                     onChange={handleStep}
+                    onBlur={validateStepType}
                   >
-                    <option>Select StepType</option>
+                    <option value="">Select StepType</option>
                     {names
                       ? names.map((mat) => <option value={mat}>{mat}</option>)
                       : ""}
@@ -138,35 +161,39 @@ const ModalExample = (props) => {
             </Row>
             <Row form>
               {stepType === "Material" ? (
-                <Col md={4}>
-                  <FormGroup>
-                    <Label for="exampleAddress" className="row label">
-                      {stepType}*
-                      {materialRequiredFields.name !== "" ? (
-                        <p className="errorselect">
-                          {" "}
-                          {materialRequiredFields.name}
-                        </p>
-                      ) : (
-                        ""
-                      )}
-                    </Label>
-                    <Input
-                      type="select"
-                      name="material"
-                      id="material"
-                      value={material}
-                      onChange={handleStepChange}
-                    >
-                      <option>Select Material</option>
-                      {materialList
-                        ? materialList.map((mat) => (
-                            <option value={mat._id}>{mat.name}</option>
-                          ))
-                        : ""}
-                    </Input>
-                  </FormGroup>
-                </Col>
+                <>
+                  <Col md={4}>
+                    <FormGroup>
+                      <Label for="exampleAddress" className="row label">
+                        {stepType}*
+                        {materialRequiredFields.name !== "" ? (
+                          <p className="errorselect">
+                            {" "}
+                            {materialRequiredFields.name}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
+                      <Input
+                        type="select"
+                        name="material"
+                        id="material"
+                        value={material}
+                        onChange={handleStepChange}
+                        onBlur={validateMaterial}
+                      >
+                        <option>Select Material</option>
+                        {materialList
+                          ? materialList.map((mat) => (
+                              <option value={mat._id}>{mat.name}</option>
+                            ))
+                          : ""}
+                        <option value="Other">Other</option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                </>
               ) : stepType === "Field" ? (
                 <>
                   <Col md={4}>
@@ -186,6 +213,7 @@ const ModalExample = (props) => {
                         type="select"
                         name="skillField"
                         id="skillField"
+                        onBlur={ValidateSkillField}
                         value={formDataSkillField.skillField}
                         onChange={handleSkillChange}
                       >
@@ -216,6 +244,7 @@ const ModalExample = (props) => {
                         type="select"
                         name="skill"
                         id="skill"
+                        onBlur={ValidateSkill}
                         value={formDataSkillField.skill}
                         onChange={handleSkillChange}
                       >
@@ -226,9 +255,41 @@ const ModalExample = (props) => {
                               <option value={mat}>{mat}</option>
                             ))
                           : ""}
+                        <option value="Other">Other</option>
                       </Input>
                     </FormGroup>
                   </Col>
+                  {formDataSkillField.skill === "Other" ? (
+                    <Col md={4}>
+                      <FormGroup>
+                        <Label for="exampleAddress" className="row label">
+                          Skill*
+                          {skillRequiredFields.otherSKill !== "" ? (
+                            <p className="errorselect ">
+                              {" "}
+                              {skillRequiredFields.otherSKill}
+                            </p>
+                          ) : (
+                            ""
+                          )}
+                        </Label>
+                        <Input
+                          type="text"
+                          name="otherSKill"
+                          id="otherSKill"
+                          placeholder="Enter your Skill"
+                          value={otherSKill}
+                          onChange={(e) => {
+                            ValidateOtherSkill();
+                            setotherSkill(e.target.value);
+                          }}
+                          onBlur={ValidateOtherSkill}
+                        ></Input>
+                      </FormGroup>
+                    </Col>
+                  ) : (
+                    ""
+                  )}
                   <Col md={4}>
                     <FormGroup>
                       <Label for="exampleAddress" className="row label">
@@ -257,10 +318,40 @@ const ModalExample = (props) => {
                         value={formDataSkillField.speciality}
                         placeholder="Speciality"
                         onChange={handleSkillChange}
+                        onBlur={validateSpeciality}
                       />
                     </FormGroup>
                   </Col>
                 </>
+              ) : (
+                ""
+              )}
+              {material === "Other" ? (
+                <Col md={4}>
+                  <>
+                    <Label for="exampleAddress" className="row label">
+                      Other material*{" "}
+                      {materialRequiredFields.otherMaterial !== "" ? (
+                        <p className="errorselect">
+                          {" "}
+                          {materialRequiredFields.otherMaterial}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                    </Label>
+                    <Input
+                      type="text"
+                      onChange={(e) => setotherMaterial(e.target.value)}
+                      // onBlur={validateScore}
+                      name="other"
+                      id="score"
+                      placeholder="Enter your material"
+                      value={otherMaterial}
+                      onBlur={ValidateOtherMaterial}
+                    ></Input>
+                  </>
+                </Col>
               ) : (
                 ""
               )}
@@ -284,23 +375,9 @@ const ModalExample = (props) => {
                     value={stepformData.description}
                     onChange={handleStepChange}
                     placeholder="Description"
+                    onBlur={validateDescription}
                   />
                 </FormGroup>
-              </Col>
-              <Col md={4} className="text-left">
-                <button
-                  type="button"
-                  onClick={onStepAdd}
-                  // id="userButton"
-                  id="modalButton"
-                  style={{
-                    marginTop: "2.7rem",
-                    marginLeft: "1rem",
-                  }}
-                  className="btn "
-                >
-                  Add
-                </button>
               </Col>
             </Row>
             <Row>

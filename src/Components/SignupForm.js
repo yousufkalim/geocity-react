@@ -393,11 +393,11 @@ export default function SignupForm({
             {skillformData.skill === "Other" ? (
               <>
                 <label className="label-agree-term row ">
-                  Other*
+                  Other Skill*
                   {skillRequiredFields.otherSKill !== "" ? (
                     <p className="errorselect">
                       {" "}
-                      ({skillRequiredFields.otherSKill})
+                      {skillRequiredFields.otherSKill}
                     </p>
                   ) : (
                     ""
@@ -457,6 +457,20 @@ export default function SignupForm({
           value={skillformData.score}
         />
 
+        {skillArrayData.length < 3 ? (
+          <Button
+            variant="contained"
+            onClick={onskillAdd}
+            name="add"
+            className="submit "
+          >
+            Add Skill
+          </Button>
+        ) : (
+          <Button variant="contained" disabled name="add" className="submit ">
+            Add Skill
+          </Button>
+        )}
         {skillArrayData && skillArrayData.length > 0 ? (
           <div className="mt-2 mb-2">
             {skillArrayData
@@ -474,20 +488,6 @@ export default function SignupForm({
           </div>
         ) : (
           ""
-        )}
-        {skillArrayData.length < 3 ? (
-          <Button
-            variant="contained"
-            onClick={onskillAdd}
-            name="add"
-            className="submit "
-          >
-            Add Skill
-          </Button>
-        ) : (
-          <Button variant="contained" disabled name="add" className="submit ">
-            Add Skill
-          </Button>
         )}
       </div>
 
@@ -518,6 +518,14 @@ export default function SignupForm({
         </select>
       </div>
 
+      <Button
+        variant="contained"
+        onClick={onMaterialAdd}
+        name="add"
+        className="submit "
+      >
+        Add Material
+      </Button>
       {materialArrayData.length > 0 ? (
         <div
           className={
@@ -544,16 +552,6 @@ export default function SignupForm({
       ) : (
         ""
       )}
-
-      <Button
-        variant="contained"
-        onClick={onMaterialAdd}
-        name="add"
-        className="submit "
-      >
-        Add Material
-      </Button>
-
       <div className="form-group-2">
         <h3>Social Links</h3>
         <label className="label-agree-term">Facebook</label>

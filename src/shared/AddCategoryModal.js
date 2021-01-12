@@ -24,13 +24,11 @@ const ModalExample = (props) => {
 
     AddCategorySubmit,
     isLoading,
-    materialRequiredFields,
-    handleCategory,
-    addcategory,
+    categoryRequiredFields,
     ValidateCategory,
-    handleColor,
-    color,
     ValidateColor,
+    handleCategoryChange,
+    categoryData,
   } = props;
 
   return (
@@ -50,30 +48,30 @@ const ModalExample = (props) => {
                 <FormGroup>
                   <Label for="exampleEmail" className="row label">
                     Category name*
-                    {materialRequiredFields.addcategory !== "" ? (
+                    {categoryRequiredFields.category !== "" ? (
                       <p className="errorselect">
                         {" "}
-                        {materialRequiredFields.addcategory}
+                        {categoryRequiredFields.category}
                       </p>
                     ) : (
                       ""
                     )}
-                    {materialRequiredFields.error !== "" ? (
+                    {/* {categoryRequiredFields.error !== "" ? (
                       <p className="errorselect">
                         {" "}
-                        {materialRequiredFields.error}
+                        {categoryRequiredFields.error}
                       </p>
                     ) : (
                       ""
-                    )}
+                    )} */}
                   </Label>
                   <Input
                     type="text"
                     name="category"
                     id="category"
-                    value={addcategory}
+                    value={categoryData.category}
                     placeholder="Enter category"
-                    onChange={handleCategory}
+                    onChange={handleCategoryChange}
                     onBlur={ValidateCategory}
                   />
                 </FormGroup>
@@ -82,10 +80,10 @@ const ModalExample = (props) => {
                 <FormGroup>
                   <Label for="exampleEmail" className="row label">
                     Color *
-                    {materialRequiredFields.color !== "" ? (
+                    {categoryRequiredFields.color !== "" ? (
                       <p className="errorselect">
                         {" "}
-                        {materialRequiredFields.color}
+                        {categoryRequiredFields.color}
                       </p>
                     ) : (
                       ""
@@ -95,9 +93,9 @@ const ModalExample = (props) => {
                     type="text"
                     name="color"
                     id="color"
-                    value={color}
+                    value={categoryData.color}
                     placeholder="Enter color"
-                    onChange={handleColor}
+                    onChange={handleCategoryChange}
                     onBlur={ValidateColor}
                   />
                 </FormGroup>

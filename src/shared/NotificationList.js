@@ -14,23 +14,52 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "36ch",
     backgroundColor: theme.palette.background.paper,
   },
-  inline: {
-    display: "inline",
-  },
+  // inline: {
+  //   display: "inline",
+  // },
 }));
 
 export default function AlignItemsList({ not }) {
   const classes = useStyles();
 
   return (
-    <List className={classes.root}>
-      <ListItem alignItems="flex-start">
+    <List
+      className={classes.root}
+      style={{
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        backgroundColor: "#f7f7f7",
+        margin: 0,
+        padding: 0,
+      }}
+    >
+      <ListItem
+        alignItems="flex-start"
+        style={{
+          paddingTop: "0px",
+          paddingBottom: "0px",
+          borderBottom: "1px solid #ccc",
+        }}
+      >
         {/* <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar> */}
         <ListItemText
+          style={{
+            fontSize: "0.8rem",
+          }}
           primary={not.title}
-          secondary={<React.Fragment>{not.description}</React.Fragment>}
+          secondary={
+            <React.Fragment style={{ fontSize: "0.6rem" }}>
+              {not.description}
+              <br />
+              {/* <small className="ml-2">
+                {new Date(not.createdAt).toString().split(" ")[1]}{" "}
+                {new Date(not.createdAt).toString().split(" ")[2]}{" "}
+                {new Date(not.createdAt).getFullYear()}
+              </small> */}
+            </React.Fragment>
+          }
         />
       </ListItem>
     </List>

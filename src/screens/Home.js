@@ -13,9 +13,56 @@ import bulbMen from "../Theme/images/bulb-men.png";
 import Group2 from "../Theme/images/Group2.png";
 import DropDown from "../shared/DropdownMenu";
 import NotificationMenu from "../shared/NotificationMenu";
+import { socket } from "../Auth/Index";
+import io from "socket.io-client";
 
 export default class Home extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      notify_data: [],
+      // this is where we are connecting to with sockets,
+    };
+  }
+  getData = (data) => {
+    this.setState((prevState) => ({
+      notify_data: [...prevState.notify_data, data],
+    }));
+  };
+
+  componentDidMount() {
+    // alert("hello");
+    // this.setState((prevState) => ({
+    //   notify_data: [...prevState.notify_data, getUser().notifications],
+    // }));
+    window.socket = io(
+      process.env.REACT_APP_SOCKET_URL || "http://localhost:3000",
+      {
+        query: `userConnectionId=${getUser()._id}`,
+      }
+    );
+    if (window.socket) {
+      window.socket.on(`recieveNotification${getUser()._id}`, (data) => {
+        console.log(data, "data");
+        this.setState((prevState) => ({
+          notify_data: [...prevState.notify_data, data],
+        }));
+        // toast.info(data.message);
+      });
+    }
+    // socket.off("sendNotification");
+
+    // socket.on("change_data", this.changeData);
+  }
+
+  /* Removing the listener before unmounting the component in order to avoid addition of multiple listener at the time revisit*/
+  componentWillUnmount() {
+    socket.off("sendNotification");
+    // socket.off("change_data");
+  }
   render() {
+    // console.log(this.state.notify_data, "notify_data");
+
     return (
       <div>
         <header id="header" className="header">
@@ -83,7 +130,11 @@ export default class Home extends React.Component {
               )}
             </div>
             <div className="row ml-1 mr-1">
-              {!isAuthenticated() ? "" : <NotificationMenu />}
+              {!isAuthenticated() ? (
+                ""
+              ) : (
+                <NotificationMenu notifyData={this.state.notify_data} />
+              )}
             </div>
             <div className="row ml-2">
               {!isAuthenticated() ? "" : <DropDown />}

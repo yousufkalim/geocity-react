@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
+
 export default function ImpementationStep({
   step,
   getUser,
@@ -8,14 +10,28 @@ export default function ImpementationStep({
   Steptoggle,
   ShowInterest,
   toggle,
+  DeleteStep,
+
+  CircularProgress,
+  useStyles,
 }) {
+  const [show, setShow] = useState(false);
+  const [isShown, setisShown] = useState(false);
+  const onShowInterest = (id) => {
+    ShowInterest(id, setisShown);
+  };
   return (
     <div
       className="row text-left"
       style={{ marginTop: "2rem" }}
       id="projectPage"
     >
-      <div className=" text-left" style={{ width: "60%" }}>
+      <div
+        className=" text-left"
+        style={{ width: "60%" }}
+        onMouseOver={() => setShow(true)}
+        onMouseOut={() => setShow(false)}
+      >
         <div style={{ marginLeft: "2rem" }}>
           <p>
             <i
@@ -43,7 +59,6 @@ export default function ImpementationStep({
           </p>
           <div className="row" style={{ marginTop: "-0.7rem" }}>
             <p style={{ width: "56%", marginLeft: "3.3rem" }}>
-              {console.log(step.skills, "ste.skills")}
               {step.skills ? (
                 Object.entries(step.skills).length > 0 ? (
                   <p
@@ -138,7 +153,8 @@ export default function ImpementationStep({
               </p>
             </p>
             {getUser()._id === data.project.project_owner._id &&
-            data.project.progress !== "100%" ? (
+            data.project.progress !== "100%" &&
+            step.status !== "completed" ? (
               <p id="entapeSearch">
                 {step.skills && Object.entries(step.skills).length > 0 ? (
                   <i
@@ -164,7 +180,12 @@ export default function ImpementationStep({
           </div>
         </div>
       </div>
-      <div className="  text-left" style={{ width: "25%" }}>
+      <div
+        className="  text-left"
+        style={{ width: "20%" }}
+        onMouseOver={() => setShow(true)}
+        onMouseOut={() => setShow(false)}
+      >
         {step.contributing_user ? (
           <>
             <p style={{ color: "rgb(112, 112, 112)" }}>Collaborateurs: </p>
@@ -189,24 +210,48 @@ export default function ImpementationStep({
           ""
         )}
       </div>
-      <div style={{ width: "15%" }}>
+      <div style={{ width: "20%" }}>
         {getUser()._id === data.project.project_owner._id &&
         data.project.progress !== "100%" ? (
-          <button
-            onClick={() => Steptoggle(step._id)}
-            type="button"
-            // id="modifyButton"
-            style={{ maxWidth: "90%" }}
-            className="btn btn-block ml-1 mt-3"
-          >
-            MODIFIER
-          </button>
+          <div className="row">
+            <div
+              className="col"
+              onMouseOver={() => setShow(true)}
+              onMouseOut={() => setShow(false)}
+            >
+              <button
+                onClick={() => Steptoggle(step._id)}
+                type="button"
+                // id="modifyButton"
+                style={{ maxWidth: "90%" }}
+                className="btn btn-block ml-1 mt-3"
+              >
+                MODIFIER
+              </button>
+            </div>
+            <div
+              className="col-3"
+              onMouseOver={() => setShow(true)}
+              onMouseOut={() => setShow(false)}
+            >
+              <div
+                // onMouseOver={() => setShow(true)}
+                style={{ display: show == true ? "block" : "none" }}
+              >
+                <ClearOutlinedIcon
+                  id="clear"
+                  onClick={() => DeleteStep(step._id)}
+                />
+              </div>
+            </div>
+          </div>
         ) : data.project.progress === "100%" ||
-          step.contributing_user.find((el) => el == getUser()._id) !== "" ? (
+          step.status === "completed" ||
+          step.contributing_user.find((el) => el._id == getUser()._id) ? (
           ""
-        ) : (
+        ) : isShown == false ? (
           <button
-            onClick={() => ShowInterest(step._id)}
+            onClick={() => onShowInterest(step._id)}
             type="button"
             // id="modifyButton"
             style={{ maxWidth: "80%" }}
@@ -214,6 +259,10 @@ export default function ImpementationStep({
           >
             Show Interest
           </button>
+        ) : (
+          <div className={useStyles.root}>
+            <CircularProgress disableShrink />
+          </div>
         )}
       </div>
     </div>

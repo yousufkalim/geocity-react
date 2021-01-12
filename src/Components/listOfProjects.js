@@ -26,7 +26,7 @@ export default function UserTable(props) {
               Step Name
             </th>
             <th style={{ padding: "0.75rem 0.3rem 0.75rem 0.3rem" }}>Status</th>
-            <th style={{ padding: "0.75rem 0.3rem 0.75rem 0.3rem" }}>
+            <th style={{ padding: "0.75rem 0.4rem 0.75rem 0.4rem" }}>
               Actions
             </th>
           </tr>

@@ -34,13 +34,16 @@ export default function TableRow({ project, DeleteProject, step }) {
             {project.title}
           </td>
           <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
-            <span> {project.project_owner}</span>
+            <span> {project.project_owner.username}</span>
           </td>
           <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>{step.name}</td>
           <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
             {step.status}
           </td>
-          <td>
+          <td
+            style={{ padding: "0.4rem 0.5rem 0rem 0.5rem" }}
+            className="text-left"
+          >
             <button
               onClick={() => DeleteProject(project._id)}
               type="button"

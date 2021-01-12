@@ -112,7 +112,6 @@ export const projectskillData = {
 export const projectaboutRequired = {
   title: "",
   type: "",
-  general_photo: "",
   general_description: "",
   category: "",
   address: "",

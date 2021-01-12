@@ -48,11 +48,10 @@ export default function ChipsArray({
     setskillArrayData({ ...skillArrayData, ["skill"]: ChipsArray });
   };
   const handleEdit = (chipToEdit) => {
-    if (editcheck === false) {
-      seteditskill(chipToEdit);
-      setIndex(i);
-    }
-    seteditcheck(!editcheck);
+    seteditskill(chipToEdit);
+    setIndex(i);
+
+    seteditcheck(true);
     // setskillArrayData({ ...skillArrayData, ["skill"]: ChipsArray });
   };
 
@@ -90,7 +89,7 @@ export default function ChipsArray({
     >
       <CardBody style={{ padding: "0.4rem" }} className="text-left">
         <div className=" row">
-          <div className="col-9">
+          <div className="col-8">
             <h5 tag="h5">
               <p>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
@@ -110,7 +109,7 @@ export default function ChipsArray({
             </h5>
           </div>
 
-          <div className="col-3 row ">
+          <div className="col-4 row ">
             <div className="col">
               <EditIcon
                 style={{ fill: "dodgerblue" }}

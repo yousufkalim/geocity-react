@@ -7,14 +7,19 @@ import {
 } from "react-router-dom";
 import CreateProject from "./screens/CreateProject";
 import Home from "./screens/Home";
+import ForgotPassword from "./screens/ForgotPassword";
+
 import List from "./screens/ListOfProject";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Project from "./screens/Project";
 import SignUp from "./screens/SignUp";
 import PrivateRoute from "./Auth/PrivateRoute";
+import AdminRoute from "./Auth/AdminRoute";
+
 import UserDashboard from "./screens/userDashboard";
 import AdminDashbaord from "./screens/AdminDashbaord";
+import ResetPassword from "./screens/ResetPassword";
 
 import "./Theme/css/bootstrap.css";
 import "./Theme/css/styles.css";
@@ -34,7 +39,11 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <PrivateRoute path="/profile/:id" component={Profile} />
+          <Route
+            path="/reset/:id"
+            render={(props) => <ResetPassword {...props} />}
+          />
+          <PrivateRoute path="/profile/:id" component={Profile} exact />
           <Route path="/ProjectList" component={List} exact />
           <PrivateRoute path="/SingleProject/:id" component={Project} exact />
           <PrivateRoute path="/Createproject" exact component={CreateProject} />
@@ -43,7 +52,7 @@ export default function App() {
             exact
             component={UserDashboard}
           />{" "}
-          <PrivateRoute
+          <AdminRoute
             path="/Admindashboard/:id"
             exact
             component={AdminDashbaord}
@@ -54,7 +63,10 @@ export default function App() {
           <Route path="/Login" exact>
             <Login />
           </Route>
-          <Route path="/">
+          <Route path="/ForgotPassword" exact>
+            <ForgotPassword />
+          </Route>
+          <Route path="/" exact>
             <Home />
           </Route>
         </Switch>

@@ -5,13 +5,13 @@ import Header from "../Components/header";
 import Footer from "../Components/footer";
 import Autocomplete from "react-autocomplete";
 import ProjectList from "../Components/projectList";
-import DefaultImage from "../Theme/images/index.png";
+import DefaultImage from "../Theme/images/index2.png";
 import { isAuthenticated, getUser } from "../Auth/Index";
 import { Redirect } from "react-router-dom";
 import SelectBox from "../shared/select";
 import { useToasts } from "react-toast-notifications";
 import Loaders from "../shared/Loaders";
-import AutoComplete from "../Components/AutoComplete";
+import AutoComplete from "../Components/SearchAutoComplete";
 import { projectaboutRequired } from "../shared/Data";
 export default function List() {
   const { addToast } = useToasts();
@@ -50,7 +50,9 @@ export default function List() {
         .get("http://localhost:3000/api/v1/auth/skillList")
         .then((res) => {
           const array = [...res.data.skills];
-          const options = array.map((arr, i) => ({
+          const tempArray = array.filter((ft) => ft.isDeleted == false);
+
+          const options = tempArray.map((arr, i) => ({
             value: arr._id,
             label: arr.skillField,
           }));
@@ -63,7 +65,8 @@ export default function List() {
         .get("http://localhost:3000/api/v1/admin/categoryList", headers)
         .then((res) => {
           const array = [...res.data.categories];
-          const options = array.map((arr) => ({
+          const tempArray = array.filter((ft) => ft.isDeleted == false);
+          const options = tempArray.map((arr) => ({
             value: arr._id,
             label: arr.name,
           }));
@@ -87,8 +90,18 @@ export default function List() {
   const validateCity = () => {
     // debugger;
     if (address === "") {
-      let msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+      try {
+        axios
+          .get("http://localhost:3000/api/v1/auth/projectList")
+          .then((res) => {
+            setProjectData(res.data.projects);
+            console.log(res, "response project");
+          })
+          .catch((err) => console.log(" error project =>", err));
+      } catch (error) {
+        // console.log(error, "error catch");
+      }
+      setFilter(false);
       return false;
     } else {
       const msg = "";

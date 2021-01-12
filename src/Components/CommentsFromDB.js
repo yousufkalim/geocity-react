@@ -14,7 +14,8 @@ export default function CommentsFromDB({
       <div
         className="text-right"
         style={{ width: "10%" }}
-        onMouseOver={() => setShow(!show)}
+        onMouseOver={() => setShow(true)}
+        onMouseOut={() => setShow(false)}
       >
         <img
           className="com-image"
@@ -28,7 +29,11 @@ export default function CommentsFromDB({
           alt="alternative"
         />
       </div>
-      <div onMouseOver={() => setShow(true)} style={{ width: "80%" }}>
+      <div
+        onMouseOver={() => setShow(true)}
+        onMouseOut={() => setShow(false)}
+        style={{ width: "80%" }}
+      >
         <div style={{ marginLeft: "2rem" }}>
           <h5>
             {comment.user.username}
@@ -46,9 +51,16 @@ export default function CommentsFromDB({
         </div>
       </div>
 
-      <div style={{ display: show == true ? "block" : "none" }}>
+      <div
+        onMouseOver={() => setShow(true)}
+        onMouseOut={() => setShow(false)}
+        style={{ display: show == true ? "block" : "none" }}
+      >
         {comment.user._id === getUser()._id ? (
-          <ClearOutlinedIcon onClick={() => DeleteComment(comment._id)} />
+          <ClearOutlinedIcon
+            id="clear"
+            onClick={() => DeleteComment(comment._id)}
+          />
         ) : (
           ""
         )}

@@ -9,13 +9,15 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import { getUser, isAuthenticated } from "../Auth/Index";
-import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.jpg";
 import { Link, Redirect } from "react-router-dom";
 import Modal from "../shared/Modal";
 import ProjectModal from "../shared/ProjectModal";
 import StepModal from "../shared/StepModal";
 import AddStepModal from "../shared/AddStepModal";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
+import DefaultuserImage from "../Theme/images/men.png";
+
 import {
   projectaboutRequired,
   projectstepRequired,
@@ -46,9 +48,11 @@ export default function Project(props) {
   };
   const [data, setData] = useState("");
   const [comment, setComment] = useState("");
+  const [CheckStep, setCheckStep] = useState("");
   const [commentError, setCommentError] = useState("");
-
   const [skillFieldData, setSkillFieldData] = useState("");
+  const [implementationstepData, setimplementationstepData] = useState([]);
+
   const [MaterialData, setMaterialData] = useState("");
   const [otherSKill, setotherSkill] = useState("");
 
@@ -60,7 +64,7 @@ export default function Project(props) {
   const [commentArray, setCommentArray] = useState([]);
   const [tempcommentArray, settempCommentArray] = useState([]);
 
-  const [materialArrayData, setmaterialArrayData] = useState([]);
+  const [singleStep, setSingleStep] = useState("");
 
   // modal states
   const [modal, setModal] = useState(false);
@@ -71,6 +75,7 @@ export default function Project(props) {
   // ***
 
   const [isLoading, setisLoading] = useState(false);
+
   const [CategoryList, setCategoryList] = useState("");
   const [stepId, setstepId] = useState("");
   const [photo, setPhoto] = useState("");
@@ -93,6 +98,7 @@ export default function Project(props) {
   const [skillList, setskillList] = useState("");
   const [stepArrayData, setstepArrayData] = useState([]);
   const [tempstepId, settempstepId] = useState("");
+  const [otherMaterial, setotherMaterial] = useState("");
 
   const [aboutRequiredFields, setAboutRequiredFields] = useState(
     projectaboutRequired
@@ -106,6 +112,7 @@ export default function Project(props) {
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
     error: "",
+    otherMaterial: "",
   });
   // ***********************************************
   const HandleStepDelete = (chipToDelete) => {
@@ -113,7 +120,7 @@ export default function Project(props) {
     const ChipsArray = stepArrayData.filter(
       (chip) => chip.name !== chipToDelete
     );
-    console.log(ChipsArray, "chipsArray");
+    // console.log(ChipsArray, "chipsArray");
     setstepArrayData(ChipsArray);
   };
   const validateMaterial = () => {
@@ -126,6 +133,29 @@ export default function Project(props) {
       setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
 
       return true;
+    }
+  };
+  const ValidateOtherMaterial = () => {
+    if (!otherMaterial) {
+      const msg = "Required";
+      setmaterialRequiredFields({ ...skillRequiredFields, otherMaterial: msg });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({ ...skillRequiredFields, otherMaterial: msg });
+      return true;
+    }
+  };
+
+  const ValidateOtherSkill = () => {
+    if (otherSKill) {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return true;
+    } else if (!otherSKill) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return false;
     }
   };
   const checkValidateForm3 = () => {
@@ -231,10 +261,54 @@ export default function Project(props) {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
+  const DeleteStep = async (id) => {
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+
+      await axios
+        .post(
+          `http://localhost:3000/api/v1/project/delete-step?id=${props.match.params.id}`,
+          { id: id },
+          headers
+        )
+        .then((res) => {
+          // setComment("");
+          addToast("Step  Deleted Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          const fil = implementationstepData.filter((con) => con._id !== id);
+          setimplementationstepData(fil);
+          setCheckStep(true);
+          setisLoading(false);
+        })
+        .catch((err) => {
+          // setTimeout(() => {
+          //   setisLoading(false);
+          // }, 1000);
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // console.log(" error =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+      // setTimeout(() => {
+      //   setisLoading(false);
+      // }, 1000);
+    }
+  };
   const DeleteComment = async (commentId) => {
     if (data.project && data.project.comments) {
       var array = data.project.comments.filter((com) => com._id !== commentId);
-      console.log(array, "array main");
+      // console.log(array, "array main");
       setCommentArray(array);
     }
     try {
@@ -363,7 +437,7 @@ export default function Project(props) {
   };
 
   const validateDescription = () => {
-    if (!formData.description) {
+    if (!stepformData.description) {
       const msg = "Required";
       setstepRequiredFields({
         ...stepRequiredFields,
@@ -393,14 +467,14 @@ export default function Project(props) {
     }
   };
   const validateStatus = () => {
-    if (stepformData.status) {
-      setstepRequiredFields({ ...stepRequiredFields, status: "" });
-
-      return true;
-    } else if (!stepformData.status) {
+    if (!stepformData.status) {
       const msg = "Required";
       setstepRequiredFields({ ...stepRequiredFields, status: msg });
       return false;
+    } else if (stepformData.status) {
+      setstepRequiredFields({ ...stepRequiredFields, status: "" });
+
+      return true;
     }
   };
   const validateStepType = () => {
@@ -471,17 +545,30 @@ export default function Project(props) {
       }
       return obj;
     });
-    // console.log(obj, "obj");
-    if (!reqFields) {
-      // obj.stepType = "Required";
-      setstepRequiredFields(obj);
-      return false;
+
+    if (stepArrayData.length >= 0) {
+      if (!reqFields) {
+        if (stepType === "") {
+          obj.stepType = "Required";
+          setstepRequiredFields(obj);
+          return false;
+        } else {
+          setstepRequiredFields(obj);
+          return false;
+        }
+        // return false;
+      } else {
+        setstepRequiredFields(projectstepRequired);
+
+        return true;
+      }
     } else {
       setstepRequiredFields(projectstepRequired);
+
       return true;
     }
   };
-
+  // console.log(stepRequiredFields, "stepRequired fields");
   // ***
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -547,68 +634,233 @@ export default function Project(props) {
           console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
     }
   };
   const onAddStepSubmit = async (e) => {
+    // console.log(stepformData, "stepFormData");
+
     e.preventDefault();
     setisLoading(true);
-    checkValidateForm();
-    const checkForm = checkValidateForm2();
-    if (checkForm == true || stepArrayData.length > 0) {
-      // validateCity();
-      setstepRequiredFields(projectstepRequired);
+    if (otherSKill !== "") {
+      formDataSkillField.skill = otherSKill;
+    }
+    if (material == "Other") {
+      var materialcheck = ValidateOtherMaterial();
+    }
+    // debugger;
 
+    if (stepType !== "") {
+      if (stepType === "Field") {
+        var stepCheck2 = checkValidateForm3();
+      } else {
+        validateMaterial();
+      }
+    }
+    const stepCheck = checkValidateForm2();
+
+    const check = Object.values(stepformData).map((obj) => {
+      if (obj !== "") {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (check[0] === true) {
+      const formObj = Object.values(formDataSkillField).map((obj) => {
+        if (obj !== "") {
+          return true;
+        } else {
+          return false;
+        }
+      });
       // console.log(photo, "photo");
+      if (stepCheck2 == true && stepCheck === true) {
+        const skills = {};
+        skills.speciality = formDataSkillField.speciality;
+        skills.skill = formDataSkillField.skill;
+        skills.skillField = formDataSkillField.skillField;
+        stepformData.skills = skills;
+        try {
+          const headers = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          };
+          await axios
+            .post(
+              `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+              { step: stepformData },
+              headers
+            )
+            .then((response) => {
+              setisLoading(false);
 
-      try {
-        const headers = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
-        await axios
-          .post(
-            `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
-            { step: stepArrayData },
-            headers
-          )
-          .then((response) => {
-            setisLoading(false);
-
-            setPhoto("");
-            setstepArrayData([]);
-            setaddstepModal(!addstepmodal);
-            addToast(`Project created Successfully`, {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 3000,
+              setPhoto("");
+              setstepArrayData([]);
+              setaddstepModal(!addstepmodal);
+              addToast(`Step created Successfully`, {
+                appearance: "success",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            })
+            .catch((err) => {
+              setTimeout(() => {
+                setisLoading(false);
+              }, 1000);
+              if (err.response.data) {
+                if (err.response.data.message) {
+                  addToast(`${err.response.data.message}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                } else {
+                  addToast(`${err.response.data}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                }
+              }
             });
-          })
-          .catch((err) => {
+        } catch (error) {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+        }
+        // setstepArrayData((prevState) => [...prevState, stepformData]);
+        setstepFormData(stepData);
+        setFormDataSkillField(skillData);
+        setstepType("");
+      } else if (material !== "" && stepCheck === true) {
+        if (material == "Other") {
+          if (materialcheck === true) {
+            stepformData.materialName = otherMaterial;
+            stepformData.material = "";
+
+            try {
+              const headers = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                },
+              };
+              await axios
+                .post(
+                  `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+                  { step: stepformData },
+                  headers
+                )
+                .then((response) => {
+                  setisLoading(false);
+
+                  setPhoto("");
+                  setstepArrayData([]);
+                  setaddstepModal(!addstepmodal);
+                  addToast(`Step created Successfully`, {
+                    appearance: "success",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                })
+                .catch((err) => {
+                  setTimeout(() => {
+                    setisLoading(false);
+                  }, 1000);
+                  if (err.response.data) {
+                    if (err.response.data.message) {
+                      addToast(`${err.response.data.message}`, {
+                        appearance: "error",
+                        autoDismiss: true,
+                        autoDismissTimeout: 3000,
+                      });
+                    } else {
+                      addToast(`${err.response.data}`, {
+                        appearance: "error",
+                        autoDismiss: true,
+                        autoDismissTimeout: 3000,
+                      });
+                    }
+                  }
+                });
+            } catch (error) {
+              setTimeout(() => {
+                setisLoading(false);
+              }, 1000);
+            }
+            setstepFormData(stepData);
+            setFormDataSkillField(skillData);
+            setstepType("");
+            setMaterial("");
+            setotherMaterial("");
+          }
+        } else {
+          stepformData.material = material;
+          try {
+            const headers = {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+              },
+            };
+            await axios
+              .post(
+                `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+                { step: stepformData },
+                headers
+              )
+              .then((response) => {
+                setisLoading(false);
+
+                setPhoto("");
+                setstepArrayData([]);
+                setaddstepModal(!addstepmodal);
+                addToast(`Step created Successfully`, {
+                  appearance: "success",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              })
+              .catch((err) => {
+                setTimeout(() => {
+                  setisLoading(false);
+                }, 1000);
+                if (err.response.data) {
+                  if (err.response.data.message) {
+                    addToast(`${err.response.data.message}`, {
+                      appearance: "error",
+                      autoDismiss: true,
+                      autoDismissTimeout: 3000,
+                    });
+                  } else {
+                    addToast(`${err.response.data}`, {
+                      appearance: "error",
+                      autoDismiss: true,
+                      autoDismissTimeout: 3000,
+                    });
+                  }
+                }
+              });
+          } catch (error) {
             setTimeout(() => {
               setisLoading(false);
             }, 1000);
-            if (err.response.data) {
-              if (err.response.data.message) {
-                addToast(`${err.response.data.message}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              } else {
-                addToast(`${err.response.data}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              }
-            }
-          });
-      } catch (error) {
+          }
+          setstepFormData(stepData);
+          setFormDataSkillField(skillData);
+          setstepType("");
+          setMaterial("");
+          setotherMaterial("");
+        }
+      } else {
+        addToast(`Please add All step fields`, {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 1000,
+        });
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
@@ -617,11 +869,6 @@ export default function Project(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      addToast(`Please add atleast one implementation_step `, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
     }
     // alert("hello");
   };
@@ -630,10 +877,12 @@ export default function Project(props) {
     // if (addstepmodal === false) {
     //   settempstepId(id);
     // }
+
     setstepArrayData([]);
     setstepFormData(stepData);
     setFormDataSkillField(skillData);
     setMaterial("");
+    setstepType("");
     setaddstepModal(!addstepmodal);
   };
   const Steptoggle = (id) => {
@@ -644,7 +893,7 @@ export default function Project(props) {
         (step) => step._id === id
       );
       const step = data.project.implementation_steps[stepIndex];
-      console.log(step, "step form toggle");
+      // console.log(step, "step form toggle");
       // if (step.skills) {
       //   setstepType("Field");
       // } else {
@@ -707,13 +956,15 @@ export default function Project(props) {
         )
         .then((res) => {
           // setProjectdataList(res.data.ownedProjects);
+
           setSkillFieldData(res.data);
           // addToast("Success", {
           //   appearance: "success",
           //   autoDismiss: true,
           //   autoDismissTimeout: 3000,
           // });
-          // console.log(res.data, "res skill search data");
+
+          console.log(res.data, "res skill search data");
         })
         .catch((err) => {
           addToast("Error", {
@@ -774,6 +1025,8 @@ export default function Project(props) {
     setstepId(stepId);
 
     setInviteId(id);
+    const fil = implementationstepData.find((el) => el._id == stepId);
+    setSingleStep(fil);
     if (modal === false && skill === "skills") {
       SearchBySkills(skill, id);
     } else if (modal === false && skill === "material") {
@@ -784,8 +1037,9 @@ export default function Project(props) {
 
   // profile toggle
   // project Like
-  const ProjectLike = () => {
+  const ProjectLike = (likedBy) => {
     // debugger;
+    // alert(like);
     if (!isAuthenticated()) {
       setRequest(true);
       addToast("Please login", {
@@ -794,8 +1048,60 @@ export default function Project(props) {
         autoDismissTimeout: 1000,
       });
     } else {
-      if (like >= 1) {
-        setlike(0);
+      // debugger;
+      if (likedBy.length > 0) {
+        const fil = likedBy.indexOf(getUser()._id);
+        if (fil == -1) {
+          // alert("hello");
+          var headers = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          };
+          // console.log(headers, "asnlnkoasnas");
+          try {
+            axios
+              .post(
+                `http://localhost:3000/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
+                {},
+                headers
+              )
+              .then((res) => {
+                setlike(like + 1);
+
+                addToast("Project like successfully", {
+                  appearance: "success",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+
+                // setProjectdataList(res.data.ownedProjects);
+              })
+              .catch((err) => {
+                setlike(0);
+                if (err.response.data) {
+                  if (err.response.data.message) {
+                    addToast(`${err.response.data.message}`, {
+                      appearance: "error",
+                      autoDismiss: true,
+                      autoDismissTimeout: 3000,
+                    });
+                  } else {
+                    addToast(`${err.response.data}`, {
+                      appearance: "error",
+                      autoDismiss: true,
+                      autoDismissTimeout: 1000,
+                    });
+                  }
+                }
+                // console.log(" error projects =>", err);
+              });
+          } catch (error) {
+            // console.log(error, "error catch");
+          }
+        } else {
+          setlike(like + 1);
+        }
       } else {
         var headers = {
           headers: {
@@ -822,7 +1128,7 @@ export default function Project(props) {
               // setProjectdataList(res.data.ownedProjects);
             })
             .catch((err) => {
-              setlike(0);
+              // setlike(0);
               if (err.response.data) {
                 if (err.response.data.message) {
                   addToast(`${err.response.data.message}`, {
@@ -846,7 +1152,62 @@ export default function Project(props) {
       }
     }
   };
-
+  const ProjectunLike = () => {
+    // debugger;
+    if (!isAuthenticated()) {
+      setRequest(true);
+      addToast("Please login", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 1000,
+      });
+    } else {
+      var headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      // console.log(headers, "asnlnkoasnas");
+      try {
+        axios
+          .post(
+            `http://localhost:3000/api/v1/project//view-project/unlike?id=${props.match.params.id}`,
+            {},
+            headers
+          )
+          .then((res) => {
+            setlike(like - 1);
+            // addToast("Project like successfully", {
+            //   appearance: "success",
+            //   autoDismiss: true,
+            //   autoDismissTimeout: 3000,
+            // });
+            // setProjectdataList(res.data.ownedProjects);
+          })
+          .catch((err) => {
+            // setlike(0);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 1000,
+                });
+              }
+            }
+            // console.log(" error projects =>", err);
+          });
+      } catch (error) {
+        // console.log(error, "error catch");
+      }
+    }
+  };
   // ****
   const Projecttoggle = () => {
     if (Profilemodal === false) {
@@ -951,10 +1312,14 @@ export default function Project(props) {
 
     setstepFormData({ ...stepformData, [e.target.name]: value });
   };
+  // console.log(stepArrayData, "stepArrayData on Add");
 
   const onStepAdd = () => {
     if (otherSKill !== "") {
       formDataSkillField.skill = otherSKill;
+    }
+    if (material == "Other") {
+      var materialcheck = ValidateOtherMaterial();
     }
     // debugger;
 
@@ -974,7 +1339,7 @@ export default function Project(props) {
         return false;
       }
     });
-    // console.log(check[0], "check on Add");
+    // console.log(stepformData, "stepformData on Add");
     if (check[0] === true) {
       const formObj = Object.values(formDataSkillField).map((obj) => {
         if (obj !== "") {
@@ -1007,12 +1372,27 @@ export default function Project(props) {
             setFormDataSkillField(skillData);
             setstepType("");
           } else if (material !== "" && stepCheck === true) {
-            stepformData.material = material;
-            setstepArrayData((prevState) => [...prevState, stepformData]);
-            setstepFormData(stepData);
-            setFormDataSkillField(skillData);
-            setstepType("");
-            setMaterial("");
+            if (material == "Other") {
+              if (materialcheck === true) {
+                stepformData.materialName = otherMaterial;
+                stepformData.material = "";
+
+                setstepArrayData((prevState) => [...prevState, stepformData]);
+                setstepFormData(stepData);
+                setFormDataSkillField(skillData);
+                setstepType("");
+                setMaterial("");
+                setotherMaterial("");
+              }
+            } else {
+              stepformData.material = material;
+              setstepArrayData((prevState) => [...prevState, stepformData]);
+              setstepFormData(stepData);
+              setFormDataSkillField(skillData);
+              setstepType("");
+              setMaterial("");
+              setotherMaterial("");
+            }
           } else {
             addToast(`Please add All step fields`, {
               appearance: "error",
@@ -1033,12 +1413,27 @@ export default function Project(props) {
           setFormDataSkillField(skillData);
           setstepType("");
         } else if (material !== "" && stepCheck === true) {
-          stepformData.material = material;
-          setstepArrayData((prevState) => [...prevState, stepformData]);
-          setstepFormData(stepData);
-          setFormDataSkillField(skillData);
-          setstepType("");
-          setMaterial("");
+          if (material == "Other") {
+            if (materialcheck === true) {
+              stepformData.materialName = otherMaterial;
+              stepformData.material = "";
+
+              setstepArrayData((prevState) => [...prevState, stepformData]);
+              setstepFormData(stepData);
+              setFormDataSkillField(skillData);
+              setstepType("");
+              setMaterial("");
+              setotherMaterial("");
+            }
+          } else {
+            stepformData.material = material;
+            setstepArrayData((prevState) => [...prevState, stepformData]);
+            setstepFormData(stepData);
+            setFormDataSkillField(skillData);
+            setstepType("");
+            setMaterial("");
+            setotherMaterial("");
+          }
         } else {
           addToast(`Please add All step fields`, {
             appearance: "error",
@@ -1187,12 +1582,14 @@ export default function Project(props) {
     // console.log(merge, "merge object");
   };
 
-  const ShowInterest = (id) => {
+  const ShowInterest = (id, setisShown) => {
+    setisShown(true);
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
+
     // console.log(headers, "asnlnkoasnas");
     try {
       axios
@@ -1202,6 +1599,19 @@ export default function Project(props) {
           headers
         )
         .then((res) => {
+          if (window.socket) {
+            // alert("hello");
+
+            window.socket.emit(`sendNotification`, {
+              id: data.project.project_owner._id,
+              title: `Someone has requested to collaborate on ${data.project.title}`,
+              description: `Someone has requested to collaborate on ${data.project.title}`,
+              projectID: props.match.params.id,
+            });
+          }
+          setTimeout(() => {
+            setisShown(false);
+          }, 1000);
           // setCategoryList(res.data.category);
           addToast("You have successfully shown interest ", {
             appearance: "success",
@@ -1216,9 +1626,15 @@ export default function Project(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
+          setTimeout(() => {
+            setisShown(false);
+          }, 1000);
           console.log(" error interest =>", err.response);
         });
     } catch (error) {
+      setTimeout(() => {
+        setisShown(false);
+      }, 1000);
       // console.log(error, "error catch");
     }
   };
@@ -1257,15 +1673,12 @@ export default function Project(props) {
       // console.log(error, "error catch");
     }
   };
-
-  //***** */
   useEffect(() => {
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    // console.log(headers, "asnlnkoasnas");
     try {
       axios
         .get("http://localhost:3000/api/v1/auth/categoryList")
@@ -1299,6 +1712,16 @@ export default function Project(props) {
     } catch (error) {
       console.log(error, "error catch");
     }
+  }, []);
+  //***** */
+  useEffect(() => {
+    var headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    // console.log(headers, "asnlnkoasnas");
+
     try {
       axios
         .get(
@@ -1309,14 +1732,14 @@ export default function Project(props) {
         .then((res) => {
           // setProjectdataList(res.data.ownedProjects);
           // const obj = { ...res.data };
-
+          setimplementationstepData(res.data.project.implementation_steps);
           setData(res.data);
           setCommentArray(res.data.project.comments);
 
           console.log(res.data, "res project data");
         })
         .catch((err) => {
-          console.log(" error projects all =>", err.response.data);
+          // console.log(" error projects all =>", err.response.data);
         });
     } catch (error) {
       // console.log(error, "error catch");
@@ -1342,7 +1765,15 @@ export default function Project(props) {
     // } catch (error) {
     //   // console.log(error, "error catch");
     // }
-  }, [Profilemodal, modal, stepmodal, addstepmodal]);
+  }, [
+    Profilemodal,
+    modal,
+    stepmodal,
+    CheckStep,
+    addstepmodal,
+    // setimplementationstepData,
+    // implementationstepData,
+  ]);
   // console.log(skillFieldData, "data skillFieldData");
   useEffect(() => {
     var headers = {
@@ -1396,6 +1827,8 @@ export default function Project(props) {
             toggle={toggle}
             materialList={materialList}
             searchBy={searchBy}
+            data={data}
+            singleStep={singleStep}
             skillFieldData={skillFieldData ? skillFieldData : []}
             MaterialData={MaterialData ? MaterialData : []}
           />
@@ -1420,6 +1853,8 @@ export default function Project(props) {
           />
           <AddStepModal
             modal={addstepmodal}
+            otherMaterial={otherMaterial}
+            setotherMaterial={setotherMaterial}
             toggle={addStepToggle}
             stepformData={stepformData}
             stepType={stepType}
@@ -1441,6 +1876,21 @@ export default function Project(props) {
             stepRequiredFields={stepRequiredFields}
             materialRequiredFields={materialRequiredFields}
             skillRequiredFields={skillRequiredFields}
+            ValidateSkillField={ValidateSkillField}
+            ValidateSkill={ValidateSkill}
+            validateStatus={validateStatus}
+            validateSpeciality={validateSpeciality}
+            validateDescription={validateDescription}
+            validateStepType={validateStepType}
+            setFormDataSkillField={setFormDataSkillField}
+            skillData={skillData}
+            setMaterial={setMaterial}
+            validateStepName={validateStepName}
+            validateMaterial={validateMaterial}
+            otherSKill={otherSKill}
+            setotherSkill={setotherSkill}
+            ValidateOtherSkill={ValidateOtherSkill}
+            ValidateOtherMaterial={ValidateOtherMaterial}
           />
           <StepModal
             modal={stepmodal}
@@ -1504,9 +1954,9 @@ export default function Project(props) {
                           }`,
                         }}
                         src={
-                          data.project.general_photo
-                            ? `http://localhost:3000/views/uploads/${data.project.general_photo}`
-                            : DefaultImage
+                          data.project.general_photo == "default.png"
+                            ? DefaultImage
+                            : `http://localhost:3000/views/uploads/${data.project.general_photo}`
                         }
                         alt="alternative"
                       />
@@ -1602,14 +2052,17 @@ export default function Project(props) {
                       ""
                     )}
                     <p style={{ marginTop: "0.7rem", marginRight: "2.1rem" }}>
-                      {like == 1 ? (
+                      {like >= 1 ? (
                         <i
                           className="fas fa-heart "
-                          style={{ color: "red" }}
-                          onClick={ProjectLike}
+                          style={{ color: "red", cursor: "pointer" }}
+                          onClick={ProjectunLike}
                         />
                       ) : (
-                        <i className="fas fa-heart " onClick={ProjectLike} />
+                        <i
+                          className="fas fa-heart "
+                          onClick={() => ProjectLike(data.project.likedBy)}
+                        />
                       )}
                       <span
                         style={{
@@ -1618,9 +2071,7 @@ export default function Project(props) {
                           fontFamily: "Arial, Helvetica, sans-serif",
                         }}
                       >
-                        {like == 1
-                          ? data.project.likedBy.length + like
-                          : data.project.likedBy.length}
+                        {data.project.likedBy.length + like}
                       </span>
                       {/* <span class="ml-2 " id="span2" >21%</span> */}
                     </p>
@@ -1656,9 +2107,10 @@ export default function Project(props) {
                       <img
                         className="proj-img"
                         src={
-                          data.project.project_owner
-                            ? `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
-                            : DefaultImage
+                          data.project.project_owner.profile_picture ==
+                          "default.png"
+                            ? DefaultuserImage
+                            : `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
                         }
                         alt="alternative"
                       />
@@ -1731,37 +2183,44 @@ export default function Project(props) {
                         </h4>
                       </div>
                       <div className="col">
-                        <button
-                          type="button"
-                          onClick={addStepToggle}
-                          // id="userButton"
-                          id="AddmodalButton"
-                          style={
-                            {
-                              // marginTop: "2.7rem",
-                              // marginLeft: "1rem",
+                        {getUser()._id === data.project.project_owner._id ? (
+                          <button
+                            type="button"
+                            onClick={addStepToggle}
+                            // id="userButton"
+                            id="AddmodalButton"
+                            style={
+                              {
+                                // marginTop: "2.7rem",
+                                // marginLeft: "1rem",
+                              }
                             }
-                          }
-                          className="btn "
-                        >
-                          Add Step
-                        </button>
+                            className="btn "
+                          >
+                            Add Step
+                          </button>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="container">
-                {data.project.implementation_steps
-                  ? data.project.implementation_steps.map((step) => (
+                {implementationstepData
+                  ? implementationstepData.map((step) => (
                       <ImplementationStep
                         step={step}
                         getUser={getUser}
+                        DeleteStep={DeleteStep}
                         data={data}
                         DefaultImage={DefaultImage}
                         Steptoggle={Steptoggle}
                         ShowInterest={ShowInterest}
                         toggle={toggle}
+                        CircularProgress={CircularProgress}
+                        useStyles={useStyles}
                       />
                     ))
                   : ""}

@@ -5,14 +5,19 @@ export default function UserprojectList({
   i,
   DefaultImage,
   projectLike,
+  projectunLike,
 }) {
   //   const onLikeClick = (id) => {
   //     projectLike(id);
   //   };
   const [like, setlike] = useState(0);
-  const LikeProject = (id) => {
+  const LikeProject = (id, likedBy) => {
     setlike(like + 1);
-    projectLike(id, like, setlike);
+    projectLike(id, like, setlike, likedBy);
+  };
+  const UnLikeProject = (id, likedBy) => {
+    setlike(0);
+    projectunLike(id, like, setlike, likedBy);
   };
   return (
     <div
@@ -28,16 +33,16 @@ export default function UserprojectList({
           }}
           className="project-image"
           src={
-            data.general_photo
-              ? `http://localhost:3000/views/uploads/${data.general_photo}`
-              : DefaultImage
+            data.general_photo == "default.png"
+              ? DefaultImage
+              : `http://localhost:3000/views/uploads/${data.general_photo}`
           }
           alt="alternative"
         />
       </div>
       <div className="text-left" style={{ width: "50%" }}>
         <div style={{ marginLeft: "2rem" }}>
-          <p>{data.category.name}</p>
+          <p style={{ color: data.category.color }}>{data.category.name}</p>
           <h5 style={{ marginTop: "-0.7rem", fontWeight: "bold" }}>
             {data.title}
           </h5>
@@ -69,16 +74,16 @@ export default function UserprojectList({
             marginRight: "5rem",
           }}
         >
-          {like == 1 ? (
+          {like >= 1 ? (
             <i
               className="fas fa-heart "
               style={{ color: "red", cursor: "pointer" }}
-              onClick={() => LikeProject(data._id)}
+              onClick={() => UnLikeProject(data._id, data.likedBy)}
             />
           ) : (
             <i
               className="fas fa-heart "
-              onClick={() => LikeProject(data._id)}
+              onClick={() => LikeProject(data._id, data.likedBy)}
             />
           )}
           {/* {like == true ? data.Likes + 1 : data.Likes} */}

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuListComposition() {
+export default function MenuListComposition({ notifyData }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -75,10 +75,14 @@ export default function MenuListComposition() {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Badge badgeContent={4} color="secondary">
+          <Badge
+            badgeContent={notifyData ? notifyData.length : ""}
+            color="secondary"
+          >
             <NotificationsActiveIcon className="text-white" />
           </Badge>
         </div>
+
         <Popper
           open={open}
           anchorEl={anchorRef.current}
@@ -99,17 +103,22 @@ export default function MenuListComposition() {
                   <MenuList
                     autoFocusItem={open}
                     id="menu-list-grow"
+                    style={{
+                      backgroundColor: "#f7f7f7",
+                    }}
                     onKeyDown={handleListKeyDown}
                   >
-                    <div className="stepDiv2">
-                      {getUser().notifications ? (
-                        getUser().notifications.map((not) => (
+                    {notifyData && notifyData.length > 0 ? (
+                      <div className="stepDiv2">
+                        {notifyData.map((not) => (
                           <NotificationList not={not} />
-                        ))
-                      ) : (
-                        <MenuItem>Log Out</MenuItem>
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="stepDiv2">
+                        <MenuItem>No notifications Found</MenuItem>
+                      </div>
+                    )}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

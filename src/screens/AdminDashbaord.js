@@ -68,6 +68,10 @@ export default function UserDashboard(props) {
     editcategory: "",
     editcolor: "",
   });
+  const [categoryRequiredFields, setcategoryRequiredFields] = useState({
+    category: "",
+    color: "",
+  });
   const [skillRequiredFields, setskillRequiredFields] = useState(
     signupskillRequired
   );
@@ -76,6 +80,7 @@ export default function UserDashboard(props) {
   const [material, setMaterial] = useState("");
   const [addcategory, setCategory] = useState("");
   const [color, setColor] = useState("");
+  const [categoryData, setCategoryData] = useState({ category: "", color: "" });
 
   const [editcategory, seteditCategory] = useState("");
   const [editcolor, seteditColor] = useState("");
@@ -102,11 +107,9 @@ export default function UserDashboard(props) {
   const [index, setIndex] = useState("");
 
   // functions
-  const handleCategory = (e) => {
-    setCategory(e.target.value);
-  };
-  const handleColor = (e) => {
-    setColor(e.target.value);
+
+  const handleCategoryChange = (e) => {
+    setCategoryData({ ...categoryData, [e.target.name]: e.target.value });
   };
   const handleEditCategory = (e) => {
     seteditCategory(e.target.value);
@@ -118,22 +121,21 @@ export default function UserDashboard(props) {
     seteditskill(e.target.value);
   };
   const UpdateSkill = () => {
-    seteditcheck(false);
+    seteditcheck(!editcheck);
 
     editformData.skill.splice(index, 1, editskill);
 
     // seteditskill("");
   };
-  console.log(skillArrayData, "skillArrayData");
+  console.log(projectdata, "projectdata");
   const AddEditSkill = (e) => {
-    alert("hello");
+    // alert("hello");
   };
   const AddCategorySubmit = (e) => {
     setisLoading(true);
-    const check = ValidateCategory();
-    const check1 = ValidateColor();
+    const check = checkValidateForm();
 
-    if (check == true && check1 == true) {
+    if (check == true) {
       const headers = {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -697,39 +699,58 @@ export default function UserDashboard(props) {
     seteditFormData({ ...editformData, [e.target.name]: value });
   };
   // *******************
-  // console.log(CategoryList, "CategoryList");
+  // console.log(materialRequiredFields, "materialRequiredFields");
   // Validations
-  const ValidateCategory = () => {
-    debugger;
-    if (addcategory === "" || !addcategory) {
+  const checkValidateForm = () => {
+    let obj = {};
+    let reqFields = true;
+
+    Object.keys(categoryData).map((key) => {
+      if (categoryData[key] === "") {
+        obj[key] = "Required";
+        reqFields = false;
+      }
+      return obj;
+    });
+
+    setcategoryRequiredFields(obj);
+    if (!reqFields) {
       const msg = "Required";
-      setmaterialRequiredFields({
-        ...materialRequiredFields,
-        addcategory: msg,
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const ValidateCategory = () => {
+    if (categoryData.category === "" || !categoryData.category) {
+      const msg = "Required";
+      setcategoryRequiredFields({
+        ...categoryRequiredFields,
+        category: msg,
       });
       return false;
     } else {
       const msg = "";
-      setmaterialRequiredFields({
-        ...materialRequiredFields,
-        addcategory: msg,
-        error: msg,
+      setcategoryRequiredFields({
+        ...categoryRequiredFields,
+        category: msg,
       });
       return true;
     }
   };
+
   const ValidateColor = () => {
-    if (!color) {
+    if (!categoryData.color) {
       const msg = "Required";
-      setmaterialRequiredFields({
-        ...materialRequiredFields,
+      setcategoryRequiredFields({
+        ...categoryRequiredFields,
         color: msg,
       });
       return false;
     } else {
       const msg = "";
-      setmaterialRequiredFields({
-        ...materialRequiredFields,
+      setcategoryRequiredFields({
+        ...categoryRequiredFields,
         color: msg,
       });
       return true;
@@ -1268,7 +1289,7 @@ export default function UserDashboard(props) {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <EditSkillModal
         modal={editskillmodal}
         toggle={Edittoggle}
@@ -1347,14 +1368,12 @@ export default function UserDashboard(props) {
         modal={addcategorymodal}
         toggle={AddCategoryToggle}
         isLoading={isLoading}
-        handleCategory={handleCategory}
-        materialRequiredFields={materialRequiredFields}
+        categoryRequiredFields={categoryRequiredFields}
         ValidateCategory={ValidateCategory}
-        addcategory={addcategory}
         AddCategorySubmit={AddCategorySubmit}
-        handleColor={handleColor}
-        color={color}
+        handleCategoryChange={handleCategoryChange}
         ValidateColor={ValidateColor}
+        categoryData={categoryData}
       />
       <div id="services" className="cards-1">
         <div className="container">

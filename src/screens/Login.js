@@ -6,6 +6,8 @@ import { useStyles } from "../Theme/styles";
 import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
+
 import { useToasts } from "react-toast-notifications";
 import { loginData } from "../shared/Data";
 import { Link } from "react-router-dom";
@@ -92,47 +94,56 @@ function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
-    checkValidateForm();
-
-    try {
-      axios
-        .post("http://localhost:3000/api/v1/auth/login", formData)
-        .then((res) => {
-          setisLoading(false);
-          console.log(res, "res user");
-          localStorage.setItem("jwt", res.data.token);
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          setFormData(loginData);
-          setisSuccess(true);
-          addToast(`Login Successfully`, {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-        })
-        .catch((err) => {
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            } else {
-              addToast(`${err.response.data}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            }
-          }
-          setTimeout(() => {
+    const check = checkValidateForm();
+    if (check == true) {
+      try {
+        axios
+          .post("http://localhost:3000/api/v1/auth/login", formData)
+          .then((res) => {
             setisLoading(false);
-          }, 1000);
+            console.log(res, "res user");
+            localStorage.setItem("jwt", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
 
-          // console.log(" error =>", err);
-        });
-    } catch (error) {
+            setFormData(loginData);
+            setisSuccess(true);
+            addToast(`Login Successfully`, {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            if (formData.email === "admin@admin.com") {
+              window.location.href = `/Admindashboard/${res.data.user._id}`;
+            }
+          })
+          .catch((err) => {
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+              }
+            }
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+
+            // console.log(" error =>", err);
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+      }
+    } else {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
@@ -251,6 +262,13 @@ function Login() {
                   id="register"
                 >
                   Create an account
+                </span>
+              </Link>
+            </p>
+            <p className="text-left ml-1 mt-2">
+              <Link to={`/ForgotPassword`}>
+                <span id="register" style={{ color: "#77b5dd" }}>
+                  Forgot password?
                 </span>
               </Link>
             </p>

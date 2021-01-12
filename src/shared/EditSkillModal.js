@@ -90,7 +90,7 @@ const ModalExample = (props) => {
                   />
                 </FormGroup>
               </Col>
-              {editskill && editcheck == true ? (
+              {editcheck == true ? (
                 <>
                   <Col md={4}>
                     <FormGroup>
@@ -142,7 +142,7 @@ const ModalExample = (props) => {
               )}
             </Row>
             <Col
-              md={8}
+              md={6}
               style={{
                 marginRight: "0px",
                 marginLeft: "0px",

@@ -18,8 +18,10 @@ const ModalExample = (props) => {
     SearchBySkills,
     SearchByMaterials,
     InviteId,
+    data,
+    singleStep,
   } = props;
-  // console.log(MaterialData, "skill field data");
+  // console.log(skillFieldData, "skill field data");
   const [CategoryData, setCategoryData] = useState("");
   // console.log(MaterialData, "MaterialData");
   const SearchByCategory = async () => {
@@ -87,7 +89,7 @@ const ModalExample = (props) => {
                 color: "#000",
               }}
             >
-              SEARCH BY :
+              <i className="fas fa-search text-dark"></i> SEARCH BY :
             </h6>
             <div className="row  mt-4">
               <div className="col-lg-2"></div>
@@ -141,6 +143,7 @@ const ModalExample = (props) => {
               <Table
                 searchBy={searchBy}
                 sendInvite={sendInvite}
+                singleStep={singleStep}
                 skillFieldData={skillFieldData ? skillFieldData : ""}
               />
             ) : searchBy === "material" ? (

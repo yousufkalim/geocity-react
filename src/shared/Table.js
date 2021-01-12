@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "reactstrap";
 import Loaders from "./Loaders";
+import SearchSkillTableRow from "./SearchSkillTableRow";
+import SearchMaterialTableRow from "./SearchMaterialTableRow";
+import SearchCategoryTableRow from "./SearchCategoryTableRow";
+
 import { Link } from "react-router-dom";
 const Example = ({
   skillFieldData,
@@ -9,11 +13,13 @@ const Example = ({
   MaterialData,
   CategoryData,
   materialList,
+  singleStep,
 }) => {
   const onSendInvite = (receiver) => {
     sendInvite(receiver);
   };
-  // console.log(CategoryData, "CategoryData");
+  useEffect(() => {}, []);
+  // console.log(singleStep, "singleStep");
   if (
     skillFieldData &&
     typeof skillFieldData !== typeof "" &&
@@ -34,36 +40,12 @@ const Example = ({
           <tbody>
             {skillFieldData &&
               skillFieldData.map((skill) => (
-                <tr>
-                  <th scope="row">{skill.username}</th>
-                  <td>{skill.city}</td>
-
-                  <td>
-                    {skill.skills.map((sk) => (
-                      <span>{sk.skill},</span>
-                    ))}
-                  </td>
-
-                  <td>
-                    <Link to={`/profile/${skill._id}`}>
-                      <button
-                        type="button"
-                        id="modalButton1"
-                        className="btn btn-primary text-white"
-                      >
-                        See profile
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => onSendInvite(skill._id)}
-                      type="button"
-                      id="modalButton2"
-                      className="btn btn-primary text-white ml-4"
-                    >
-                      Invite
-                    </button>
-                  </td>
-                </tr>
+                <SearchSkillTableRow
+                  skill={skill}
+                  Link={Link}
+                  onSendInvite={onSendInvite}
+                  singleStep={singleStep}
+                />
               ))}
           </tbody>
         </Table>
@@ -89,36 +71,12 @@ const Example = ({
           <tbody>
             {Object.keys(MaterialData).length > 0 &&
               MaterialData.map((skill, i) => (
-                <tr key={i}>
-                  <th scope="row">{skill.username}</th>
-                  <td>{skill.city}</td>
-
-                  <td>
-                    {skill.material.map((sk) => (
-                      <span>{sk.name},</span>
-                    ))}
-                  </td>
-
-                  <td>
-                    <Link to={`/profile/${skill._id}`}>
-                      <button
-                        type="button"
-                        id="modalButton1"
-                        className="btn btn-primary text-white"
-                      >
-                        See profile
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => onSendInvite(skill._id)}
-                      type="button"
-                      id="modalButton2"
-                      className="btn btn-primary text-white ml-4"
-                    >
-                      Invite
-                    </button>
-                  </td>
-                </tr>
+                <SearchMaterialTableRow
+                  skill={skill}
+                  Link={Link}
+                  onSendInvite={onSendInvite}
+                  singleStep={singleStep}
+                />
               ))}
           </tbody>
         </Table>
@@ -144,43 +102,13 @@ const Example = ({
           <tbody>
             {Object.keys(CategoryData).length > 0 &&
               CategoryData.map((skill, i) => (
-                <tr key={i}>
-                  <th scope="row">{skill.username}</th>
-                  <td>{skill.city}</td>
-
-                  <td>
-                    {skill
-                      ? skill.material.map((data) => {
-                          // let icon = <TagFacesIcon />;
-                          return materialList.map((mat) => {
-                            if (mat._id === data) {
-                              return <span>{mat.name},</span>;
-                            }
-                          });
-                        })
-                      : ""}
-                  </td>
-
-                  <td>
-                    <Link to={`/profile/${skill._id}`}>
-                      <button
-                        type="button"
-                        id="modalButton1"
-                        className="btn btn-primary text-white"
-                      >
-                        See profile
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => onSendInvite(skill._id)}
-                      type="button"
-                      id="modalButton2"
-                      className="btn btn-primary text-white ml-4"
-                    >
-                      Invite
-                    </button>
-                  </td>
-                </tr>
+                <SearchCategoryTableRow
+                  skill={skill}
+                  Link={Link}
+                  onSendInvite={onSendInvite}
+                  singleStep={singleStep}
+                  materialList={materialList}
+                />
               ))}
           </tbody>
         </Table>

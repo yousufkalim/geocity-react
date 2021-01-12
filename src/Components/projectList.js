@@ -73,7 +73,7 @@ export default function ProjectList({
                     data.project.category
                       ? data.project.category.color
                         ? `5px solid ${data.project.category.color}`
-                        : ""
+                        : "5px solid #000"
                       : ""
                   }`,
                 }}
@@ -169,7 +169,7 @@ export default function ProjectList({
                     data.category
                       ? data.category.color
                         ? `5px solid ${data.category.color}`
-                        : ""
+                        : "5px solid #000"
                       : ""
                   }`,
                 }}

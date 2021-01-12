@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardImg,
@@ -17,6 +17,20 @@ const Example = ({
   skillfieldList,
   HandleStepDelete,
 }) => {
+  const [state, setstate] = useState("");
+  const [random, setrandom] = useState(112213);
+
+  useEffect(() => {
+    setrandom(Math.floor(Math.random() * 101));
+  }, [step]);
+  useEffect(() => {
+    materialList &&
+      materialList.map((mat) => {
+        if (mat._id === step.material) {
+          setstate(mat.name);
+        }
+      });
+  }, [step]);
   return (
     <Card
       style={{
@@ -30,35 +44,115 @@ const Example = ({
       <CardBody style={{ padding: "0.6rem" }}>
         <div className=" row">
           <div className="col-10">
-            <CardTitle tag="h5">{step.name}</CardTitle>
+            <CardTitle tag="h5">
+              <p>
+                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  {" "}
+                  #Sr:
+                </span>{" "}
+                <span
+                  style={{
+                    opacity: 0.7,
+                    fontSize: "15px",
+                  }}
+                >
+                  {" "}
+                  {random}
+                </span>
+              </p>
+              <p>
+                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  {" "}
+                  Step Name:
+                </span>{" "}
+                <span
+                  style={{
+                    opacity: 0.7,
+                    fontSize: "15px",
+                  }}
+                >
+                  {" "}
+                  {step.name}
+                </span>
+              </p>
+            </CardTitle>
           </div>
           <div className="col-2">
             <ClearOutlinedIcon
-              style={{ fill: "#000" }}
+              style={{ fill: "red" }}
               onClick={() => HandleStepDelete(step.name)}
             />
           </div>
         </div>
         <CardSubtitle tag="h6" className="mb-2 text-muted">
-          {step.material
-            ? materialList &&
-              materialList.map((mat) => {
-                if (mat._id === step.material) {
-                  return "Material:" + mat.name;
-                }
-              })
-            : ""}
+          {step.material || step.materialName ? (
+            <p>
+              <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                {" "}
+                Material:
+              </span>{" "}
+              <span
+                style={{
+                  opacity: 0.7,
+                  fontSize: "15px",
+                }}
+              >
+                {" "}
+                {state
+                  ? state
+                  : step.material
+                  ? step.material
+                  : step.materialName
+                  ? step.materialName
+                  : ""}
+              </span>
+            </p>
+          ) : (
+            ""
+          )}
           {step.skills
             ? skillfieldList &&
               skillfieldList.map((mat) => {
                 if (mat._id === step.skills.skillField) {
-                  return "skillField:" + " " + mat.skillField;
+                  return (
+                    <p>
+                      <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                        {" "}
+                        SkillField:
+                      </span>{" "}
+                      <span
+                        style={{
+                          opacity: 0.7,
+                          fontSize: "15px",
+                        }}
+                      >
+                        {" "}
+                        {mat.skillField}
+                      </span>
+                    </p>
+                  );
                 }
               })
             : ""}
           {/* {step.material ? `Material: ${step.material}` : ``} */}
         </CardSubtitle>
-        <CardText>{`Description:  ${step.description}`}</CardText>
+        <CardText>
+          <p>
+            <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+              {" "}
+              Description:
+            </span>{" "}
+            <span
+              style={{
+                opacity: 0.7,
+                fontSize: "15px",
+              }}
+            >
+              {" "}
+              {step.description}
+            </span>
+          </p>
+        </CardText>
       </CardBody>
     </Card>
   );

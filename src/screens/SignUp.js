@@ -248,7 +248,7 @@ function Signup() {
       let msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
       return false;
-    } else if (!formData.city) {
+    } else if (formData.city === "") {
       let msg = "Please select your complete address from list";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
       return false;

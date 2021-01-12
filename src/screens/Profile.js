@@ -15,7 +15,9 @@ import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import UserProjectList from "../Components/userprojectList";
 
 import LikeUser from "../Components/RecommendUser";
-import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.jpg";
+import DefaultuserImage from "../Theme/images/men.png";
+
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 
 import facebook from "../Theme/images/facebook.png";
@@ -108,8 +110,48 @@ export default function Profile(props) {
     setComment(e.target.value);
   };
 
-  const RecommendUser = async (skillField, like, setlike) => {
-    if (like === 0) {
+  const RecommendUser = async (skillField, like, setlike, recommendedBy) => {
+    if (recommendedBy.length > 0) {
+      const fil = recommendedBy.indexOf(getUser()._id);
+      if (fil === -1) {
+        try {
+          const headers = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          };
+
+          await Axios.post(
+            `http://localhost:3000/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
+            { skillField: skillField },
+            headers
+          )
+            .then((res) => {
+              // setrecommendstatus(true);
+              setlike(like + 1);
+              addToast("User recommended successfully", {
+                appearance: "success",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            })
+            .catch((err) => {
+              addToast("Error", {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+
+              // console.log(" error recommend=>", err);
+            });
+        } catch (error) {
+          // console.log(error, "error catch");
+        }
+      } else {
+        setlike(like + 1);
+      }
+    } else {
+      // alert("helllo");
       try {
         const headers = {
           headers: {
@@ -124,7 +166,7 @@ export default function Profile(props) {
         )
           .then((res) => {
             // setrecommendstatus(true);
-
+            setlike(like + 1);
             addToast("User recommended successfully", {
               appearance: "success",
               autoDismiss: true,
@@ -143,8 +185,41 @@ export default function Profile(props) {
       } catch (error) {
         // console.log(error, "error catch");
       }
-    } else {
-      setlike(0);
+    }
+  };
+  const UnRecommendUser = async (skillId, like, setlike, recommendedBy) => {
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+
+      await Axios.post(
+        `http://localhost:3000/api/v1/profile/view-profile/UnrecommendSkill?id=${props.match.params.id}`,
+        { skillId: skillId },
+        headers
+      )
+        .then((res) => {
+          setlike(like - 1);
+          // setrecommendstatus(true);
+          // addToast("User recommended successfully", {
+          //   appearance: "success",
+          //   autoDismiss: true,
+          //   autoDismissTimeout: 3000,
+          // });
+        })
+        .catch((err) => {
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+
+          // console.log(" error recommend=>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
     }
   };
   const DeleteTempComment = async (commentId) => {
@@ -243,13 +318,52 @@ export default function Profile(props) {
 
   // *****
 
-  const projectLike = (id, like, setlike) => {
-    const headers = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-    if (like === 0) {
+  const projectLike = (id, like, setlike, likedBy) => {
+    if (likedBy.length > 0) {
+      const fil = likedBy.indexOf(getUser()._id);
+      if (fil === -1) {
+        const headers = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        };
+
+        try {
+          Axios.post(
+            `http://localhost:3000/api/v1/project/view-project/likedBy?id=${id}`,
+            {},
+            headers
+          )
+            .then((res) => {
+              // setlike(0);
+              addToast("Project like successfully", {
+                appearance: "success",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+              // console.log(res, "res like");
+            })
+            .catch((err) => {
+              addToast("Error", {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+              // console.log(" error projects =>", err);
+            });
+        } catch (error) {
+          // console.log(error, "error catch");
+        }
+      } else {
+        setlike(like + 1);
+      }
+    } else {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+
       try {
         Axios.post(
           `http://localhost:3000/api/v1/project/view-project/likedBy?id=${id}`,
@@ -275,8 +389,41 @@ export default function Profile(props) {
       } catch (error) {
         // console.log(error, "error catch");
       }
-    } else {
-      setlike(0);
+    }
+  };
+  const projectunLike = (id, like, setlike, likedBy) => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+
+    try {
+      Axios.post(
+        `http://localhost:3000/api/v1/project/view-project/unlike?id=${id}`,
+        {},
+        headers
+      )
+        .then((res) => {
+          setlike(like - 1);
+
+          // addToast("Project like successfully", {
+          //   appearance: "success",
+          //   autoDismiss: true,
+          //   autoDismissTimeout: 3000,
+          // });
+          // console.log(res, "res like");
+        })
+        .catch((err) => {
+          addToast("Error", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // console.log(" error projects =>", err);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
     }
   };
 
@@ -425,9 +572,9 @@ export default function Profile(props) {
                   <img
                     className="card-image"
                     src={
-                      data.data.profile_picture
-                        ? `http://localhost:3000/views/uploads/${data.data.profile_picture}`
-                        : DefaultImage
+                      data.data.profile_picture == "default.png"
+                        ? DefaultuserImage
+                        : `http://localhost:3000/views/uploads/${data.data.profile_picture}`
                     }
                     alt="alternative"
                   />
@@ -546,7 +693,7 @@ export default function Profile(props) {
                   <i className="fas fa-shopping-basket fa-lg " />
                   {Object.entries(data.data).length > 0
                     ? data.data.material.map((mat) => (
-                        <span className="ml-2">{mat.name},</span>
+                        <span className="pl-1">{mat.name},</span>
                       ))
                     : ""}
                 </p>
@@ -560,7 +707,11 @@ export default function Profile(props) {
                         id="iconRow"
                         style={{ marginTop: "-0.3rem" }}
                       >
-                        <LikeUser skill={skill} RecommendUser={RecommendUser} />
+                        <LikeUser
+                          skill={skill}
+                          RecommendUser={RecommendUser}
+                          UnRecommendUser={UnRecommendUser}
+                        />
                       </div>
                     ))
                   : ""}
@@ -587,6 +738,7 @@ export default function Profile(props) {
                     i={i}
                     DefaultImage={DefaultImage}
                     projectLike={projectLike}
+                    projectunLike={projectunLike}
                   />
                 ))}
               </>

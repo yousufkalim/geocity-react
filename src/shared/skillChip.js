@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
@@ -35,7 +35,11 @@ export default function ChipsArray({
   mat,
 }) {
   const classes = useStyles();
+  const [random, setrandom] = useState(112213);
 
+  useEffect(() => {
+    setrandom(Math.floor(Math.random() * 101));
+  }, [mat]);
   const handleDelete = (chipToDelete) => {
     const ChipsArray = skillArrayData.filter((chip) => chip !== chipToDelete);
     setskillArrayData(ChipsArray);
@@ -68,7 +72,7 @@ export default function ChipsArray({
         borderRadius: "0.45rem",
         padding: "0px",
         border: "0.1px solid #ccc",
-        marginTop: "5px",
+        marginTop: "7px",
         marginBottom: "5px",
       }}
       // className={i == 0 ? "" : "mt-2"}
@@ -77,6 +81,21 @@ export default function ChipsArray({
         <div className=" row">
           <div className="col-9">
             <h5 tag="h5">
+              <p>
+                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  {" "}
+                  Sr#:
+                </span>{" "}
+                <span
+                  style={{
+                    opacity: 0.7,
+                    fontSize: "15px",
+                  }}
+                >
+                  {" "}
+                  {random}
+                </span>
+              </p>
               <p>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
                   {" "}
@@ -96,7 +115,7 @@ export default function ChipsArray({
           </div>
           <div className="col-3">
             <ClearOutlinedIcon
-              style={{ fill: "#000" }}
+              style={{ fill: "red" }}
               onClick={() => handleDelete(mat)}
             />
           </div>

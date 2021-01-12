@@ -7,6 +7,14 @@ display-flex {
   text-decoration: underline;
   cursor: pointer;
 }
+.main #forgot:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: "dodgerblue";
+}
+.main #forgot {
+  font-size: 15px;
+}
 img {
   object-fit: cover;
 }

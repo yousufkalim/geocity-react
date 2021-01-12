@@ -46,6 +46,8 @@ function Form({
   formDataSkillField,
   otherSKill,
   setotherSkill,
+  setotherMaterial,
+  otherMaterial,
   // list
   materialList,
   skillfieldList,
@@ -61,6 +63,7 @@ function Form({
   setFormDataSkillField,
   setMaterial,
   onMaterialChange,
+  ValidateOtherMaterial,
 
   materialRequiredFields,
 }) {
@@ -136,21 +139,15 @@ function Form({
             address={address}
             validateCity={validateCity}
           />
-          <label className="label-agree-term row">General Photo*</label>
-          {aboutRequiredFields.general_photo !== "" ? (
-            <p className="error"> {aboutRequiredFields.general_photo}</p>
-          ) : (
-            ""
-          )}
+          <label className="label-agree-term row">General Photo</label>
+
           <input
             type="file"
             name="general_photo"
             id="file"
-            onBlur={validatePhoto}
             onChange={(e) => {
               const file = e.target.files[0];
               console.log(file, "photo1");
-              validatePhoto(file);
               setPhoto(file);
             }}
           />
@@ -278,8 +275,37 @@ function Form({
                         <option value={mat._id}>{mat.name}</option>
                       ))
                     : ""}
+                  <option value="Other">Other</option>
                 </select>
               </div>
+              {material === "Other" ? (
+                <>
+                  <label className="label-agree-term row">
+                    Other material*{" "}
+                    {materialRequiredFields.otherMaterial !== "" ? (
+                      <p className="errorselect">
+                        {" "}
+                        {materialRequiredFields.otherMaterial}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </label>
+
+                  <input
+                    type="text"
+                    onChange={(e) => setotherMaterial(e.target.value)}
+                    // onBlur={validateScore}
+                    name="other"
+                    id="score"
+                    placeholder="Enter your material"
+                    value={otherMaterial}
+                    onBlur={ValidateOtherMaterial}
+                  />
+                </>
+              ) : (
+                ""
+              )}
             </>
           ) : stepType === "Field" ? (
             <>

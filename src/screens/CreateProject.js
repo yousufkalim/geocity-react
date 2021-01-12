@@ -44,6 +44,7 @@ function CreateProject() {
   const [isLoading, setisLoading] = useState(false);
   const [photo, setPhoto] = useState("");
   const [otherSKill, setotherSkill] = useState("");
+  const [otherMaterial, setotherMaterial] = useState("");
 
   // **********
 
@@ -63,42 +64,54 @@ function CreateProject() {
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
     error: "",
+    otherMaterial: "",
   });
   // *************
 
   // validation start
-  const ValidateSkillField = () => {
-    if (formDataSkillField.skillField) {
+  const ValidateOtherMaterial = () => {
+    if (!otherMaterial) {
+      const msg = "Required";
+      setmaterialRequiredFields({ ...skillRequiredFields, otherMaterial: msg });
+      return false;
+    } else {
       const msg = "";
-      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      setmaterialRequiredFields({ ...skillRequiredFields, otherMaterial: msg });
       return true;
-    } else if (!formDataSkillField.skillField) {
+    }
+  };
+  const ValidateSkillField = () => {
+    if (!formDataSkillField.skillField) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return false;
+    } else {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
     }
   };
 
   const ValidateSkill = () => {
-    if (formDataSkillField.skill) {
-      const msg = "";
-      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
-      return true;
-    } else if (!formDataSkillField.skill) {
+    if (!formDataSkillField.skill) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skill: msg });
       return false;
+    } else {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skill: msg });
+      return true;
     }
   };
   const ValidateOtherSkill = () => {
-    if (otherSKill) {
-      const msg = "";
-      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
-      return true;
-    } else if (!otherSKill) {
+    if (!otherSKill) {
       const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
       return false;
+    } else {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, otherSKill: msg });
+      return true;
     }
   };
 
@@ -128,15 +141,15 @@ function CreateProject() {
     }
   };
   const validateSpeciality = () => {
-    if (formDataSkillField.speciality) {
+    if (!formDataSkillField.speciality) {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, speciality: msg });
+      return false;
+    } else {
       const msg = "";
       setskillRequiredFields({ ...skillRequiredFields, speciality: msg });
 
       return true;
-    } else if (!formDataSkillField.speciality) {
-      const msg = "Required";
-      setskillRequiredFields({ ...skillRequiredFields, speciality: msg });
-      return false;
     }
   };
   const validateStatus = () => {
@@ -179,19 +192,7 @@ function CreateProject() {
       return false;
     }
   };
-  const validatePhoto = (file) => {
-    if (file) {
-      const msg = "";
 
-      setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
-
-      return true;
-    } else if (!file) {
-      const msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, general_photo: msg });
-      return false;
-    }
-  };
   const validateCity = () => {
     // debugger;
     if (address === "") {
@@ -203,7 +204,7 @@ function CreateProject() {
       let msg = "Please select your complete address from list";
       setcityRequiredFields({ ...cityRequiredFields, city: msg });
       return false;
-    } else if (formDataCity.city) {
+    } else {
       const msg = "";
       setcityRequiredFields({ ...cityRequiredFields, city: msg });
       return true;
@@ -532,6 +533,9 @@ function CreateProject() {
     if (otherSKill !== "") {
       formDataSkillField.skill = otherSKill;
     }
+    if (material == "Other") {
+      var materialcheck = ValidateOtherMaterial();
+    }
     // debugger;
 
     if (stepType !== "") {
@@ -550,7 +554,6 @@ function CreateProject() {
         return false;
       }
     });
-    // console.log(check[0], "check on Add");
     if (check[0] === true) {
       const formObj = Object.values(formDataSkillField).map((obj) => {
         if (obj !== "") {
@@ -583,12 +586,27 @@ function CreateProject() {
             setFormDataSkillField(projectskillData);
             setstepType("");
           } else if (material !== "" && stepCheck === true) {
-            stepformData.material = material;
-            setstepArrayData((prevState) => [...prevState, stepformData]);
-            setstepFormData(projectstepData);
-            setFormDataSkillField(projectskillData);
-            setstepType("");
-            setMaterial("");
+            if (material == "Other") {
+              if (materialcheck === true) {
+                stepformData.materialName = otherMaterial;
+                stepformData.material = "";
+
+                setstepArrayData((prevState) => [...prevState, stepformData]);
+                setstepFormData(projectstepData);
+                setFormDataSkillField(projectskillData);
+                setstepType("");
+                setMaterial("");
+                setotherMaterial("");
+              }
+            } else {
+              stepformData.material = material;
+              setstepArrayData((prevState) => [...prevState, stepformData]);
+              setstepFormData(projectstepData);
+              setFormDataSkillField(projectskillData);
+              setstepType("");
+              setMaterial("");
+              setotherMaterial("");
+            }
           } else {
             addToast(`Please add All step fields`, {
               appearance: "error",
@@ -609,12 +627,27 @@ function CreateProject() {
           setFormDataSkillField(projectskillData);
           setstepType("");
         } else if (material !== "" && stepCheck === true) {
-          stepformData.material = material;
-          setstepArrayData((prevState) => [...prevState, stepformData]);
-          setstepFormData(projectstepData);
-          setFormDataSkillField(projectskillData);
-          setstepType("");
-          setMaterial("");
+          if (material == "Other") {
+            if (materialcheck === true) {
+              stepformData.materialName = otherMaterial;
+              stepformData.material = "";
+
+              setstepArrayData((prevState) => [...prevState, stepformData]);
+              setstepFormData(projectstepData);
+              setFormDataSkillField(projectskillData);
+              setstepType("");
+              setMaterial("");
+              setotherMaterial("");
+            }
+          } else {
+            stepformData.material = material;
+            setstepArrayData((prevState) => [...prevState, stepformData]);
+            setstepFormData(projectstepData);
+            setFormDataSkillField(projectskillData);
+            setstepType("");
+            setMaterial("");
+            setotherMaterial("");
+          }
         } else {
           addToast(`Please add All step fields`, {
             appearance: "error",
@@ -721,11 +754,11 @@ function CreateProject() {
           validateCategory={validateCategory}
           validateGenralDesc={validateGenralDesc}
           validateProjectType={validateProjectType}
-          validatePhoto={validatePhoto}
           validateMaterial={validateMaterial}
           ValidateSkillField={ValidateSkillField}
           ValidateSkill={ValidateSkill}
           ValidateOtherSkill={ValidateOtherSkill}
+          ValidateOtherMaterial={ValidateOtherMaterial}
           // ***********
           // Required Fields
           stepRequiredFields={stepRequiredFields}
@@ -757,6 +790,8 @@ function CreateProject() {
           formDataSkillField={formDataSkillField}
           setMaterial={setMaterial}
           material={material}
+          setotherMaterial={setotherMaterial}
+          otherMaterial={otherMaterial}
           stepType={stepType}
           setstepType={setstepType}
           getAddress={getAddress}
