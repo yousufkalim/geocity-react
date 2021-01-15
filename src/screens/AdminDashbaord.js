@@ -7,7 +7,7 @@ import {
   editProfileData,
   signupstepData,
 } from "../shared/Data";
-import Header from "../Components/header";
+import Header from "../Components/HomeHeader";
 import axios from "axios";
 
 import ListOfUser from "../Components/ListOfUser";
@@ -23,10 +23,11 @@ import AddCategoryModal from "../shared/AddCategoryModal";
 
 import AddSKillModal from "../shared/AddSKillModal";
 import AddMaterialModal from "../shared/AddMaterialModal";
-
+import DropDown from "../shared/DropdownMenu";
+import NotificationMenu from "../shared/NotificationMenu";
 export default function UserDashboard(props) {
   const { addToast } = useToasts();
-
+  const { notificationsData } = props;
   // states start ************************************
   const [skillformData, setskillFormData] = useState(signupstepData);
 
@@ -134,7 +135,6 @@ export default function UserDashboard(props) {
   const AddCategorySubmit = (e) => {
     setisLoading(true);
     const check = checkValidateForm();
-
     if (check == true) {
       const headers = {
         headers: {
@@ -144,8 +144,8 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/admin/create-category`,
-            { name: addcategory, color: color },
+            `http://160.153.249.64:7002/api/v1/admin/create-category`,
+            { name: categoryData.category, color: categoryData.color },
             headers
           )
           .then((res) => {
@@ -223,7 +223,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/admin/edit-category?id=${categoryId}`,
+            `http://160.153.249.64:7002/api/v1/admin/edit-category?id=${categoryId}`,
             { name: editcategory, color: editcolor },
             headers
           )
@@ -302,7 +302,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/admin/create-material`,
+            `http://160.153.249.64:7002/api/v1/admin/create-material`,
             { name: material },
             headers
           )
@@ -379,7 +379,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/admin/edit-material?id=${materialId}`,
+            `http://160.153.249.64:7002/api/v1/admin/edit-material?id=${materialId}`,
             { name: editmaterial },
             headers
           )
@@ -502,7 +502,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin/edit-skillField?id=${skillFieldId}`,
+          `http://160.153.249.64:7002/api/v1/admin/edit-skillField?id=${skillFieldId}`,
           {
             skillField: editformData.skillField,
             skills: editformData.skill,
@@ -601,7 +601,7 @@ export default function UserDashboard(props) {
         try {
           axios
             .post(
-              `http://localhost:3000/api/v1/admin/create-skillField`,
+              `http://160.153.249.64:7002/api/v1/admin/create-skillField`,
               { skillField: formData.skillField, skills: skillArrayData },
               headers
             )
@@ -931,7 +931,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/materialList")
+        .get(`http://160.153.249.64:7002/api/v1/auth/materialList`)
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -943,7 +943,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/skillList")
+        .get(`http://160.153.249.64:7002/api/v1/auth/skillList`)
         .then((res) => {
           setskillFieldList(res.data.skills);
           console.log(res, "res skill");
@@ -954,7 +954,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/categoryList")
+        .get(`http://160.153.249.64:7002/api/v1/auth/categoryList`)
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -966,7 +966,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get(`http://localhost:3000/api/v1/admin/userslist`, headers)
+        .get(`http://160.153.249.64:7002/api/v1/admin/userslist`, headers)
         .then((res) => {
           const filter = res.data.users.filter(
             (dt) => dt.email !== "admin@admin.com"
@@ -984,7 +984,7 @@ export default function UserDashboard(props) {
     // fecth all projects
     try {
       axios
-        .get(`http://localhost:3000/api/v1/admin/projectslist`, headers)
+        .get(`http://160.153.249.64:7002/api/v1/admin/projectslist`, headers)
         .then((res) => {
           setprojectData(res.data.projects);
           // console.log(res.data, "res data projects");
@@ -1017,7 +1017,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin/delete-user?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/admin/delete-user?id=${id}`,
           {},
           headers
         )
@@ -1074,7 +1074,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin//delete-project?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/admin//delete-project?id=${id}`,
           {},
           headers
         )
@@ -1129,7 +1129,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin/delete-material?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/admin/delete-material?id=${id}`,
           {},
           headers
         )
@@ -1184,7 +1184,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin/delete-skillField?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/admin/delete-skillField?id=${id}`,
           {},
           headers
         )
@@ -1239,7 +1239,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/admin/delete-category?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/admin/delete-category?id=${id}`,
           {},
           headers
         )
@@ -1289,7 +1289,7 @@ export default function UserDashboard(props) {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header data={notificationsData} />
       <EditSkillModal
         modal={editskillmodal}
         toggle={Edittoggle}

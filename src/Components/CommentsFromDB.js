@@ -22,7 +22,7 @@ export default function CommentsFromDB({
           src={
             comment.user
               ? comment.user.profile_picture
-                ? `http://localhost:3000/views/uploads/${comment.user.profile_picture}`
+                ? `http://160.153.249.64:7002/views/uploads/${comment.user.profile_picture}`
                 : DefaultImage
               : DefaultImage
           }

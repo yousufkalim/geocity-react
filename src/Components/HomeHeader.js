@@ -1,0 +1,108 @@
+import React from "react";
+import { getUser, SignOut, isAuthenticated } from "../Auth/Index";
+import { Link } from "react-router-dom";
+import DropDown from "../shared/DropdownMenu";
+import NotificationMenu from "../shared/NotificationMenu";
+export default function HomeHeader({ data }) {
+  return (
+    <header id="header" className="header">
+      <nav className="navbar navbar-expand-lg navbar-dark navbar-custom-home ">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarsExampleDefault"
+          aria-controls="navbarsExampleDefault"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-awesome fas fa-bars" />
+          <span className="navbar-toggler-awesome fas fa-times" />
+        </button>
+        {/* end of mobile menu toggle button */}
+        <div className="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link to="/" className="nav-link ">
+                Home <span className="sr-only">(current)</span>
+              </Link>
+              {/* <a className="nav-link " href="#header">Home <span className="sr-only">(current)</span></a> */}
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/ProjectList">
+                Projects
+              </Link>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link ">
+                About
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link " href="#request">
+                Service
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link " href="#request">
+                Contact Us
+              </a>
+            </li>
+          </ul>
+          {!isAuthenticated() ? (
+            <>
+              <span className="nav-item" style={{ marginLeft: "30px" }}>
+                <Link className="btn-outline-sm" to="/SignUp">
+                  SIGN UP
+                </Link>
+              </span>
+              <span className="nav-item" style={{ marginLeft: "1rem" }}>
+                <Link className="btn-outline-sm" to="/Login">
+                  LOG IN
+                </Link>
+              </span>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="row ml-1 mr-1">
+          {!isAuthenticated() ? "" : <NotificationMenu data={data} />}
+        </div>
+        <div className="row ml-2">{!isAuthenticated() ? "" : <DropDown />}</div>
+      </nav>{" "}
+      <div className="header-content">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-7">
+              <div className="text-container">
+                <h2>
+                  <span className="turquoise">Vous avez un project ?</span>{" "}
+                </h2>
+                <h2>
+                  <span className="turquoise">
+                    Trouvez donc vos collaborateurs !
+                  </span>{" "}
+                </h2>
+                <p className="p-large">
+                  Plateforme vous permettant de trouver vos collaborateurs selon
+                  les competences necesseries, et ce pour chaque etape de votre
+                  project
+                </p>
+                <a className="btn-solid-lg " href="#services">
+                  En savoir plus{" "}
+                </a>
+              </div>{" "}
+              {/* end of text-container */}
+            </div>{" "}
+            {/* end of col */}
+            <div className="col-lg-5"></div>
+          </div>{" "}
+          {/* end of row */}
+        </div>{" "}
+        {/* end of container */}
+      </div>{" "}
+      {/* end of header-content */}
+    </header>
+  );
+}

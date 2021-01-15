@@ -15,7 +15,7 @@ export default function comments({
           className="com-image"
           src={
             comment.profile_picture
-              ? `http://localhost:3000/views/uploads/${comment.profile_picture}`
+              ? `http://160.153.249.64:7002/views/uploads/${comment.profile_picture}`
               : DefaultImage
           }
           alt="alternative"

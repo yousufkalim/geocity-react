@@ -192,7 +192,7 @@ const ModalExample = (props) => {
                   src={
                     profilePreview
                       ? profilePreview
-                      : `http://localhost:3000/views/uploads/${data.data.profile_picture}`
+                      : `http://160.153.249.64:7002/views/uploads/${data.data.profile_picture}`
                   }
                   alt="alternative"
                 />

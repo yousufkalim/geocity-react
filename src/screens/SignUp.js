@@ -342,7 +342,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/materialList")
+        .get("http://160.153.249.64:7002/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
         })
@@ -353,7 +353,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/skillList")
+        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           // console.log(res, "res skill");
@@ -784,7 +784,7 @@ function Signup() {
       };
       try {
         axios
-          .post("http://localhost:3000/api/v1/auth/register", newFormData)
+          .post("http://160.153.249.64:7002/api/v1/auth/register", newFormData)
           .then((res) => {
             setisLoading(false);
             setFormData(signupData);

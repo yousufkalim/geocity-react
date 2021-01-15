@@ -34,7 +34,7 @@ const ModalExample = (props) => {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
           {},
 
           headers

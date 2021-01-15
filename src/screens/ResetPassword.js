@@ -98,7 +98,7 @@ function Login(props) {
         try {
           axios
             .post(
-              `http://localhost:3000/api/v1/profile/reset-password?passwordToken=${props.match.params.id}`,
+              `http://160.153.249.64:7002/api/v1/profile/reset-password?passwordToken=${props.match.params.id}`,
               {
                 password: formData.password,
                 confirm: formData.confirm,

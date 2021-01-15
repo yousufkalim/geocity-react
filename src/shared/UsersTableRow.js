@@ -24,7 +24,7 @@ export default function TableRow({ data, DeleteUser }) {
               }}
               src={
                 data.profile_picture
-                  ? `http://localhost:3000/views/uploads/${data.profile_picture}`
+                  ? `http://160.153.249.64:7002/views/uploads/${data.profile_picture}`
                   : DefaultImage
               }
               alt="alternative"

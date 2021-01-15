@@ -85,7 +85,7 @@ export default function MenuListComposition() {
             src={
               getUser().profile_picture == "default.png"
                 ? DefaultImage
-                : `http://localhost:3000/views/uploads/${
+                : `http://160.153.249.64:7002/views/uploads/${
                     getUser().profile_picture
                   }`
             }

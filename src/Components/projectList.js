@@ -83,7 +83,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.project.general_photo
-                    ? `http://localhost:3000/views/uploads/${data.project.general_photo}`
+                    ? `http://160.153.249.64:7002/views/uploads/${data.project.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -179,7 +179,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.general_photo
-                    ? `http://localhost:3000/views/uploads/${data.general_photo}`
+                    ? `http://160.153.249.64:7002/views/uploads/${data.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -195,7 +195,7 @@ export default function ProjectList({
                       privateFilter === false
                         ? DefaultImage
                         : data.general_photo
-                        ? `http://localhost:3000/views/uploads/${data.general_photo}`
+                        ? `http://160.153.249.64:7002/views/uploads/${data.general_photo}`
                         : DefaultImage
                     }
                     alt="alternative"

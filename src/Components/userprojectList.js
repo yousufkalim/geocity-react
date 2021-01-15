@@ -35,7 +35,7 @@ export default function UserprojectList({
           src={
             data.general_photo == "default.png"
               ? DefaultImage
-              : `http://localhost:3000/views/uploads/${data.general_photo}`
+              : `http://160.153.249.64:7002/views/uploads/${data.general_photo}`
           }
           alt="alternative"
         />

@@ -15,15 +15,17 @@ import {
   editProfileData,
   signupstepData,
 } from "../shared/Data";
-import Header from "../Components/header";
+import Header from "../Components/HomeHeader";
 import axios from "axios";
 import UserTable from "../shared/ProjectsTable";
 import InviteTable from "../shared/InviteTable";
-
+import DropDown from "../shared/DropdownMenu";
+import NotificationMenu from "../shared/NotificationMenu";
 import UserForm from "../Components/UserForm";
 export default function UserDashboard(props) {
-  const { addToast } = useToasts();
+  const { notificationsData } = props;
 
+  const { addToast } = useToasts();
   // states start ************************************
   const [skillformData, setskillFormData] = useState(signupstepData);
 
@@ -608,7 +610,7 @@ export default function UserDashboard(props) {
         };
         await axios
           .post(
-            `http://localhost:3000/api/v1/profile/editProfile?id=${props.match.params.id}`,
+            `http://160.153.249.64:7002/api/v1/profile/editProfile?id=${props.match.params.id}`,
             newFormData,
             headers
           )
@@ -785,7 +787,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/materialList")
+        .get("http://160.153.249.64:7002/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -797,7 +799,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/skillList")
+        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           // console.log(res, "res skill");
@@ -808,7 +810,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/categoryList")
+        .get("http://160.153.249.64:7002/api/v1/auth/categoryList")
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -819,7 +821,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/profile/myProjects", headers)
+        .get("http://160.153.249.64:7002/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
           console.log(res.data, "res owened projects");
@@ -833,7 +835,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .get(
-          `http://localhost:3000/api/v1/profile/view-profile?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/profile/view-profile?id=${props.match.params.id}`,
           headers
         )
         .then((res) => {
@@ -852,7 +854,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/profile/myProjects", headers)
+        .get("http://160.153.249.64:7002/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
           // console.log(res.data, "res owened projects");
@@ -925,7 +927,7 @@ export default function UserDashboard(props) {
 
   return (
     <div>
-      <Header />
+      <Header data={notificationsData} />
       <div id="services" className="cards-1">
         <div className="container">
           <div className="row">

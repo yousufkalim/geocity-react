@@ -24,7 +24,7 @@ export default function TableRow({ project, DeleteProject, step }) {
               }}
               src={
                 project.general_photo
-                  ? `http://localhost:3000/views/uploads/${project.general_photo}`
+                  ? `http://160.153.249.64:7002/views/uploads/${project.general_photo}`
                   : DefaultImage
               }
               alt="alternative"

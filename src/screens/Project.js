@@ -222,7 +222,7 @@ export default function Project(props) {
 
         await axios
           .post(
-            `http://localhost:3000/api/v1/project/view-project/comment?id=${props.match.params.id}`,
+            `http://160.153.249.64:7002/api/v1/project/view-project/comment?id=${props.match.params.id}`,
             { comment: comment },
             headers
           )
@@ -271,7 +271,7 @@ export default function Project(props) {
 
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/delete-step?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/delete-step?id=${props.match.params.id}`,
           { id: id },
           headers
         )
@@ -286,6 +286,30 @@ export default function Project(props) {
           setimplementationstepData(fil);
           setCheckStep(true);
           setisLoading(false);
+          try {
+            axios
+              .get(
+                `http://160.153.249.64:7002/api/v1/project/view-project?id=${props.match.params.id}`,
+
+                headers
+              )
+              .then((res) => {
+                // setProjectdataList(res.data.ownedProjects);
+                // const obj = { ...res.data };
+                setimplementationstepData(
+                  res.data.project.implementation_steps
+                );
+                setData(res.data);
+                setCommentArray(res.data.project.comments);
+
+                console.log(res.data, "res project data");
+              })
+              .catch((err) => {
+                // console.log(" error projects all =>", err.response.data);
+              });
+          } catch (error) {
+            // console.log(error, "error catch");
+          }
         })
         .catch((err) => {
           // setTimeout(() => {
@@ -320,7 +344,7 @@ export default function Project(props) {
 
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/delete-comment?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/delete-comment?id=${props.match.params.id}`,
           { commentId: commentId },
           headers
         )
@@ -592,7 +616,7 @@ export default function Project(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/editProject?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/editProject?id=${props.match.params.id}`,
           newFormData,
           headers
         )
@@ -692,7 +716,7 @@ export default function Project(props) {
           };
           await axios
             .post(
-              `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+              `http://160.153.249.64:7002/api/v1/project/add-step?id=${props.match.params.id}`,
               { step: stepformData },
               headers
             )
@@ -751,7 +775,7 @@ export default function Project(props) {
               };
               await axios
                 .post(
-                  `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+                  `http://160.153.249.64:7002/api/v1/project/add-step?id=${props.match.params.id}`,
                   { step: stepformData },
                   headers
                 )
@@ -808,7 +832,7 @@ export default function Project(props) {
             };
             await axios
               .post(
-                `http://localhost:3000/api/v1/project/add-step?id=${props.match.params.id}`,
+                `http://160.153.249.64:7002/api/v1/project/add-step?id=${props.match.params.id}`,
                 { step: stepformData },
                 headers
               )
@@ -950,7 +974,7 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/project/SearchCollaboratorsBySkill`,
+          `http://160.153.249.64:7002/api/v1/project/SearchCollaboratorsBySkill`,
           { skill: id },
           headers
         )
@@ -992,7 +1016,7 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/project/SearchCollaboratorsByMaterial`,
+          `http://160.153.249.64:7002/api/v1/project/SearchCollaboratorsByMaterial`,
           { material: id },
           headers
         )
@@ -1062,7 +1086,7 @@ export default function Project(props) {
           try {
             axios
               .post(
-                `http://localhost:3000/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
+                `http://160.153.249.64:7002/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
                 {},
                 headers
               )
@@ -1112,7 +1136,7 @@ export default function Project(props) {
         try {
           axios
             .post(
-              `http://localhost:3000/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
+              `http://160.153.249.64:7002/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
               {},
               headers
             )
@@ -1171,7 +1195,7 @@ export default function Project(props) {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/project//view-project/unlike?id=${props.match.params.id}`,
+            `http://160.153.249.64:7002/api/v1/project//view-project/unlike?id=${props.match.params.id}`,
             {},
             headers
           )
@@ -1236,7 +1260,7 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/send-invite?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/send-invite?id=${props.match.params.id}`,
           { receiver: receiver, skills: InviteId, stepID: stepId },
           headers
         )
@@ -1486,7 +1510,7 @@ export default function Project(props) {
           // console.log(array, "array on submit");
           axios
             .post(
-              `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
+              `http://160.153.249.64:7002/api/v1/project/edit-step?id=${props.match.params.id}`,
               { id: tempstepId, step: obj2 },
               headers
             )
@@ -1532,7 +1556,7 @@ export default function Project(props) {
         // console.log(fil, "fil oy");
         axios
           .post(
-            `http://localhost:3000/api/v1/project/edit-step?id=${props.match.params.id}`,
+            `http://160.153.249.64:7002/api/v1/project/edit-step?id=${props.match.params.id}`,
             { id: tempstepId, step: stepformData },
             headers
           )
@@ -1594,24 +1618,15 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/sendInviteToCollaborateByUser?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/sendInviteToCollaborateByUser?id=${props.match.params.id}`,
           { stepID: id },
           headers
         )
         .then((res) => {
-          if (window.socket) {
-            // alert("hello");
-
-            window.socket.emit(`sendNotification`, {
-              id: data.project.project_owner._id,
-              title: `Someone has requested to collaborate on ${data.project.title}`,
-              description: `Someone has requested to collaborate on ${data.project.title}`,
-              projectID: props.match.params.id,
-            });
-          }
           setTimeout(() => {
             setisShown(false);
           }, 1000);
+
           // setCategoryList(res.data.category);
           addToast("You have successfully shown interest ", {
             appearance: "success",
@@ -1648,7 +1663,7 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/project/delete-project?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/delete-project?id=${props.match.params.id}`,
           {},
           headers
         )
@@ -1681,7 +1696,7 @@ export default function Project(props) {
     };
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/categoryList")
+        .get("http://160.153.249.64:7002/api/v1/auth/categoryList")
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -1692,7 +1707,7 @@ export default function Project(props) {
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/materialList", headers)
+        .get("http://160.153.249.64:7002/api/v1/auth/materialList", headers)
         .then((res) => {
           setMaterialList(res.data.materials);
           // // console.log(res, "res material");
@@ -1703,7 +1718,7 @@ export default function Project(props) {
     }
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/skillList")
+        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           // // console.log(res, "res skilllist");
@@ -1725,7 +1740,7 @@ export default function Project(props) {
     try {
       axios
         .get(
-          `http://localhost:3000/api/v1/project/view-project?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project?id=${props.match.params.id}`,
 
           headers
         )
@@ -1744,27 +1759,6 @@ export default function Project(props) {
     } catch (error) {
       // console.log(error, "error catch");
     }
-    // try {
-    //   axios
-    //     .get(
-    //       `http://localhost:3000/api/v1/project/project-progress?id=${props.match.params.id}`,
-
-    //       headers
-    //     )
-    //     .then((res) => {
-    //       // setProjectdataList(res.data.ownedProjects);
-    //       // const obj = { ...res.data };
-
-    //       // setData(res.data);
-
-    //       console.log(res.data, "res progress data");
-    //     })
-    //     .catch((err) => {
-    //       console.log(" error projects all =>", err.response.data);
-    //     });
-    // } catch (error) {
-    //   // console.log(error, "error catch");
-    // }
   }, [
     Profilemodal,
     modal,
@@ -1785,7 +1779,7 @@ export default function Project(props) {
       if (stepType === "Material") {
         try {
           axios
-            .get("http://localhost:3000/api/v1/auth/materialList", headers)
+            .get("http://160.153.249.64:7002/api/v1/auth/materialList", headers)
             .then((res) => {
               setMaterialList(res.data.materials);
               // // console.log(res, "res material");
@@ -1797,7 +1791,7 @@ export default function Project(props) {
       } else if (stepType === "Field") {
         try {
           axios
-            .get("http://localhost:3000/api/v1/auth/skillList")
+            .get("http://160.153.249.64:7002/api/v1/auth/skillList")
             .then((res) => {
               setskillFieldList(res.data.skills);
               // // console.log(res, "res skilllist");
@@ -1956,7 +1950,7 @@ export default function Project(props) {
                         src={
                           data.project.general_photo == "default.png"
                             ? DefaultImage
-                            : `http://localhost:3000/views/uploads/${data.project.general_photo}`
+                            : `http://160.153.249.64:7002/views/uploads/${data.project.general_photo}`
                         }
                         alt="alternative"
                       />
@@ -2110,7 +2104,7 @@ export default function Project(props) {
                           data.project.project_owner.profile_picture ==
                           "default.png"
                             ? DefaultuserImage
-                            : `http://localhost:3000/views/uploads/${data.project.project_owner.profile_picture}`
+                            : `http://160.153.249.64:7002/views/uploads/${data.project.project_owner.profile_picture}`
                         }
                         alt="alternative"
                       />

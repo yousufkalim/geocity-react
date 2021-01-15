@@ -47,7 +47,7 @@ export default function List() {
     };
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/skillList")
+        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
         .then((res) => {
           const array = [...res.data.skills];
           const tempArray = array.filter((ft) => ft.isDeleted == false);
@@ -62,7 +62,7 @@ export default function List() {
     } catch (error) {}
     try {
       axios
-        .get("http://localhost:3000/api/v1/admin/categoryList", headers)
+        .get("http://160.153.249.64:7002/api/v1/admin/categoryList", headers)
         .then((res) => {
           const array = [...res.data.categories];
           const tempArray = array.filter((ft) => ft.isDeleted == false);
@@ -76,7 +76,7 @@ export default function List() {
     } catch (error) {}
     try {
       axios
-        .get("http://localhost:3000/api/v1/auth/projectList")
+        .get("http://160.153.249.64:7002/api/v1/auth/projectList")
         .then((res) => {
           setProjectData(res.data.projects);
           console.log(res, "response project");
@@ -92,7 +92,7 @@ export default function List() {
     if (address === "") {
       try {
         axios
-          .get("http://localhost:3000/api/v1/auth/projectList")
+          .get("http://160.153.249.64:7002/api/v1/auth/projectList")
           .then((res) => {
             setProjectData(res.data.projects);
             console.log(res, "response project");
@@ -127,7 +127,7 @@ export default function List() {
       try {
         axios
           .post(
-            `http://localhost:3000/api/v1/project/view-project/send-request?id=${id}`,
+            `http://160.153.249.64:7002/api/v1/project/view-project/send-request?id=${id}`,
             {},
             headers
           )
@@ -178,7 +178,7 @@ export default function List() {
       try {
         axios
           .post(
-            "http://localhost:3000/api/v1/project/search/category",
+            "http://160.153.249.64:7002/api/v1/project/search/category",
             { category: e.value },
             headers
           )
@@ -214,7 +214,7 @@ export default function List() {
       try {
         axios
           .post(
-            "http://localhost:3000/api/v1/project/search/skill",
+            "http://160.153.249.64:7002/api/v1/project/search/skill",
             { skill: e.value },
             headers
           )
@@ -283,7 +283,7 @@ export default function List() {
     try {
       axios
         .post(
-          "http://localhost:3000/api/v1/project/search/city",
+          "http://160.153.249.64:7002/api/v1/project/search/city",
           { city: city },
           headers
         )

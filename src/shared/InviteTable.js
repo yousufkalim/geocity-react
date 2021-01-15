@@ -28,7 +28,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -39,16 +39,6 @@ export default function UserTable(props) {
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            if (window.socket) {
-              // alert("hello");
-
-              window.socket.emit(`sendNotification`, {
-                id: data.project.project_owner._id,
-                title: `Invitation Accepted on ${data.project.title}`,
-                description: `Invitation Accepted on ${data.project.title}`,
-                projectID: props.match.params.id,
-              });
-            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -99,7 +89,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -111,16 +101,6 @@ export default function UserTable(props) {
               autoDismissTimeout: 1000,
             });
             setcheckDecision(true);
-            if (window.socket) {
-              // alert("hello");
-
-              window.socket.emit(`sendNotification`, {
-                id: data.project.project_owner._id,
-                title: `Invitation Declined on ${data.project.title}`,
-                description: `Invitation Declined on ${data.project.title}`,
-                projectID: props.match.params.id,
-              });
-            }
           } else {
             addToast(`Error`, {
               appearance: "success",
@@ -169,7 +149,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -180,16 +160,6 @@ export default function UserTable(props) {
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            if (window.socket) {
-              // alert("hello");
-
-              window.socket.emit(`sendNotification`, {
-                id: data.project.project_owner._id,
-                title: `Invitation Accepted on ${data.project.title}`,
-                description: `Invitation Accepted on ${data.project.title}`,
-                projectID: props.match.params.id,
-              });
-            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -243,7 +213,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -254,16 +224,6 @@ export default function UserTable(props) {
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            if (window.socket) {
-              // alert("hello");
-
-              window.socket.emit(`sendNotification`, {
-                id: data.project.project_owner._id,
-                title: `Invitation Declined on ${data.project.title}`,
-                description: `Invitation Declined on ${data.project.title}`,
-                projectID: props.match.params.id,
-              });
-            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -316,7 +276,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -327,16 +287,6 @@ export default function UserTable(props) {
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            if (window.socket) {
-              // alert("hello");
-
-              window.socket.emit(`sendNotification`, {
-                id: data.project.project_owner._id,
-                title: `Invitation Accepted on ${data.project.title}`,
-                description: `Invitation Accepted on ${data.project.title}`,
-                projectID: props.match.params.id,
-              });
-            }
           } else {
             addToast(`Success`, {
               appearance: "success",
@@ -389,7 +339,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -400,16 +350,6 @@ export default function UserTable(props) {
               autoDismiss: true,
               autoDismissTimeout: 1000,
             });
-            if (window.socket) {
-              // alert("hello");
-
-              window.socket.emit(`sendNotification`, {
-                id: data.project.project_owner._id,
-                title: `Invitation Declined on ${data.project.title}`,
-                description: `Invitation Declined on ${data.project.title}`,
-                projectID: props.match.params.id,
-              });
-            }
           } else {
             addToast(`Success`, {
               appearance: "success",

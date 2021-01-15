@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuListComposition({ notifyData }) {
+export default function MenuListComposition({ data }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -75,10 +75,7 @@ export default function MenuListComposition({ notifyData }) {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Badge
-            badgeContent={notifyData ? notifyData.length : ""}
-            color="secondary"
-          >
+          <Badge badgeContent={data ? data.length : ""} color="secondary">
             <NotificationsActiveIcon className="text-white" />
           </Badge>
         </div>
@@ -108,9 +105,9 @@ export default function MenuListComposition({ notifyData }) {
                     }}
                     onKeyDown={handleListKeyDown}
                   >
-                    {notifyData && notifyData.length > 0 ? (
+                    {data && data.length > 0 ? (
                       <div className="stepDiv2">
-                        {notifyData.map((not) => (
+                        {data.map((not) => (
                           <NotificationList not={not} />
                         ))}
                       </div>

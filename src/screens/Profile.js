@@ -72,7 +72,7 @@ export default function Profile(props) {
         };
 
         await Axios.post(
-          `http://localhost:3000/api/v1/profile/view-profile/comment?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/profile/view-profile/comment?id=${props.match.params.id}`,
           { comment: comment },
           headers
         )
@@ -122,7 +122,7 @@ export default function Profile(props) {
           };
 
           await Axios.post(
-            `http://localhost:3000/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
+            `http://160.153.249.64:7002/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
             { skillField: skillField },
             headers
           )
@@ -160,7 +160,7 @@ export default function Profile(props) {
         };
 
         await Axios.post(
-          `http://localhost:3000/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
           { skillField: skillField },
           headers
         )
@@ -196,7 +196,7 @@ export default function Profile(props) {
       };
 
       await Axios.post(
-        `http://localhost:3000/api/v1/profile/view-profile/UnrecommendSkill?id=${props.match.params.id}`,
+        `http://160.153.249.64:7002/api/v1/profile/view-profile/UnrecommendSkill?id=${props.match.params.id}`,
         { skillId: skillId },
         headers
       )
@@ -238,7 +238,7 @@ export default function Profile(props) {
 
       await axios
         .post(
-          `http://localhost:3000/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
           { commentId: commentId },
           headers
         )
@@ -284,7 +284,7 @@ export default function Profile(props) {
 
       await axios
         .post(
-          `http://localhost:3000/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
           { commentId: commentId },
           headers
         )
@@ -330,7 +330,7 @@ export default function Profile(props) {
 
         try {
           Axios.post(
-            `http://localhost:3000/api/v1/project/view-project/likedBy?id=${id}`,
+            `http://160.153.249.64:7002/api/v1/project/view-project/likedBy?id=${id}`,
             {},
             headers
           )
@@ -366,7 +366,7 @@ export default function Profile(props) {
 
       try {
         Axios.post(
-          `http://localhost:3000/api/v1/project/view-project/likedBy?id=${id}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/likedBy?id=${id}`,
           {},
           headers
         )
@@ -400,7 +400,7 @@ export default function Profile(props) {
 
     try {
       Axios.post(
-        `http://localhost:3000/api/v1/project/view-project/unlike?id=${id}`,
+        `http://160.153.249.64:7002/api/v1/project/view-project/unlike?id=${id}`,
         {},
         headers
       )
@@ -438,7 +438,7 @@ export default function Profile(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/profile/delete-profile?id=${props.match.params.id}`,
+          `http://160.153.249.64:7002/api/v1/profile/delete-profile?id=${props.match.params.id}`,
           {},
           headers
         )
@@ -473,7 +473,7 @@ export default function Profile(props) {
     };
 
     try {
-      Axios.get("http://localhost:3000/api/v1/profile/myProjects", headers)
+      Axios.get("http://160.153.249.64:7002/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
           // console.log(res.data, "res owened projects");
@@ -486,7 +486,7 @@ export default function Profile(props) {
     }
     try {
       Axios.get(
-        `http://localhost:3000/api/v1/profile/view-profile?id=${props.match.params.id}`,
+        `http://160.153.249.64:7002/api/v1/profile/view-profile?id=${props.match.params.id}`,
         headers
       )
         .then((res) => {
@@ -574,7 +574,7 @@ export default function Profile(props) {
                     src={
                       data.data.profile_picture == "default.png"
                         ? DefaultuserImage
-                        : `http://localhost:3000/views/uploads/${data.data.profile_picture}`
+                        : `http://160.153.249.64:7002/views/uploads/${data.data.profile_picture}`
                     }
                     alt="alternative"
                   />

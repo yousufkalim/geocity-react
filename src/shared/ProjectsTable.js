@@ -45,7 +45,7 @@ export default function UserTable(props) {
     try {
       axios
         .post(
-          `http://localhost:3000/api/v1/project/view-project/delete-contributing-user?id=${projectId}`,
+          `http://160.153.249.64:7002/api/v1/project/view-project/delete-contributing-user?id=${projectId}`,
           { user_id: userId, step_Id: stepId },
           headers
         )

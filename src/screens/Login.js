@@ -98,7 +98,7 @@ function Login() {
     if (check == true) {
       try {
         axios
-          .post("http://localhost:3000/api/v1/auth/login", formData)
+          .post("http://160.153.249.64:7002/api/v1/auth/login", formData)
           .then((res) => {
             setisLoading(false);
             console.log(res, "res user");

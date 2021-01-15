@@ -81,7 +81,7 @@ function Login() {
       try {
         axios
           .post(
-            "http://localhost:3000/api/v1/profile/request-forget-password",
+            "http://160.153.249.64:7002/api/v1/profile/request-forget-password",
             {
               email: formData.email,
             }

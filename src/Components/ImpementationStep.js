@@ -197,7 +197,7 @@ export default function ImpementationStep({
                     className="project-image-sm"
                     src={
                       cont.profile_picture
-                        ? `http://localhost:3000/views/uploads/${cont.profile_picture}`
+                        ? `http://160.153.249.64:7002/views/uploads/${cont.profile_picture}`
                         : DefaultImage
                     }
                     alt="alternative"

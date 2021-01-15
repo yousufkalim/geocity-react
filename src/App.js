@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { SignOut, isAuthenticated, getUser } from "./Auth/Index";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -32,7 +34,62 @@ import "./Theme/css/fontawesomeAll.css";
 import "./Theme/css/swiper.css";
 import "./Theme/css/magnific-popup.css";
 
+import { useToasts } from "react-toast-notifications";
+
+import axios from "axios";
+import io from "socket.io-client";
 export default function App() {
+  const { addToast } = useToasts();
+
+  const [data, setdata] = useState([]);
+  // console.log(this.state.notify_data, "notify_data");
+  useEffect(() => {
+    window.socket = io(
+      process.env.REACT_APP_SOCKET_URL || "http://localhost:3000",
+      {
+        query: `userConnectionId=${getUser()._id}`,
+      }
+    );
+    if (window.socket) {
+      window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
+        setdata([...data, datas]);
+
+        addToast(datas.title, {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+      });
+    }
+    var headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    // console.log(headers, "asnlnkoasnas");
+
+    try {
+      axios
+        .post(
+          `http://160.153.249.64:7002/api/v1/profile/view-profile/all-notifications?id=${
+            getUser()._id
+          }`,
+          {},
+          headers
+        )
+        .then((res) => {
+          // settempCommentArray([...tempcommentArray, obj]);
+          setdata(res.data.notifications);
+
+          console.log(res.data, "res notifications data");
+        })
+        .catch((err) => {
+          console.log(" error projects all =>", err.response.data);
+        });
+    } catch (error) {
+      // console.log(error, "error catch");
+    }
+  }, []);
   return (
     <Router>
       <div>
@@ -47,16 +104,23 @@ export default function App() {
           <Route path="/ProjectList" component={List} exact />
           <PrivateRoute path="/SingleProject/:id" component={Project} exact />
           <PrivateRoute path="/Createproject" exact component={CreateProject} />
-          <PrivateRoute
-            path="/userdashboard/:id"
-            exact
-            component={UserDashboard}
-          />{" "}
+
           <AdminRoute
             path="/Admindashboard/:id"
             exact
-            component={AdminDashbaord}
+            component={(props) => (
+              <AdminDashbaord {...props} notificationsData={data} />
+            )}
           />
+          <PrivateRoute
+            path="/userdashboard/:id"
+            exact
+            component={(props) => (
+              <UserDashboard {...props} notificationsData={data} />
+            )}
+          />
+          {/* <UserDashboard notificationsData={data} />
+          </PrivateRoute> */}
           <Route path="/SignUp" exact>
             <SignUp />
           </Route>
@@ -66,9 +130,10 @@ export default function App() {
           <Route path="/ForgotPassword" exact>
             <ForgotPassword />
           </Route>
-          <Route path="/" exact>
-            <Home />
-          </Route>
+          <Route
+            path="/"
+            render={(props) => <Home {...props} notificationsData={data} />}
+          />
         </Switch>
       </div>
     </Router>
