@@ -11,23 +11,33 @@ export default function TableRow({ DeleteMaterial, material, Edittoggle }) {
           {material.name}
         </td>
 
-        <td style={{ padding: "0.4rem 0.4rem 0.3rem 0.4rem" }}>
-          <button
-            onClick={() => Edittoggle(material._id)}
-            type="button"
-            id="modalButton1"
-            className="btn btn-primary text-white ml-4 text-uppercase"
+        <td>
+          <div
+            className="row"
+            style={{
+              display: "flex",
+              flexWrap: "nowrap",
+              marginRight: "0px",
+              marginLeft: "0px",
+            }}
           >
-            Edit
-          </button>
-          <button
-            onClick={() => DeleteMaterial(material._id)}
-            type="button"
-            id="modalButton1"
-            className="btn btn-primary text-white ml-4 text-uppercase"
-          >
-            Delete
-          </button>
+            <button
+              onClick={() => Edittoggle(material._id)}
+              type="button"
+              id="modalButton1"
+              className="btn btn-primary text-white ml-4  "
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => DeleteMaterial(material._id)}
+              type="button"
+              id="modalButton1"
+              className="btn btn-primary text-white ml-4 "
+            >
+              Delete
+            </button>
+          </div>
         </td>
       </tr>
     </>

@@ -18,11 +18,7 @@ const Example = ({
   HandleStepDelete,
 }) => {
   const [state, setstate] = useState("");
-  const [random, setrandom] = useState(112213);
 
-  useEffect(() => {
-    setrandom(Math.floor(Math.random() * 101));
-  }, [step]);
   useEffect(() => {
     materialList &&
       materialList.map((mat) => {
@@ -45,21 +41,6 @@ const Example = ({
         <div className=" row">
           <div className="col-10">
             <CardTitle tag="h5">
-              <p>
-                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
-                  {" "}
-                  #Sr:
-                </span>{" "}
-                <span
-                  style={{
-                    opacity: 0.7,
-                    fontSize: "15px",
-                  }}
-                >
-                  {" "}
-                  {random}
-                </span>
-              </p>
               <p>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
                   {" "}

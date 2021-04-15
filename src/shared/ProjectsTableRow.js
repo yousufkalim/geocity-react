@@ -24,7 +24,7 @@ export default function TableRow({ project, DeleteProject, step }) {
               }}
               src={
                 project.general_photo
-                  ? `http://160.153.249.64:7002/views/uploads/${project.general_photo}`
+                  ? `https://api.geocity.io/views/uploads/${project.general_photo}`
                   : DefaultImage
               }
               alt="alternative"
@@ -48,7 +48,7 @@ export default function TableRow({ project, DeleteProject, step }) {
               onClick={() => DeleteProject(project._id)}
               type="button"
               id="modalButton1"
-              className="btn btn-primary text-white  text-uppercase"
+              className="btn btn-primary text-white  "
             >
               Delete Project
             </button>

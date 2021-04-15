@@ -24,7 +24,7 @@ export default function TableRow({ data, DeleteUser }) {
               }}
               src={
                 data.profile_picture
-                  ? `http://160.153.249.64:7002/views/uploads/${data.profile_picture}`
+                  ? `https://api.geocity.io/views/uploads/${data.profile_picture}`
                   : DefaultImage
               }
               alt="alternative"
@@ -42,7 +42,7 @@ export default function TableRow({ data, DeleteUser }) {
               onClick={() => DeleteUser(data._id)}
               type="button"
               id="modalButton1"
-              className="btn btn-primary text-white ml-4 text-uppercase"
+              className="btn btn-primary text-white ml-4 "
             >
               Delete User
             </button>

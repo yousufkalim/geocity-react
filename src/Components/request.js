@@ -20,7 +20,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -53,7 +53,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -80,7 +80,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
           //   }}
           src={
             data.sender.profile_picture
-              ? `http://160.153.249.64:7002/views/uploads/${data.sender.profile_picture}`
+              ? `https://api.geocity.io/views/uploads/${data.sender.profile_picture}`
               : DefaultImage
           }
           alt="alternative"

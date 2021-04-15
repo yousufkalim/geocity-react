@@ -2,23 +2,140 @@ import React, { useEffect, useState } from "react";
 // import "../Theme/css/styles.css";
 import Footer from "../Components/footer";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
-import { Link } from "react-router-dom";
-import lightbulb from "../Theme/images/light-bulb.svg";
-import deal from "../Theme/images/deal.svg";
-import rocket from "../Theme/images/rocket.svg";
-import magnifier from "../Theme/images/magnifier.svg";
-import paperPlane from "../Theme/images/paper-plane.svg";
-import target from "../Theme/images/target.svg";
-import bulbMen from "../Theme/images/bulb-men.png";
+import { Link, withRouter } from "react-router-dom";
+import lightbulb from "../Theme/images/Group 13.png";
+import deal from "../Theme/images/geocity/deal.png";
+import rocket from "../Theme/images/geocity/rocket.png";
+import magnifier from "../Theme/images/geocity/magnifier.png";
+import paperPlane from "../Theme/images/geocity/paper-plane.png";
+import target from "../Theme/images/geocity/target.png";
+import bulbMen from "../Theme/images/geocity/light-bulb.png";
 import Group2 from "../Theme/images/Group2.png";
 import DropDown from "../shared/DropdownMenu";
 import NotificationMenu from "../shared/NotificationMenu";
 import Header from "../Components/HomeHeader";
-
-export default function Home({ notificationsData }) {
+import { useToasts } from "react-toast-notifications";
+import io from "socket.io-client";
+function Home({ setdata, data }) {
+  const { addToast } = useToasts();
+  useEffect(() => {
+    window.socket = io(
+      process.env.REACT_APP_SOCKET_URL || "http://160.153.249.64:7002",
+      {
+        query: `userConnectionId=${getUser()._id}`,
+      }
+    );
+    if (window.socket) {
+      window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
+        setdata([...data, datas]);
+        console.log(datas, "datas");
+        addToast(datas.title, {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+      });
+    }
+  }, []);
   return (
     <div>
-      <Header data={notificationsData} />
+      <header id="header" className="header">
+        <nav className="navbar navbar-expand-lg navbar-dark navbar-custom-home ">
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-awesome fas fa-bars" />
+            {/* <span className="navbar-toggler-awesome fas fa-times" /> */}
+          </button>
+
+          {/* end of mobile menu toggle button */}
+          <div className="collapse navbar-collapse" id="navbarsExampleDefault">
+            <Link to="/" className="navbar-brand logo-image">
+              GEOCITY
+            </Link>
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/" className="nav-link ">
+                  Home <span className="sr-only">(current)</span>
+                </Link>
+                {/* <a className="nav-link " href="#header">Home <span className="sr-only">(current)</span></a> */}
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/ProjectList">
+                  Projects
+                </Link>
+              </li>
+              <li className="nav-item">
+                <a href="#services" className="nav-link ">
+                  Comment cela fontctionne
+                </a>
+              </li>
+              {!isAuthenticated() ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="btn-outline-sm" to="/SignUp">
+                      Sign Up
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="btn-outline-sm" to="/Login">
+                      Log In
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                ""
+              )}
+            </ul>
+          </div>
+          <div className="row ml-1 mr-1 sideheader">
+            {!isAuthenticated() ? (
+              ""
+            ) : (
+              <NotificationMenu data={data} setdata={setdata} />
+            )}
+            {!isAuthenticated() ? "" : <DropDown />}
+          </div>
+        </nav>{" "}
+        <div className="header-content">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-7">
+                <div className="text-container">
+                  <h2>
+                    <span className="turquoise">Vous avez un project ?</span>{" "}
+                  </h2>
+                  <h2>
+                    <span className="turquoise">
+                      Trouvez donc vos collaborateurs !
+                    </span>{" "}
+                  </h2>
+                  <p className="p-large">
+                    Plateforme vous permettant de trouver vos collaborateurs
+                    selon les competences necesseries, et ce pour chaque etape
+                    de votre project
+                  </p>
+                  <a className="btn-solid-lg " href="#services">
+                    En savoir plus{" "}
+                  </a>
+                </div>{" "}
+                {/* end of text-container */}
+              </div>{" "}
+              {/* end of col */}
+              <div className="col-lg-5"></div>
+            </div>{" "}
+            {/* end of row */}
+          </div>{" "}
+          {/* end of container */}
+        </div>{" "}
+        {/* end of header-content */}
+      </header>
       <div id="services" className="cards-1">
         <div className="container">
           <div className="row">
@@ -66,7 +183,7 @@ export default function Home({ notificationsData }) {
           </div>
           <div className="row " id="section2">
             <div className="col-lg-12">
-              <h2 className="h2-heading">
+              <h2 className="h2-heading" style={{ fontWeight: "700" }}>
                 Pour les personnes recherchant un projet
               </h2>
               {/* Card */}
@@ -111,43 +228,28 @@ export default function Home({ notificationsData }) {
       <div className="basic-2">
         <div className="container">
           <div className="row">
-            <div className="col-lg-4">
-              <div className="row image-container">
-                <img
-                  className="img-fluid"
-                  style={{
-                    width: "280px",
-                    height: "291px",
-                    marginLeft: "6rem",
-                    // left: "36%",
-                  }}
-                  src={Group2}
-                  alt="alternative"
-                />
-                <img
-                  className="img-fluid"
-                  style={{
-                    width: "157px",
-                    height: "274px",
-                    position: "absolute",
-                    left: "36%",
-                  }}
-                  src={bulbMen}
-                  alt="alternative"
-                />
+            <div className="col-lg-5 text-right col-md-12">
+              <div className="row text-right image-container">
+                <img className=" bulb-men" src={bulbMen} alt="alternative" />
               </div>{" "}
               {/* end of image-container */}
             </div>{" "}
             {/* end of col */}
-            <div className="col-lg-8">
-              <div className="text-container">
-                <h2>Lancez-vous maintenant !</h2>
-                <Link to="/ProjectList">
-                  <p>See the list of projects</p>
-                </Link>
-                <Link to="/Createproject">
-                  <p className="mt-5 ">Create a new project</p>
-                </Link>
+            <div className="col-lg-7 col-md-12">
+              <div className="box-container">
+                <h2 className="project_title text-white">
+                  Lancez-vous maintenant !
+                </h2>
+                <div className="Project_List">
+                  <Link to="/ProjectList">
+                    <p>See the list of projects</p>
+                  </Link>
+                </div>
+                <div className="Project_List ">
+                  <Link to="/Createproject">
+                    <p>Create a new project</p>
+                  </Link>
+                </div>
               </div>{" "}
               {/* end of text-container */}
             </div>{" "}
@@ -162,3 +264,4 @@ export default function Home({ notificationsData }) {
     </div>
   );
 }
+export default withRouter(Home);

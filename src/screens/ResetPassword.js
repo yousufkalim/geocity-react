@@ -98,7 +98,7 @@ function Login(props) {
         try {
           axios
             .post(
-              `http://160.153.249.64:7002/api/v1/profile/reset-password?passwordToken=${props.match.params.id}`,
+              `https://api.geocity.io/api/v1/profile/reset-password?passwordToken=${props.match.params.id}`,
               {
                 password: formData.password,
                 confirm: formData.confirm,
@@ -190,7 +190,7 @@ function Login(props) {
       <div className="main">
         <div className="Logincontainer">
           <form method="POST" className="appointmentform" id="appointment-form">
-            <h2>Reset Password</h2>
+            <h2 style={{ paddingTop: "3rem" }}>Reset Password</h2>
             <div className="form-group-1">
               <label className="label-agree-term row">
                 Password*{" "}

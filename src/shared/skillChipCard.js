@@ -37,11 +37,6 @@ export default function ChipsArray({
 }) {
   const classes = useStyles();
   const [chipData, setChipData] = React.useState(skillArrayData);
-  const [random, setrandom] = useState(112213);
-
-  useEffect(() => {
-    setrandom(Math.floor(Math.random() * 101));
-  }, [step]);
 
   const handleDelete = (chipToDelete) => {
     const ChipsArray = skillArrayData.filter(
@@ -91,8 +86,8 @@ export default function ChipsArray({
         // className={i == 0 ? "" : "mt-2"}
       >
         <CardBody style={{ padding: "0.6rem" }} className="text-left">
-          <div className=" row">
-            <div className="col-10">
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
               <h5 tag="h5">
                 {step.skillField
                   ? skillFieldList &&
@@ -100,24 +95,7 @@ export default function ChipsArray({
                       if (mat._id === step.skillField) {
                         return (
                           <>
-                            <p>
-                              <span
-                                style={{ fontSize: "15px", fontWeight: "bold" }}
-                              >
-                                {" "}
-                                Sr#:
-                              </span>{" "}
-                              <span
-                                style={{
-                                  opacity: 0.7,
-                                  fontSize: "15px",
-                                }}
-                              >
-                                {" "}
-                                {random}
-                              </span>
-                            </p>
-                            <p>
+                            <p style={{ marginBottom: "0px" }}>
                               <span
                                 style={{ fontSize: "15px", fontWeight: "bold" }}
                               >
@@ -141,16 +119,16 @@ export default function ChipsArray({
                   : ""}
               </h5>
             </div>
-            <div className="col-2">
+            <div>
               <ClearOutlinedIcon
                 style={{ fill: "red" }}
                 onClick={() => handleDelete(step.skillField)}
               />
             </div>
           </div>
-          <p tag="h6" className="mb-2 ">
+          <p tag="h6" className="mb-1 ">
             {step.skill ? (
-              <p>
+              <p style={{ marginBottom: "0px" }}>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
                   {" "}
                   Skill:
@@ -171,7 +149,7 @@ export default function ChipsArray({
           </p>
           <CardText>
             {
-              <p>
+              <p style={{ marginBottom: "0px" }}>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
                   {" "}
                   Score:

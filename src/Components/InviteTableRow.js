@@ -8,18 +8,18 @@ export default function InviteTableRow({
   type,
 }) {
   const [checkDecision, setcheckDecision] = useState(false);
-  const AcceptedFunc = (projectId, sender, decision, invitation) => {
-    AcceptFunc(setcheckDecision, projectId, sender, decision, invitation);
+  const AcceptedFunc = (projectId, stepId, decision, invitation) => {
+    AcceptFunc(setcheckDecision, projectId, stepId, decision, invitation);
   };
-  const DeclinedFunc = (projectId, sender, decision, invitation) => {
-    DeclineFunc(setcheckDecision, projectId, sender, decision, invitation);
+  const DeclinedFunc = (projectId, stepId, decision, invitation) => {
+    DeclineFunc(setcheckDecision, projectId, stepId, decision, invitation);
   };
   return (
     <tr>
       <td>
         {new Date(project.createdAt).toString().split(" ")[2]}
         {"/"}
-        {new Date(project.createdAt).getMonth()}
+        {new Date(project.createdAt).getMonth() + 1}
         {"/"}
         {new Date(project.createdAt).getFullYear()}
       </td>
@@ -67,7 +67,7 @@ export default function InviteTableRow({
                   onClick={() =>
                     AcceptedFunc(
                       project.projectID._id,
-                      project.sender,
+                      project.stepID,
                       "Accept",
                       project._id
                     )
@@ -83,7 +83,7 @@ export default function InviteTableRow({
                   onClick={() =>
                     DeclinedFunc(
                       project.projectID._id,
-                      project.sender,
+                      project.stepID,
                       "Decline",
                       project._id
                     )

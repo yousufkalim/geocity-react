@@ -32,6 +32,7 @@ const ModalExample = (props) => {
     address,
     onSubmit,
     isLoading,
+    addToast,
     CategoryList,
     items,
     skillformData,
@@ -159,14 +160,31 @@ const ModalExample = (props) => {
               <Col md={4}>
                 <FormGroup>
                   <Label for="examplePassword">Profile_picture*</Label>
+
                   <Input
                     type="file"
+                    accept="image/x-png,image/gif,image/jpeg"
                     name="profile_picture"
+                    id="profile_picture"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      console.log(file, "photo1");
-                      setProfilePreview(URL.createObjectURL(file));
-                      setPhoto(file);
+                      const type = e.target.files[0].type;
+                      if (
+                        type === "image/jpeg" ||
+                        type === "image/jpg" ||
+                        type === "image/png"
+                      ) {
+                        setPhoto(file);
+                        setProfilePreview(URL.createObjectURL(file));
+                      } else {
+                        addToast(`File should be png/jpg`, {
+                          appearance: "error",
+                          autoDismiss: true,
+                          autoDismissTimeout: 3000,
+                        });
+                        setPhoto("");
+                      }
+                      // validatePhoto(file);
                     }}
                   />
                 </FormGroup>
@@ -192,7 +210,7 @@ const ModalExample = (props) => {
                   src={
                     profilePreview
                       ? profilePreview
-                      : `http://160.153.249.64:7002/views/uploads/${data.data.profile_picture}`
+                      : `https://api.geocity.io/views/uploads/${data.data.profile_picture}`
                   }
                   alt="alternative"
                 />

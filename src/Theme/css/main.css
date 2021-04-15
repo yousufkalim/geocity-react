@@ -234,7 +234,13 @@ textarea:focus {
 }
 
 .appointmentform {
-  padding: 50px 60px 70px 60px;
+  padding: 0px 60px 70px 60px;
+}
+#signup-form {
+  padding: 0px 60px 70px 60px !important;
+}
+#project-form {
+  padding: 0px 60px 70px 60px !important;
 }
 .appointmentform textarea {
   width: 100%;
@@ -423,9 +429,22 @@ select:focus {
     max-width: 100%;
   }
 }
+
 @media screen and (max-width: 480px) {
   .appointmentform {
-    padding: 50px 30px 70px 30px;
+    padding: 0px 30px 70px 30px;
+  }
+  .appointmentform .form-submit .submit {
+    margin: 0px !important;
+  }
+  .appointmentform .submit {
+    width: 60% !important;
+  }
+  .appointmentform .materialSubmit {
+    width: 77% !important;
+  }
+  .appointmentform h2 {
+    font-size: 16px !important;
   }
 }
 

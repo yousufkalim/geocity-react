@@ -81,7 +81,7 @@ function Login() {
       try {
         axios
           .post(
-            "http://160.153.249.64:7002/api/v1/profile/request-forget-password",
+            "https://api.geocity.io/api/v1/profile/request-forget-password",
             {
               email: formData.email,
             }
@@ -147,6 +147,21 @@ function Login() {
     return (
       <div className="main">
         <div className="Logincontainer">
+          <div>
+            <Link to="/">
+              <p className="pl-4 pt-2 ">
+                <i
+                  class="fa fa-arrow-left"
+                  aria-hidden="true"
+                  style={{ fontSize: "18px" }}
+                ></i>
+                <span style={{ fontSize: "18px" }} className="pl-1">
+                  {" "}
+                  Back to home{" "}
+                </span>
+              </p>
+            </Link>
+          </div>
           <form method="POST" className="appointmentform" id="appointment-form">
             <h2>Forgot Password</h2>
             <div className="form-group-1">

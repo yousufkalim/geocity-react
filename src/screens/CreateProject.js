@@ -72,11 +72,17 @@ function CreateProject() {
   const ValidateOtherMaterial = () => {
     if (!otherMaterial) {
       const msg = "Required";
-      setmaterialRequiredFields({ ...skillRequiredFields, otherMaterial: msg });
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        otherMaterial: msg,
+      });
       return false;
     } else {
       const msg = "";
-      setmaterialRequiredFields({ ...skillRequiredFields, otherMaterial: msg });
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        otherMaterial: msg,
+      });
       return true;
     }
   };
@@ -282,19 +288,20 @@ function CreateProject() {
     let reqFields = true;
     Object.keys(formData).map((key) => {
       if (formData[key] === "") {
-        obj[key] = "Required";
-        reqFields = false;
+        if (key === "general_photo") {
+          obj[key] = "";
+        } else {
+          obj[key] = "Required";
+          reqFields = false;
+        }
       }
       return obj;
     });
-    // debugger;
     if (!reqFields) {
       setAboutRequiredFields(obj);
-
       return false;
     } else {
       setAboutRequiredFields(projectaboutRequired);
-
       return true;
     }
   };
@@ -310,7 +317,6 @@ function CreateProject() {
       }
       return obj;
     });
-
     if (stepArrayData.length >= 0) {
       if (!reqFields) {
         if (stepType === "") {
@@ -336,6 +342,7 @@ function CreateProject() {
   const checkValidateForm3 = () => {
     let obj = {};
     let reqFields = true;
+    const vos = ValidateOtherSkill();
     Object.keys(formDataSkillField).map((key) => {
       if (formDataSkillField[key] === "") {
         obj[key] = "Required";
@@ -343,16 +350,37 @@ function CreateProject() {
       }
       return obj;
     });
+    debugger;
     if (stepArrayData.length >= 0) {
-      // debugger;
-      if (!reqFields) {
-        if (otherSKill !== "") {
-          obj.skill = "";
-          setskillRequiredFields(obj);
-          return false;
+      if (!reqFields || !vos) {
+        setskillRequiredFields(obj);
+        if (formDataSkillField.skill === "Other") {
+          if (otherSKill !== "") {
+            obj.skill = "";
+            setskillRequiredFields(obj);
+            return false;
+          } else if (otherSKill == "") {
+            obj.otherSKill = "Required";
+            setskillRequiredFields(obj);
+            return false;
+          } else {
+            setskillRequiredFields(projectskillRequired);
+
+            return true;
+          }
+        } else if (formDataSkillField.skill !== "Other") {
+          if (!reqFields) {
+            setskillRequiredFields(obj);
+            return false;
+          } else {
+            setskillRequiredFields(projectskillRequired);
+
+            return true;
+          }
         } else {
-          setskillRequiredFields(obj);
-          return false;
+          setskillRequiredFields(projectskillRequired);
+
+          return true;
         }
 
         // console.log(obj, "validate 2 check");
@@ -381,7 +409,7 @@ function CreateProject() {
       if (stepType === "Material") {
         try {
           axios
-            .get("http://160.153.249.64:7002/api/v1/auth/materialList", headers)
+            .get("https://api.geocity.io/api/v1/auth/materialList", headers)
             .then((res) => {
               setMaterialList(res.data.materials);
               // // console.log(res, "res material");
@@ -393,7 +421,7 @@ function CreateProject() {
       } else if (stepType === "Field") {
         try {
           axios
-            .get("http://160.153.249.64:7002/api/v1/auth/skillList")
+            .get("https://api.geocity.io/api/v1/auth/skillList")
             .then((res) => {
               setskillFieldList(res.data.skills);
               // // console.log(res, "res skilllist");
@@ -406,7 +434,7 @@ function CreateProject() {
     }
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/categoryList")
+        .get("https://api.geocity.io/api/v1/auth/categoryList")
         .then((res) => {
           setCategoryList(res.data.category);
         })
@@ -530,22 +558,26 @@ function CreateProject() {
     setstepArrayData(ChipsArray);
   };
   const onAdd = () => {
-    if (otherSKill !== "") {
-      formDataSkillField.skill = otherSKill;
-    }
-    if (material == "Other") {
-      var materialcheck = ValidateOtherMaterial();
-    }
     // debugger;
+    const stepCheck = checkValidateForm2();
 
     if (stepType !== "") {
+      var stepCheck2 = checkValidateForm3();
+
       if (stepType === "Field") {
-        var stepCheck2 = checkValidateForm3();
+        if (formDataSkillField.skill == "Other") {
+          if (otherSKill !== "") {
+            formDataSkillField.skill = otherSKill;
+          }
+        }
       } else {
-        validateMaterial();
+        if (material == "Other") {
+          ValidateOtherMaterial();
+        } else {
+          validateMaterial();
+        }
       }
     }
-    const stepCheck = checkValidateForm2();
 
     const check = Object.values(stepformData).map((obj) => {
       if (obj !== "") {
@@ -587,10 +619,9 @@ function CreateProject() {
             setstepType("");
           } else if (material !== "" && stepCheck === true) {
             if (material == "Other") {
-              if (materialcheck === true) {
+              if (otherMaterial !== "") {
                 stepformData.materialName = otherMaterial;
                 stepformData.material = "";
-
                 setstepArrayData((prevState) => [...prevState, stepformData]);
                 setstepFormData(projectstepData);
                 setFormDataSkillField(projectskillData);
@@ -628,7 +659,7 @@ function CreateProject() {
           setstepType("");
         } else if (material !== "" && stepCheck === true) {
           if (material == "Other") {
-            if (materialcheck === true) {
+            if (otherMaterial !== "") {
               stepformData.materialName = otherMaterial;
               stepformData.material = "";
 
@@ -663,75 +694,91 @@ function CreateProject() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
-    checkValidateForm();
-    const checkForm = checkValidateForm2();
-    if (checkForm == true || stepArrayData.length > 0) {
-      // validateCity();
-      setstepRequiredFields(projectstepRequired);
+    const checkForm1 = checkValidateForm();
 
-      // console.log(photo, "photo");
-      const newFormData = new FormData();
-      newFormData.append("title", formData.title);
-      newFormData.append("type", formData.type);
-      newFormData.append("general_photo", photo);
-      newFormData.append("general_description", formData.general_description);
-      newFormData.append("category", formData.category);
-      newFormData.append("address", JSON.stringify(formDataCity));
-      newFormData.append("implementation_steps", JSON.stringify(stepArrayData));
-      try {
-        const headers = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
-        await axios
-          .post(
-            "http://160.153.249.64:7002/api/v1/project/CreateProject",
-            newFormData,
-            headers
-          )
-          .then((response) => {
-            setisLoading(false);
-            setFormData(projectData);
-            setPhoto("");
-            setstepArrayData([]);
-            setAddress("");
-            addToast(`Project created Successfully`, {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 3000,
-            });
-          })
-          .catch((err) => {
-            setTimeout(() => {
+    const cityCheck = validateCity();
+    if (checkForm1 == true && cityCheck === true) {
+      if (stepArrayData.length > 0) {
+        // validateCity();
+        setstepRequiredFields(projectstepRequired);
+
+        // console.log(photo, "photo");
+        const newFormData = new FormData();
+        newFormData.append("title", formData.title);
+        newFormData.append("type", formData.type);
+        newFormData.append("general_photo", photo);
+        newFormData.append("general_description", formData.general_description);
+        newFormData.append("category", formData.category);
+        newFormData.append("address", JSON.stringify(formDataCity));
+        newFormData.append(
+          "implementation_steps",
+          JSON.stringify(stepArrayData)
+        );
+        try {
+          const headers = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          };
+          await axios
+            .post(
+              "https://api.geocity.io/api/v1/project/CreateProject",
+              newFormData,
+              headers
+            )
+            .then((response) => {
               setisLoading(false);
-            }, 1000);
-            if (err.response.data) {
-              if (err.response.data.message) {
-                addToast(`${err.response.data.message}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              } else {
-                addToast(`${err.response.data}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
+              setFormData(projectData);
+              setPhoto("");
+              setFormDataCity(projectcityData);
+              setstepArrayData([]);
+              setAddress("");
+              addToast(`Project created Successfully`, {
+                appearance: "success",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            })
+            .catch((err) => {
+              setTimeout(() => {
+                setisLoading(false);
+              }, 1000);
+              if (err.response.data) {
+                if (err.response.data.message) {
+                  addToast(`${err.response.data.message}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                } else {
+                  addToast(`${err.response.data}`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                }
               }
-            }
-          });
-      } catch (error) {
+            });
+        } catch (error) {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+        }
+      } else {
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
+        addToast(`Please add atleast one implementation_step `, {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
       }
     } else {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      addToast(`Please add atleast one implementation_step `, {
+      addToast(`Please fill mandatory fields`, {
         appearance: "error",
         autoDismiss: true,
         autoDismissTimeout: 3000,
@@ -759,6 +806,7 @@ function CreateProject() {
           ValidateSkill={ValidateSkill}
           ValidateOtherSkill={ValidateOtherSkill}
           ValidateOtherMaterial={ValidateOtherMaterial}
+          addToast={addToast}
           // ***********
           // Required Fields
           stepRequiredFields={stepRequiredFields}

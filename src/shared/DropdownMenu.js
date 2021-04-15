@@ -11,14 +11,7 @@ import DefaultImage from "../Theme/images/men.png";
 import { Link, Redirect } from "react-router-dom";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import Typography from "@material-ui/core/Typography";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  paper: {
-    marginRight: theme.spacing(2),
-  },
-}));
+const useStyles = makeStyles((theme) => ({}));
 
 export default function MenuListComposition() {
   const classes = useStyles();
@@ -55,9 +48,8 @@ export default function MenuListComposition() {
   }, [open]);
 
   return (
-    <div className={classes.root}>
-      <div id="user">
-        {/* <Button
+    <div>
+      {/* <Button
           ref={anchorRef}
           aria-controls={open ? "menu-list-grow" : undefined}
           aria-haspopup="true"
@@ -65,88 +57,87 @@ export default function MenuListComposition() {
         >
           Toggle Menu Grow
         </Button> */}
-        <div
-          className="row ml-4 userdiv"
-          ref={anchorRef}
-          aria-controls={open ? "menu-list-grow" : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}
-        >
-          <img
-            style={{
-              width: "33px",
-              height: "33px",
-              borderRadius: "100%",
-              // marginRight: "auto",
-              // marginBottom: "0.5rem",
-              // marginLeft: "auto",
-              marginTop: "5px",
-            }}
-            src={
-              getUser().profile_picture == "default.png"
-                ? DefaultImage
-                : `http://160.153.249.64:7002/views/uploads/${
-                    getUser().profile_picture
-                  }`
-            }
-            alt="alternative"
-          />
-          <ul className="navbar-nav">
-            <li className="nav-item row">
-              <a className="nav-link ml-3">{getUser().username}</a>
-              <i
-                class="fas fa-caret-down"
-                style={{
-                  fontSize: "22px",
-                  margin: "auto",
-                  color: "#fff",
-                }}
-              ></i>
-            </li>
-          </ul>
-        </div>
-        <Popper
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-          disablePortal
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
+      <div
+        className="row ml-4 userdiv"
+        ref={anchorRef}
+        aria-controls={open ? "menu-list-grow" : undefined}
+        aria-haspopup="true"
+        onClick={handleToggle}
+      >
+        <img
+          style={{
+            width: "33px",
+            height: "33px",
+            borderRadius: "100%",
+            // marginRight: "auto",
+            // marginBottom: "0.5rem",
+            // marginLeft: "auto",
+            marginTop: "5px",
+          }}
+          src={
+            getUser().profile_picture == "default.png"
+              ? DefaultImage
+              : `https://api.geocity.io/views/uploads/${
+                  getUser().profile_picture
+                }`
+          }
+          alt="alternative"
+        />
+        <ul className="navbar-nav">
+          <li className="nav-item row">
+            <a className="nav-link username">{getUser().username}</a>
+            <i
+              class="fas fa-caret-down"
               style={{
-                transformOrigin:
-                  placement === "bottom" ? "right top" : "right bottom",
+                fontSize: "22px",
+                margin: "auto",
+                color: "#fff",
               }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="menu-list-grow"
-                    onKeyDown={handleListKeyDown}
-                  >
-                    {getUser().email === "admin@admin.com" ? (
-                      <Link to={`/Admindashboard/${getUser()._id}`}>
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      </Link>
-                    ) : (
-                      <Link to={`/profile/${getUser()._id}`}>
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      </Link>
-                    )}
-                    <hr style={{ margin: "0 auto", width: "90%" }} />
-                    <Link onClick={SignOut}>
-                      <MenuItem>Log Out</MenuItem>
-                    </Link>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+            ></i>
+          </li>
+        </ul>
       </div>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom" ? "right top" : "right bottom",
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="menu-list-grow"
+                  onKeyDown={handleListKeyDown}
+                >
+                  {getUser().email === "admin@admin.com" ? (
+                    <Link to={`/Admindashboard/${getUser()._id}`}>
+                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    </Link>
+                  ) : (
+                    <Link to={`/profile/${getUser()._id}`}>
+                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    </Link>
+                  )}
+                  <hr style={{ margin: "0 auto", width: "90%" }} />
+                  <Link onClick={SignOut}>
+                    <MenuItem>Log Out</MenuItem>
+                  </Link>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
     </div>
   );
 }

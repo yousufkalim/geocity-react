@@ -43,7 +43,7 @@ export default function AutoComplete({
       }}
       inputProps={{
         className: "form-control",
-        placeholder: "e.g Sas Van Genstraete 59270 Bailleul",
+        placeholder: "",
         onBlur: validateCity,
       }}
       value={address}

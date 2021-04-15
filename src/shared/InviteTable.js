@@ -3,11 +3,13 @@ import { Table } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import InviteTableRow from "../Components/InviteTableRow";
+import PrivateInviteTableRow from "../shared/PrivateInviteTableRow";
+
 import { projectData } from "./Data";
 export default function UserTable(props) {
   const { data, addToast, invitationData, setinvitationData } = props;
   // ******
-  // Accept invitation from project owner for collaboration
+  // Accept invitation from user for collaboration
 
   const AcceptInviteCollaborator = async (
     setcheckDecision,
@@ -28,7 +30,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -37,13 +39,13 @@ export default function UserTable(props) {
             addToast(`${res.data.message}`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Success`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -54,13 +56,13 @@ export default function UserTable(props) {
             addToast(`${err.res.data.message}`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Error`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -70,11 +72,11 @@ export default function UserTable(props) {
       console.log(error, "error catch");
     }
   };
-  // Decline invitation from project owner for collaboration
+  // Decline invitation from user for collaboration
   const DeclineInviteCollaborator = async (
     setcheckDecision,
     projectId,
-    sender,
+    stepId,
     decision,
     invitation
   ) => {
@@ -89,8 +91,8 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
-          { sender: sender, decision: decision, invitation: invitation },
+          `https://api.geocity.io/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          { step: stepId, decision: decision, invitation: invitation },
           headers
         )
         .then((res) => {
@@ -98,14 +100,14 @@ export default function UserTable(props) {
             addToast(`${res.data.message}`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
             setcheckDecision(true);
           } else {
             addToast(`Error`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
         })
@@ -114,13 +116,13 @@ export default function UserTable(props) {
             addToast(`${err.res.data.message}`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Error`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
         });
@@ -129,7 +131,7 @@ export default function UserTable(props) {
     }
   };
 
-  // Accept Request to view private project from a user
+  // Accept Request to view private project from a project_owner
   const AcceptRequestToView = async (
     setcheckDecision,
     projectId,
@@ -149,7 +151,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -158,13 +160,13 @@ export default function UserTable(props) {
             addToast(`${res.data.message}`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Success`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -175,13 +177,13 @@ export default function UserTable(props) {
             addToast(`${err.res.data.message}`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Error`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -192,7 +194,7 @@ export default function UserTable(props) {
     }
   };
 
-  // Decline Request to view private project from a user
+  // Decline Request to view private project from a project_owner
 
   const DeclineRequestToView = async (
     setcheckDecision,
@@ -201,7 +203,6 @@ export default function UserTable(props) {
     decision,
     invitation
   ) => {
-    // alert(sender);
     var array = invitationData.filter((com) => com._id !== invitation);
     // console.log(array, "array main");
     setinvitationData(array);
@@ -213,7 +214,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -222,13 +223,13 @@ export default function UserTable(props) {
             addToast(`${res.data.message}`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Success`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -239,13 +240,13 @@ export default function UserTable(props) {
             addToast(`${err.res.data.message}`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Error`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -256,7 +257,7 @@ export default function UserTable(props) {
     }
   };
 
-  // Accept request from a user to collaborate with us in a project
+  // Accept request from a projectowner to collaborate with us in a project
   const AcceptRequestToCollaborate = async (
     setcheckDecision,
     projectId,
@@ -264,7 +265,6 @@ export default function UserTable(props) {
     decision,
     invitation
   ) => {
-    // alert(sender);
     var array = invitationData.filter((com) => com._id !== invitation);
     // console.log(array, "array main");
     setinvitationData(array);
@@ -276,7 +276,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -285,13 +285,13 @@ export default function UserTable(props) {
             addToast(`${res.data.message}`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Success`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -302,13 +302,13 @@ export default function UserTable(props) {
             addToast(`${err.res.data.message}`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Error`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -319,7 +319,7 @@ export default function UserTable(props) {
     }
   };
 
-  // Decline request from a user to collaborate with us in a project
+  // Decline request from a projectOwner to collaborate with us in a project
   const DeclineRequestToCollaborate = async (
     setcheckDecision,
     projectId,
@@ -327,7 +327,7 @@ export default function UserTable(props) {
     decision,
     invitation
   ) => {
-    // alert(sender);
+    // alert(stepId);
     var array = invitationData.filter((com) => com._id !== invitation);
     // console.log(array, "array main");
     setinvitationData(array);
@@ -339,7 +339,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `https://api.geocity.io/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -348,13 +348,13 @@ export default function UserTable(props) {
             addToast(`${res.data.message}`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Success`, {
               appearance: "success",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -365,13 +365,13 @@ export default function UserTable(props) {
             addToast(`${err.res.data.message}`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           } else {
             addToast(`Error`, {
               appearance: "error",
               autoDismiss: true,
-              autoDismissTimeout: 1000,
+              autoDismissTimeout: 3000,
             });
           }
 
@@ -418,7 +418,7 @@ export default function UserTable(props) {
                 AcceptFunc={AcceptInviteCollaborator}
               />
             ) : project.type === "viewProject" ? (
-              <InviteTableRow
+              <PrivateInviteTableRow
                 project={project}
                 DeclineFunc={DeclineRequestToView}
                 data={data}

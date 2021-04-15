@@ -30,7 +30,7 @@ export default function TableRow({ DeleteSkillField, skillField, Edittoggle }) {
               onClick={() => Edittoggle(skillField._id)}
               type="button"
               id="modalButton1"
-              className="btn btn-primary text-white ml-4 text-uppercase"
+              className="btn btn-primary text-white ml-4 "
             >
               Edit
             </button>
@@ -38,7 +38,7 @@ export default function TableRow({ DeleteSkillField, skillField, Edittoggle }) {
               onClick={() => DeleteSkillField(skillField._id)}
               type="button"
               id="modalButton1"
-              className="btn btn-primary text-white ml-4 text-uppercase"
+              className="btn btn-primary text-white ml-4 "
             >
               Delete
             </button>

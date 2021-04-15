@@ -3,7 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { getUser } from "../Auth/Index";
 import PrivateModal from "../shared/PrivateModal";
-import AutorenewIcon from "@material-ui/icons/Autorenew";
+import AutorenewIcon from "../Theme/images/geocity/Group 3.png";
 
 export default function ProjectList({
   data,
@@ -61,7 +61,7 @@ export default function ProjectList({
         <>
           <PrivateModal toggle={CheckRedirect} modal={modal} />
 
-          <div className="col-lg-3 " key={data._id}>
+          <div className="col-lg-3 col-md-4 col-sm-6" key={data._id}>
             <div className="card">
               {/* <Link to={`/SingleProject/${data.project._id}`}> */}
 
@@ -83,7 +83,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.project.general_photo
-                    ? `http://160.153.249.64:7002/views/uploads/${data.project.general_photo}`
+                    ? `https://api.geocity.io/views/uploads/${data.project.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -131,11 +131,7 @@ export default function ProjectList({
                     </span>
                   </span>
                   <span id="second">
-                    <AutorenewIcon
-                      style={{
-                        fontSize: "1.3rem",
-                      }}
-                    />
+                    <img src={AutorenewIcon} style={{ height: "23px" }} />
                     <span className="ml-2 " id="span2">
                       {data.project.type === "Private" &&
                       getUser()._id !== data.project.project_owner
@@ -159,7 +155,7 @@ export default function ProjectList({
       return (
         <>
           <PrivateModal toggle={CheckRedirect} modal={modal} />
-          <div className="col-lg-3 " key={data._id}>
+          <div className="col-lg-3 col-md-4 col-sm-6" key={data._id}>
             <div className="card">
               <img
                 onClick={CheckRedirect}
@@ -179,7 +175,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.general_photo
-                    ? `http://160.153.249.64:7002/views/uploads/${data.general_photo}`
+                    ? `https://api.geocity.io/views/uploads/${data.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -195,7 +191,7 @@ export default function ProjectList({
                       privateFilter === false
                         ? DefaultImage
                         : data.general_photo
-                        ? `http://160.153.249.64:7002/views/uploads/${data.general_photo}`
+                        ? `https://api.geocity.io/views/uploads/${data.general_photo}`
                         : DefaultImage
                     }
                     alt="alternative"
@@ -237,11 +233,7 @@ export default function ProjectList({
                         </span>
                       </span>
                       <span id="second">
-                        <AutorenewIcon
-                          style={{
-                            fontSize: "1.3rem",
-                          }}
-                        />
+                        <img src={AutorenewIcon} style={{ height: "23px" }} />
                         <span className="ml-2 " id="span2">
                           {parseInt(data.progress)}%
                         </span>
