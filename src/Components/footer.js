@@ -6,7 +6,7 @@ function footer() {
       <div className="footer">
         <div className="container">
           <div className="row">
-            <div className="col-md-4 col-lg-4 col-sm-12">
+            <div className="col-md-4 col-lg-4">
               <div className="footer-col">
                 <h4>GEOCITY</h4>
                 <p>
@@ -16,7 +16,7 @@ function footer() {
               </div>
             </div>{" "}
             {/* end of col */}
-            <div className="col-md-8 col-lg-6 col-sm-12">
+            <div className="col-md-6 col-lg-6">
               <div className="footer-col middle">
                 {/* <h4>Important Links</h4> */}
                 <div className="row mt-1">
@@ -78,7 +78,7 @@ function footer() {
               </div>
             </div>{" "}
             {/* end of col */}
-            <div className=" col-lg-2 col-sm-12">
+            <div className="col-md-2 col-lg-2">
               <div className="footer-col last">
                 {/* <h4>Social Media</h4> */}
                 <span className="fa-stack" style={{ marginRight: "0.7rem" }}>
@@ -97,22 +97,6 @@ function footer() {
             </div>{" "}
             {/* end of col */}
           </div>{" "}
-          <div className="row">
-            <div className="col-lg-12 col-md-12 col-sm-12 text-center">
-              <p className="tilt-footer-para">
-                {" "}
-                &copy; {new Date().getFullYear()}{" "}
-                <a target="blank" href="https://falconconsulting.fr/">
-                  <span
-                    style={{ color: "dodgerblue", textDecoration: "underline" }}
-                  >
-                    Falcon Consulting
-                  </span>
-                </a>
-                , made with love for a better web
-              </p>
-            </div>
-          </div>
           {/* end of row */}
         </div>{" "}
         {/* end of container */}

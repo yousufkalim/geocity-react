@@ -180,14 +180,6 @@ a.white {
   color: #fff;
 }
 
-.testimonial-text {
-  /* font: italic 400 1rem/1.5rem "Raleway", sans-serif; */
-}
-
-.testimonial-author {
-  /* font: 700 1rem/1.5rem "Raleway", sans-serif; */
-}
-
 .turquoise {
   color: #fff;
 }
@@ -435,10 +427,6 @@ select::-ms-expand {
 .form-control-select:hover,
 .form-control-textarea:hover {
   border: 1px solid #a1a1a1;
-}
-
-.checkbox {
-  /* font: 400 0.75rem/1.25rem "Raleway", sans-serif; */
 }
 
 input[type="checkbox"] {
@@ -963,18 +951,7 @@ input[type="checkbox"] {
 #search input {
   border-radius: 4px;
 }
-.cards-1 input:focus {
-  /* background: none; */
-  /* color: white; */
-}
-.cards-1 select {
-  /* background: rgba(116, 68, 30, 0.986);
-  color: white; */
-}
-.cards-1 select:focus {
-  /* background: rgba(116, 68, 30, 0.986);
-  color: white; */
-}
+
 .cards-1 #section1 {
   border: 1px solid #ccc;
   border-radius: 2em;
@@ -1032,6 +1009,30 @@ input[type="checkbox"] {
 
 .cards-1 .card-body {
   padding: 0;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+}
+.geocity-image {
+  width: 100%;
+}
+.single-card {
+  width: 32%;
+}
+/* .single-card img {
+  width: 100%;
+} */
+
+.header {
+  /* linear-gradient(to left, rgb(89, 156, 98), rgb(41, 113, 126)) */
+  /* background-image: url("../images/Image_90.png") center center; */
+  background: url("../images/bg.png") no-repeat;
+
+  background-size: cover;
+  padding-bottom: 8rem;
 }
 
 /*************************/
@@ -1488,13 +1489,11 @@ input[type="checkbox"] {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2028%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23626262'%2F%3E%3C%2Fsvg%3E");
   background-size: 1.125rem 1.75rem;
 }
-
 .slider-2 .swiper-button-next {
   right: -0.5rem;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2028%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23626262'%2F%3E%3C%2Fsvg%3E");
   background-size: 1.125rem 1.75rem;
 }
-
 .slider-2 .card {
   position: relative;
   border: none;
@@ -2114,14 +2113,6 @@ a:hover.back-to-top {
   /* end of general styles */
 
   /* Header */
-  .header {
-    /* linear-gradient(to left, rgb(89, 156, 98), rgb(41, 113, 126)) */
-    /* background-image: url("../images/Image_90.png") center center; */
-    background: url("../images/Image_90.png") no-repeat;
-
-    background-size: cover;
-    padding-bottom: 8rem;
-  }
 
   .header .header-content {
     padding-top: 0rem;
@@ -2266,6 +2257,35 @@ a:hover.back-to-top {
   }
   /* end of extra pages */
 }
+.btn-outline-bm {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border: 0.125rem solid #cbf3f0;
+
+  border-radius: 0.8rem;
+  background-color: #cbf3f0;
+  color: #000;
+  font-weight: bold;
+  /* font: 10 0.675rem/0 "Open Sans", sans-serif; */
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-outline-bj {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border: 0.125rem solid #cbf3f0;
+  margin-left: 80;
+
+  border-radius: 0.8rem;
+  background-color: #cbf3f0;
+  color: #000;
+  font-weight: bold;
+  /* font: 10 0.675rem/0 "Open Sans", sans-serif; */
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
 /* end of min-width width 992px */
 
 /* Min-width width 1200px */
@@ -2654,29 +2674,10 @@ a:hover.back-to-top {
 .react-toast-notifications__toast {
   z-index: 9999 !important;
 }
-.sideheader {
-  margin-left: 0.5rem !important;
-  margin-right: 0.5rem !important;
-}
-.notificationMenu {
-  margin-top: 0.7rem !important;
-}
-@media (max-width: 425px) {
-  .navbar-custom-home {
-    padding: 1.125rem 1rem 0.2rem 1rem !important;
-  }
-  .sideheader {
-    margin-left: 1.5rem !important;
-    margin-top: 0.5rem;
-  }
-  .navbar-collapse {
-    margin-left: 0.5rem;
-  }
-  .notificationMenu {
-    margin-right: 0.5rem !important;
-  }
-}
 
-.notificationMenu > div {
-  z-index: 10;
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
