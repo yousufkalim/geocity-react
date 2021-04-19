@@ -3,6 +3,7 @@ import { getUser, SignOut, isAuthenticated } from "../Auth/Index";
 import { Link } from "react-router-dom";
 import DropDown from "../shared/DropdownMenu";
 import NotificationMenu from "../shared/NotificationMenu";
+import LandImage from "../Theme/images/LandImage.png";
 export default function HomeHeader({ data }) {
   return (
     <header id="header" className="header">
@@ -20,13 +21,18 @@ export default function HomeHeader({ data }) {
           <span className="navbar-toggler-awesome fas fa-times" />
         </button>
         {/* end of mobile menu toggle button */}
-        <div className="collapse navbar-collapse" id="navbarsExampleDefault">
+        <div
+          className="collapse navbar-collapse justify-content-end"
+          id="navbarsExampleDefault"
+        >
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link to="/" className="nav-link ">
+              {/* <Link to="/" className="nav-link ">
                 Home <span className="sr-only">(current)</span>
-              </Link>
-              {/* <a className="nav-link " href="#header">Home <span className="sr-only">(current)</span></a> */}
+              </Link> */}
+              <a className="nav-link " href="#header">
+                Home <span className="sr-only">(current)</span>
+              </a>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/ProjectList">
@@ -74,8 +80,11 @@ export default function HomeHeader({ data }) {
       <div className="header-content">
         <div className="container">
           <div className="row">
+            <div className="col-lg-5">
+              <img src={LandImage} style={{ width: "100%" }} alt="Landing " />
+            </div>
             <div className="col-lg-7">
-              <div className="text-container">
+              <div className="text-container" style={{ textAlign: "right" }}>
                 <h2>
                   <span className="turquoise">Vous avez un project ?</span>{" "}
                 </h2>
@@ -96,7 +105,6 @@ export default function HomeHeader({ data }) {
               {/* end of text-container */}
             </div>{" "}
             {/* end of col */}
-            <div className="col-lg-5"></div>
           </div>{" "}
           {/* end of row */}
         </div>{" "}
