@@ -34,7 +34,7 @@ export default function UserTable(props) {
               />
             ))
           ) : (
-            <h5 className="text-dark">No Users found</h5>
+            <h5 className="text-dark text-center mt-2">No Skills found</h5>
           )}
         </tbody>
       </Table>

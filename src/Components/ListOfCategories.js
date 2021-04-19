@@ -39,7 +39,7 @@ export default function UserTable(props) {
               />
             ))
           ) : (
-            <h5 className="text-dark text-center mt-2">No Materials found</h5>
+            <h5 className="text-dark text-center mt-2">No Category found</h5>
           )}
         </tbody>
       </Table>

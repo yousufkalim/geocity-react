@@ -10,11 +10,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import DefaultImage from "../Theme/images/men.png";
 import { Link, Redirect } from "react-router-dom";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
+import { useHistory } from "react-router";
+
 import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({}));
 
 export default function MenuListComposition() {
   const classes = useStyles();
+  const history = useHistory();
+
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
@@ -129,7 +133,7 @@ export default function MenuListComposition() {
                     </Link>
                   )}
                   <hr style={{ margin: "0 auto", width: "90%" }} />
-                  <Link onClick={SignOut}>
+                  <Link onClick={() => SignOut(history)}>
                     <MenuItem>Log Out</MenuItem>
                   </Link>
                 </MenuList>

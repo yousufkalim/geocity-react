@@ -7,10 +7,11 @@ export const isAuthenticated = () => {
     return false;
   }
 };
-export const SignOut = () => {
+export const SignOut = (history) => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("jwt");
     localStorage.removeItem("user");
+    history.push("/Login");
     // window.location.href = "/Login";
   }
 };

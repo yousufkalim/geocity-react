@@ -9,7 +9,6 @@ import {
 } from "../shared/Data";
 import Header from "../Components/HomeHeader";
 import axios from "axios";
-
 import ListOfUser from "../Components/ListOfUser";
 import ListOfProjects from "../Components/listOfProjects";
 import ListOfSkills from "../Components/listOfSkills";

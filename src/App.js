@@ -52,7 +52,6 @@ export default function App() {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    console.log(headers, "asnlnkoasnas");
     // if (isAuthenticated()) {
     //   const sort = getUser().notifications.sort(
     //     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
