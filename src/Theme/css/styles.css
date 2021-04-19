@@ -1026,6 +1026,15 @@ input[type="checkbox"] {
   width: 100%;
 } */
 
+.header {
+  /* linear-gradient(to left, rgb(89, 156, 98), rgb(41, 113, 126)) */
+  /* background-image: url("../images/Image_90.png") center center; */
+  background: url("../images/bg.png") no-repeat;
+
+  background-size: cover;
+  padding-bottom: 8rem;
+}
+
 /*************************/
 /*     07. Details 1     */
 /*************************/
@@ -2104,14 +2113,6 @@ a:hover.back-to-top {
   /* end of general styles */
 
   /* Header */
-  .header {
-    /* linear-gradient(to left, rgb(89, 156, 98), rgb(41, 113, 126)) */
-    /* background-image: url("../images/Image_90.png") center center; */
-    background: url("../images/bg.png") no-repeat;
-
-    background-size: cover;
-    padding-bottom: 8rem;
-  }
 
   .header .header-content {
     padding-top: 0rem;
@@ -2258,10 +2259,26 @@ a:hover.back-to-top {
 }
 .btn-outline-bm {
   display: inline-block;
-  padding: 0.65rem 1rem;
-  border: 0.125rem solid #f2f2f2;
-  border-radius: 2rem;
-  background-color: white;
+  padding: 0.85rem 2rem;
+  border: 0.125rem solid #cbf3f0;
+
+  border-radius: 0.8rem;
+  background-color: #cbf3f0;
+  color: #000;
+  font-weight: bold;
+  /* font: 10 0.675rem/0 "Open Sans", sans-serif; */
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-outline-bj {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border: 0.125rem solid #cbf3f0;
+  margin-left: 80;
+
+  border-radius: 0.8rem;
+  background-color: #cbf3f0;
   color: #000;
   font-weight: bold;
   /* font: 10 0.675rem/0 "Open Sans", sans-serif; */
