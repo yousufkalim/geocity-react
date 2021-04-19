@@ -27,9 +27,12 @@ export default function Home({ notificationsData }) {
               className="col-lg-6"
               style={{ backgroundColor: "#00bcb6" }}
             ></div>
-            <div className=" col-lg-6 single-card">
+            <div
+              className=" col-lg-6 single-card p-30"
+              style={{ paddingLeft: 100 }}
+            >
               <div
-                className="pl-0 col-lg-12"
+                className="pl-0 col-lg-8"
                 style={{ border: "10px solid blue" }}
               >
                 <img
@@ -205,18 +208,18 @@ export default function Home({ notificationsData }) {
             </div>
             {/* end of col */}
 
-            <div className="d-flex row justify-content-center w-100">
-              <span className="nav-item col-sm-12 mx-auto mb-2">
-                <Link className="btn-outline-bm" to="/SignUp">
+            <div className="d-flex-row justify-content-center p-25 w-100">
+              <span className="nav-item mb-2" style={{ marginRight: "25px" }}>
+                <Link className="btn-outline-bm" to="">
                   Voir tous les projets
                 </Link>
               </span>
               <span
-                className="nav-item col-sm12 mx-auto mt-2"
+                className="nav-item mt-2"
+                style={{ marginLeft: "25px" }}
                 text-bold
-                style={{ marginLeft: "6rem" }}
               >
-                <Link className="  btn-outline-bm" to="/Login">
+                <Link className="btn-outline-bj" to="">
                   Creer un nouveau projet
                 </Link>
               </span>
