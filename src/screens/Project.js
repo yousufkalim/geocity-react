@@ -15,9 +15,10 @@ import Modal from "../shared/Modal";
 import ProjectModal from "../shared/ProjectModal";
 import StepModal from "../shared/StepModal";
 import AddStepModal from "../shared/AddStepModal";
-import AutorenewIcon from "@material-ui/icons/Autorenew";
 import DefaultuserImage from "../Theme/images/men.png";
-
+import AutorenewIcon from "../Theme/images/geocity/Group 3.png";
+import Image46 from "../Theme/images/geocity/Image 46.png";
+import Image47 from "../Theme/images/geocity/Image 47.png";
 import {
   projectaboutRequired,
   projectstepRequired,
@@ -27,8 +28,33 @@ import CommentsFromDB from "../Components/CommentsFromDB";
 import Comments from "../Components/Comments";
 import ImplementationStep from "../Components/ImpementationStep";
 import LoadedClients from "../shared/Loaders";
+import io from "socket.io-client";
+
 export default function Project(props) {
+  const { notificationsData, setdata } = props;
   const { addToast } = useToasts();
+  useEffect(() => {
+    window.socket = io(
+      process.env.REACT_APP_SOCKET_URL || "http://160.153.249.64:7002",
+      {
+        query: `userConnectionId=${getUser()._id}`,
+      }
+    );
+    if (window.socket) {
+      window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
+        setdata([...notificationsData, datas]);
+        console.log(datas, "datas");
+        addToast(datas.title, {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+      });
+    }
+    // return () => {
+    //   io.socket.off();
+    // };
+  }, []);
   const stepData = {
     name: "",
     description: "",
@@ -222,7 +248,7 @@ export default function Project(props) {
 
         await axios
           .post(
-            `http://160.153.249.64:7002/api/v1/project/view-project/comment?id=${props.match.params.id}`,
+            `https://api.geocity.io/api/v1/project/view-project/comment?id=${props.match.params.id}`,
             { comment: comment },
             headers
           )
@@ -271,7 +297,7 @@ export default function Project(props) {
 
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/delete-step?id=${props.match.params.id}`,
+          `https://api.geocity.io/api/v1/project/delete-step?id=${props.match.params.id}`,
           { id: id },
           headers
         )
@@ -289,7 +315,7 @@ export default function Project(props) {
           try {
             axios
               .get(
-                `http://160.153.249.64:7002/api/v1/project/view-project?id=${props.match.params.id}`,
+                `https://api.geocity.io/api/v1/project/view-project?id=${props.match.params.id}`,
 
                 headers
               )
@@ -344,7 +370,7 @@ export default function Project(props) {
 
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/delete-comment?id=${props.match.params.id}`,
+          `https://api.geocity.io/api/v1/project/view-project/delete-comment?id=${props.match.params.id}`,
           { commentId: commentId },
           headers
         )
@@ -616,7 +642,7 @@ export default function Project(props) {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/editProject?id=${props.match.params.id}`,
+          `https://api.geocity.io/api/v1/project/editProject?id=${props.match.params.id}`,
           newFormData,
           headers
         )
@@ -716,7 +742,7 @@ export default function Project(props) {
           };
           await axios
             .post(
-              `http://160.153.249.64:7002/api/v1/project/add-step?id=${props.match.params.id}`,
+              `https://api.geocity.io/api/v1/project/add-step?id=${props.match.params.id}`,
               { step: stepformData },
               headers
             )
@@ -775,7 +801,7 @@ export default function Project(props) {
               };
               await axios
                 .post(
-                  `http://160.153.249.64:7002/api/v1/project/add-step?id=${props.match.params.id}`,
+                  `https://api.geocity.io/api/v1/project/add-step?id=${props.match.params.id}`,
                   { step: stepformData },
                   headers
                 )
@@ -832,7 +858,7 @@ export default function Project(props) {
             };
             await axios
               .post(
-                `http://160.153.249.64:7002/api/v1/project/add-step?id=${props.match.params.id}`,
+                `https://api.geocity.io/api/v1/project/add-step?id=${props.match.params.id}`,
                 { step: stepformData },
                 headers
               )
@@ -962,51 +988,48 @@ export default function Project(props) {
   // console.log(stepformData, "step form data");onSte
 
   // searchby functions
-  const SearchBySkills = (skill, id) => {
+  const SearchBySkills = async (skill, id) => {
     setsearchBy(skill);
-
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    // console.log(headers, "asnlnkoasnas");
-    try {
-      axios
-        .post(
-          `http://160.153.249.64:7002/api/v1/project/SearchCollaboratorsBySkill`,
-          { skill: id },
-          headers
-        )
-        .then((res) => {
-          // setProjectdataList(res.data.ownedProjects);
 
-          setSkillFieldData(res.data);
-          // addToast("Success", {
-          //   appearance: "success",
-          //   autoDismiss: true,
-          //   autoDismissTimeout: 3000,
-          // });
+    await axios
+      .post(
+        `https://api.geocity.io/api/v1/project/SearchCollaboratorsBySkill`,
+        { skill: id },
+        headers
+      )
+      .then((res) => {
+        // setProjectdataList(res.data.ownedProjects);
+        console.log(res, "res skill search data");
 
-          console.log(res.data, "res skill search data");
-        })
-        .catch((err) => {
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-          console.log(" error projects =>", err);
-        });
-    } catch (error) {
-      console.log(error, "error catch");
-    }
+        const filter = res.data.filter(
+          (dt) =>
+            dt._id !== data.project.project_owner._id &&
+            dt.email !== "admin@admin.com"
+        );
+        setSkillFieldData(filter);
+        // addToast("Success", {
+        //   appearance: "success",
+        //   autoDismiss: true,
+        //   autoDismissTimeout: 3000,
+        // });
+      })
+      .catch((err) => {
+        // addToast("Error", {
+        //   appearance: "error",
+        //   autoDismiss: true,
+        //   autoDismissTimeout: 3000,
+        // });
+        console.log(" error searchbyskill =>", err);
+      });
   };
   const SearchByMaterials = (skill, id) => {
     setsearchBy(skill);
 
-    // alert(id);
-
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -1016,13 +1039,19 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/SearchCollaboratorsByMaterial`,
+          `https://api.geocity.io/api/v1/project/SearchCollaboratorsByMaterial`,
           { material: id },
           headers
         )
         .then((res) => {
           // setProjectdataList(res.data.ownedProjects);
-          setMaterialData(res.data.users);
+          const filter = res.data.users.filter(
+            (dt) =>
+              dt._id !== data.project.project_owner._id &&
+              dt.email !== "admin@admin.com"
+          );
+
+          setMaterialData(filter);
           // addToast("Success", {
           //   appearance: "success",
           //   autoDismiss: true,
@@ -1031,11 +1060,6 @@ export default function Project(props) {
           // console.log(res.data, "res material search data");
         })
         .catch((err) => {
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
           // console.log(" error projects =>", err);
         });
     } catch (error) {
@@ -1086,7 +1110,7 @@ export default function Project(props) {
           try {
             axios
               .post(
-                `http://160.153.249.64:7002/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
+                `https://api.geocity.io/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
                 {},
                 headers
               )
@@ -1136,7 +1160,7 @@ export default function Project(props) {
         try {
           axios
             .post(
-              `http://160.153.249.64:7002/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
+              `https://api.geocity.io/api/v1/project//view-project/likedBy?id=${props.match.params.id}`,
               {},
               headers
             )
@@ -1195,7 +1219,7 @@ export default function Project(props) {
       try {
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/project//view-project/unlike?id=${props.match.params.id}`,
+            `https://api.geocity.io/api/v1/project//view-project/unlike?id=${props.match.params.id}`,
             {},
             headers
           )
@@ -1251,56 +1275,54 @@ export default function Project(props) {
   // console.log(formData, "project in profile toggle");
   const sendInvite = (receiver) => {
     // setrecieverId(receiver);
-    // if (requestCount === 0 && recieverId !== receiver) {
+    setModal(!modal);
+
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    try {
-      axios
-        .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/send-invite?id=${props.match.params.id}`,
-          { receiver: receiver, skills: InviteId, stepID: stepId },
-          headers
-        )
-        .then((res) => {
-          // setProjectdataList(res.data.ownedProjects);
-          // const obj = { ...res.data };
-          // setData(res.data);
-          setModal(false);
+    axios
+      .post(
+        `https://api.geocity.io/api/v1/project/view-project/send-invite?id=${props.match.params.id}`,
+        { receiver: receiver, skills: InviteId, stepID: stepId },
+        headers
+      )
+      .then((res) => {
+        // setProjectdataList(res.data.ownedProjects);
+        // const obj = { ...res.data };
+        // setData(res.data);
+        setModal(!modal);
 
-          addToast("Success", {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-          // console.log(res.data, "res invite sent");
-        })
-        .catch((err) => {
-          setModal(false);
-
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            } else {
-              addToast(`${err.response.data}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            }
-          }
-
-          // console.log(" error projects =>", err);
+        addToast("Invitation sent successfully", {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
         });
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+        // console.log(res.data, "res invite sent");
+      })
+      .catch((err) => {
+        setModal(!modal);
+
+        if (err.response.data) {
+          if (err.response.data.message) {
+            addToast(`${err.response.data.message}`, {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+          } else {
+            addToast(`${err.response.data}`, {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+          }
+        }
+
+        // console.log(" error projects =>", err);
+      });
+
     // } else {
     //   addToast("You already sent invite to this user", {
     //     appearance: "error",
@@ -1510,7 +1532,7 @@ export default function Project(props) {
           // console.log(array, "array on submit");
           axios
             .post(
-              `http://160.153.249.64:7002/api/v1/project/edit-step?id=${props.match.params.id}`,
+              `https://api.geocity.io/api/v1/project/edit-step?id=${props.match.params.id}`,
               { id: tempstepId, step: obj2 },
               headers
             )
@@ -1556,7 +1578,7 @@ export default function Project(props) {
         // console.log(fil, "fil oy");
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/project/edit-step?id=${props.match.params.id}`,
+            `https://api.geocity.io/api/v1/project/edit-step?id=${props.match.params.id}`,
             { id: tempstepId, step: stepformData },
             headers
           )
@@ -1618,7 +1640,7 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/view-project/sendInviteToCollaborateByUser?id=${props.match.params.id}`,
+          `https://api.geocity.io/api/v1/project/view-project/sendInviteToCollaborateByUser?id=${props.match.params.id}`,
           { stepID: id },
           headers
         )
@@ -1663,7 +1685,7 @@ export default function Project(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/delete-project?id=${props.match.params.id}`,
+          `https://api.geocity.io/api/v1/project/delete-project?id=${props.match.params.id}`,
           {},
           headers
         )
@@ -1696,7 +1718,7 @@ export default function Project(props) {
     };
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/categoryList")
+        .get("https://api.geocity.io/api/v1/auth/categoryList")
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -1707,7 +1729,7 @@ export default function Project(props) {
     }
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/materialList", headers)
+        .get("https://api.geocity.io/api/v1/auth/materialList", headers)
         .then((res) => {
           setMaterialList(res.data.materials);
           // // console.log(res, "res material");
@@ -1718,7 +1740,7 @@ export default function Project(props) {
     }
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
+        .get("https://api.geocity.io/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           // // console.log(res, "res skilllist");
@@ -1730,6 +1752,7 @@ export default function Project(props) {
   }, []);
   //***** */
   useEffect(() => {
+    // alert("props.match.params.id");
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -1740,7 +1763,7 @@ export default function Project(props) {
     try {
       axios
         .get(
-          `http://160.153.249.64:7002/api/v1/project/view-project?id=${props.match.params.id}`,
+          `https://api.geocity.io/api/v1/project/view-project?id=${props.match.params.id}`,
 
           headers
         )
@@ -1779,7 +1802,7 @@ export default function Project(props) {
       if (stepType === "Material") {
         try {
           axios
-            .get("http://160.153.249.64:7002/api/v1/auth/materialList", headers)
+            .get("https://api.geocity.io/api/v1/auth/materialList", headers)
             .then((res) => {
               setMaterialList(res.data.materials);
               // // console.log(res, "res material");
@@ -1791,7 +1814,7 @@ export default function Project(props) {
       } else if (stepType === "Field") {
         try {
           axios
-            .get("http://160.153.249.64:7002/api/v1/auth/skillList")
+            .get("https://api.geocity.io/api/v1/auth/skillList")
             .then((res) => {
               setskillFieldList(res.data.skills);
               // // console.log(res, "res skilllist");
@@ -1829,6 +1852,7 @@ export default function Project(props) {
           <ProjectModal
             modal={Profilemodal}
             toggle={Projecttoggle}
+            addToast={addToast}
             CategoryList={CategoryList}
             aboutRequiredFields={aboutRequiredFields}
             validateCategory={validateCategory}
@@ -1838,6 +1862,7 @@ export default function Project(props) {
             formData={formData}
             isLoading={isLoading}
             DefaultImage={DefaultImage}
+            addToast={addToast}
             setPhoto={setPhoto}
             data={data}
             photo={photo}
@@ -1914,7 +1939,7 @@ export default function Project(props) {
             stepRequiredFields={stepRequiredFields}
             skillRequiredFields={skillRequiredFields}
           />
-          <Header />
+          <Header notificationsData={notificationsData} />
 
           {/* start of api integrate */}
           {data ? (
@@ -1922,10 +1947,9 @@ export default function Project(props) {
               <div className="container ">
                 <div className="row ">
                   <div
-                    className=" text-center"
+                    className=" col-lg-3 col-md-12 col-sm-12 col-xs-12 text-center"
                     style={{
-                      width: "20%",
-                      background: "#fcfcfc",
+                      background: "#f7f7f7",
                       height: "15.1rem",
                     }}
                   >
@@ -1950,143 +1974,155 @@ export default function Project(props) {
                         src={
                           data.project.general_photo == "default.png"
                             ? DefaultImage
-                            : `http://160.153.249.64:7002/views/uploads/${data.project.general_photo}`
+                            : `https://api.geocity.io/views/uploads/${data.project.general_photo}`
                         }
                         alt="alternative"
                       />
                     </div>
                   </div>
-                  <div className="text-left" style={{ width: "55%" }}>
-                    <div
-                      style={{
-                        background: "#fcfcfc",
-                        marginLeft: "2rem",
-                        paddingBottom: "0.1rem",
-                      }}
-                    >
+                  <div className=" col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                    <div style={{ background: "#f7f7f7", padding: "10px" }}>
                       <div
                         style={{
-                          paddingLeft: "2rem",
-                          paddingBottom: 0,
-                          paddingTop: "0.8rem",
+                          display: "flex",
+                          background: "#f7f7f7",
+                          justifyContent: "flex-end",
+
+                          paddingRight: "10px",
                         }}
                       >
-                        <p
-                          style={{
-                            color: `${
-                              data.project.category
-                                ? data.project.category.color
-                                  ? ` ${data.project.category.color}`
+                        {getUser()._id === data.project.project_owner._id ? (
+                          <div className="row buttonBox ">
+                            <div>
+                              <button
+                                onClick={DeleteProject}
+                                type="button"
+                                className="btn btn-block"
+                              >
+                                Delete Projet
+                              </button>
+                            </div>
+
+                            <div>
+                              <button
+                                type="button"
+                                className="btn ml-3 btn-block"
+                                onClick={Projecttoggle}
+                              >
+                                Modifier
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <div>
+                        <div className="projectSection1  text-left">
+                          <div>
+                            <p
+                              style={{
+                                color: `${
+                                  data.project.category
+                                    ? data.project.category.color
+                                      ? ` ${data.project.category.color}`
+                                      : ""
+                                    : ""
+                                }`,
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {data.project.category
+                                ? data.project.category.name
+                                : ""}
+                            </p>
+                            <div
+                              style={{
+                                display: "flex",
+                                background: "#f7f7f7",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <h4
+                                style={{
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {data.project.title}
+                              </h4>
+
+                              <p>
+                                {like >= 1 ? (
+                                  <i
+                                    className="fas fa-heart "
+                                    style={{ color: "red", cursor: "pointer" }}
+                                    onClick={ProjectunLike}
+                                  />
+                                ) : (
+                                  <i
+                                    className="fas fa-heart "
+                                    onClick={() =>
+                                      ProjectLike(data.project.likedBy)
+                                    }
+                                  />
+                                )}
+                                <span
+                                  style={{
+                                    marginTop: "-2rem",
+                                    marginLeft: "0.5rem",
+                                    fontFamily: "Arial, Helvetica, sans-serif",
+                                  }}
+                                >
+                                  {data.project.likedBy.length + like}
+                                </span>
+                                {/* <span class="ml-2 " id="span2" >21%</span> */}
+                              </p>
+                            </div>
+                            <p className="project-desc">
+                              {data.project.general_description}
+                            </p>
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              background: "#f7f7f7",
+                              marginTop: "4rem",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <p>
+                              {data.project.address
+                                ? data.project.address.city
+                                : ""}{" "}
+                              {`(${
+                                data.project.address
+                                  ? data.project.address.zipCode
                                   : ""
-                                : ""
-                            }`,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {data.project.category
-                            ? data.project.category.name
-                            : ""}
-                        </p>
-                        <h4
-                          style={{
-                            marginTop: "-0.5rem",
+                              })`}
+                            </p>
 
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {data.project.title}
-                        </h4>
-                        <p>{data.project.general_description}</p>
+                            <p>
+                              <img
+                                src={AutorenewIcon}
+                                style={{ height: "20px" }}
+                              />
+                              <span
+                                style={{
+                                  marginTop: "-2rem",
+                                  marginLeft: "0.3rem",
+                                  fontFamily: "Arial, Helvetica, sans-serif",
+                                  // marginRight: "-17px",
+                                }}
+                              >
+                                {parseInt(data.project.progress)}%
+                              </span>
+                              {/* <span class="ml-2 " id="span2" >21%</span> */}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <p style={{ marginLeft: "2rem", marginTop: "4.5rem" }}>
-                        {data.project.address ? data.project.address.city : ""}{" "}
-                        {`(${
-                          data.project.address
-                            ? data.project.address.zipCode
-                            : ""
-                        })`}
-                      </p>
                     </div>
-                  </div>
-                  <div
-                    className="  text-right"
-                    style={{
-                      width: "25%",
-                      background: "#fcfcfc",
-                      paddingRight: "1rem",
-                      height: "15.2rem",
-                      // background: "red",
-                    }}
-                  >
-                    {getUser()._id === data.project.project_owner._id ? (
-                      <div className="row">
-                        <div className="col ">
-                          <button
-                            onClick={DeleteProject}
-                            type="button"
-                            className="btn btn-block"
-                            style={{ fontSize: "15px", border: 0 }}
-                          >
-                            Delete Projet
-                          </button>
-                        </div>
-
-                        <div className="col">
-                          <button
-                            type="button"
-                            className="btn btn-block"
-                            style={{ fontSize: "15px", border: 0 }}
-                            onClick={Projecttoggle}
-                          >
-                            MODIFIER
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                    <p style={{ marginTop: "0.7rem", marginRight: "2.1rem" }}>
-                      {like >= 1 ? (
-                        <i
-                          className="fas fa-heart "
-                          style={{ color: "red", cursor: "pointer" }}
-                          onClick={ProjectunLike}
-                        />
-                      ) : (
-                        <i
-                          className="fas fa-heart "
-                          onClick={() => ProjectLike(data.project.likedBy)}
-                        />
-                      )}
-                      <span
-                        style={{
-                          marginTop: "-2rem",
-                          marginLeft: "0.5rem",
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                        }}
-                      >
-                        {data.project.likedBy.length + like}
-                      </span>
-                      {/* <span class="ml-2 " id="span2" >21%</span> */}
-                    </p>
-                    <p style={{ marginTop: "7.2rem", marginRight: "1rem" }}>
-                      <AutorenewIcon
-                        style={{
-                          fontSize: "1.3rem",
-                        }}
-                      />
-                      <span
-                        style={{
-                          marginTop: "-2rem",
-                          marginLeft: "0.3rem",
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                          // marginRight: "-17px",
-                        }}
-                      >
-                        {parseInt(data.project.progress)}%
-                      </span>
-                      {/* <span class="ml-2 " id="span2" >21%</span> */}
-                    </p>
                   </div>
                 </div>
                 <div
@@ -2094,8 +2130,8 @@ export default function Project(props) {
                   style={{ marginTop: "1rem", marginLeft: "1rem" }}
                 >
                   <div
-                    className=" text-right"
-                    style={{ width: "15%", background: "#fcfcfc" }}
+                    className="col-lg-3 col-md-3 col-sm-12  userImageSection"
+                    style={{ background: "#f7f7f7" }}
                   >
                     <div id="userImage">
                       <img
@@ -2104,51 +2140,54 @@ export default function Project(props) {
                           data.project.project_owner.profile_picture ==
                           "default.png"
                             ? DefaultuserImage
-                            : `http://160.153.249.64:7002/views/uploads/${data.project.project_owner.profile_picture}`
+                            : `https://api.geocity.io/views/uploads/${data.project.project_owner.profile_picture}`
                         }
                         alt="alternative"
                       />
                     </div>
                   </div>
-                  <div className="text-left" style={{ width: "20%" }}>
-                    <div id="userDetail">
-                      <h5 className="ml-3 text-capitalize ">
-                        <b>{data.project.project_owner.username}</b>
-                      </h5>
-                      <p style={{ marginTop: "1.5rem" }}>
-                        <i
-                          className="fas fa-phone-volume fa-lg "
-                          style={{ color: "#0d2456" }}
-                        />
-                        <span className="ml-2">
-                          {data.project.project_owner.phone}
-                        </span>
-                      </p>
-                      <p style={{ marginTop: "1.5rem" }}>
-                        <i
-                          className="fas fa-envelope fa-lg "
-                          style={{ color: "#0d2456" }}
-                        />
-                        <span className="ml-2">
-                          {data.project.project_owner.email}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-left" style={{ width: "65%" }}>
-                    <div style={{ marginLeft: "1rem", marginTop: "1.5rem" }}>
-                      <Link to={`/profile/${data.project.project_owner._id}`}>
-                        <button
-                          type="button"
-                          id="userButton"
-                          className="btn btn-block text-uppercase"
-                        >
-                          Voir le profil
-                        </button>
-                      </Link>
+                  <div className="text-left col-lg-5 col-md-7 col-sm-10 ">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: 0,
+                      }}
+                    >
+                      <div id="userDetail">
+                        <h5 className="ml-3 text-capitalize ">
+                          <b>{data.project.project_owner.username}</b>
+                        </h5>
+                        <p style={{ marginTop: "1.5rem" }}>
+                          <img src={Image46} style={{ height: "23px" }} />
+
+                          <span className="ml-2">
+                            {data.project.project_owner.phone}
+                          </span>
+                        </p>
+                        <p style={{ marginTop: "1.5rem" }}>
+                          <img src={Image47} style={{ height: "23px" }} />
+
+                          <span className="ml-2">
+                            {data.project.project_owner.email}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="btnProfileSection">
+                        <Link to={`/profile/${data.project.project_owner._id}`}>
+                          <button
+                            type="button"
+                            id="ButtonUser"
+                            className="btn  "
+                          >
+                            Voir le profil
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div className="col-lg-4 col-md-2 col-sm-2"></div>
                 {/* end of col */}
               </div>
 
@@ -2157,26 +2196,23 @@ export default function Project(props) {
                   <div
                     className="col-lg-12  text-left  pt-1"
                     style={{
-                      background: "#fcfcfc",
+                      background: "#f7f7f7",
                       margin: "auto",
                       padding: "12px",
                       position: "relative",
                     }}
                   >
-                    <div className="row">
-                      <div className="col-3 ">
-                        <h4
-                          className=" ml-3 mt-3 "
-                          style={{
-                            fontWeight: "bold",
-                            fontSize: "18px",
-                            color: "#707070",
-                          }}
-                        >
-                          ETAPES DE REALISATION
-                        </h4>
+                    <div
+                      className=" mainstepSection"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <h4 className=" ml-3  ">ETAPES DE REALISATION</h4>
                       </div>
-                      <div className="col">
+                      <div>
                         {getUser()._id === data.project.project_owner._id ? (
                           <button
                             type="button"
@@ -2185,11 +2221,11 @@ export default function Project(props) {
                             id="AddmodalButton"
                             style={
                               {
-                                // marginTop: "2.7rem",
+                                // marginTop: "0.7rem",
                                 // marginLeft: "1rem",
                               }
                             }
-                            className="btn "
+                            className="btn block"
                           >
                             Add Step
                           </button>
@@ -2230,7 +2266,7 @@ export default function Project(props) {
                   <div
                     className="col-lg-12 text-left  p-1"
                     style={{
-                      background: "#fcfcfc",
+                      background: "#f7f7f7",
                       margin: "auto",
                       position: "relative",
                     }}
@@ -2253,7 +2289,7 @@ export default function Project(props) {
                       />
                     ))
                   : ""}
-                {tempcommentArray.length > 0
+                {/* {tempcommentArray.length > 0
                   ? tempcommentArray.map((comment) => (
                       <Comments
                         comment={comment}
@@ -2264,7 +2300,7 @@ export default function Project(props) {
                         ClearOutlinedIcon={ClearOutlinedIcon}
                       />
                     ))
-                  : ""}
+                  : ""} */}
               </div>
               {getUser()._id == data.project.project_owner._id ? (
                 ""

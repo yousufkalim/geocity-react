@@ -34,13 +34,18 @@ const ModalExample = (props) => {
       };
       await axios
         .post(
-          `http://160.153.249.64:7002/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
+          `https://api.geocity.io/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
           {},
 
           headers
         )
         .then((res) => {
-          setCategoryData(res.data);
+          const filter = res.data.filter(
+            (dt) =>
+              dt._id !== data.project.project_owner._id &&
+              dt.email !== "admin@admin.com"
+          );
+          setCategoryData(filter);
 
           // addToast("Success", {
           //   appearance: "success",
@@ -51,12 +56,6 @@ const ModalExample = (props) => {
           // console.log(res,"res")
         })
         .catch((err) => {
-          addToast("Error", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-
           console.log(" error =>", err);
         });
     } catch (error) {
@@ -150,6 +149,7 @@ const ModalExample = (props) => {
               <Table
                 searchBy={searchBy}
                 sendInvite={sendInvite}
+                singleStep={singleStep}
                 MaterialData={MaterialData ? MaterialData : ""}
               />
             ) : searchBy === "Category" ? (
@@ -157,6 +157,7 @@ const ModalExample = (props) => {
                 searchBy={searchBy}
                 skillFieldData={skillFieldData}
                 sendInvite={sendInvite}
+                singleStep={singleStep}
                 materialList={materialList}
                 CategoryData={CategoryData ? CategoryData : ""}
               />

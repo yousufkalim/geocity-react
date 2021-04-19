@@ -15,7 +15,7 @@ export default function comments({
           className="com-image"
           src={
             comment.profile_picture
-              ? `http://160.153.249.64:7002/views/uploads/${comment.profile_picture}`
+              ? `https://api.geocity.io/views/uploads/${comment.profile_picture}`
               : DefaultImage
           }
           alt="alternative"
@@ -23,17 +23,19 @@ export default function comments({
       </div>
       <div className="text-left" style={{ width: "75%" }}>
         <div style={{ marginLeft: "2rem" }}>
-          <h5>
+          <h5 style={{ fontWeight: "bold" }}>
             {getUser() ? getUser().username : ""}
             <small className="ml-2">
               {new Date(comment.date).toString().split(" ")[2]}
               {"/"}
-              {new Date(comment.date).getMonth()}
+              {new Date(comment.date).getMonth() + 1}
               {"/"}
               {new Date(comment.date).getFullYear()}
             </small>
           </h5>
-          <p className="mt-2">{comment.comment}</p>
+          <p style={{ opacity: 0.7 }} className="mt-2">
+            {comment.comment}
+          </p>
         </div>
       </div>
       <div>

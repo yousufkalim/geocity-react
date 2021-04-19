@@ -4,6 +4,7 @@ import Loaders from "./Loaders";
 import SearchSkillTableRow from "./SearchSkillTableRow";
 import SearchMaterialTableRow from "./SearchMaterialTableRow";
 import SearchCategoryTableRow from "./SearchCategoryTableRow";
+import { useToasts } from "react-toast-notifications";
 
 import { Link } from "react-router-dom";
 const Example = ({
@@ -15,10 +16,19 @@ const Example = ({
   materialList,
   singleStep,
 }) => {
+  const { addToast } = useToasts();
   const onSendInvite = (receiver) => {
-    sendInvite(receiver);
+    const fil = singleStep.contributing_user.find((ft) => ft._id == receiver);
+    if (fil) {
+      addToast("This user is already a contributor", {
+        appearance: "error",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+    } else {
+      sendInvite(receiver);
+    }
   };
-  useEffect(() => {}, []);
   // console.log(singleStep, "singleStep");
   if (
     skillFieldData &&

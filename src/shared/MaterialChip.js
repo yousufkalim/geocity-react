@@ -34,12 +34,16 @@ export default function ChipsArray({
   step,
 }) {
   const classes = useStyles();
-  const [random, setrandom] = useState(112213);
+  const [state, setstate] = useState("");
 
   useEffect(() => {
-    setrandom(Math.floor(Math.random() * 101));
+    materialList &&
+      materialList.map((mat) => {
+        if (mat._id === step) {
+          setstate(mat.name);
+        }
+      });
   }, [step]);
-
   const handleDelete = (chipToDelete) => {
     const ChipsArray = materialArrayData.filter(
       (chip) => chip !== chipToDelete
@@ -47,7 +51,6 @@ export default function ChipsArray({
     setmaterialArrayData(ChipsArray);
   };
 
-  // console.log(chipData, "chipData");
   return (
     <Card
       style={{
@@ -65,57 +68,28 @@ export default function ChipsArray({
       // className={i == 0 ? "" : "mt-2"}
     >
       <CardBody className="text-left">
-        <div className=" row">
-          <div className="col-10">
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
             <h5 tag="h5">
-              {step
-                ? materialList &&
-                  materialList.map((mat) => {
-                    if (mat._id === step) {
-                      return (
-                        <>
-                          <p>
-                            <span
-                              style={{ fontSize: "15px", fontWeight: "bold" }}
-                            >
-                              {" "}
-                              Sr#:
-                            </span>{" "}
-                            <span
-                              style={{
-                                opacity: 0.7,
-                                fontSize: "15px",
-                              }}
-                            >
-                              {" "}
-                              {random}
-                            </span>
-                          </p>
-                          <p>
-                            <span
-                              style={{ fontSize: "15px", fontWeight: "bold" }}
-                            >
-                              {" "}
-                              Material:
-                            </span>{" "}
-                            <span
-                              style={{
-                                opacity: 0.7,
-                                fontSize: "15px",
-                              }}
-                            >
-                              {" "}
-                              {mat.name}
-                            </span>
-                          </p>
-                        </>
-                      );
-                    }
-                  })
-                : "no material"}
+              <>
+                <p>
+                  <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                    {" "}
+                    Material:
+                  </span>{" "}
+                  <span
+                    style={{
+                      opacity: 0.7,
+                      fontSize: "15px",
+                    }}
+                  >
+                    {state ? state : step ? step : state}
+                  </span>
+                </p>
+              </>
             </h5>
           </div>
-          <div className="col-2">
+          <div>
             <ClearOutlinedIcon
               style={{ fill: "red" }}
               onClick={() => handleDelete(step)}

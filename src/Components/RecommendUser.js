@@ -86,13 +86,14 @@ export default function RecommendUser({
           <>
             <i
               className="fas fa-heart "
+              style={{ color: "grey" }}
               onClick={() =>
                 RecommendedUser(skill.skillField._id, skill.recommendedBy)
               }
             />
           </>
         )}
-        <span class="ml-1 " style={{ color: "grey" }}>
+        <span class=" ml-1" style={{ color: "grey" }}>
           {skill.recommendedBy.length + like}
         </span>
       </p>

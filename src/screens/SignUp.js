@@ -21,10 +21,15 @@ function Signup() {
   const { addToast } = useToasts();
 
   // states start ************************************
-
+  const socialLinks = {
+    facebook: "",
+    instagram: "",
+    youtube: "",
+  };
   // formdata & arrayData states
   const [skillformData, setskillFormData] = useState(signupstepData);
   const [formData, setFormData] = useState(signupData);
+  const [socialformData, setsocialFormData] = useState(socialLinks);
 
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
@@ -60,6 +65,7 @@ function Signup() {
     name: "",
     error: "",
   });
+
   // *************************
   // states end ***************************
   const showHide1 = (e) => {
@@ -342,7 +348,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/materialList")
+        .get("https://api.geocity.io/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
         })
@@ -353,7 +359,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
+        .get("https://api.geocity.io/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           // console.log(res, "res skill");
@@ -388,6 +394,7 @@ function Signup() {
         setMaterial("");
       } else {
         var array = materialArrayData.filter((mat) => mat !== material);
+
         if (material) {
           array.push(material);
         }
@@ -406,6 +413,9 @@ function Signup() {
         setMaterial("");
       }
     }
+  };
+  const handleSocialChange = (e) => {
+    setsocialFormData({ ...socialformData, [e.target.name]: e.target.value });
   };
   const handleChange = (e) => {
     let value = e.target.value;
@@ -475,35 +485,37 @@ function Signup() {
           );
         }
       } else if (e.target.name === "score") {
-        var avail = e.target.value.replace(/\D/g, "");
-        if (e.target.value <= 5) {
-          if (avail !== "") {
-            if (avail.length >= 2 && e.target.value >= 5) {
-            } else {
-              setskillFormData({
-                ...skillformData,
-                [e.target.name]: avail,
-              });
-            }
-          } else {
-            if (e.target.value) {
-              setskillFormData({
-                ...skillformData,
-                [e.target.name]: e.target.value.replace(/\D/g, ""),
-              });
-            } else {
-              setskillFormData({
-                ...skillformData,
-                [e.target.name]: "",
-              });
-            }
-          }
-          const msg = "";
-          setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        } else {
-          const msg = "Rating must be less than equal to 5";
-          setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        }
+        setskillFormData({ ...skillformData, [e.target.name]: value });
+
+        // var avail = e.target.value.replace(/\D/g, "");
+        // if (e.target.value <= 5) {
+        //   if (avail !== "") {
+        //     if (avail.length >= 2 && e.target.value >= 5) {
+        //     } else {
+        //       setskillFormData({
+        //         ...skillformData,
+        //         [e.target.name]: avail,
+        //       });
+        //     }
+        //   } else {
+        //     if (e.target.value) {
+        //       setskillFormData({
+        //         ...skillformData,
+        //         [e.target.name]: e.target.value.replace(/\D/g, ""),
+        //       });
+        //     } else {
+        //       setskillFormData({
+        //         ...skillformData,
+        //         [e.target.name]: "",
+        //       });
+        //     }
+        //   }
+        //   const msg = "";
+        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
+        // } else {
+        //   const msg = "Rating must be less than equal to 5";
+        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
+        // }
       } else {
         setskillFormData({ ...skillformData, [e.target.name]: value });
       }
@@ -511,55 +523,23 @@ function Signup() {
   };
   // console.log(skillArrayData, "skillArrayData");
   const onskillAdd = () => {
-    const checkForm = checkValidateForm2();
-    // validateScore();
-    if (checkForm == true) {
-      if (skillArrayData.length > 0) {
-        const tempCheck = skillArrayData.find(
-          (cont) => cont.skillField === skillformData.skillField
-        );
-        const tempCheck2 = skillArrayData.find(
-          (cont) => cont.skill === skillformData.skill
-        );
-        if (tempCheck || tempCheck2) {
-          const msg = "Skill already existed";
-          addToast("Skill already existed", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-        } else {
-          if (otherSKill !== "") {
-            skillformData.skill = otherSKill;
-          }
-          // debugger;
-          const check = Object.values(skillformData).map((obj) => {
-            if (obj !== "") {
-              return true;
-            } else {
-              return false;
-            }
-          });
-          if (check[0] === true) {
-            if (skillArrayData.length === 3) {
-              // alert(skillArrayData.length);
-              addToast("skills length must be 1 or less than equal to 3", {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-              // seterrorMessage("You can only add upto 3 skills  or less");
-            } else {
-              if (otherSKill !== "") {
-                skillformData.skill = otherSKill;
-              }
+    checkValidateForm2();
 
-              setskillArrayData([...skillArrayData, skillformData]);
-              setskillFormData(signupstepData);
-              setskillRequiredFields(signupskillRequired);
-            }
-          }
-        }
+    // validateScore();
+    if (skillArrayData.length > 0) {
+      const tempCheck = skillArrayData.find(
+        (cont) => cont.skillField === skillformData.skillField
+      );
+      const tempCheck2 = skillArrayData.find(
+        (cont) => cont.skill === skillformData.skill
+      );
+      if (tempCheck && tempCheck2) {
+        const msg = "Skill already existed";
+        addToast("Skill already existed", {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
       } else {
         if (otherSKill !== "") {
           skillformData.skill = otherSKill;
@@ -572,7 +552,7 @@ function Signup() {
             return false;
           }
         });
-        if (check[0] === true) {
+        if (check[0] === true && check[1] === true) {
           if (skillArrayData.length === 3) {
             // alert(skillArrayData.length);
             addToast("skills length must be 1 or less than equal to 3", {
@@ -582,10 +562,59 @@ function Signup() {
             });
             // seterrorMessage("You can only add upto 3 skills  or less");
           } else {
+            if (skillformData.skill === "Other") {
+              if (otherSKill !== "") {
+                skillformData.skill = otherSKill;
+
+                setskillArrayData([...skillArrayData, skillformData]);
+                setskillFormData(signupstepData);
+                setskillRequiredFields(signupskillRequired);
+                setotherSkill("");
+              } else {
+                ValidateOtherSkill();
+              }
+            } else {
+              setskillArrayData([...skillArrayData, skillformData]);
+              setskillFormData(signupstepData);
+              setskillRequiredFields(signupskillRequired);
+            }
+          }
+        }
+      }
+    } else {
+      // debugger;
+      const check = Object.values(skillformData).map((obj) => {
+        if (obj !== "") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (check[0] === true && check[1] === true) {
+        if (skillArrayData.length === 3) {
+          // alert(skillArrayData.length);
+          addToast("skills length must be 1 or less than equal to 3", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // seterrorMessage("You can only add upto 3 skills  or less");
+        } else {
+          // if (otherSKill !== "") {
+          //   skillformData.skill = otherSKill;
+          // }
+          if (skillformData.skill === "Other") {
             if (otherSKill !== "") {
               skillformData.skill = otherSKill;
-            }
 
+              setskillArrayData([...skillArrayData, skillformData]);
+              setskillFormData(signupstepData);
+              setskillRequiredFields(signupskillRequired);
+              setotherSkill("");
+            } else {
+              ValidateOtherSkill();
+            }
+          } else {
             setskillArrayData([...skillArrayData, skillformData]);
             setskillFormData(signupstepData);
             setskillRequiredFields(signupskillRequired);
@@ -649,9 +678,7 @@ function Signup() {
           longitude: lng,
           firstname: formData.firstname,
           lastname: formData.lastname,
-          facebook: formData.facebook,
-          youtube: formData.youtube,
-          instagram: formData.instagram,
+
           username: formData.username,
           email: formData.email,
           password: formData.password,
@@ -667,19 +694,34 @@ function Signup() {
   const checkValidateForm = () => {
     let obj = {};
     let reqFields = true;
+
     Object.keys(formData).map((key) => {
-      if (formData[key] === "") {
+      const hasKey = aboutRequiredFields.hasOwnProperty([key]);
+
+      if (hasKey && formData[key] === "") {
         obj[key] = "Required";
         reqFields = false;
       }
       return obj;
     });
-
-    if (!reqFields) {
+    if (
+      !reqFields
+      // !vfn ||
+      // !vln ||
+      // !vun ||
+      // !ve ||
+      // !vp ||
+      // !vcp ||
+      // !vcity ||
+      // !vphone ||
+      // !vavail ||
+      // !vpd
+    ) {
       setAboutRequiredFields(obj);
+
+      // setmaterialArrayData((prevState) => [...prevState, material]);
       return false;
     } else {
-      // alert("hello");
       setAboutRequiredFields(signupaboutRequired);
       return true;
     }
@@ -699,14 +741,6 @@ function Signup() {
       }
       return obj;
     });
-    // debugger;
-    // setskillRequiredFields({
-    //   skillField: "Required",
-    //   skill: "Required",
-    //   specialization: "Required",
-    //   score: "Required",
-    // });
-
     if (!reqFields) {
       const msg = "Required";
       if (otherSKill !== "") {
@@ -717,6 +751,7 @@ function Signup() {
         setskillRequiredFields(obj);
         return false;
       } else {
+        obj.otherSKill = "Required";
         setskillRequiredFields(obj);
         return false;
       }
@@ -733,7 +768,6 @@ function Signup() {
     e.preventDefault();
     setisLoading(true);
     checkValidateForm();
-
     // checkValidateForm2();
     if (skillArrayData.length == 0) {
       addToast(`You must add atleast one skill`, {
@@ -741,6 +775,7 @@ function Signup() {
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
+
       setisLoading(false);
     } else if (materialArrayData.length == 0) {
       addToast(`You must add atleast one material`, {
@@ -748,10 +783,13 @@ function Signup() {
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
+
       setisLoading(false);
 
       validateMaterial();
     } else {
+      validatePhoneNumber();
+
       // social links
       // console.log(formData.firstName, "formData.firstName");
       // ****
@@ -771,9 +809,9 @@ function Signup() {
       newFormData.append("profile_picture", photo);
       newFormData.append("zipCode", formData.zipCode);
 
-      newFormData.append("facebook", formData.facebook);
-      newFormData.append("instagram", formData.instagram);
-      newFormData.append("youtube", formData.youtube);
+      newFormData.append("facebook", socialformData.facebook);
+      newFormData.append("instagram", socialformData.instagram);
+      newFormData.append("youtube", socialformData.youtube);
 
       newFormData.append("skills", JSON.stringify(skillArrayData));
       newFormData.append("material", JSON.stringify(materialArrayData));
@@ -784,7 +822,7 @@ function Signup() {
       };
       try {
         axios
-          .post("http://160.153.249.64:7002/api/v1/auth/register", newFormData)
+          .post("https://api.geocity.io/api/v1/auth/register", newFormData)
           .then((res) => {
             setisLoading(false);
             setFormData(signupData);
@@ -825,6 +863,7 @@ function Signup() {
       }
     }
   };
+  console.log(materialList, "materialList");
   if (isSuccess === true) {
     return <Redirect to="/Login" />;
   } else {
@@ -844,6 +883,8 @@ function Signup() {
             isLoading={isLoading}
             skillformData={skillformData}
             formData={formData}
+            socialformData={socialformData}
+            handleSocialChange={handleSocialChange}
             //********** */
             skillArrayData={skillArrayData}
             materialArrayData={materialArrayData}

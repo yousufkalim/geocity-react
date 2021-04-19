@@ -7,14 +7,38 @@ import Autocomplete from "react-autocomplete";
 import ProjectList from "../Components/projectList";
 import DefaultImage from "../Theme/images/index2.png";
 import { isAuthenticated, getUser } from "../Auth/Index";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import SelectBox from "../shared/select";
 import { useToasts } from "react-toast-notifications";
 import Loaders from "../shared/Loaders";
 import AutoComplete from "../Components/SearchAutoComplete";
 import { projectaboutRequired } from "../shared/Data";
-export default function List() {
+import io from "socket.io-client";
+
+function List({ notificationsData, setdata }) {
   const { addToast } = useToasts();
+  useEffect(() => {
+    window.socket = io(
+      process.env.REACT_APP_SOCKET_URL || "http://160.153.249.64:7002",
+      {
+        query: `userConnectionId=${getUser()._id}`,
+      }
+    );
+    if (window.socket) {
+      window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
+        setdata([...notificationsData, datas]);
+        console.log(datas, "datas");
+        addToast(datas.title, {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+      });
+    }
+    // return () => {
+    //   io.socket.off();
+    // };
+  }, []);
   const filterData = {
     category: "",
     skillField: "",
@@ -47,7 +71,7 @@ export default function List() {
     };
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
+        .get("https://api.geocity.io/api/v1/auth/skillList")
         .then((res) => {
           const array = [...res.data.skills];
           const tempArray = array.filter((ft) => ft.isDeleted == false);
@@ -62,7 +86,7 @@ export default function List() {
     } catch (error) {}
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/admin/categoryList", headers)
+        .get("https://api.geocity.io/api/v1/admin/categoryList", headers)
         .then((res) => {
           const array = [...res.data.categories];
           const tempArray = array.filter((ft) => ft.isDeleted == false);
@@ -76,7 +100,7 @@ export default function List() {
     } catch (error) {}
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/projectList")
+        .get("https://api.geocity.io/api/v1/auth/projectList")
         .then((res) => {
           setProjectData(res.data.projects);
           console.log(res, "response project");
@@ -92,7 +116,7 @@ export default function List() {
     if (address === "") {
       try {
         axios
-          .get("http://160.153.249.64:7002/api/v1/auth/projectList")
+          .get("https://api.geocity.io/api/v1/auth/projectList")
           .then((res) => {
             setProjectData(res.data.projects);
             console.log(res, "response project");
@@ -127,7 +151,7 @@ export default function List() {
       try {
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/project/view-project/send-request?id=${id}`,
+            `https://api.geocity.io/api/v1/project/view-project/send-request?id=${id}`,
             {},
             headers
           )
@@ -178,14 +202,16 @@ export default function List() {
       try {
         axios
           .post(
-            "http://160.153.249.64:7002/api/v1/project/search/category",
+            "https://api.geocity.io/api/v1/project/search/category",
             { category: e.value },
             headers
           )
           .then((res) => {
+            const tempArray = res.data.filter((ft) => ft.isDeleted == false);
+
             setFilter(true);
             if (res.data.length > 0) {
-              setfilteredArray(res.data);
+              setfilteredArray(tempArray);
             }
           })
           .catch((err) => {
@@ -214,14 +240,18 @@ export default function List() {
       try {
         axios
           .post(
-            "http://160.153.249.64:7002/api/v1/project/search/skill",
+            "https://api.geocity.io/api/v1/project/search/skill",
             { skill: e.value },
             headers
           )
           .then((res) => {
             setFilter(true);
+            const tempArray = res.data.projects.filter(
+              (ft) => ft.isDeleted == false
+            );
+
             if (res.data) {
-              setfilteredArray(res.data.projects);
+              setfilteredArray(tempArray);
             } else {
               setfilteredArray([]);
             }
@@ -283,7 +313,7 @@ export default function List() {
     try {
       axios
         .post(
-          "http://160.153.249.64:7002/api/v1/project/search/city",
+          "https://api.geocity.io/api/v1/project/search/city",
           { city: city },
           headers
         )
@@ -306,7 +336,7 @@ export default function List() {
   if (request === false) {
     return (
       <div>
-        <Header />
+        <Header notificationsData={notificationsData} />
         <div id="services" className="cardsList">
           <div className="container ">
             <div className="row">
@@ -335,62 +365,82 @@ export default function List() {
         >
           <div className="container ">
             {/* end of row */}
-            <div className="row ">
-              <div className="col-lg-2" />
-              <div className="col-lg-2 " id="selectbox">
-                <SelectBox
-                  name="category"
-                  id="category"
-                  CategoryList={CategoryList}
-                  value={filterFormData.category}
-                  onChange={handleCategoryChange}
-                />
-              </div>
+            {!isAuthenticated() ? (
+              ""
+            ) : (
+              <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div className="row " id="mainselectBox">
+                  <div>
+                    <SelectBox
+                      name="category"
+                      id="category"
+                      CategoryList={CategoryList}
+                      value={filterFormData.category}
+                      placeholder="Catégories"
+                      onChange={handleCategoryChange}
+                    />
+                  </div>
+                  <div className="selectBox">
+                    <SelectBox
+                      name="skillField"
+                      id="skillField"
+                      placeholder="Domaine"
+                      CategoryList={skillfieldList}
+                      value={filterFormData.category}
+                      onChange={handleFieldChange}
+                    />
+                  </div>
+                  <div className="selectbox3" style={{ position: "relative" }}>
+                    <i
+                      class="fas fa-search"
+                      style={{
+                        color: "grey",
+                        fontSize: "16px",
+                        position: "absolute",
+                        left: "13.5rem",
+                        // right: 0,
+                        top: "0.8rem",
+                        display: address == "" ? "block" : "none",
+                      }}
+                    ></i>
+                    <AutoComplete
+                      items={items}
+                      SetAddress={SetAddress}
+                      getAddress={getAddress}
+                      address={address}
+                      validateCity={validateCity}
+                    />
+                  </div>
 
-              <div className="col-lg-2 " id="selectbox2">
-                <SelectBox
-                  name="skillField"
-                  id="skillField"
-                  CategoryList={skillfieldList}
-                  value={filterFormData.category}
-                  onChange={handleFieldChange}
-                />
-              </div>
-              <div className="col-lg-3" id="selectbox3">
-                <div className="mt-1">
-                  <AutoComplete
-                    items={items}
-                    SetAddress={SetAddress}
-                    getAddress={getAddress}
-                    address={address}
-                    validateCity={validateCity}
-                  />
+                  {/* end of col */}
                 </div>
               </div>
-              <div className="col-lg-3"></div>
-              {/* end of col */}
-            </div>
+            )}
             {/* row 1 */}
             <div className="row ">
               <div className="col-lg-12 text-left">
                 {filter === false ? (
-                  projectData.length > 0 ? (
-                    <div className="row" id="search2">
-                      {projectData
-                        .slice(0, 12)
-                        .map(({ project: data, totalLikes }) => (
-                          <ProjectList
-                            data={data}
-                            totalLikes={totalLikes}
-                            RequestToView={RequestToView}
-                            DefaultImage={DefaultImage}
-                          />
-                        ))}
-                    </div>
+                  projectData ? (
+                    projectData.length > 0 ? (
+                      <div className="row" id="search2">
+                        {projectData
+                          .slice(0, 12)
+                          .map(({ project: data, totalLikes }) => (
+                            <ProjectList
+                              data={data}
+                              totalLikes={totalLikes}
+                              RequestToView={RequestToView}
+                              DefaultImage={DefaultImage}
+                            />
+                          ))}
+                      </div>
+                    ) : (
+                      <center className="p-3">
+                        <h5>No project found</h5>
+                      </center>
+                    )
                   ) : (
-                    <center>
-                      <h1>No project found</h1>
-                    </center>
+                    <Loaders />
                   )
                 ) : typeof filteredArray !== typeof "" ? (
                   filteredArray ? (
@@ -428,3 +478,4 @@ export default function List() {
     return <Redirect to="/Login" />;
   }
 }
+export default withRouter(List);

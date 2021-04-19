@@ -1,4 +1,6 @@
 export const names = ["Field", "Material"];
+export const scores = [1, 2, 3, 4, 5];
+
 export const loginData = {
   email: "",
   password: "",
@@ -19,9 +21,6 @@ export const signupData = {
   zipCode: "",
   latitude: "",
   longitude: "",
-  facebook: "",
-  instagram: "",
-  youtube: "",
 };
 export const editProfileData = {
   firstname: "",
@@ -39,9 +38,6 @@ export const editProfileData = {
   zipCode: "",
   latitude: "",
   longitude: "",
-  facebook: "",
-  instagram: "",
-  youtube: "",
 };
 export const signupstepData = {
   skillField: "",
@@ -102,7 +98,7 @@ export const projectcityData = {
 export const projectstepData = {
   name: "",
   description: "",
-  status: "",
+  status: "NoProgress",
 };
 export const projectskillData = {
   skillField: "",

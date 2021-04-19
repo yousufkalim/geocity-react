@@ -11,7 +11,6 @@ export default function ImpementationStep({
   ShowInterest,
   toggle,
   DeleteStep,
-
   CircularProgress,
   useStyles,
 }) {
@@ -27,135 +26,149 @@ export default function ImpementationStep({
       id="projectPage"
     >
       <div
-        className=" text-left"
-        style={{ width: "60%" }}
+        className="col-lg-6 col-md-6 col-sm-5 col-xs-5 text-left"
         onMouseOver={() => setShow(true)}
         onMouseOut={() => setShow(false)}
       >
-        <div style={{ marginLeft: "2rem" }}>
-          <p>
-            <i
-              className="fas fa-circle fa-lg mr-3 "
-              style={{
-                color: `${
-                  step.status === "completed"
-                    ? "#000"
-                    : step.status === "InProgress"
-                    ? "green"
-                    : step.status === "NoProgress"
-                    ? "#c9c9c9"
-                    : ""
-                }`,
-              }}
-            />
-            <span
-              style={{
-                fontSize: "16px",
-                color: "#707070",
-              }}
-            >
-              {step.name}
-            </span>
-          </p>
-          <div className="row" style={{ marginTop: "-0.7rem" }}>
-            <p style={{ width: "56%", marginLeft: "3.3rem" }}>
-              {step.skills ? (
-                Object.entries(step.skills).length > 0 ? (
-                  <p
-                    style={{
-                      color: "#707070",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontWeight: "unset",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {" "}
-                      Field
-                    </span>{" "}
-                    :
-                    <span
-                      className="ml-1"
-                      style={{
-                        fontWeight: "unset",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {step.skills.skillField.skillField}
-                    </span>
-                  </p>
-                ) : (
-                  ""
-                )
-              ) : (
-                ""
-              )}
-              {step.material ? (
-                Object.entries(step.material).length > 0 ? (
-                  <p
-                    style={{
-                      color: "#707070",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontWeight: "unset",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {" "}
-                      Material
-                    </span>{" "}
-                    :
-                    <span
-                      className="ml-1"
-                      style={{
-                        fontWeight: "unset",
-                        fontSize: "12px",
-                      }}
-                    >
-                      {step.material.name}
-                    </span>
-                  </p>
-                ) : (
-                  ""
-                )
-              ) : (
-                ""
-              )}
-              <p
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+          }}
+        >
+          <div>
+            <p>
+              <i
+                className="fas fa-circle fa-lg mr-3 "
                 style={{
+                  color: `${
+                    step.status === "completed"
+                      ? "#000"
+                      : step.status === "InProgress"
+                      ? "green"
+                      : step.status === "NoProgress"
+                      ? "#c9c9c9"
+                      : ""
+                  }`,
+                }}
+              />
+              <span
+                style={{
+                  fontSize: "16px",
                   color: "#707070",
-                  marginTop: "-1rem",
                 }}
               >
-                <span
+                {step.name}
+                <p
                   style={{
-                    fontWeight: "unset",
-                    fontSize: "13px",
+                    marginLeft: "2rem",
+                    marginTop: "5px",
                   }}
                 >
-                  {" "}
-                  Description
-                </span>{" "}
-                :
-                <span
-                  className="ml-1"
-                  style={{
-                    fontWeight: "unset",
-                    fontSize: "12px",
-                  }}
-                >
-                  {step.description}
-                </span>
-              </p>
+                  {step.skills ? (
+                    Object.entries(step.skills).length > 0 ? (
+                      <p
+                        style={{
+                          color: "#707070",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontWeight: "unset",
+                            fontSize: "13px",
+                          }}
+                        >
+                          {" "}
+                          Field
+                        </span>{" "}
+                        :
+                        <span
+                          className="ml-1"
+                          style={{
+                            fontWeight: "unset",
+                            fontSize: "12px",
+                          }}
+                        >
+                          {step.skills.skillField.skillField}
+                        </span>
+                      </p>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
+                  {step.material ? (
+                    Object.entries(step.material).length > 0 ? (
+                      <p
+                        style={{
+                          color: "#707070",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontWeight: "unset",
+                            fontSize: "13px",
+                          }}
+                        >
+                          {" "}
+                          Material
+                        </span>{" "}
+                        :
+                        <span
+                          className="ml-1"
+                          style={{
+                            fontWeight: "unset",
+                            fontSize: "12px",
+                          }}
+                        >
+                          {step.material.name}
+                        </span>
+                      </p>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
+                  <p
+                    style={{
+                      color: "#707070",
+                      marginTop: "-1rem",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: "unset",
+                        fontSize: "13px",
+                      }}
+                    >
+                      {" "}
+                      Description
+                    </span>{" "}
+                    :
+                    <span
+                      className="ml-1"
+                      style={{
+                        fontWeight: "unset",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {step.description}
+                    </span>
+                  </p>
+                </p>
+              </span>
             </p>
+          </div>
+          {/* search icon */}
+          <div className="text-center" style={{ paddingTop: "1.5rem" }}>
             {getUser()._id === data.project.project_owner._id &&
             data.project.progress !== "100%" &&
             step.status !== "completed" ? (
-              <p id="entapeSearch">
+              <p>
                 {step.skills && Object.entries(step.skills).length > 0 ? (
                   <i
                     className="fas fa-search fa-lg  text-secondary"
@@ -179,91 +192,110 @@ export default function ImpementationStep({
             )}
           </div>
         </div>
+        {/* serach icon end */}
       </div>
+
       <div
-        className="  text-left"
-        style={{ width: "20%" }}
+        className="col-lg-6 col-md-6 col-sm-6 col-xs-6  text-left"
         onMouseOver={() => setShow(true)}
         onMouseOut={() => setShow(false)}
       >
-        {step.contributing_user ? (
-          <>
-            <p style={{ color: "rgb(112, 112, 112)" }}>Collaborateurs: </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+          }}
+        >
+          <div>
+            {step.contributing_user ? (
+              <>
+                <p
+                  className="collaborator"
+                  style={{ color: "rgb(112, 112, 112)" }}
+                >
+                  Collaborateurs:{" "}
+                </p>
 
-            <p>
-              {step.contributing_user.map((cont) => (
-                <Link to={`/profile/${cont._id}`}>
-                  <img
-                    className="project-image-sm"
-                    src={
-                      cont.profile_picture
-                        ? `http://160.153.249.64:7002/views/uploads/${cont.profile_picture}`
-                        : DefaultImage
-                    }
-                    alt="alternative"
-                  />
-                </Link>
-              ))}
-            </p>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
-      <div style={{ width: "20%" }}>
-        {getUser()._id === data.project.project_owner._id &&
-        data.project.progress !== "100%" ? (
-          <div className="row">
-            <div
-              className="col"
-              onMouseOver={() => setShow(true)}
-              onMouseOut={() => setShow(false)}
-            >
+                <p>
+                  {step.contributing_user.map((cont) => (
+                    <Link to={`/profile/${cont._id}`}>
+                      <img
+                        className="project-image-sm"
+                        src={
+                          cont.profile_picture
+                            ? `https://api.geocity.io/views/uploads/${cont.profile_picture}`
+                            : DefaultImage
+                        }
+                        alt="alternative"
+                      />
+                    </Link>
+                  ))}
+                </p>
+              </>
+            ) : (
+              ""
+            )}
+          </div>
+          <div>
+            {getUser()._id === data.project.project_owner._id &&
+            data.project.progress !== "100%" ? (
+              <div
+                className="text-right"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <div
+                  onMouseOver={() => setShow(true)}
+                  onMouseOut={() => setShow(false)}
+                >
+                  <button
+                    onClick={() => Steptoggle(step._id)}
+                    type="button"
+                    // id="modifyButton"
+
+                    className="btn btn-block ml-1 mt-3"
+                  >
+                    Modifier
+                  </button>
+                </div>
+                <div
+                  onMouseOver={() => setShow(true)}
+                  onMouseOut={() => setShow(false)}
+                  className="ml-2"
+                >
+                  <div
+                    // onMouseOver={() => setShow(true)}
+                    style={{ display: show == true ? "block" : "none" }}
+                  >
+                    <ClearOutlinedIcon
+                      id="clear"
+                      onClick={() => DeleteStep(step._id)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : data.project.progress === "100%" ||
+              step.status === "completed" ||
+              step.contributing_user.find((el) => el._id == getUser()._id) ? (
+              ""
+            ) : isShown == false ? (
               <button
-                onClick={() => Steptoggle(step._id)}
+                onClick={() => onShowInterest(step._id)}
                 type="button"
                 // id="modifyButton"
-                style={{ maxWidth: "90%" }}
+
                 className="btn btn-block ml-1 mt-3"
               >
-                MODIFIER
+                Show Interest
               </button>
-            </div>
-            <div
-              className="col-3"
-              onMouseOver={() => setShow(true)}
-              onMouseOut={() => setShow(false)}
-            >
-              <div
-                // onMouseOver={() => setShow(true)}
-                style={{ display: show == true ? "block" : "none" }}
-              >
-                <ClearOutlinedIcon
-                  id="clear"
-                  onClick={() => DeleteStep(step._id)}
-                />
+            ) : (
+              <div className={useStyles.root}>
+                <CircularProgress disableShrink />
               </div>
-            </div>
+            )}
           </div>
-        ) : data.project.progress === "100%" ||
-          step.status === "completed" ||
-          step.contributing_user.find((el) => el._id == getUser()._id) ? (
-          ""
-        ) : isShown == false ? (
-          <button
-            onClick={() => onShowInterest(step._id)}
-            type="button"
-            // id="modifyButton"
-            style={{ maxWidth: "80%" }}
-            className="btn btn-block ml-1 mt-3"
-          >
-            Show Interest
-          </button>
-        ) : (
-          <div className={useStyles.root}>
-            <CircularProgress disableShrink />
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

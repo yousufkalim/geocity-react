@@ -35,11 +35,7 @@ export default function ChipsArray({
   mat,
 }) {
   const classes = useStyles();
-  const [random, setrandom] = useState(112213);
 
-  useEffect(() => {
-    setrandom(Math.floor(Math.random() * 101));
-  }, [mat]);
   const handleDelete = (chipToDelete) => {
     const ChipsArray = skillArrayData.filter((chip) => chip !== chipToDelete);
     setskillArrayData(ChipsArray);
@@ -78,24 +74,9 @@ export default function ChipsArray({
       // className={i == 0 ? "" : "mt-2"}
     >
       <CardBody style={{ padding: "0.4rem" }} className="text-left">
-        <div className=" row">
-          <div className="col-9">
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
             <h5 tag="h5">
-              <p>
-                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
-                  {" "}
-                  Sr#:
-                </span>{" "}
-                <span
-                  style={{
-                    opacity: 0.7,
-                    fontSize: "15px",
-                  }}
-                >
-                  {" "}
-                  {random}
-                </span>
-              </p>
               <p>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
                   {" "}
@@ -113,7 +94,7 @@ export default function ChipsArray({
               </p>
             </h5>
           </div>
-          <div className="col-3">
+          <div>
             <ClearOutlinedIcon
               style={{ fill: "red" }}
               onClick={() => handleDelete(mat)}

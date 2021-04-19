@@ -1,5 +1,7 @@
 import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
+import { getUser } from "../Auth/Index";
+import ProjectOwnerImage from "../Theme/images/geocity/Image 35.png";
 export default function UserprojectList({
   data,
   i,
@@ -22,56 +24,96 @@ export default function UserprojectList({
   return (
     <div
       key={i}
-      className="row text-left"
+      className="row "
       style={{ marginTop: "2rem" }}
       id="projectPage"
     >
-      <div className=" text-right" style={{ width: "20%" }}>
-        <img
-          style={{
-            border: `5px solid ${data.category.color}`,
-          }}
-          className="project-image"
-          src={
-            data.general_photo == "default.png"
-              ? DefaultImage
-              : `http://160.153.249.64:7002/views/uploads/${data.general_photo}`
-          }
-          alt="alternative"
-        />
-      </div>
-      <div className="text-left" style={{ width: "50%" }}>
-        <div style={{ marginLeft: "2rem" }}>
-          <p style={{ color: data.category.color }}>{data.category.name}</p>
-          <h5 style={{ marginTop: "-0.7rem", fontWeight: "bold" }}>
-            {data.title}
-          </h5>
-          <small>{data.general_description}</small>
+      <div className=" col-lg-9 col-md-8 col-sm-12 col-xs-12">
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="col-lg-3  ">
+            <img
+              style={{
+                border: `5px solid ${data.category.color}`,
+              }}
+              className="project-image"
+              src={
+                data.general_photo == "default.png"
+                  ? DefaultImage
+                  : `https://api.geocity.io/views/uploads/${data.general_photo}`
+              }
+              alt="alternative"
+            />
+          </div>
+
+          <div className="text-left col-lg-9 " style={{ marginLeft: "1rem" }}>
+            <p style={{ color: data.category.color }}>{data.category.name}</p>
+
+            <h5 style={{ marginTop: "-0.7rem", fontWeight: "bold" }}>
+              {data.title}
+            </h5>
+            <small>{data.general_description}</small>
+          </div>
+
+          {/* style={{ marginRight: "5rem", color: "grey" } */}
         </div>
       </div>
-      <div className="  text-center" style={{ width: "30%" }}>
-        {data.progress === "InProgress" ? (
-          <i className="fas fa-circle fa-lg " style={{ color: "#4B8B0B" }} />
-        ) : data.progress === "completed" ? (
-          <i className="fas fa-circle fa-lg " style={{ color: "#000" }} />
-        ) : data.progress === "NoProgress" ? (
-          <i className="fas fa-circle fa-lg " style={{ color: "red" }} />
-        ) : (
-          ""
-        )}
-        <Link to={`/SingleProject/${data._id}`}>
-          <button type="button" className="btn btn-block text-uppercase">
-            Voir Plus
-          </button>
-        </Link>
-      </div>
-      <div className="col-lg-12 text-right">
-        {/* style={{ marginRight: "5rem", color: "grey" } */}
+      <div className="text-center col-lg-3 col-md-4 col-sm-12 col-xs-12">
+        <div className="viewmore">
+          <div className="row ">
+            {getUser()._id === data.project_owner ? (
+              <p>
+                <img
+                  src={ProjectOwnerImage}
+                  style={{ marginTop: "5px", height: "20px" }}
+                />
+              </p>
+            ) : (
+              ""
+            )}
+            {data.progress >= "0%" ? (
+              <i
+                className="fas fa-circle fa-lg "
+                style={{
+                  color: "green",
+                  marginTop: "6px",
+                  fontSize: "20px",
+                }}
+              />
+            ) : data.progress === "100%" ? (
+              <i
+                className="fas fa-circle fa-lg "
+                style={{ color: "#000", marginTop: "5px" }}
+              />
+            ) : (
+              <i
+                className="fas fa-circle fa-lg "
+                style={{ color: "red", marginTop: "5px" }}
+              />
+            )}
+            <Link to={`/SingleProject/${data._id}`}>
+              <button
+                type="button"
+                style={{
+                  maxWidth: "100%",
+                  paddingRight: "2rem",
+                  paddingLeft: "2rem",
+                  paddingTop: "0.2rem",
+                  paddingBottom: "0.2rem",
+                }}
+                className="btn btn-block "
+              >
+                Voir Plus
+              </button>
+            </Link>
+          </div>
+        </div>
         <p
           style={{
             // color: like === true ? "red" : "grey",
             color: "grey",
-            marginRight: "5rem",
+            position: "absolute",
+            bottom: "-32px",
+            right: "16px",
           }}
         >
           {like >= 1 ? (

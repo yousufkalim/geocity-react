@@ -1,5 +1,5 @@
 import React from "react";
-import { getUser, SignOut, isAuthenticated } from "../Auth/Index";
+import { isAuthenticated } from "../Auth/Index";
 import { Link } from "react-router-dom";
 import DropDown from "../shared/DropdownMenu";
 import NotificationMenu from "../shared/NotificationMenu";
@@ -27,12 +27,9 @@ export default function HomeHeader({ data }) {
         >
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              {/* <Link to="/" className="nav-link ">
+              <Link to="/" className="nav-link ">
                 Home <span className="sr-only">(current)</span>
-              </Link> */}
-              <a className="nav-link " href="#header">
-                Home <span className="sr-only">(current)</span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/ProjectList">
@@ -40,7 +37,7 @@ export default function HomeHeader({ data }) {
               </Link>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link ">
+              <a href="#dan" className="nav-link">
                 About
               </a>
             </li>
@@ -81,7 +78,11 @@ export default function HomeHeader({ data }) {
         <div className="container">
           <div className="row">
             <div className="col-lg-5">
-              <img src={LandImage} style={{ width: "100%" }} alt="Landing " />
+              <img
+                src={LandImage}
+                style={{ width: "100%" }}
+                alt="Landing Images"
+              />
             </div>
             <div className="col-lg-7">
               <div className="text-container" style={{ textAlign: "right" }}>

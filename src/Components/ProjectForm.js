@@ -1,72 +1,74 @@
 import React from "react";
 import AutoComplete from "./AutoComplete";
-
+import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { names } from "../shared/Data";
 import { useStyles } from "../Theme/styles";
 import StepCard from "../shared/StepCard";
-function Form({
-  address,
-  onAdd,
-  handleChange,
-  handleStepChange,
-  onSubmit,
-  isLoading,
-  //   validator
-  validateStepName,
-  validateDescription,
-  validateTitle,
-  validateCategory,
-  stepRequiredFields,
-  validateStatus,
-  validateSpeciality,
-  validateProjectType,
-  validateGenralDesc,
-  validateMaterial,
-  validateStepType,
-  ValidateOtherSkill,
-  ValidateSkillField,
-  ValidateSkill,
-  validatePhoto,
-  validateCity,
-  // validator
-  setmaterialArrayData,
-  skillRequiredFields,
-  handleSkillChange,
-  aboutRequiredFields,
-  cityRequiredFields,
-  items,
-  getAddress,
-  SetAddress,
-  CategoryList,
-  stepType,
-  setstepType,
-  material,
-  formDataSkillField,
-  otherSKill,
-  setotherSkill,
-  setotherMaterial,
-  otherMaterial,
-  // list
-  materialList,
-  skillfieldList,
-  skillList,
-  // ******
-  setPhoto,
-  // array data
-  stepformData,
-  formData,
-  stepArrayData,
-  HandleStepDelete,
-  projectskillData,
-  setFormDataSkillField,
-  setMaterial,
-  onMaterialChange,
-  ValidateOtherMaterial,
+function Form(props) {
+  const {
+    address,
+    onAdd,
+    handleChange,
+    handleStepChange,
+    onSubmit,
+    isLoading,
+    //   validator
+    validateStepName,
+    validateDescription,
+    validateTitle,
+    validateCategory,
+    stepRequiredFields,
+    validateStatus,
+    validateSpeciality,
+    validateProjectType,
+    validateGenralDesc,
+    validateMaterial,
+    validateStepType,
+    ValidateOtherSkill,
+    ValidateSkillField,
+    ValidateSkill,
+    validatePhoto,
+    validateCity,
+    // validator
+    setmaterialArrayData,
+    skillRequiredFields,
+    handleSkillChange,
+    aboutRequiredFields,
+    cityRequiredFields,
+    items,
+    getAddress,
+    SetAddress,
+    CategoryList,
+    stepType,
+    setstepType,
+    material,
+    formDataSkillField,
+    otherSKill,
+    setotherSkill,
+    setotherMaterial,
+    addToast,
+    otherMaterial,
+    // list
+    materialList,
+    skillfieldList,
+    skillList,
+    // ******
+    setPhoto,
+    // array data
+    stepformData,
+    formData,
+    stepArrayData,
+    HandleStepDelete,
+    projectskillData,
+    setFormDataSkillField,
+    setMaterial,
+    onMaterialChange,
+    ValidateOtherMaterial,
 
-  materialRequiredFields,
-}) {
+    materialRequiredFields,
+  } = props;
   const handleStep = (e) => {
     if (e.target.name === "Field") {
       const array = [];
@@ -80,7 +82,22 @@ function Form({
   };
   return (
     <>
-      <form method="POST" className="appointmentform" id="appointment-form">
+      <div>
+        <Link to="/">
+          <p className="p-4 ">
+            <i
+              class="fa fa-arrow-left"
+              aria-hidden="true"
+              style={{ fontSize: "18px" }}
+            ></i>
+            <span style={{ fontSize: "18px" }} className="pl-1">
+              {" "}
+              Back to home{" "}
+            </span>
+          </p>
+        </Link>
+      </div>
+      <form method="POST" className="appointmentform" id="project-form">
         <h2>Create A Project</h2>
         <div className="form-group-1">
           <label className="label-agree-term row">
@@ -143,15 +160,30 @@ function Form({
 
           <input
             type="file"
+            accept="image/x-png,image/gif,image/jpeg"
             name="general_photo"
-            id="file"
+            id="general_photo"
             onChange={(e) => {
               const file = e.target.files[0];
-              console.log(file, "photo1");
-              setPhoto(file);
+              const type = e.target.files[0].type;
+              if (
+                type === "image/jpeg" ||
+                type === "image/jpg" ||
+                type === "image/png"
+              ) {
+                setPhoto(file);
+              } else {
+                addToast(`File should be png/jpg`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                document.getElementById("general_photo").value = "";
+                setPhoto("");
+              }
+              // validatePhoto(file);
             }}
           />
-
           <label className="label-agree-term row">
             General Description*
             {aboutRequiredFields.general_description !== "" ? (
@@ -220,7 +252,7 @@ function Form({
             type="text"
             name="name"
             value={stepformData.name}
-            placeholder="name"
+            placeholder="Step name"
             onChange={handleStepChange}
             onBlur={validateStepName}
           />
@@ -378,7 +410,7 @@ function Form({
               {formDataSkillField.skill === "Other" ? (
                 <>
                   <label className="label-agree-term row ">
-                    Other{" "}
+                    Other*{" "}
                     {skillRequiredFields.otherSKill !== "" ? (
                       <p className="error mt-2">
                         {" "}

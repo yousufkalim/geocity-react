@@ -23,9 +23,9 @@ export default function TableRow({ project, step, DeletContributor, data }) {
           <button
             onClick={() => DeletContributor(step._id)}
             type="button"
-            id="modalButton3"
-            style={{ width: "-moz-fit-content" }}
-            className="btn btn-primary text-white ml-4 text-uppercase"
+            id="modalButton1"
+            // style={{ width: "-moz-fit-content" }}
+            className="btn  text-white  "
           >
             Edit Contributor
           </button>

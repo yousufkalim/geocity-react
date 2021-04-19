@@ -11,11 +11,13 @@ import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import { useToasts } from "react-toast-notifications";
 import { loginData } from "../shared/Data";
 import { Link } from "react-router-dom";
-function Login() {
+function Login(props) {
   const { addToast } = useToasts();
   // single states
   const [isLoading, setisLoading] = useState(false);
   const [isSuccess, setisSuccess] = useState(false);
+  const [isAdminSuccess, setisAdminSuccess] = useState(false);
+
   const [formData, setFormData] = useState(loginData);
   const [type, setType] = useState("password");
 
@@ -98,25 +100,31 @@ function Login() {
     if (check == true) {
       try {
         axios
-          .post("http://160.153.249.64:7002/api/v1/auth/login", formData)
+          .post("https://api.geocity.io/api/v1/auth/login", formData)
           .then((res) => {
             setisLoading(false);
-            console.log(res, "res user");
+            // console.log(res, "res user");
             localStorage.setItem("jwt", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
 
             setFormData(loginData);
-            setisSuccess(true);
+
             addToast(`Login Successfully`, {
               appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 3000,
             });
             if (formData.email === "admin@admin.com") {
-              window.location.href = `/Admindashboard/${res.data.user._id}`;
+              setisAdminSuccess(true);
+            } else {
+              setisSuccess(true);
             }
           })
           .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+
             if (err.response.data) {
               if (err.response.data.message) {
                 addToast(`${err.response.data.message}`, {
@@ -132,9 +140,6 @@ function Login() {
                 });
               }
             }
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
 
             // console.log(" error =>", err);
           });
@@ -162,10 +167,27 @@ function Login() {
   // handle actions end ***************
   if (isSuccess === true) {
     return <Redirect to="/" />;
+  } else if (isAdminSuccess === true) {
+    return <Redirect to={`/Admindashboard/${getUser()._id}`} />;
   } else {
     return (
       <div className="main">
         <div className="Logincontainer">
+          <div>
+            <Link to="/">
+              <p className="p-4 ">
+                <i
+                  class="fa fa-arrow-left"
+                  aria-hidden="true"
+                  style={{ fontSize: "18px" }}
+                ></i>
+                <span style={{ fontSize: "18px" }} className="pl-1">
+                  {" "}
+                  Back to home{" "}
+                </span>
+              </p>
+            </Link>
+          </div>
           <form method="POST" className="appointmentform" id="appointment-form">
             <h2>Login Form</h2>
             <div className="form-group-1">
@@ -216,7 +238,7 @@ function Login() {
                       position: "absolute",
                       left: "20rem",
                       right: 0,
-                      top: "16.5rem",
+                      top: "19.3rem",
                     }}
                   ></i>
                 ) : (
@@ -229,7 +251,7 @@ function Login() {
                       position: "absolute",
                       left: "20rem",
                       right: 0,
-                      top: "16.5rem",
+                      top: "19.3rem",
                     }}
                   ></i>
                 )}
