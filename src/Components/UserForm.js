@@ -1,5 +1,6 @@
 import React from "react";
 import Autocomplete from "react-autocomplete";
+import { scores } from "../shared/Data";
 
 export default function UserForm({
   formData,
@@ -64,14 +65,16 @@ export default function UserForm({
   // ****
   otherSKill,
   setotherSkill,
+  socialformData,
+  handleSocialChange,
 }) {
   return (
     <Form>
       <Row form>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail " className="row label">
-              First_name*
+              First Name*
               {aboutRequiredFields.firstname !== "" ? (
                 <p className="error"> {aboutRequiredFields.firstname}</p>
               ) : (
@@ -89,10 +92,10 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail" className="row label">
-              Last_name*{" "}
+              Last Name*{" "}
               {aboutRequiredFields.lastname !== "" ? (
                 <p className="error"> {aboutRequiredFields.lastname}</p>
               ) : (
@@ -110,10 +113,10 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail" className="row label">
-              User_name*{" "}
+              User Name*{" "}
               {aboutRequiredFields.username !== "" ? (
                 <p className="error"> {aboutRequiredFields.username}</p>
               ) : (
@@ -131,7 +134,7 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        {/* <Col md={4}>
+        {/* <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail">Email*</Label>
             <Input
@@ -144,7 +147,7 @@ export default function UserForm({
             />
           </FormGroup>
         </Col> */}
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail" className="row label">
               City*{" "}
@@ -200,10 +203,10 @@ export default function UserForm({
           </FormGroup>
         </Col>
 
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress" className="row label">
-              Phone Number*(10 digit only){" "}
+              Phone Number* (10 digit only){" "}
               {aboutRequiredFields.phone !== "" ? (
                 <p className="error"> {aboutRequiredFields.phone}</p>
               ) : (
@@ -221,14 +224,14 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label
               for="exampleAddress"
               className="row label"
               style={{ flexWrap: "noWrap" }}
             >
-              Availability*(Days per week)
+              Availability* (Days per week)
             </Label>
             <Input
               type="number"
@@ -246,7 +249,7 @@ export default function UserForm({
             )}
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress" className="row label">
               Facebook
@@ -255,14 +258,14 @@ export default function UserForm({
               type="text"
               name="facebook"
               id="facebook"
-              value={formData.facebook}
+              value={socialformData.facebook}
               placeholder="facebook"
-              onChange={handleChange}
-              onpaste={handleChange}
+              onChange={handleSocialChange}
+              onpaste={handleSocialChange}
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress" className="row label">
               Instagram
@@ -271,14 +274,14 @@ export default function UserForm({
               type="text"
               name="instagram"
               id="instagram"
-              value={formData.instagram}
+              value={socialformData.instagram}
               placeholder="instagram"
-              onChange={handleChange}
-              onpaste={handleChange}
+              onChange={handleSocialChange}
+              onpaste={handleSocialChange}
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress" className="row label">
               Youtube
@@ -287,34 +290,49 @@ export default function UserForm({
               type="text"
               name="youtube"
               id="youtube"
-              value={formData.youtube}
+              value={socialformData.youtube}
               placeholder="youtube"
-              onChange={handleChange}
-              onpaste={handleChange}
+              onChange={handleSocialChange}
+              onpaste={handleSocialChange}
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="examplePassword" className="row label">
-              Profile_picture
+              Profile Picture
             </Label>
             <Input
               type="file"
+              accept="image/x-png,image/gif,image/jpeg"
               name="profile_picture"
+              id="profile_picture"
               onChange={(e) => {
                 const file = e.target.files[0];
-                console.log(file, "photo1");
-                // setProfilePreview(
-                //   URL.createObjectURL(file)
-                // );
-                setPhoto(file);
+                const type = e.target.files[0].type;
+                if (
+                  type === "image/jpeg" ||
+                  type === "image/jpg" ||
+                  type === "image/png"
+                ) {
+                  setPhoto(file);
+                } else {
+                  addToast(`File should be png/jpg`, {
+                    appearance: "error",
+                    autoDismiss: true,
+                    autoDismissTimeout: 3000,
+                  });
+                  document.getElementById("profile_picture").value = "";
+
+                  setPhoto("");
+                }
+                // validatePhoto(file);
               }}
             />
           </FormGroup>
         </Col>
 
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress2" className="row label">
               Description*{" "}
@@ -343,10 +361,10 @@ export default function UserForm({
       <hr />
       <h5 style={{ fontWeight: "bold" }}>Skills*</h5>
       <Row form className="mt-3">
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress" className="row label">
-              Skill_field*{" "}
+              SkillField*{" "}
               {skillRequiredFields.skillField !== "" ? (
                 <p className="errorselect"> {skillRequiredFields.skillField}</p>
               ) : (
@@ -372,7 +390,7 @@ export default function UserForm({
           </FormGroup>
         </Col>
 
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress2" className="row label">
               Specialization
@@ -388,12 +406,26 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        <Col md={4}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress2" className="row label">
-              Rate Your Skill( 1 to 5)*{" "}
+              Rate Your Skill (1 to 5)*{" "}
             </Label>
             <Input
+              name="score"
+              id="score"
+              type="select"
+              value={skillformData.score}
+              onBlur={validateScore}
+              onChange={handleSkillChange}
+            >
+              <option value="">Select Score</option>
+
+              {scores
+                ? scores.map((skill) => <option value={skill}>{skill}</option>)
+                : ""}
+            </Input>
+            {/* <Input
               min={1}
               max={5}
               type="number"
@@ -403,7 +435,7 @@ export default function UserForm({
               value={skillformData.score}
               placeholder="Score"
               onChange={handleSkillChange}
-            />
+            /> */}
             {skillRequiredFields.score !== "" ? (
               <p className="error "> {skillRequiredFields.score}</p>
             ) : (
@@ -412,7 +444,7 @@ export default function UserForm({
           </FormGroup>
         </Col>
         {skillList.length > 0 ? (
-          <Col md={4}>
+          <Col md={6} sm={12} lg={4}>
             <FormGroup>
               <>
                 <Label for="exampleAddress" className="row label">
@@ -451,7 +483,7 @@ export default function UserForm({
             </FormGroup>
           </Col>
         ) : (
-          <Col md={4}>
+          <Col md={6} sm={12} lg={4}>
             <FormGroup>
               <>
                 <Label for="exampleAddress" className="row label">
@@ -488,7 +520,7 @@ export default function UserForm({
         )}
         {skillformData.skill === "Other" ? (
           <>
-            <Col md={4}>
+            <Col md={6} sm={12} lg={4}>
               <FormGroup>
                 <Label for="exampleAddress2" className="row label">
                   Other*{" "}
@@ -533,7 +565,7 @@ export default function UserForm({
           ""
         )}
         {skillArrayData.length < 3 ? (
-          <Col md={4} className="text-left">
+          <Col md={6} sm={12} lg={4} className="text-left">
             <button
               type="button"
               onClick={onskillAdd}
@@ -542,13 +574,13 @@ export default function UserForm({
               style={{
                 marginTop: "1.9rem",
               }}
-              className="btn text-uppercase "
+              className="btn "
             >
-              Add Skill
+              Add
             </button>
           </Col>
         ) : (
-          <Col md={4} className="text-left">
+          <Col md={6} sm={12} lg={4} className="text-left">
             <button
               disabled
               type="button"
@@ -560,13 +592,13 @@ export default function UserForm({
               }}
               className="btn text-uppercase "
             >
-              Add Skill
+              Add
             </button>
           </Col>
         )}
       </Row>
       <Row className="mb-2 mt-3">
-        <Col md={6}>
+        <Col md={6} sm={12} lg={6}>
           {skillArrayData && skillArrayData.length > 0 ? (
             <>
               {/* <Col className="mb-3">Skills:</Col> */}
@@ -600,7 +632,7 @@ export default function UserForm({
       </Row>
 
       <Row className="mt-4">
-        <Col md={6}>
+        <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleAddress" className="row label">
               Material*{" "}
@@ -633,7 +665,7 @@ export default function UserForm({
             </Input>
           </FormGroup>
         </Col>
-        <Col md={4} className="text-left">
+        <Col md={6} sm={12} lg={4} className="text-left">
           <button
             type="button"
             onClick={onMaterialAdd}
@@ -642,21 +674,21 @@ export default function UserForm({
             style={{
               marginTop: "1.9rem",
             }}
-            className="btn text-uppercase "
+            className="btn  "
           >
             Add
           </button>
         </Col>
       </Row>
       <Row className="mb-2 mt-3">
-        <Col md={6}>
+        <Col md={6} sm={12} lg={6}>
           {materialArrayData && materialArrayData.length > 0 ? (
             <>
               {/* <Col className="mb-3">Material:</Col> */}
               <div
                 className={
-                  skillArrayData
-                    ? skillArrayData.length > 0
+                  materialArrayData
+                    ? materialArrayData.length > 0
                       ? " text-center stepDiv"
                       : ""
                     : ""

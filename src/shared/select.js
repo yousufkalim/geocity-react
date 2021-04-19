@@ -67,7 +67,14 @@ const ControlComponent = (props) => (
   </div>
 );
 
-export default function SelectBox({ CategoryList, value, onChange, name, id }) {
+export default function SelectBox({
+  CategoryList,
+  value,
+  onChange,
+  name,
+  placeholder,
+  id,
+}) {
   return (
     <Select
       isClearable
@@ -77,6 +84,7 @@ export default function SelectBox({ CategoryList, value, onChange, name, id }) {
       key={`my_unique_select_key__${id}`}
       // defaultValue={`Select ${name}`}
       // placeholder={`Select ${name}`}
+      placeholder={placeholder}
       options={CategoryList}
       // onInputChange={onChange}
       // value={value}

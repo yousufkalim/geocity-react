@@ -1,5 +1,3 @@
-import socketIOClient from "socket.io-client";
-
 export const isAuthenticated = () => {
   const token = localStorage.getItem("jwt");
   if (token) {
@@ -13,7 +11,7 @@ export const SignOut = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("jwt");
     localStorage.removeItem("user");
-    window.location.href = "/Login";
+    // window.location.href = "/Login";
   }
 };
 
@@ -25,10 +23,18 @@ export const getUser = () => {
     return false;
   }
 };
+export const getNotifications = () => {
+  const token = localStorage.getItem("user");
+  if (token) {
+    return getUser().notifications.filter((not) => not.statusNew == true);
+  } else {
+    return false;
+  }
+};
 
 export const headers = {
   headers: {
     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
   },
 };
-export const socket = socketIOClient("http://localhost:3000");
+// export const socket = socketIOClient("http://160.153.249.64:7002");

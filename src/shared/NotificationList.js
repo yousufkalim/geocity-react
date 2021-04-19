@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,7 +7,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-
+import { getUser, isAuthenticated } from "../Auth/Index";
+import Chip from "@material-ui/core/Chip";
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -19,16 +21,22 @@ const useStyles = makeStyles((theme) => ({
   // },
 }));
 
-export default function AlignItemsList({ not }) {
+export default function AlignItemsList({ not, onChangeStatus }) {
   const classes = useStyles();
+  const [color, setColor] = useState(false);
+  const [countCheck, setCountCheck] = useState(false);
 
+  const HandleChangeStatus = (notify) => {
+    setCountCheck(true);
+    onChangeStatus(setColor, notify, not, color, countCheck);
+  };
   return (
     <List
       className={classes.root}
       style={{
         paddingTop: "0px",
         paddingBottom: "0px",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: color == true ? "#fff" : "#f7f7f7",
         margin: 0,
         padding: 0,
       }}
@@ -48,16 +56,41 @@ export default function AlignItemsList({ not }) {
           style={{
             fontSize: "0.8rem",
           }}
-          primary={not.title}
+          primary={not.description}
           secondary={
             <React.Fragment style={{ fontSize: "0.6rem" }}>
-              {not.description}
               <br />
-              {/* <small className="ml-2">
-                {new Date(not.createdAt).toString().split(" ")[1]}{" "}
-                {new Date(not.createdAt).toString().split(" ")[2]}{" "}
-                {new Date(not.createdAt).getFullYear()}
-              </small> */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <p className="ml-2">
+                  <small>
+                    {new Date(not.createdAt).toString().split(" ")[1]}{" "}
+                    {new Date(not.createdAt).toString().split(" ")[2]}{" "}
+                    {new Date(not.createdAt).getFullYear()}
+                  </small>
+                  <small className="ml-1">
+                    {new Date(not.createdAt).getHours()}
+                    {":"}
+                    {new Date(not.createdAt).getMinutes()}
+                    {":"}
+                    {new Date(not.createdAt).getSeconds()}
+                  </small>
+                </p>
+                <div className="MarkasRead">
+                  <Chip
+                    //   icon={icon}
+                    className="MarkasRead"
+                    label={"Mark as read"}
+                    onClick={(e) => HandleChangeStatus(not)}
+                    // className={classes.chip}
+                  />
+                </div>
+              </div>
             </React.Fragment>
           }
         />

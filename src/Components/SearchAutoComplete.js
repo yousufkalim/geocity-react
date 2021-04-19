@@ -20,6 +20,8 @@ export default function AutoComplete({
           key={item.id}
           style={{
             backgroundColor: highlighted ? "#eee" : "transparent",
+            borderBottom: "0.01px solid grey",
+            padding: "5px",
           }}
         >
           {item.label}
@@ -35,17 +37,18 @@ export default function AutoComplete({
         // boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
         background: "rgba(255, 255, 255, 0.9)",
         padding: "2px 12px",
-        fontSize: "90%",
+        fontSize: "80%",
         color: "#000",
         overflow: "auto",
         maxHeight: "15rem",
         marginTop: "0px",
         left: "0px",
         top: "50px",
+        // border: "1px solid",
       }}
       inputProps={{
-        className: "form-control",
-        placeholder: "e.g Sas Van Genstraete 59270 Bailleul",
+        className: "form-control searchInput",
+        placeholder: "Lieu du projet ",
         onBlur: validateCity,
       }}
       value={address}

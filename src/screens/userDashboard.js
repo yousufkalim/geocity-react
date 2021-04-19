@@ -8,6 +8,9 @@ import ChipArray from "../shared/MaterialChip";
 import SkillChipArray from "../shared/skillChipCard";
 import { useToasts } from "react-toast-notifications";
 import { getUser, SignOut } from "../Auth/Index";
+import ListOfInterests from "../Components/ListOfInterests";
+import AddInterestModal from "../shared/AddInterestModal";
+import LoadedClients from "../shared/Loaders";
 
 import {
   signupskillRequired,
@@ -15,21 +18,30 @@ import {
   editProfileData,
   signupstepData,
 } from "../shared/Data";
-import Header from "../Components/HomeHeader";
+import Header from "../Components/header";
 import axios from "axios";
 import UserTable from "../shared/ProjectsTable";
 import InviteTable from "../shared/InviteTable";
 import DropDown from "../shared/DropdownMenu";
 import NotificationMenu from "../shared/NotificationMenu";
 import UserForm from "../Components/UserForm";
+
 export default function UserDashboard(props) {
   const { notificationsData } = props;
 
+  const socialLinks = {
+    facebook: "",
+    instagram: "",
+    youtube: "",
+  };
   const { addToast } = useToasts();
   // states start ************************************
   const [skillformData, setskillFormData] = useState(signupstepData);
+  const [socialformData, setsocialFormData] = useState(socialLinks);
 
   const [formData, setFormData] = useState(editProfileData);
+  const [interest, setInterest] = useState("");
+
   const [data, setData] = useState({ data: "" });
   const [ProjectdataList, setProjectdataList] = useState([]);
   const [profilemodal, setprofileModal] = useState(false);
@@ -41,9 +53,13 @@ export default function UserDashboard(props) {
   const [aboutRequiredFields, setAboutRequiredFields] = useState(
     editProfileRequired
   );
+  const [interestRequiredFields, setinterestRequiredFields] = useState({
+    interest: "",
+  });
   const [materialRequiredFields, setmaterialRequiredFields] = useState({
     name: "",
     error: "",
+    otherMaterial: "",
   });
   const [skillRequiredFields, setskillRequiredFields] = useState(
     signupskillRequired
@@ -57,11 +73,154 @@ export default function UserDashboard(props) {
 
   const [isLoading, setisLoading] = useState(false);
   const [CategoryList, setCategoryList] = useState("");
+  const [InterestList, setInterestList] = useState("");
+  const [addInterestmodal, setaddInterestModal] = useState(false);
+
   const [key, setKey] = useState("first");
   const [invitationData, setinvitationData] = useState("");
+  const [otherMaterial, setotherMaterial] = useState("");
 
   // functions
+  const AddInteresttoggle = () => {
+    setInterest("");
+    setaddInterestModal(!addInterestmodal);
+  };
+  const AddinterestSubmit = () => {
+    setisLoading(true);
+    const check = ValidateInterest();
 
+    if (check == true) {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      try {
+        axios
+          .post(
+            `https://api.geocity.io/api/v1/profile/create-interest?id=${props.match.params.id}`,
+            { interest: interest },
+            headers
+          )
+          .then((res) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
+            addToast("Interest added successfully", {
+              appearance: "success",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+            const msg = "";
+            setinterestRequiredFields({
+              ...interestRequiredFields,
+              interest: msg,
+            });
+            setaddInterestModal(!addInterestmodal);
+            setInterest("");
+            // console.log(res, "res material");
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1500);
+            if (err.response.data) {
+              if (err.response.data.message) {
+                addToast(`${err.response.data.message}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data.message;
+                setinterestRequiredFields({
+                  ...interestRequiredFields,
+                  interest: msg,
+                });
+              } else {
+                addToast(`${err.response.data}`, {
+                  appearance: "error",
+                  autoDismiss: true,
+                  autoDismissTimeout: 3000,
+                });
+                const msg = err.response.data;
+                setinterestRequiredFields({
+                  ...interestRequiredFields,
+                  interest: msg,
+                });
+              }
+            }
+          });
+      } catch (error) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
+        // console.log(error, "error catch");
+      }
+    } else {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1500);
+    }
+  };
+  const DeleteInterest = (id) => {
+    setisLoading(true);
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    try {
+      axios
+        .post(
+          `https://api.geocity.io/api/v1/profile/delete-interest?id=${props.match.params.id}`,
+          { interest: id },
+          headers
+        )
+        .then((res) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 2000);
+          const filter = CategoryList.filter((dt) => dt._id !== id);
+          setCategoryList(filter);
+          addToast("Interest has been deleted Successfully", {
+            appearance: "success",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+
+          // console.log(res, "res material");
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+          if (err.response.data) {
+            if (err.response.data.message) {
+              addToast(`${err.response.data.message}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            } else {
+              addToast(`${err.response.data}`, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            }
+          }
+        });
+    } catch (error) {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+      // console.log(error, "error catch");
+    }
+  };
+
+  const handleSocialChange = (e) => {
+    setsocialFormData({ ...socialformData, [e.target.name]: e.target.value });
+  };
   const getAddress = (e) => {
     setAddress(e.target.value);
     fetch(
@@ -130,7 +289,21 @@ export default function UserDashboard(props) {
   // *** skill end
 
   // validation
-
+  const ValidateInterest = () => {
+    if (!interest) {
+      const msg = "Required";
+      setinterestRequiredFields({ ...interestRequiredFields, interest: msg });
+      return false;
+    } else if (interest.length < 3) {
+      const msg = "interest needs to be more than 3 characters long";
+      setinterestRequiredFields({ ...interestRequiredFields, interest: msg });
+      return false;
+    } else {
+      const msg = "";
+      setinterestRequiredFields({ ...interestRequiredFields, interest: msg });
+      return true;
+    }
+  };
   const validatePhoneNumber = () => {
     if (!formData.phone) {
       const msg = "Required";
@@ -366,20 +539,34 @@ export default function UserDashboard(props) {
   const checkValidateForm = () => {
     let obj = {};
     let reqFields = true;
+
     Object.keys(formData).map((key) => {
-      if (formData[key] === "") {
+      const hasKey = aboutRequiredFields.hasOwnProperty([key]);
+
+      if (hasKey && formData[key] === "") {
         obj[key] = "Required";
         reqFields = false;
       }
       return obj;
     });
-    console.log(obj, "obj");
-    if (!reqFields) {
+    if (
+      !reqFields
+      // !vfn ||
+      // !vln ||
+      // !vun ||
+      // !ve ||
+      // !vp ||
+      // !vcp ||
+      // !vcity ||
+      // !vphone ||
+      // !vavail ||
+      // !vpd
+    ) {
       setAboutRequiredFields(obj);
 
+      // setmaterialArrayData((prevState) => [...prevState, material]);
       return false;
     } else {
-      // alert("hello");
       setAboutRequiredFields(editProfileRequired);
       return true;
     }
@@ -399,14 +586,6 @@ export default function UserDashboard(props) {
       }
       return obj;
     });
-    // debugger;
-    // setskillRequiredFields({
-    //   skillField: "Required",
-    //   skill: "Required",
-    //   specialization: "Required",
-    //   score: "Required",
-    // });
-
     if (!reqFields) {
       const msg = "Required";
       if (otherSKill !== "") {
@@ -417,6 +596,7 @@ export default function UserDashboard(props) {
         setskillRequiredFields(obj);
         return false;
       } else {
+        obj.otherSKill = "Required";
         setskillRequiredFields(obj);
         return false;
       }
@@ -433,35 +613,27 @@ export default function UserDashboard(props) {
     if (materialArrayData.length > 0) {
       const tempCheck = materialArrayData.find((cont) => cont === material);
 
-      if (!tempCheck) {
-        var array = materialArrayData.filter((mat) => mat !== material);
-        if (material) {
-          array.push(material);
-          setmaterialArrayData(array);
-
-          const msg = "";
-          setmaterialRequiredFields({
-            ...materialRequiredFields,
-            error: msg,
-          });
-          setMaterial("");
-        }
-      } else {
-        const msg = "Value already existed";
-        setmaterialRequiredFields({
-          ...materialRequiredFields,
-          error: msg,
-        });
-        setMaterial("");
+      if (tempCheck) {
         addToast("Material already existed", {
           appearance: "error",
           autoDismiss: true,
           autoDismissTimeout: 3000,
         });
-        // alert("msg");
-        // const array = materialArrayData.filter((mat) => mat !== material);
-        // // console.log(array, "array mat");
-        // setmaterialArrayData(array);
+        setMaterial("");
+      } else {
+        var array = materialArrayData.filter((mat) => mat !== material);
+
+        if (material) {
+          array.push(material);
+        }
+        setmaterialArrayData(array);
+        // setMaterial("");
+        const msg = "";
+        setmaterialRequiredFields({
+          ...materialRequiredFields,
+          error: msg,
+        });
+        setMaterial("");
       }
     } else {
       if (material) {
@@ -470,56 +642,41 @@ export default function UserDashboard(props) {
       }
     }
   };
+  const ValidateOtherMaterial = () => {
+    if (!otherMaterial) {
+      const msg = "Required";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        otherMaterial: msg,
+      });
+      return false;
+    } else {
+      const msg = "";
+      setmaterialRequiredFields({
+        ...materialRequiredFields,
+        otherMaterial: msg,
+      });
+      return true;
+    }
+  };
   const onskillAdd = () => {
-    const checkForm = checkValidateForm2();
-    // validateScore();
-    if (checkForm == true) {
-      if (skillArrayData.length > 0) {
-        const tempCheck = skillArrayData.find(
-          (cont) => cont.skillField === skillformData.skillField
-        );
-        const tempCheck2 = skillArrayData.find(
-          (cont) => cont.skill === skillformData.skill
-        );
-        if (tempCheck || tempCheck2) {
-          const msg = "Skill already existed";
-          addToast("Skill already existed", {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-        } else {
-          if (otherSKill !== "") {
-            skillformData.skill = otherSKill;
-          }
-          // debugger;
-          const check = Object.values(skillformData).map((obj) => {
-            if (obj !== "") {
-              return true;
-            } else {
-              return false;
-            }
-          });
-          if (check[0] === true) {
-            if (skillArrayData.length === 3) {
-              // alert(skillArrayData.length);
-              addToast("skills length must be 1 or less than equal to 3", {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-              // seterrorMessage("You can only add upto 3 skills  or less");
-            } else {
-              if (otherSKill !== "") {
-                skillformData.skill = otherSKill;
-              }
+    checkValidateForm2();
 
-              setskillArrayData([...skillArrayData, skillformData]);
-              setskillFormData(signupstepData);
-              setskillRequiredFields(signupskillRequired);
-            }
-          }
-        }
+    // validateScore();
+    if (skillArrayData.length > 0) {
+      const tempCheck = skillArrayData.find(
+        (cont) => cont.skillField === skillformData.skillField
+      );
+      const tempCheck2 = skillArrayData.find(
+        (cont) => cont.skill === skillformData.skill
+      );
+      if (tempCheck && tempCheck2) {
+        const msg = "Skill already existed";
+        addToast("Skill already existed", {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
       } else {
         if (otherSKill !== "") {
           skillformData.skill = otherSKill;
@@ -532,7 +689,7 @@ export default function UserDashboard(props) {
             return false;
           }
         });
-        if (check[0] === true) {
+        if (check[0] === true && check[1] === true) {
           if (skillArrayData.length === 3) {
             // alert(skillArrayData.length);
             addToast("skills length must be 1 or less than equal to 3", {
@@ -542,10 +699,59 @@ export default function UserDashboard(props) {
             });
             // seterrorMessage("You can only add upto 3 skills  or less");
           } else {
+            if (skillformData.skill === "Other") {
+              if (otherSKill !== "") {
+                skillformData.skill = otherSKill;
+
+                setskillArrayData([...skillArrayData, skillformData]);
+                setskillFormData(signupstepData);
+                setskillRequiredFields(signupskillRequired);
+                setotherSkill("");
+              } else {
+                ValidateOtherSkill();
+              }
+            } else {
+              setskillArrayData([...skillArrayData, skillformData]);
+              setskillFormData(signupstepData);
+              setskillRequiredFields(signupskillRequired);
+            }
+          }
+        }
+      }
+    } else {
+      // debugger;
+      const check = Object.values(skillformData).map((obj) => {
+        if (obj !== "") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (check[0] === true && check[1] === true) {
+        if (skillArrayData.length === 3) {
+          // alert(skillArrayData.length);
+          addToast("skills length must be 1 or less than equal to 3", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          // seterrorMessage("You can only add upto 3 skills  or less");
+        } else {
+          // if (otherSKill !== "") {
+          //   skillformData.skill = otherSKill;
+          // }
+          if (skillformData.skill === "Other") {
             if (otherSKill !== "") {
               skillformData.skill = otherSKill;
-            }
 
+              setskillArrayData([...skillArrayData, skillformData]);
+              setskillFormData(signupstepData);
+              setskillRequiredFields(signupskillRequired);
+              setotherSkill("");
+            } else {
+              ValidateOtherSkill();
+            }
+          } else {
             setskillArrayData([...skillArrayData, skillformData]);
             setskillFormData(signupstepData);
             setskillRequiredFields(signupskillRequired);
@@ -558,9 +764,6 @@ export default function UserDashboard(props) {
   const onSubmit = async (e) => {
     e.preventDefault();
     checkValidateForm();
-    if (materialArrayData.length == 0) {
-      validateMaterial();
-    }
     if (skillArrayData.length == 0) {
       addToast(`You must add atleast one skill`, {
         appearance: "error",
@@ -568,6 +771,7 @@ export default function UserDashboard(props) {
         autoDismissTimeout: 3000,
       });
     } else if (materialArrayData.length == 0) {
+      validateMaterial();
       addToast(`You must add atleast one material`, {
         appearance: "error",
         autoDismiss: true,
@@ -591,9 +795,9 @@ export default function UserDashboard(props) {
       newFormData.append("profile_picture", photo);
       newFormData.append("zipCode", formData.zipCode);
 
-      newFormData.append("facebook", formData.facebook);
-      newFormData.append("instagram", formData.instagram);
-      newFormData.append("youtube", formData.youtube);
+      newFormData.append("facebook", socialformData.facebook);
+      newFormData.append("instagram", socialformData.instagram);
+      newFormData.append("youtube", socialformData.youtube);
       if (skillArrayData.length > 0 && materialArrayData.length > 0) {
         newFormData.append("skills", JSON.stringify(skillArrayData));
         newFormData.append("material", JSON.stringify(materialArrayData));
@@ -610,7 +814,7 @@ export default function UserDashboard(props) {
         };
         await axios
           .post(
-            `http://160.153.249.64:7002/api/v1/profile/editProfile?id=${props.match.params.id}`,
+            `https://api.geocity.io/api/v1/profile/editProfile?id=${props.match.params.id}`,
             newFormData,
             headers
           )
@@ -619,7 +823,7 @@ export default function UserDashboard(props) {
               setisLoading(false);
             }, 1000);
             localStorage.setItem("user", JSON.stringify(response.data.user));
-            setprofileModal(false);
+            // setprofileModal(false);
 
             if (response.data) {
               if (response.data.message) {
@@ -669,7 +873,9 @@ export default function UserDashboard(props) {
       }
     }
   };
-
+  const handleInterestChange = (e) => {
+    setInterest(e.target.value);
+  };
   const handleChange = (e) => {
     if (e.target.name === "phone") {
       if (e.target.value.length <= 10) {
@@ -731,35 +937,36 @@ export default function UserDashboard(props) {
           skill._id === e.target.value ? setskillList(skill.skill) : ""
         );
       } else if (e.target.name === "score") {
-        var avail = e.target.value.replace(/\D/g, "");
-        if (e.target.value <= 5) {
-          if (avail !== "") {
-            if (avail.length >= 2 && e.target.value >= 5) {
-            } else {
-              setskillFormData({
-                ...skillformData,
-                [e.target.name]: avail,
-              });
-            }
-          } else {
-            if (e.target.value) {
-              setskillFormData({
-                ...skillformData,
-                [e.target.name]: e.target.value.replace(/\D/g, ""),
-              });
-            } else {
-              setskillFormData({
-                ...skillformData,
-                [e.target.name]: "",
-              });
-            }
-          }
-          const msg = "";
-          setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        } else {
-          const msg = "Rating must be less than equal to 5";
-          setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        }
+        // var avail = e.target.value.replace(/\D/g, "");
+        // if (e.target.value <= 5) {
+        //   if (avail !== "") {
+        //     if (avail.length >= 2 && e.target.value >= 5) {
+        //     } else {
+        //       setskillFormData({
+        //         ...skillformData,
+        //         [e.target.name]: avail,
+        //       });
+        //     }
+        //   } else {
+        //     if (e.target.value) {
+        //       setskillFormData({
+        //         ...skillformData,
+        //         [e.target.name]: e.target.value.replace(/\D/g, ""),
+        //       });
+        //     } else {
+        //       setskillFormData({
+        //         ...skillformData,
+        //         [e.target.name]: "",
+        //       });
+        //     }
+        //   }
+        //   const msg = "";
+        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
+        // } else {
+        //   const msg = "Rating must be less than equal to 5";
+        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
+        // }
+        setskillFormData({ ...skillformData, [e.target.name]: value });
       } else {
         setskillFormData({ ...skillformData, [e.target.name]: value });
       }
@@ -787,7 +994,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/materialList")
+        .get("https://api.geocity.io/api/v1/auth/materialList")
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -799,7 +1006,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/skillList")
+        .get("https://api.geocity.io/api/v1/auth/skillList")
         .then((res) => {
           setskillFieldList(res.data.skills);
           // console.log(res, "res skill");
@@ -810,7 +1017,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/auth/categoryList")
+        .get("https://api.geocity.io/api/v1/auth/categoryList")
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -821,40 +1028,21 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/profile/myProjects", headers)
-        .then((res) => {
-          setProjectdataList(res.data.ownedProjects);
-          console.log(res.data, "res owened projects");
-        })
-        .catch((err) => {
-          console.log(" error projects =>", err);
-        });
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
-    try {
-      axios
         .get(
-          `http://160.153.249.64:7002/api/v1/profile/view-profile?id=${props.match.params.id}`,
-          headers
+          `https://api.geocity.io/api/v1/profile/all-interest?id=${props.match.params.id}`
         )
         .then((res) => {
-          // const obj = { ...res.data };
-
-          setData({ ["data"]: res.data.user });
-          setinvitationData(res.data.user.invitation);
-          UserData(res.data.user);
-          console.log(res.data, "res data user");
+          setInterestList(res.data.interests[0].interests);
+          console.log(res, "response interest");
         })
-        .catch((err) => {
-          // console.log(" error =>", err);
-        });
+        .catch((err) => console.log(" error interest =>", err));
     } catch (error) {
       // console.log(error, "error catch");
     }
+
     try {
       axios
-        .get("http://160.153.249.64:7002/api/v1/profile/myProjects", headers)
+        .get("https://api.geocity.io/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
           // console.log(res.data, "res owened projects");
@@ -865,7 +1053,33 @@ export default function UserDashboard(props) {
     } catch (error) {
       // console.log(error, "error catch");
     }
-  }, [props.match.params.id, key]);
+  }, [key]);
+  useEffect(() => {
+    fecthEditProfile();
+  }, [key]);
+  const fecthEditProfile = async () => {
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    await axios
+      .get(
+        `https://api.geocity.io/api/v1/profile/view-profile?id=${props.match.params.id}`,
+        headers
+      )
+      .then((res) => {
+        // const obj = { ...res.data };
+
+        setData({ ["data"]: res.data.user });
+        setinvitationData(res.data.user.invitation);
+        UserData(res.data.user);
+        // console.log(res.data, "res data user");
+      })
+      .catch((err) => {
+        // console.log(" error =>", err);
+      });
+  };
   const UserData = (data) => {
     const tempskillArray = [];
     // skills
@@ -904,13 +1118,16 @@ export default function UserDashboard(props) {
       latitude: data.latitude,
       longitude: data.longitude,
       phone: data.phone,
-      facebook: data.facebook,
-      instagram: data.instagram,
-      youtube: data.youtube,
+
       availability: data.availability,
       profile_description: data.profile_description,
       skills: tempskillArray,
       material: tempMaterial,
+    };
+    const socialData = {
+      facebook: data.facebook,
+      instagram: data.instagram,
+      youtube: data.youtube,
     };
     setPhoto(data.profile_picture);
     // console.log(projectData.socialLinks, "project data");
@@ -921,142 +1138,197 @@ export default function UserDashboard(props) {
     // setPhoto(data.profile_picture);
     setAddress(data.city);
     setFormData({ ...projectData });
+    setsocialFormData({ ...socialData });
   };
-  console.log(formData, "fomrdata sanksajh");
-  console.log(photo, "fomrdata photo");
+  // console.log(formData, "fomrdata sanksajh");
+  // console.log(photo, "fomrdata photo");
+  if (data) {
+    return (
+      <div>
+        <AddInterestModal
+          modal={addInterestmodal}
+          toggle={AddInteresttoggle}
+          isLoading={isLoading}
+          handleInterestChange={handleInterestChange}
+          interest={interest}
+          CategoryList={CategoryList}
+          interestRequiredFields={interestRequiredFields}
+          ValidateInterest={ValidateInterest}
+          AddinterestSubmit={AddinterestSubmit}
+        />
+        <Header notificationsData={notificationsData} />
+        <div id="services" className="cards-1">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12">
+                <h2>User Dashboard</h2>
+                {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
+              </div>{" "}
+              <div className="container">
+                {" "}
+                <div className="col-lg-12 text-right ">
+                  {key == "fourth" ? (
+                    <button
+                      onClick={AddInteresttoggle}
+                      type="button"
+                      id="modalButton1"
+                      className="btn btn-primary text-white"
+                    >
+                      Add Interest
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+              <Container className="mt-4 userdashboard text-left">
+                <Tab.Container
+                  id="left-tabs-example"
+                  defaultActiveKey="first"
+                  activeKey={key}
+                  onSelect={(k) => setKey(k)}
+                >
+                  <Row>
+                    <Col
+                      sm={12}
+                      md={12}
+                      lg={3}
+                      style={{ marginBottom: "1rem" }}
+                    >
+                      <Nav variant="pills" className="flex-column">
+                        <Nav.Item>
+                          <Nav.Link eventKey="first">
+                            General information
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="second"> Projects </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="third">
+                            {" "}
+                            Invite Requests{" "}
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="fourth"> Interests </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </Col>
+                    <Col sm={12} md={12} lg={9}>
+                      <Tab.Content>
+                        <Tab.Pane eventKey="first">
+                          <UserForm
+                            setmaterialArrayData={setmaterialArrayData}
+                            setskillArrayData={setskillArrayData}
+                            onSubmit={onSubmit}
+                            formData={formData}
+                            skillformData={skillformData}
+                            handleSkillChange={handleSkillChange}
+                            skillArrayData={skillArrayData}
+                            materialArrayData={materialArrayData}
+                            handleChange={handleChange}
+                            handleSocialChange={handleSocialChange}
+                            socialformData={socialformData}
+                            SetAddress={SetAddress}
+                            getAddress={getAddress}
+                            items={items}
+                            skillList={skillList}
+                            skillFieldList={skillFieldList}
+                            materialList={materialList}
+                            Form={Form}
+                            Row={Row}
+                            Col={Col}
+                            addToast={addToast}
+                            FormGroup={FormGroup}
+                            Input={Input}
+                            Label={Label}
+                            Autocomplete={Autocomplete}
+                            setPhoto={setPhoto}
+                            CategoryList={CategoryList}
+                            material={material}
+                            onMaterialChange={onMaterialChange}
+                            onskillAdd={onskillAdd}
+                            onMaterialAdd={onMaterialAdd}
+                            address={address}
+                            ChipArray={ChipArray}
+                            SkillChipArray={SkillChipArray}
+                            isLoading={isLoading}
+                            useStyles={useStyles}
+                            CircularProgress={CircularProgress}
+                            //
+                            skillRequiredFields={skillRequiredFields}
+                            aboutRequiredFields={aboutRequiredFields}
+                            materialRequiredFields={materialRequiredFields}
+                            validateAvailability={validateAvailability}
+                            validateConfirmPassword={validateConfirmPassword}
+                            validateEmail={validateEmail}
+                            validatePassword={validatePassword}
+                            validatePhoneNumber={validatePhoneNumber}
+                            validateProfileDesc={validateProfileDesc}
+                            validateScore={validateScore}
+                            ValidateSkillField={ValidateSkillField}
+                            ValidateSkill={ValidateSkill}
+                            ValidateUsername={ValidateUsername}
+                            validateFirstName={validateFirstName}
+                            validateLastName={validateLastName}
+                            ValidateOtherSkill={ValidateOtherSkill}
+                            validateMaterial={validateMaterial}
+                            validateCity={validateCity}
+                            //
+                            otherSKill={otherSKill}
+                            setotherSkill={setotherSkill}
+                          />
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="second">
+                          {Object.keys(data) ? (
+                            <div>
+                              <UserTable
+                                data={data}
+                                addToast={addToast}
+                                materialList={materialList}
+                                skillFieldList={skillFieldList}
+                              />
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="third">
+                          {Object.keys(data) ? (
+                            <div>
+                              <InviteTable
+                                data={data}
+                                addToast={addToast}
+                                invitationData={invitationData}
+                                setinvitationData={setinvitationData}
+                              />
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="fourth">
+                          <ListOfInterests
+                            addToast={addToast}
+                            InterestList={InterestList}
+                            DeleteInterest={DeleteInterest}
+                            CategoryList={CategoryList}
 
-  return (
-    <div>
-      <Header data={notificationsData} />
-      <div id="services" className="cards-1">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <h2>User Dashboard</h2>
-              {/* <p class="p-heading p-large">We serve small and medium sized companies in all tech related industries with high quality growth services which are presented below</p> */}
-            </div>{" "}
-            <Container className="mt-4 text-left">
-              <Tab.Container
-                id="left-tabs-example"
-                defaultActiveKey="first"
-                activeKey={key}
-                onSelect={(k) => setKey(k)}
-              >
-                <Row>
-                  <Col sm={3}>
-                    <Nav variant="pills" className="flex-column">
-                      <Nav.Item>
-                        <Nav.Link eventKey="first">
-                          General information
-                        </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Nav.Link eventKey="second"> Projects </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Nav.Link eventKey="third"> Invite Requests </Nav.Link>
-                      </Nav.Item>
-                    </Nav>
-                  </Col>
-                  <Col sm={9}>
-                    <Tab.Content>
-                      <Tab.Pane eventKey="first">
-                        <UserForm
-                          setmaterialArrayData={setmaterialArrayData}
-                          setskillArrayData={setskillArrayData}
-                          onSubmit={onSubmit}
-                          formData={formData}
-                          skillformData={skillformData}
-                          handleSkillChange={handleSkillChange}
-                          skillArrayData={skillArrayData}
-                          materialArrayData={materialArrayData}
-                          handleChange={handleChange}
-                          SetAddress={SetAddress}
-                          getAddress={getAddress}
-                          items={items}
-                          skillList={skillList}
-                          skillFieldList={skillFieldList}
-                          materialList={materialList}
-                          Form={Form}
-                          Row={Row}
-                          Col={Col}
-                          addToast={addToast}
-                          FormGroup={FormGroup}
-                          Input={Input}
-                          Label={Label}
-                          Autocomplete={Autocomplete}
-                          setPhoto={setPhoto}
-                          CategoryList={CategoryList}
-                          material={material}
-                          onMaterialChange={onMaterialChange}
-                          onskillAdd={onskillAdd}
-                          onMaterialAdd={onMaterialAdd}
-                          address={address}
-                          ChipArray={ChipArray}
-                          SkillChipArray={SkillChipArray}
-                          isLoading={isLoading}
-                          useStyles={useStyles}
-                          CircularProgress={CircularProgress}
-                          //
-                          skillRequiredFields={skillRequiredFields}
-                          aboutRequiredFields={aboutRequiredFields}
-                          materialRequiredFields={materialRequiredFields}
-                          validateAvailability={validateAvailability}
-                          validateConfirmPassword={validateConfirmPassword}
-                          validateEmail={validateEmail}
-                          validatePassword={validatePassword}
-                          validatePhoneNumber={validatePhoneNumber}
-                          validateProfileDesc={validateProfileDesc}
-                          validateScore={validateScore}
-                          ValidateSkillField={ValidateSkillField}
-                          ValidateSkill={ValidateSkill}
-                          ValidateUsername={ValidateUsername}
-                          validateFirstName={validateFirstName}
-                          validateLastName={validateLastName}
-                          ValidateOtherSkill={ValidateOtherSkill}
-                          validateMaterial={validateMaterial}
-                          validateCity={validateCity}
-                          //
-                          otherSKill={otherSKill}
-                          setotherSkill={setotherSkill}
-                        />
-                      </Tab.Pane>
-                      <Tab.Pane eventKey="second">
-                        {Object.keys(data) ? (
-                          <div>
-                            <UserTable
-                              data={data}
-                              addToast={addToast}
-                              materialList={materialList}
-                              skillFieldList={skillFieldList}
-                            />
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                      </Tab.Pane>
-                      <Tab.Pane eventKey="third">
-                        {Object.keys(data) ? (
-                          <div>
-                            <InviteTable
-                              data={data}
-                              addToast={addToast}
-                              invitationData={invitationData}
-                              setinvitationData={setinvitationData}
-                            />
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                      </Tab.Pane>
-                    </Tab.Content>
-                  </Col>
-                </Row>
-              </Tab.Container>
-            </Container>
+                            // EditCategoryToggle={EditCategoryToggle}
+                          />
+                        </Tab.Pane>
+                      </Tab.Content>
+                    </Col>
+                  </Row>
+                </Tab.Container>
+              </Container>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return <LoadedClients />;
+  }
 }

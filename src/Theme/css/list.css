@@ -39,7 +39,27 @@ Colors:
 - Text headers, navbar links - black #393939
 - Text body - black #626262
 ******************************************/
-
+.css-2b097c-container {
+  position: relative;
+  box-sizing: border-box;
+  width: 10rem !important;
+  /* margin: 0 auto; */
+}
+::-webkit-input-placeholder {
+  opacity: 0.5;
+  color: grey;
+  font-size: 14px;
+}
+::-moz-placeholder {
+  opacity: 0.5;
+  color: grey;
+  font-size: 14px;
+}
+::-ms-input-placeholder {
+  opacity: 0.5;
+  color: grey;
+  font-size: 14px;
+}
 /******************************/
 /*     01. General Styles     */
 /******************************/
@@ -931,8 +951,8 @@ input[type="checkbox"] {
   /* padding-top: 2rem; */
 }
 #search2 {
-  justify-content: center;
-  margin-left: 6rem;
+  justify-content: flex-start;
+  margin-left: 0rem;
 }
 #search select {
   width: 260;
@@ -951,6 +971,9 @@ input[type="checkbox"] {
 
 .cardsList input {
   border-radius: 4px;
+
+  /* margin-left: 5rem; */
+  width: 110%;
   /* margin-left:5rem */
 }
 .cardsList select::-ms-expand {
@@ -996,7 +1019,7 @@ input[type="checkbox"] {
   margin-right: auto;
   /* margin-bottom: 4.5rem; */
   margin-left: auto;
-  padding: 3.25rem 2rem 2rem 2rem;
+  padding: 3.25rem 2rem 2rem 0rem;
   border: none;
   /* border-radius: 0.5rem; */
   background: transparent;
@@ -1008,7 +1031,7 @@ input[type="checkbox"] {
   object-fit: cover;
   margin-right: auto;
   margin-bottom: 0.5rem;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 
 .cardsList .card-title {
@@ -1803,13 +1826,32 @@ a:hover.back-to-top {
   padding: 1.625rem 1.5rem 0.75rem 2rem;
   background-color: #f9fafc;
 }
-
+.headerProject {
+  background-image: url("../images/a4fb4e178307efdf2e8bf41f5884d5573863183e.png");
+  background-size: cover;
+  height: 20rem;
+}
 /*****************************/
 /*     20. Media Queries     */
 /*****************************/
 /* Min-width width 768px */
 @media (min-width: 768px) {
   /* General Styles */
+  .headerProject {
+    background-image: url("../images/a4fb4e178307efdf2e8bf41f5884d5573863183e.png");
+    background-size: cover;
+    height: 20rem;
+  }
+  .navbar {
+    /* position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start !important;
+    padding: 0.5rem 1rem; */
+  }
+  .navbar-custom-home {
+    background: transparent !important;
+  }
   .p-heading {
     width: 85%;
     margin-right: auto;
@@ -1909,6 +1951,11 @@ a:hover.back-to-top {
     margin-right: auto;
     margin-left: auto;
   }
+  #search2 {
+    justify-content: flex-start;
+    margin-left: 0rem;
+  }
+
   /* end of extra pages */
 }
 /* end of min-width width 768px */
@@ -2244,7 +2291,7 @@ a:hover.back-to-top {
   .basic-2 .text-container {
     /* margin-top: 5.375rem; */
     margin-right: 1rem;
-    margin-left: 4rem;
+    margin-left: 0rem;
   }
   .basic-2 .text-container h2 {
     /* margin-top: 5.375rem; */
@@ -2340,21 +2387,32 @@ a:hover.back-to-top {
   /* end of extra pages */
 }
 /* end of min-width width 1200px */
-.cardsList #selectbox {
+/* .cardsList #selectbox {
   margin-left: -1.5rem;
-}
-.cardsList #selectbox2 {
+} */
+/* .cardsList #selectbox2 {
   margin-left: 1rem;
-}
-.cardsList #selectbox3 {
+} */
+/* .cardsList #selectbox3 {
   margin-left: 1rem;
-}
+} */
 .cardsList #selectbox3 .input-group {
   width: 90%;
 }
 .cardsList #card1 {
   margin-left: -1rem;
 }
+#mainselectBox {
+  justify-content: flex-start;
+  margin: 0 auto;
+}
+.selectBox {
+  margin-left: 4rem;
+}
+.selectbox3 {
+  margin-left: 4rem;
+}
+
 @media (min-width: 311px) and (max-width: 1024px) {
   .footer .footer-col.last {
     margin-right: 0;
@@ -2362,16 +2420,13 @@ a:hover.back-to-top {
     margin-top: 4.8rem;
   }
   #search2 {
-    justify-content: center;
+    justify-content: flex-start;
     margin-left: 0rem;
   }
   .cardsList #card1 {
     margin-left: 0rem;
   }
-  .cardsList #selectbox {
-    position: absolute;
-    margin-left: 0rem;
-  }
+
   #search {
     margin-left: 2rem;
   }
@@ -2380,13 +2435,47 @@ a:hover.back-to-top {
   }
   .cardsList #selectbox2 {
     /* margin-left: 4rem; */
-    position: absolute;
-    left: 15rem;
+    /* position: absolute;
+    left: 15rem; */
   }
   .cardsList #selectbox3 {
-    margin-left: 19rem;
+    /* margin-left: 19rem; */
   }
   .cardsList #selectbox3 form {
     width: 16rem;
+  }
+}
+@media (max-width: 413px) and (min-width: 374px) {
+  .selectbox {
+    margin-left: 0rem !important;
+    margin-top: 1rem !important;
+  }
+}
+@media (max-width: 425px) {
+  .cardsList .card-image {
+    width: 15rem !important;
+    height: 10rem;
+    object-fit: cover;
+    margin-right: auto;
+    margin-bottom: 0.5rem;
+    margin-left: 0px !important;
+  }
+  .selectBox {
+    margin-left: 3rem;
+  }
+  .selectbox3 {
+    margin-left: 0px !important;
+    margin-top: 1rem !important;
+  }
+}
+@media (max-width: 375px) {
+  .selectBox {
+    margin-left: 0.6rem;
+  }
+}
+@media (max-width: 320px) {
+  .selectBox {
+    margin-left: 0rem;
+    margin-top: 1rem;
   }
 }

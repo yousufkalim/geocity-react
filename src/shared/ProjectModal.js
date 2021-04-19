@@ -23,6 +23,7 @@ const ModalExample = (props) => {
     className,
     formData,
     handleChange,
+    addToast,
     onSubmit,
     isLoading,
     CategoryList,
@@ -79,14 +80,33 @@ const ModalExample = (props) => {
                   <Label for="examplePassword" className="row label">
                     General Photo
                   </Label>
+
                   <Input
                     type="file"
-                    name="general_photo"
+                    accept="image/x-png,image/gif,image/jpeg"
+                    name="profile_picture"
+                    id="profile_picture"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      console.log(file, "photo1");
-                      setProfilePreview(URL.createObjectURL(file));
-                      setPhoto(file);
+                      const type = e.target.files[0].type;
+                      if (
+                        type === "image/jpeg" ||
+                        type === "image/jpg" ||
+                        type === "image/png"
+                      ) {
+                        setPhoto(file);
+                        setProfilePreview(URL.createObjectURL(file));
+                      } else {
+                        addToast(`File should be png/jpg`, {
+                          appearance: "error",
+                          autoDismiss: true,
+                          autoDismissTimeout: 3000,
+                        });
+                        document.getElementById("profile_picture").value = "";
+
+                        setPhoto("");
+                      }
+                      // validatePhoto(file);
                     }}
                   />
                 </FormGroup>
@@ -97,7 +117,7 @@ const ModalExample = (props) => {
                       src={
                         profilePreview
                           ? profilePreview
-                          : `http://160.153.249.64:7002/views/uploads/${data.project.general_photo}`
+                          : `https://api.geocity.io/views/uploads/${data.project.general_photo}`
                       }
                       alt="alternative"
                     /> */}

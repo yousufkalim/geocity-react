@@ -144,7 +144,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/admin/create-category`,
+            `https://api.geocity.io/api/v1/admin/create-category`,
             { name: categoryData.category, color: categoryData.color },
             headers
           )
@@ -223,7 +223,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/admin/edit-category?id=${categoryId}`,
+            `https://api.geocity.io/api/v1/admin/edit-category?id=${categoryId}`,
             { name: editcategory, color: editcolor },
             headers
           )
@@ -292,7 +292,6 @@ export default function UserDashboard(props) {
   const AddMaterialSubmit = () => {
     setisLoading(true);
     const check = ValidateMaterial();
-
     if (check == true) {
       const headers = {
         headers: {
@@ -302,7 +301,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/admin/create-material`,
+            `https://api.geocity.io/api/v1/admin/create-material`,
             { name: material },
             headers
           )
@@ -379,7 +378,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://160.153.249.64:7002/api/v1/admin/edit-material?id=${materialId}`,
+            `https://api.geocity.io/api/v1/admin/edit-material?id=${materialId}`,
             { name: editmaterial },
             headers
           )
@@ -502,7 +501,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/admin/edit-skillField?id=${skillFieldId}`,
+          `https://api.geocity.io/api/v1/admin/edit-skillField?id=${skillFieldId}`,
           {
             skillField: editformData.skillField,
             skills: editformData.skill,
@@ -601,7 +600,7 @@ export default function UserDashboard(props) {
         try {
           axios
             .post(
-              `http://160.153.249.64:7002/api/v1/admin/create-skillField`,
+              `https://api.geocity.io/api/v1/admin/create-skillField`,
               { skillField: formData.skillField, skills: skillArrayData },
               headers
             )
@@ -903,13 +902,6 @@ export default function UserDashboard(props) {
         skill: msg,
       });
       return false;
-    } else if (formData.skill.length > 15) {
-      const msg = "Please enter max 10 character length skill";
-      setAboutRequiredFields({
-        ...aboutRequiredFields,
-        skill: msg,
-      });
-      return false;
     } else {
       const msg = "";
       setAboutRequiredFields({
@@ -931,7 +923,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .get(`http://160.153.249.64:7002/api/v1/auth/materialList`)
+        .get(`https://api.geocity.io/api/v1/auth/materialList`)
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -943,7 +935,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get(`http://160.153.249.64:7002/api/v1/auth/skillList`)
+        .get(`https://api.geocity.io/api/v1/auth/skillList`)
         .then((res) => {
           setskillFieldList(res.data.skills);
           console.log(res, "res skill");
@@ -954,7 +946,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get(`http://160.153.249.64:7002/api/v1/auth/categoryList`)
+        .get(`https://api.geocity.io/api/v1/auth/categoryList`)
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -966,7 +958,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get(`http://160.153.249.64:7002/api/v1/admin/userslist`, headers)
+        .get(`https://api.geocity.io/api/v1/admin/userslist`, headers)
         .then((res) => {
           const filter = res.data.users.filter(
             (dt) => dt.email !== "admin@admin.com"
@@ -984,7 +976,7 @@ export default function UserDashboard(props) {
     // fecth all projects
     try {
       axios
-        .get(`http://160.153.249.64:7002/api/v1/admin/projectslist`, headers)
+        .get(`https://api.geocity.io/api/v1/admin/projectslist`, headers)
         .then((res) => {
           setprojectData(res.data.projects);
           // console.log(res.data, "res data projects");
@@ -1017,7 +1009,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/admin/delete-user?id=${id}`,
+          `https://api.geocity.io/api/v1/admin/delete-user?id=${id}`,
           {},
           headers
         )
@@ -1074,7 +1066,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/admin//delete-project?id=${id}`,
+          `https://api.geocity.io/api/v1/admin//delete-project?id=${id}`,
           {},
           headers
         )
@@ -1129,7 +1121,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/admin/delete-material?id=${id}`,
+          `https://api.geocity.io/api/v1/admin/delete-material?id=${id}`,
           {},
           headers
         )
@@ -1184,7 +1176,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/admin/delete-skillField?id=${id}`,
+          `https://api.geocity.io/api/v1/admin/delete-skillField?id=${id}`,
           {},
           headers
         )
@@ -1239,7 +1231,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://160.153.249.64:7002/api/v1/admin/delete-category?id=${id}`,
+          `https://api.geocity.io/api/v1/admin/delete-category?id=${id}`,
           {},
           headers
         )
@@ -1390,7 +1382,7 @@ export default function UserDashboard(props) {
                     onClick={Addtoggle}
                     type="button"
                     id="modalButton1"
-                    className="btn btn-primary text-white  text-uppercase"
+                    className="btn btn-primary text-white  "
                   >
                     Add Skill
                   </button>
@@ -1399,7 +1391,7 @@ export default function UserDashboard(props) {
                     onClick={MaterialToggle}
                     type="button"
                     id="modalButton1"
-                    className="btn btn-primary text-white  text-uppercase"
+                    className="btn btn-primary text-white  "
                   >
                     Add Material
                   </button>
@@ -1408,7 +1400,7 @@ export default function UserDashboard(props) {
                     onClick={AddCategoryToggle}
                     type="button"
                     id="modalButton1"
-                    className="btn btn-primary text-white  text-uppercase"
+                    className="btn btn-primary text-white  "
                   >
                     Add Category
                   </button>

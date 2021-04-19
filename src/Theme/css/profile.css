@@ -846,6 +846,9 @@ textarea:focus {
   cursor: pointer;
   margin-right: 5px;
 }
+.projectsList {
+  max-width: 75%;
+}
 .cardSection #projectPage .project-image {
   width: 130px;
   height: 130px;
@@ -855,7 +858,7 @@ textarea:focus {
 }
 
 .cardSection #projectPage {
-  background: #fcfcfc;
+  background: #f7f7f7;
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
@@ -1769,7 +1772,16 @@ a:hover.back-to-top {
     margin-left: auto;
   }
   /* end of general styles */
-
+  .profileModify {
+    margin-right: 1rem;
+  }
+  .profileModify button {
+    font-size: 14px;
+    margin-top: 0.3rem;
+  }
+  .projectsList {
+    max-width: 65%;
+  }
   /* Header */
   .headerProfile .headerProfile-content {
     padding-top: 10.5rem;
@@ -1861,6 +1873,9 @@ a:hover.back-to-top {
     width: 90%;
     margin-right: auto;
     margin-left: auto;
+  }
+  .interetpour {
+    text-align: left !important;
   }
   /* end of extra pages */
 }
@@ -2002,8 +2017,11 @@ a:hover.back-to-top {
     margin-bottom: 0;
   }
   /* end of header */
-  .cardSection button {
+  /* .cardSection button {
     max-width: 45%;
+  } */
+  .profileModify {
+    margin-right: 1rem;
   }
 
   /* Services */
@@ -2299,4 +2317,51 @@ a:hover.back-to-top {
   }
   /* end of extra pages */
 }
+.interetpour {
+  margin-right: 3rem;
+}
+@media (max-width: 425px) {
+  .profileModify button {
+    font-size: 14px !important;
+    margin-top: 5px;
+  }
+  .interetpour {
+    text-align: left !important;
+  }
+  .viewmore {
+    justify-content: flex-start !important;
+    margin-top: 30px !important;
+  }
+  .commentUser {
+    margin-left: 3rem !important;
+  }
+}
+.viewmore {
+  display: flex;
+  background: #f7f7f7;
+  justify-content: flex-end;
+
+  padding-right: 23px;
+}
+.commentUser {
+  margin-left: 2rem;
+}
 /* end of min-width width 1200px */
+@media (max-width: 375px) {
+  .interetpour {
+    margin-right: 2rem;
+    text-align: left !important;
+  }
+}
+@media (max-width: 320px) {
+  .interetpour {
+    margin-right: 0rem;
+    text-align: left !important;
+  }
+  .project-image {
+    width: 109px !important;
+    height: 120px !important;
+    /* border: 5px solid #11ce70; */
+    margin-left: -1rem;
+  }
+}

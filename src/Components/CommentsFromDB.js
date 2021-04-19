@@ -22,7 +22,7 @@ export default function CommentsFromDB({
           src={
             comment.user
               ? comment.user.profile_picture
-                ? `http://160.153.249.64:7002/views/uploads/${comment.user.profile_picture}`
+                ? `https://api.geocity.io/views/uploads/${comment.user.profile_picture}`
                 : DefaultImage
               : DefaultImage
           }
@@ -34,13 +34,14 @@ export default function CommentsFromDB({
         onMouseOut={() => setShow(false)}
         style={{ width: "80%" }}
       >
-        <div style={{ marginLeft: "2rem" }}>
-          <h5>
+        <div className="commentUser">
+          <h5 style={{ fontWeight: "bold" }}>
             {comment.user.username}
+
             <small className="ml-4">
               {new Date(comment.createdAt).toString().split(" ")[2]}
               {"/"}
-              {new Date(comment.createdAt).getMonth()}
+              {new Date(comment.createdAt).getMonth() + 1}
               {"/"}
               {new Date(comment.createdAt).getFullYear()}
             </small>

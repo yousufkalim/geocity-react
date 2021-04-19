@@ -88,7 +88,11 @@ p {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   cursor: pointer;
-  color: grey;
+  /* color: grey; */
+}
+.navbar-dark .navbar-toggler {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 .p-small {
   /* font: 400 0.75rem/1.25rem Arial, Helvetica, sans-serif; */
@@ -743,9 +747,6 @@ input[type="checkbox"] {
 /*********************/
 /*    04. Header     */
 /*********************/
-.headerProject {
-  background-color: rgb(255, 255, 255);
-}
 
 .headerProject .headerProject-content {
   padding-top: 8rem;
@@ -1003,32 +1004,6 @@ textarea:focus {
 .cardsProject #iconRow {
   display: flex;
   justify-content: space-between;
-}
-#search2 #ImageSmall {
-  width: 25px;
-  height: 25px;
-  border-radius: 100%;
-}
-#search2 #iconRow #second {
-  margin-right: 0.5rem;
-}
-#search2 #iconRow #second #span2 {
-  font-size: 14px;
-}
-
-#search {
-  justify-content: center;
-}
-#search2 {
-  justify-content: flex-start;
-  margin-left: 6rem;
-}
-#search select {
-  width: 180px;
-  border-radius: 4px;
-}
-#search input {
-  border-radius: 4px;
 }
 
 .cardsProject input {
@@ -1907,6 +1882,17 @@ a:hover.back-to-top {
 /* Min-width width 768px */
 @media (min-width: 768px) {
   /* General Styles */
+  .cardsProject #userImage {
+    text-align: center !important;
+  }
+  .userImageSection {
+    text-align: center !important;
+  }
+  .cardsProject {
+    padding-top: 2rem;
+    padding-bottom: 1.625rem;
+    text-align: center;
+  }
   .p-heading {
     width: 85%;
     margin-right: auto;
@@ -2006,7 +1992,16 @@ a:hover.back-to-top {
     margin-right: auto;
     margin-left: auto;
   }
+  .mainstepSection h4 {
+    padding-top: 13px;
+  }
   /* end of extra pages */
+}
+.mainstepSection h4 {
+  padding-top: 10px;
+}
+.mainstepSection button {
+  margin-top: 7px;
 }
 /* end of min-width width 768px */
 @media (min-width: 1024) {
@@ -2349,7 +2344,7 @@ a:hover.back-to-top {
   .basic-2 .text-container {
     /* margin-top: 5.375rem; */
     margin-right: 1rem;
-    margin-left: 4rem;
+    margin-left: 0rem;
   }
   .basic-2 .text-container h2 {
     /* margin-top: 5.375rem; */
@@ -2483,7 +2478,7 @@ a:hover.back-to-top {
     margin-top: 1.5rem;
   }
   .cardsProject #userButton {
-    max-width: 20%;
+    max-width: 25%;
     margin-top: 2rem;
   }
   .cardsProject #modifyButton {
@@ -2503,4 +2498,98 @@ a:hover.back-to-top {
 
 .react-toast-notifications__toast {
   z-index: 9999 !important;
+}
+.projectSection1 {
+  background: #f7f7f7;
+  margin-left: 2rem;
+  padding-bottom: 0.1rem;
+}
+.projectSection1 .project-desc {
+  font-size: 16px;
+}
+.projectSection2 {
+  height: 15.2rem;
+  /* margin-right: 3rem; */
+}
+.projectSection2 .row {
+  margin-right: 3rem;
+}
+.projectSection2 button {
+  font-size: 14px;
+}
+.mainstepSection h4 {
+  font-weight: bold;
+  font-size: 18px;
+  color: #707070;
+}
+.cardsProject .btnProfileSection {
+  padding-top: 3.5rem;
+}
+@media (min-width: 236px) and (max-width: 1200px) {
+  .navbar {
+    padding: 1.125rem 5rem 0.2rem 5rem;
+  }
+  .navbar-custom-home {
+    padding: 1.125rem 5rem 0.2rem 5rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .projectSection1 {
+    background: #f7f7f7;
+    margin-left: 0rem !important;
+    padding-bottom: 0.1rem;
+  }
+  .projectSection2 {
+    height: 15.2rem;
+  }
+  .projectSection2 button {
+    font-size: 13px !important;
+  }
+  .userImageSection {
+    text-align: center !important;
+  }
+  .cardsProject #userDetail {
+    margin-left: 0rem !important;
+    margin-top: 1.5rem;
+  }
+  .cardsProject .btnProfileSection #ButtonUser {
+    font-size: 13px !important;
+  }
+
+  .cardsProject .btnProfileSection {
+    padding-top: 3.5rem;
+    margin-right: 1rem;
+  }
+  .mainstepSection h4 {
+    font-weight: bold;
+    font-size: 14px;
+    color: #707070;
+  }
+  .cardsProject #userImage {
+    text-align: center;
+  }
+  .mainstepSection h4 {
+    margin-top: 9px !important;
+  }
+  .collaborator {
+    margin-top: 21px !important;
+  }
+}
+.collaborator {
+  margin-top: 0px;
+}
+.buttonBox {
+  margin-right: 1rem;
+}
+.mainstepSection h4 {
+  margin-top: 0px;
+}
+@media (max-width: 320px) {
+  .cardsProject .btnProfileSection #ButtonUser {
+    font-size: 14px !important;
+  }
+  .projectSection1 {
+    padding-top: 10px;
+  }
 }

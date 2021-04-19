@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { SignOut, isAuthenticated, getUser } from "./Auth/Index";
-
+import {
+  SignOut,
+  isAuthenticated,
+  getUser,
+  getNotifications,
+} from "./Auth/Index";
+import Loader from "./shared/Loaders";
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,6 +23,7 @@ import Project from "./screens/Project";
 import SignUp from "./screens/SignUp";
 import PrivateRoute from "./Auth/PrivateRoute";
 import AdminRoute from "./Auth/AdminRoute";
+import HomeRoute from "./Auth/HomeRoute";
 
 import UserDashboard from "./screens/userDashboard";
 import AdminDashbaord from "./screens/AdminDashbaord";
@@ -34,62 +40,53 @@ import "./Theme/css/fontawesomeAll.css";
 import "./Theme/css/swiper.css";
 import "./Theme/css/magnific-popup.css";
 
-import { useToasts } from "react-toast-notifications";
-
 import axios from "axios";
-import io from "socket.io-client";
 export default function App() {
-  const { addToast } = useToasts();
-
   const [data, setdata] = useState([]);
   // console.log(this.state.notify_data, "notify_data");
-  useEffect(() => {
-    window.socket = io(
-      process.env.REACT_APP_SOCKET_URL || "http://localhost:3000",
-      {
-        query: `userConnectionId=${getUser()._id}`,
-      }
-    );
-    if (window.socket) {
-      window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
-        setdata([...data, datas]);
+  // console.log(data, "sort");
 
-        addToast(datas.title, {
-          appearance: "success",
-          autoDismiss: true,
-          autoDismissTimeout: 3000,
-        });
-      });
-    }
+  useEffect(() => {
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-    // console.log(headers, "asnlnkoasnas");
+    console.log(headers, "asnlnkoasnas");
+    // if (isAuthenticated()) {
+    //   const sort = getUser().notifications.sort(
+    //     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    //   );
+    //   setdata(sort);
+    // }
+    if (isAuthenticated()) {
+      try {
+        axios
+          .post(
+            `https://api.geocity.io/api/v1/profile/view-profile/all-notifications?id=${
+              getUser()._id
+            }`,
+            {},
+            headers
+          )
+          .then((res) => {
+            // settempCommentArray([...tempcommentArray, obj]);
+            const sort = res.data.notifications.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setdata(sort);
 
-    try {
-      axios
-        .post(
-          `http://160.153.249.64:7002/api/v1/profile/view-profile/all-notifications?id=${
-            getUser()._id
-          }`,
-          {},
-          headers
-        )
-        .then((res) => {
-          // settempCommentArray([...tempcommentArray, obj]);
-          setdata(res.data.notifications);
-
-          console.log(res.data, "res notifications data");
-        })
-        .catch((err) => {
-          console.log(" error projects all =>", err.response.data);
-        });
-    } catch (error) {
-      // console.log(error, "error catch");
+            console.log(res.data, "res notifications data");
+          })
+          .catch((err) => {
+            console.log(" error projects all =>", err.response.data);
+          });
+      } catch (error) {
+        // console.log(error, "error catch");
+      }
     }
   }, []);
+  // if (data && data.length > 0) {
   return (
     <Router>
       <div>
@@ -97,12 +94,34 @@ export default function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route
+            exact
             path="/reset/:id"
             render={(props) => <ResetPassword {...props} />}
           />
-          <PrivateRoute path="/profile/:id" component={Profile} exact />
-          <Route path="/ProjectList" component={List} exact />
-          <PrivateRoute path="/SingleProject/:id" component={Project} exact />
+          <PrivateRoute
+            path="/profile/:id"
+            exact
+            component={(props) => (
+              <Profile {...props} notificationsData={data} setdata={setdata} />
+            )}
+          />
+          {/* <PrivateRoute path="/profile/:id" component={Profile} exact /> */}
+          {/* <Route path="/ProjectList" component={List} exact /> */}
+          <Route
+            exact
+            path="/ProjectList"
+            component={(props) => (
+              <List {...props} notificationsData={data} setdata={setdata} />
+            )}
+          />
+          <PrivateRoute
+            path="/SingleProject/:id"
+            exact
+            component={(props) => (
+              <Project {...props} notificationsData={data} setdata={setdata} />
+            )}
+          />
+          {/* <PrivateRoute path="/SingleProject/:id" component={Project} exact /> */}
           <PrivateRoute path="/Createproject" exact component={CreateProject} />
 
           <AdminRoute
@@ -116,7 +135,11 @@ export default function App() {
             path="/userdashboard/:id"
             exact
             component={(props) => (
-              <UserDashboard {...props} notificationsData={data} />
+              <UserDashboard
+                {...props}
+                notificationsData={data}
+                setNotificationsData={setdata}
+              />
             )}
           />
           {/* <UserDashboard notificationsData={data} />
@@ -130,12 +153,19 @@ export default function App() {
           <Route path="/ForgotPassword" exact>
             <ForgotPassword />
           </Route>
-          <Route
+
+          <HomeRoute
             path="/"
-            render={(props) => <Home {...props} notificationsData={data} />}
+            exact
+            component={(props) => (
+              <Home {...props} setdata={setdata} data={data} />
+            )}
           />
         </Switch>
       </div>
     </Router>
   );
+  // } else {
+  //   return <Loader />;
+  // }
 }

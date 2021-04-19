@@ -14,26 +14,34 @@ export default function TableRow({
         <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
           {category.name}
         </td>
-        <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
-          {category.color}
-        </td>
-        <td style={{ padding: "0.4rem 0.4rem 0.3rem 0.4rem" }}>
-          <button
-            onClick={() => EditCategoryToggle(category._id)}
-            type="button"
-            id="modalButton1"
-            className="btn btn-primary text-white ml-4 text-uppercase"
+
+        <td>
+          <div
+            className="row"
+            style={{
+              display: "flex",
+              flexWrap: "nowrap",
+              marginRight: "0px",
+              marginLeft: "0px",
+            }}
           >
-            Edit
-          </button>
-          <button
-            onClick={() => DeleteCategory(category._id)}
-            type="button"
-            id="modalButton1"
-            className="btn btn-primary text-white ml-4 text-uppercase"
-          >
-            Delete
-          </button>
+            <button
+              onClick={() => EditCategoryToggle(category._id)}
+              type="button"
+              id="modalButton1"
+              className="btn btn-primary text-white ml-4 "
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => DeleteCategory(category._id)}
+              type="button"
+              id="modalButton1"
+              className="btn btn-primary text-white ml-4 "
+            >
+              Delete
+            </button>
+          </div>
         </td>
       </tr>
     </>
