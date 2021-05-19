@@ -195,7 +195,7 @@ export default function Project(props) {
       return obj;
     });
     if (stepArrayData.length >= 0) {
-      // debugger;
+      // ""
       if (!reqFields) {
         if (otherSKill !== "") {
           obj.skill = "";
@@ -574,7 +574,7 @@ export default function Project(props) {
       }
       return obj;
     });
-    // debugger;
+    // ""
     if (!reqFields) {
       setAboutRequiredFields(obj);
 
@@ -701,7 +701,7 @@ export default function Project(props) {
     if (material == "Other") {
       var materialcheck = ValidateOtherMaterial();
     }
-    // debugger;
+    // ""
 
     if (stepType !== "") {
       if (stepType === "Field") {
@@ -936,7 +936,7 @@ export default function Project(props) {
     setaddstepModal(!addstepmodal);
   };
   const Steptoggle = (id) => {
-    // debugger;
+    // ""
     if (stepmodal === false) {
       settempstepId(id);
       const stepIndex = data.project.implementation_steps.findIndex(
@@ -1086,7 +1086,7 @@ export default function Project(props) {
   // profile toggle
   // project Like
   const ProjectLike = (likedBy) => {
-    // debugger;
+    // ""
     // alert(like);
     if (!isAuthenticated()) {
       setRequest(true);
@@ -1096,7 +1096,7 @@ export default function Project(props) {
         autoDismissTimeout: 1000,
       });
     } else {
-      // debugger;
+      // ""
       if (likedBy.length > 0) {
         const fil = likedBy.indexOf(getUser()._id);
         if (fil == -1) {
@@ -1201,7 +1201,7 @@ export default function Project(props) {
     }
   };
   const ProjectunLike = () => {
-    // debugger;
+    // ""
     if (!isAuthenticated()) {
       setRequest(true);
       addToast("Please login", {
@@ -1367,7 +1367,7 @@ export default function Project(props) {
     if (material == "Other") {
       var materialcheck = ValidateOtherMaterial();
     }
-    // debugger;
+    // ""
 
     if (stepType !== "") {
       if (stepType === "Field") {
@@ -1394,7 +1394,7 @@ export default function Project(props) {
           return false;
         }
       });
-      // debugger;
+      // ""
       if (stepArrayData.length > 0) {
         const tempCheck = stepArrayData.find(
           (cont) => cont.name === stepformData.name
@@ -1501,7 +1501,7 @@ export default function Project(props) {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
       };
-      // debugger;
+      // ""
       if (
         Object.keys(stepformData).length > 0 &&
         stepformData.material === undefined &&

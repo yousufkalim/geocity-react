@@ -112,7 +112,7 @@ function List({ notificationsData, setdata }) {
   }, []);
   // useEffect end
   const validateCity = () => {
-    // debugger;
+    // ""
     if (address === "") {
       try {
         axios

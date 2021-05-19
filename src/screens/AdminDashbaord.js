@@ -7,7 +7,7 @@ import {
   editProfileData,
   signupstepData,
 } from "../shared/Data";
-import Header from "../Components/HomeHeader";
+import Header from "../Components/header";
 import axios from "axios";
 import ListOfUser from "../Components/ListOfUser";
 import ListOfProjects from "../Components/listOfProjects";

@@ -200,7 +200,7 @@ function CreateProject() {
   };
 
   const validateCity = () => {
-    // debugger;
+    // ""
     if (address === "") {
       let msg = "Required";
       setcityRequiredFields({ ...cityRequiredFields, city: msg });
@@ -350,7 +350,7 @@ function CreateProject() {
       }
       return obj;
     });
-    debugger;
+
     if (stepArrayData.length >= 0) {
       if (!reqFields || !vos) {
         setskillRequiredFields(obj);
@@ -558,7 +558,7 @@ function CreateProject() {
     setstepArrayData(ChipsArray);
   };
   const onAdd = () => {
-    // debugger;
+    // ""
     const stepCheck = checkValidateForm2();
 
     if (stepType !== "") {
@@ -594,7 +594,7 @@ function CreateProject() {
           return false;
         }
       });
-      // debugger;
+      // ""
       if (stepArrayData.length > 0) {
         const tempCheck = stepArrayData.find(
           (cont) => cont.name === stepformData.name

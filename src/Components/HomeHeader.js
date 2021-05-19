@@ -69,10 +69,14 @@ export default function HomeHeader({ data }) {
             ""
           )}
         </div>
-        <div className="row ml-1 mr-1">
-          {!isAuthenticated() ? "" : <NotificationMenu data={data} />}
+        <div className="row userHeader">
+          <div className="notify">
+            {!isAuthenticated() ? "" : <NotificationMenu data={data} />}
+          </div>
+          <div className="drop ml-2">
+            {!isAuthenticated() ? "" : <DropDown />}
+          </div>
         </div>
-        <div className="row ml-2">{!isAuthenticated() ? "" : <DropDown />}</div>
       </nav>{" "}
       <div className="header-content">
         <div className="container">
@@ -85,8 +89,8 @@ export default function HomeHeader({ data }) {
               />
             </div>
             <div className="col-lg-7">
-              <div className="text-container" style={{ textAlign: "right" }}>
-                <h2>
+              <div className="text-container">
+                <h2 className="h2-image-bottom">
                   <span className="turquoise">Vous avez un project ?</span>{" "}
                 </h2>
                 <h2>

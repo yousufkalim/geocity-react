@@ -231,7 +231,7 @@ function Signup() {
   };
 
   const validateScore = () => {
-    // debugger;
+    // ""
     // alert(skillformData.score);
     // console.log(skillformData.score);
     if (skillformData.score) {
@@ -249,7 +249,7 @@ function Signup() {
   };
 
   const validateCity = () => {
-    // debugger;
+    // ""
     if (address === "") {
       let msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
@@ -293,7 +293,7 @@ function Signup() {
     }
   };
   const validateConfirmPassword = () => {
-    // debugger;
+    // ""
     if (!formData.confirm_password.length) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, confirm_password: msg });
@@ -381,7 +381,7 @@ function Signup() {
   };
   const onMaterialAdd = () => {
     validateMaterial();
-    // debugger;
+    // ""
     if (materialArrayData.length > 0) {
       const tempCheck = materialArrayData.find((cont) => cont === material);
 
@@ -544,7 +544,7 @@ function Signup() {
         if (otherSKill !== "") {
           skillformData.skill = otherSKill;
         }
-        // debugger;
+        // ""
         const check = Object.values(skillformData).map((obj) => {
           if (obj !== "") {
             return true;
@@ -582,7 +582,7 @@ function Signup() {
         }
       }
     } else {
-      // debugger;
+      // ""
       const check = Object.values(skillformData).map((obj) => {
         if (obj !== "") {
           return true;
@@ -638,7 +638,7 @@ function Signup() {
         // console.log("res address", responseJson);
 
         var addressToSet = [];
-        // debugger;
+        // ""
         for (var i = 0; i < responseJson.features.length; i++) {
           addressToSet.push({
             id: i,

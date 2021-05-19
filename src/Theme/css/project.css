@@ -1721,6 +1721,9 @@ textarea:focus {
   padding-top: 4.625rem;
   padding-bottom: 0.5rem;
 }
+.footer .row {
+  align-items: flex-end;
+}
 
 .footer .footer-col {
   margin-bottom: 2.25rem;
@@ -1882,6 +1885,7 @@ a:hover.back-to-top {
 /* Min-width width 768px */
 @media (min-width: 768px) {
   /* General Styles */
+
   .cardsProject #userImage {
     text-align: center !important;
   }
@@ -2530,7 +2534,7 @@ a:hover.back-to-top {
     padding: 1.125rem 5rem 0.2rem 5rem;
   }
   .navbar-custom-home {
-    padding: 1.125rem 5rem 0.2rem 5rem;
+    padding: 1.125rem 5rem 0.2rem 1rem;
   }
 }
 

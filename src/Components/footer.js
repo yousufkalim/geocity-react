@@ -6,8 +6,8 @@ function footer() {
       <div className="footer">
         <div className="container">
           <div className="row">
-            <div className="col-md-4 col-lg-4">
-              <div className="footer-col">
+            <div className="col-md-4 col-lg-4 col-sm-4">
+              <div className="">
                 <h4>GEOCITY</h4>
                 <p>
                   We're passionate about offering some of the best business
@@ -16,8 +16,8 @@ function footer() {
               </div>
             </div>{" "}
             {/* end of col */}
-            <div className="col-md-6 col-lg-6">
-              <div className="footer-col middle">
+            <div className="col-md-6 col-lg-6 col-sm-6">
+              <div className=" middle">
                 {/* <h4>Important Links</h4> */}
                 <div className="row mt-1">
                   <ul className="list-unstyled li-space-lg">
@@ -79,7 +79,7 @@ function footer() {
             </div>{" "}
             {/* end of col */}
             <div className="col-md-2 col-lg-2">
-              <div className="footer-col last">
+              <div className="last">
                 {/* <h4>Social Media</h4> */}
                 <span className="fa-stack" style={{ marginRight: "0.7rem" }}>
                   <a href="#your-link">

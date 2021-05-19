@@ -153,7 +153,8 @@ export default function MenuListComposition({ data, setdata }) {
                   autoFocusItem={open}
                   id="menu-list-grow"
                   style={{
-                    backgroundColor: data.length > 0 ? "#f7f7f7" : "#fff",
+                    backgroundColor:
+                      data && data.length > 0 ? "#f7f7f7" : "#fff",
                     zIndex: 1,
                   }}
                   onKeyDown={handleListKeyDown}

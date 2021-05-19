@@ -234,7 +234,7 @@ export default function UserDashboard(props) {
         // setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
         // console.log("res address", responseJson);
         var addressToSet = [];
-        // debugger;
+        // ""
         for (var i = 0; i < responseJson.features.length; i++) {
           addressToSet.push({
             id: i,
@@ -263,7 +263,7 @@ export default function UserDashboard(props) {
     // this.setState({ address: item });
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
-        // debugger;
+        // ""
         var city = items[i].city;
         var zipCode = items[i].PostalCode;
         var lat = items[i].lat.toString();
@@ -434,7 +434,7 @@ export default function UserDashboard(props) {
   };
 
   const validateScore = () => {
-    // debugger;
+    // ""
     // alert(skillformData.score);
     // console.log(skillformData.score);
     if (!skillformData.score) {
@@ -449,7 +449,7 @@ export default function UserDashboard(props) {
   };
 
   const validateCity = () => {
-    // debugger;
+    // ""
     if (address === "") {
       let msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
@@ -493,7 +493,7 @@ export default function UserDashboard(props) {
     }
   };
   const validateConfirmPassword = () => {
-    // debugger;
+    // ""
     if (!formData.confirm_password.length) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, confirm_password: msg });
@@ -609,7 +609,7 @@ export default function UserDashboard(props) {
   // ***************
   const onMaterialAdd = () => {
     validateMaterial();
-    // debugger;
+    // ""
     if (materialArrayData.length > 0) {
       const tempCheck = materialArrayData.find((cont) => cont === material);
 
@@ -681,7 +681,7 @@ export default function UserDashboard(props) {
         if (otherSKill !== "") {
           skillformData.skill = otherSKill;
         }
-        // debugger;
+        // ""
         const check = Object.values(skillformData).map((obj) => {
           if (obj !== "") {
             return true;
@@ -719,7 +719,7 @@ export default function UserDashboard(props) {
         }
       }
     } else {
-      // debugger;
+      // ""
       const check = Object.values(skillformData).map((obj) => {
         if (obj !== "") {
           return true;
