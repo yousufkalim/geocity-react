@@ -18,7 +18,7 @@ import {
   editProfileData,
   signupstepData,
 } from "../shared/Data";
-import Header from "../Components/Header";
+import Header from "../Components/Header/header";
 import axios from "axios";
 import UserTable from "../shared/ProjectsTable";
 import InviteTable from "../shared/InviteTable";

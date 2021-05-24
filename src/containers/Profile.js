@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../Theme/css/profile.css";
-import Header from "../Components/Header";
+import Header from "../Components/Header/header";
 import Footer from "../Components/footer";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Axios from "axios";
