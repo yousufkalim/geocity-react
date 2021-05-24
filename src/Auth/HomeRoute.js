@@ -7,7 +7,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={(props) =>
-        localStorage.getItem("jwt") && getUser().email == "admin@admin.com" ? (
+        localStorage.getItem("jwt") && getUser().role == "admin" ? (
           <Redirect
             to={{
               pathname: `/Admindashboard/${getUser()._id}`,

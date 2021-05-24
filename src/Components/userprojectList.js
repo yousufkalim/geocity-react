@@ -39,7 +39,7 @@ export default function UserprojectList({
               src={
                 data.general_photo == "default.png"
                   ? DefaultImage
-                  : `https://api.geocity.io/views/uploads/${data.general_photo}`
+                  : `http://localhost:1190/views/uploads/${data.general_photo}`
               }
               alt="alternative"
             />

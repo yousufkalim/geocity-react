@@ -20,7 +20,7 @@ export default function UserprojectList({ i, DefaultImage, data }) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/take-decision?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/take-decision?id=${projectId}`,
           { decision: "Yes" },
           headers
         )
@@ -52,7 +52,7 @@ export default function UserprojectList({ i, DefaultImage, data }) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/take-decision?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/take-decision?id=${projectId}`,
           { decision: "No" },
           headers
         )

@@ -45,7 +45,7 @@ export default function UserTable(props) {
     try {
       axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/delete-contributing-user?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/delete-contributing-user?id=${projectId}`,
           { user_id: userId, step_Id: stepId },
           headers
         )

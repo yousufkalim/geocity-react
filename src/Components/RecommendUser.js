@@ -26,7 +26,7 @@ export default function RecommendUser({
   return (
     <>
       <p>
-        <small>{skill.skillField.skillField} - </small>
+        <small>{skill?.skillField?.skillField} - </small>
         <span style={{ fontWeight: "500" }}> {skill.skill}</span>
 
         {skill.specialization ? (

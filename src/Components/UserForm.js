@@ -54,7 +54,6 @@ export default function UserForm({
   validateProfileDesc,
   validateScore,
   ValidateSkillField,
-  ValidateUsername,
   validateFirstName,
   validateLastName,
   ValidateSkill,
@@ -113,27 +112,7 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        <Col md={6} sm={12} lg={4}>
-          <FormGroup>
-            <Label for="exampleEmail" className="row label">
-              User Name*{" "}
-              {aboutRequiredFields.username !== "" ? (
-                <p className="error"> {aboutRequiredFields.username}</p>
-              ) : (
-                ""
-              )}
-            </Label>
-            <Input
-              type="text"
-              name="username"
-              id="username"
-              value={formData.username}
-              placeholder="username"
-              onChange={handleChange}
-              onBlur={ValidateUsername}
-            />
-          </FormGroup>
-        </Col>
+        
         {/* <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail">Email*</Label>
@@ -564,7 +543,7 @@ export default function UserForm({
         ) : (
           ""
         )}
-        {skillArrayData.length < 3 ? (
+        {skillArrayData.length < 5 ? (
           <Col md={6} sm={12} lg={4} className="text-left">
             <button
               type="button"

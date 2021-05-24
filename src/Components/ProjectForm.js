@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { names } from "../shared/Data";
 import { useStyles } from "../Theme/styles";
-import StepCard from "../shared/StepCard";
+import StepCard from "../Components/UI/StepCard";
 function Form(props) {
   const {
     address,

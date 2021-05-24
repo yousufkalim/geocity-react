@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 
@@ -13,12 +13,24 @@ export default function ImpementationStep({
   DeleteStep,
   CircularProgress,
   useStyles,
+  paramID,
 }) {
   const [show, setShow] = useState(false);
   const [isShown, setisShown] = useState(false);
+  const [isSent, setisSent] = useState(false);
+
   const onShowInterest = (id) => {
     ShowInterest(id, setisShown);
   };
+  useEffect(() => {
+    if (getUser().interests && getUser().interests.length > 0) {
+      let isFill = getUser().interests.some(
+        (dt) => dt === `${paramID}`
+      );
+      setisSent(isFill)
+      console.log(isFill,paramID, "isFill");
+    }
+  }, []);
   return (
     <div
       className="row text-left"
@@ -60,7 +72,7 @@ export default function ImpementationStep({
                   color: "#707070",
                 }}
               >
-                {step.name}
+                {step.name.substring(0, 50)}
                 <p
                   style={{
                     marginLeft: "2rem",
@@ -156,7 +168,7 @@ export default function ImpementationStep({
                         fontSize: "12px",
                       }}
                     >
-                      {step.description}
+                      {step.description.substring(0,50)}
                     </span>
                   </p>
                 </p>
@@ -225,7 +237,7 @@ export default function ImpementationStep({
                         className="project-image-sm"
                         src={
                           cont.profile_picture
-                            ? `https://api.geocity.io/views/uploads/${cont.profile_picture}`
+                            ? `http://localhost:1190/views/uploads/${cont.profile_picture}`
                             : DefaultImage
                         }
                         alt="alternative"

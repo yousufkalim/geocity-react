@@ -30,7 +30,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -91,7 +91,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -151,7 +151,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -214,7 +214,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -276,7 +276,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -339,7 +339,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `https://api.geocity.io/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
+          `http://localhost:1190/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )

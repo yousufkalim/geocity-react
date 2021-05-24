@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 import { getUser } from "../Auth/Index";
-import PrivateModal from "../shared/PrivateModal";
+import PrivateModal from "../Components/UI/Modals/PrivateModal";
 import AutorenewIcon from "../Theme/images/geocity/Group 3.png";
 
 export default function ProjectList({
@@ -83,7 +83,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.project.general_photo
-                    ? `https://api.geocity.io/views/uploads/${data.project.general_photo}`
+                    ? `http://localhost:1190/views/uploads/${data.project.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -109,7 +109,7 @@ export default function ProjectList({
                   getUser()._id !== data.project.project_owner &&
                   privateFilter === false
                     ? "This project is private"
-                    : data.project.general_description}
+                    : data.project.general_description.substring(0,70)}
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   <span>
@@ -175,7 +175,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.general_photo
-                    ? `https://api.geocity.io/views/uploads/${data.general_photo}`
+                    ? `http://localhost:1190/views/uploads/${data.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -191,7 +191,7 @@ export default function ProjectList({
                       privateFilter === false
                         ? DefaultImage
                         : data.general_photo
-                        ? `https://api.geocity.io/views/uploads/${data.general_photo}`
+                        ? `http://localhost:1190/views/uploads/${data.general_photo}`
                         : DefaultImage
                     }
                     alt="alternative"
@@ -209,7 +209,7 @@ export default function ProjectList({
                   getUser()._id !== data.project_owner &&
                   privateFilter === false
                     ? "This Project is private"
-                    : data.general_description}
+                    : data.general_description.substring(0,70)}
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   {data.type === "Private" &&

@@ -22,7 +22,7 @@ export default function CommentsFromDB({
           src={
             comment.user
               ? comment.user.profile_picture
-                ? `https://api.geocity.io/views/uploads/${comment.user.profile_picture}`
+                ? `http://localhost:1190/views/uploads/${comment.user.profile_picture}`
                 : DefaultImage
               : DefaultImage
           }

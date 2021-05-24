@@ -15,7 +15,7 @@ export default function comments({
           className="com-image"
           src={
             comment.profile_picture
-              ? `https://api.geocity.io/views/uploads/${comment.profile_picture}`
+              ? `http://localhost:1190/views/uploads/${comment.profile_picture}`
               : DefaultImage
           }
           alt="alternative"
@@ -24,7 +24,7 @@ export default function comments({
       <div className="text-left" style={{ width: "75%" }}>
         <div style={{ marginLeft: "2rem" }}>
           <h5 style={{ fontWeight: "bold" }}>
-            {getUser() ? getUser().username : ""}
+            {getUser() ? getUser().firstName : ""}
             <small className="ml-2">
               {new Date(comment.date).toString().split(" ")[2]}
               {"/"}

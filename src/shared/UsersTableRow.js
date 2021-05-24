@@ -24,7 +24,7 @@ export default function TableRow({ data, DeleteUser }) {
               }}
               src={
                 data.profile_picture
-                  ? `https://api.geocity.io/views/uploads/${data.profile_picture}`
+                  ? `http://localhost:1190/views/uploads/${data.profile_picture}`
                   : DefaultImage
               }
               alt="alternative"

@@ -46,19 +46,22 @@ Colors:
   /* margin: 0 auto; */
 }
 ::-webkit-input-placeholder {
-  opacity: 0.5;
-  color: grey;
+  opacity: 0.6;
+  color: #000;
+  font-style: italic;
   font-size: 14px;
 }
 ::-moz-placeholder {
-  opacity: 0.5;
-  color: grey;
+  opacity: 0.6;
+  font-style: italic;
+  color: #000;
   font-size: 14px;
 }
 ::-ms-input-placeholder {
-  opacity: 0.5;
-  color: grey;
+  opacity: 0.6;
+  color: #000;
   font-size: 14px;
+  font-style: italic;
 }
 /******************************/
 /*     01. General Styles     */

@@ -81,7 +81,7 @@ export default function MenuListComposition() {
           src={
             getUser().profile_picture == "default.png"
               ? DefaultImage
-              : `https://api.geocity.io/views/uploads/${
+              : `http://localhost:1190/views/uploads/${
                   getUser().profile_picture
                 }`
           }
@@ -89,7 +89,7 @@ export default function MenuListComposition() {
         />
         <ul className="navbar-nav">
           <li className="nav-item row">
-            <a className="nav-link username">{getUser().username}</a>
+            <a className="nav-link username">{getUser().firstName}{" "}</a>
             <i
               class="fas fa-caret-down"
               style={{
@@ -123,7 +123,7 @@ export default function MenuListComposition() {
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
                 >
-                  {getUser().email === "admin@admin.com" ? (
+                  {getUser().role === "admin" ? (
                     <Link to={`/Admindashboard/${getUser()._id}`}>
                       <MenuItem onClick={handleClose}>Profile</MenuItem>
                     </Link>

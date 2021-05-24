@@ -82,7 +82,7 @@ export default function MenuListComposition({ data, setdata }) {
         try {
           axios
             .post(
-              `https://api.geocity.io/api/v1/profile/update-notifications?id=${notify._id}`,
+              `http://localhost:1190/api/v1/profile/update-notifications?id=${notify._id}`,
               { title: not.title, description: not.description },
               headers
             )

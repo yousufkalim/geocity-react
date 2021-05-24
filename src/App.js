@@ -12,22 +12,24 @@ import {
   Route,
   // Link
 } from "react-router-dom";
-import CreateProject from "./screens/CreateProject";
-import Home from "./screens/Home";
-import ForgotPassword from "./screens/ForgotPassword";
+import CreateProject from "./containers/CreateProject";
+import Home from "./containers/Home";
+import ForgotPassword from "./containers/ForgotPassword";
 
-import List from "./screens/ListOfProject";
-import Login from "./screens/Login";
-import Profile from "./screens/Profile";
-import Project from "./screens/Project";
-import SignUp from "./screens/SignUp";
+import List from "./containers/ListOfProject";
+import Login from "./containers/Login";
+import Profile from "./containers/Profile";
+import Project from "./containers/Project/index";
+import SignUp from "./containers/Signup";
 import PrivateRoute from "./Auth/PrivateRoute";
 import AdminRoute from "./Auth/AdminRoute";
 import HomeRoute from "./Auth/HomeRoute";
 
-import UserDashboard from "./screens/userDashboard";
-import AdminDashbaord from "./screens/AdminDashbaord";
-import ResetPassword from "./screens/ResetPassword";
+import UserDashboard from "./containers/userDashboard";
+import AdminDashbaord from "./containers/AdminDashbaord";
+import ResetPassword from "./containers/ResetPassword";
+import VerifyEmail from "./containers/emailVerify";
+
 
 import "./Theme/css/bootstrap.css";
 import "./Theme/css/styles.css";
@@ -62,7 +64,7 @@ export default function App() {
       try {
         axios
           .post(
-            `https://api.geocity.io/api/v1/profile/view-profile/all-notifications?id=${
+            `http://localhost:1190/api/v1/profile/view-profile/all-notifications?id=${
               getUser()._id
             }`,
             {},
@@ -96,6 +98,11 @@ export default function App() {
             exact
             path="/reset/:id"
             render={(props) => <ResetPassword {...props} />}
+          />
+          <Route
+            exact
+            path="/verifyEmail/:token"
+            render={(props) => <VerifyEmail {...props} />}
           />
           <PrivateRoute
             path="/profile/:id"

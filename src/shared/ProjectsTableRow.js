@@ -24,7 +24,7 @@ export default function TableRow({ project, DeleteProject, step }) {
               }}
               src={
                 project.general_photo
-                  ? `https://api.geocity.io/views/uploads/${project.general_photo}`
+                  ? `http://localhost:1190/views/uploads/${project.general_photo}`
                   : DefaultImage
               }
               alt="alternative"
