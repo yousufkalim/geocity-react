@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import "../Theme/css/main.css";
-import { useStyles } from "../Theme/styles";
+import "../../Components/UI/Theme/css/main.css";
+import { useStyles } from "../../Components/UI/Theme/styles";
 import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { useToasts } from "react-toast-notifications";
-import { loginData } from "../shared/Data";
+import { loginData } from "../../shared/Data";
 import { Link } from "react-router-dom";
 function Login(props) {
   const { addToast } = useToasts();

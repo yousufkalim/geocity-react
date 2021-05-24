@@ -1,39 +1,39 @@
 import React, { useEffect, useState } from "react";
-import "../Theme/css/profile.css";
-import Header from "../Components/Header/header";
-import Footer from "../Components/footer";
+import "../../Components/UI/Theme/css/profile.css";
+import Header from "../../Components/Header/header";
+import Footer from "../../Components/footer";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Axios from "axios";
-import { useStyles } from "../Theme/styles";
+import { useStyles } from "../../Components/UI/Theme/styles";
 import Button from "@material-ui/core/Button";
-import ChipArray from "../Components/UI/MaterialChip";
+import ChipArray from "../../Components/UI/MaterialChip";
 import axios from "axios";
-import { getUser, SignOut } from "../Auth/Index";
+import { getUser, SignOut } from "../../Auth/Index";
 import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
-import UserProjectList from "../Components/userprojectList";
+import UserProjectList from "../../Components/userprojectList";
 
-import LikeUser from "../Components/RecommendUser";
-import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.jpg";
-import DefaultuserImage from "../Theme/images/men.png";
+import LikeUser from "../../Components/RecommendUser";
+import DefaultImage from "../../Components/UI/Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.jpg";
+import DefaultuserImage from "../../Components/UI/Theme/images/men.png";
 
 import { UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 
-import facebook from "../Theme/images/facebook.png";
-import Image32 from "../Theme/images/geocity/Image 32.png";
-import Image46 from "../Theme/images/geocity/Image 46.png";
-import Image47 from "../Theme/images/geocity/Image 47.png";
-import Image48 from "../Theme/images/geocity/time.png";
+import facebook from "../../Components/UI/Theme/images/facebook.png";
+import Image32 from "../../Components/UI/Theme/images/geocity/Image 32.png";
+import Image46 from "../../Components/UI/Theme/images/geocity/Image 46.png";
+import Image47 from "../../Components/UI/Theme/images/geocity/Image 47.png";
+import Image48 from "../../Components/UI/Theme/images/geocity/time.png";
 
 
-import instagram from "../Theme/images/instagram.png";
-import youtube from "../Theme/images/youtube.png";
+import instagram from "../../Components/UI/Theme/images/instagram.png";
+import youtube from "../../Components/UI/Theme/images/youtube.png";
 import { useToasts } from "react-toast-notifications";
-import Notifications from "../Components/Notifications";
-import CommentsFromDB from "../Components/CommentsFromDB";
-import Comments from "../Components/Comments";
-import LoadedClients from "../shared/Loaders";
+import Notifications from "../../Components/Notifications";
+import CommentsFromDB from "../../Components/CommentsFromDB";
+import Comments from "../../Components/Comments";
+import LoadedClients from "../../shared/Loaders";
 import io from "socket.io-client";
 
 export default function Profile(props) {

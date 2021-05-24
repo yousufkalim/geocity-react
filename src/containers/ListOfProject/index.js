@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-// import "../Theme/css/list.css";
+// import "../../Components/UI/Theme/css/list.css";
 import axios from "axios";
-import Header from "../Components/Header/header";
-import Footer from "../Components/footer";
+import Header from "../../Components/Header/header";
+import Footer from "../../Components/footer";
 import Autocomplete from "react-autocomplete";
-import ProjectList from "../Components/projectList";
-import DefaultImage from "../Theme/images/index2.png";
-import { isAuthenticated, getUser } from "../Auth/Index";
+import ProjectList from "../../Components/projectList";
+import DefaultImage from "../../Components/UI/Theme/images/index2.png";
+import { isAuthenticated, getUser } from "../../Auth/Index";
 import { Redirect, withRouter } from "react-router-dom";
-import SelectBox from "../shared/select";
+import SelectBox from "../../shared/select";
 import { useToasts } from "react-toast-notifications";
-import Loaders from "../shared/Loaders";
-import AutoComplete from "../Components/SearchAutoComplete";
-import { projectaboutRequired } from "../shared/Data";
+import Loaders from "../../shared/Loaders";
+import AutoComplete from "../../Components/SearchAutoComplete";
+import { projectaboutRequired } from "../../shared/Data";
 import io from "socket.io-client";
 
 function List({ notificationsData, setdata }) {

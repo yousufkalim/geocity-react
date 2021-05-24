@@ -2,29 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Nav, Row, Col, Tab, Container } from "react-bootstrap";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { useStyles } from "../Theme/styles";
+import { useStyles } from "../../Components/UI/Theme/styles";
 import Autocomplete from "react-autocomplete";
-import ChipArray from "../Components/UI/MaterialChip";
-import SkillChipArray from "../Components/UI/SkillChipCard";
+import ChipArray from "../../Components/UI/MaterialChip";
+import SkillChipArray from "../../Components/UI/SkillChipCard";
 import { useToasts } from "react-toast-notifications";
-import { getUser, SignOut } from "../Auth/Index";
-import ListOfInterests from "../Components/ListOfInterests";
-import AddInterestModal from "../Components/UI/Modals/AddInterestModal";
-import LoadedClients from "../shared/Loaders";
-
+import { getUser, SignOut } from "../../Auth/Index";
+import ListOfInterests from "../../Components/ListOfInterests";
+import AddInterestModal from "../../Components/UI/Modals/AddInterestModal";
+import LoadedClients from "../../shared/Loaders";
 import {
   signupskillRequired,
   editProfileRequired,
   editProfileData,
   signupstepData,
-} from "../shared/Data";
-import Header from "../Components/Header/header";
+} from "../../shared/Data";
+import Header from "../../Components/Header/header";
 import axios from "axios";
-import UserTable from "../shared/ProjectsTable";
-import InviteTable from "../shared/InviteTable";
-import DropDown from "../shared/DropdownMenu";
-import NotificationMenu from "../shared/NotificationMenu";
-import UserForm from "../Components/UserForm";
+import UserTable from "../../shared/ProjectsTable";
+import InviteTable from "../../shared/InviteTable";
+import DropDown from "../../shared/DropdownMenu";
+import NotificationMenu from "../../shared/NotificationMenu";
+import UserForm from "../../Components/UserForm";
 import { useHistory, useParams } from "react-router-dom";
 
 export default function UserDashboard(props) {

@@ -12,23 +12,23 @@ import {
   Route,
   // Link
 } from "react-router-dom";
-import CreateProject from "./containers/CreateProject";
-import Home from "./containers/Home";
-import ForgotPassword from "./containers/ForgotPassword";
+import CreateProject from "./containers/CreateProject/index";
+import Home from "./containers/Home/index";
+import ForgotPassword from "./containers/ForgotPassword/index";
 
-import List from "./containers/ListOfProject";
-import Login from "./containers/Login";
-import Profile from "./containers/Profile";
+import List from "./containers/ListOfProject/index";
+import Login from "./containers/Login/index";
+import Profile from "./containers/Profile/index";
 import Project from "./containers/Project/index";
-import SignUp from "./containers/Signup";
+import SignUp from "./containers/Signup/index";
 import PrivateRoute from "./Auth/PrivateRoute";
 import AdminRoute from "./Auth/AdminRoute";
 import HomeRoute from "./Auth/HomeRoute";
 
-import UserDashboard from "./containers/userDashboard";
-import AdminDashbaord from "./containers/AdminDashbaord";
-import ResetPassword from "./containers/ResetPassword";
-import VerifyEmail from "./containers/emailVerify";
+import UserDashboard from "./containers/UserDashboard/index";
+import AdminDashbaord from "./containers/AdminDashboard/index";
+import ResetPassword from "./containers/ResetPassword/index";
+import VerifyEmail from "./containers/EmailVerify/index";
 
 
 import "./Theme/css/bootstrap.css";

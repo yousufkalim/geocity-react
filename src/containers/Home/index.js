@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-// import "../Theme/css/styles.css";
-import Footer from "../Components/footer";
-import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
+// import "../../Components/UI/Theme/css/styles.css";
+import Footer from "../../Components/footer";
+import { SignOut, isAuthenticated, getUser } from "../../Auth/Index";
 import { Link } from "react-router-dom";
-import lightbulb from "../Theme/images/light-bulb.svg";
-import deal from "../Theme/images/deal.svg";
-import rocket from "../Theme/images/rocket.svg";
-import magnifier from "../Theme/images/magnifier.svg";
-import paperPlane from "../Theme/images/paper-plane.svg";
-import target from "../Theme/images/target.svg";
-import Header from "../Components/HomeHeader";
-import projectImage from "../Theme/images/projectImage.png";
-import avatarimage from "../Theme/images/avatar.png";
-import ProjectList from "../Components/projectList";
+import lightbulb from "../../Components/UI/Theme/images/light-bulb.svg";
+import deal from "../../Components/UI/Theme/images/deal.svg";
+import rocket from "../../Components/UI/Theme/images/rocket.svg";
+import magnifier from "../../Components/UI/Theme/images/magnifier.svg";
+import paperPlane from "../../Components/UI/Theme/images/paper-plane.svg";
+import target from "../../Components/UI/Theme/images/target.svg";
+import Header from "../../Components/HomeHeader";
+import projectImage from "../../Components/UI/Theme/images/projectImage.png";
+import avatarimage from "../../Components/UI/Theme/images/avatar.png";
+import ProjectList from "../../Components/projectList";
 import axios from "axios";
-import Loaders from "../shared/Loaders";
-import DefaultImage from "../Theme/images/index2.png";
+import Loaders from "../../shared/Loaders";
+import DefaultImage from "../../Components/UI/Theme/images/index2.png";
 export default function Home({ notificationsData }) {
   const [projectData, setProjectData] = useState("");
 

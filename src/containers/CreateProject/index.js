@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../Theme/css/main.css";
+import "../../Components/UI/Theme/css/main.css";
 import axios from "axios";
-import Form from "../Components/ProjectForm";
+import Form from "../../Components/ProjectForm";
 import { useToasts } from "react-toast-notifications";
 import {
   projectData,
@@ -12,7 +12,7 @@ import {
   projectstepRequired,
   projectskillRequired,
   cityaboutRequired,
-} from "../shared/Data";
+} from "../../shared/Data";
 import { useHistory, useParams } from "react-router-dom";
 
 function CreateProject() {

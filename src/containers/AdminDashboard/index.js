@@ -6,24 +6,24 @@ import {
   editProfileRequired,
   editProfileData,
   signupstepData,
-} from "../shared/Data";
-import Header from "../Components/header";
+} from "../../shared/Data";
+import Header from "../../Components/header";
 import axios from "axios";
-import ListOfUser from "../Components/ListOfUser";
-import ListOfProjects from "../Components/listOfProjects";
-import ListOfSkills from "../Components/listOfSkills";
-import ListOfMaterials from "../Components/ListOfMaterials";
-import ListOfCategories from "../Components/ListOfCategories";
+import ListOfUser from "../../Components/ListOfUser";
+import ListOfProjects from "../../Components/listOfProjects";
+import ListOfSkills from "../../Components/listOfSkills";
+import ListOfMaterials from "../../Components/ListOfMaterials";
+import ListOfCategories from "../../Components/ListOfCategories";
 
-import EditSkillModal from "../Components/UI/Modals/EditSkillModal";
-import EditMaterialModal from "../Components/UI/Modals/EditMaterialModal";
-import EditCategoryModal from "../Components/UI/Modals/EditCategoryModal";
-import AddCategoryModal from "../Components/UI/Modals/AddCategoryModal";
+import EditSkillModal from "../../Components/UI/Modals/EditSkillModal";
+import EditMaterialModal from "../../Components/UI/Modals/EditMaterialModal";
+import EditCategoryModal from "../../Components/UI/Modals/EditCategoryModal";
+import AddCategoryModal from "../../Components/UI/Modals/AddCategoryModal";
 
-import AddSKillModal from "../Components/UI/Modals/AddSKillModal";
-import AddMaterialModal from "../Components/UI/Modals/AddMaterialModal";
-import DropDown from "../shared/DropdownMenu";
-import NotificationMenu from "../shared/NotificationMenu";
+import AddSKillModal from "../../Components/UI/Modals/AddSKillModal";
+import AddMaterialModal from "../../Components/UI/Modals/AddMaterialModal";
+import DropDown from "../../shared/DropdownMenu";
+import NotificationMenu from "../../shared/NotificationMenu";
 export default function UserDashboard(props) {
   const { addToast } = useToasts();
   const { notificationsData } = props;

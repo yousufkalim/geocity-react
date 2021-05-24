@@ -1,31 +1,26 @@
 import React, { useState } from "react";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import "../Theme/css/main.css";
-import { useStyles } from "../Theme/styles";
+import "../../Components/UI/Theme/css/main.css";
+import { useStyles } from "../../Components/UI/Theme/styles";
 import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
-
 import { useToasts } from "react-toast-notifications";
-import { loginData } from "../shared/Data";
+import { loginData } from "../../shared/Data";
 import { Link } from "react-router-dom";
-function Login(props) {
+function Login() {
   const { addToast } = useToasts();
   // single states
   const [isLoading, setisLoading] = useState(false);
   const [isSuccess, setisSuccess] = useState(false);
-  const [isAdminSuccess, setisAdminSuccess] = useState(false);
-
-  const [formData, setFormData] = useState(loginData);
+  const [formData, setFormData] = useState({ email: "" });
   const [type, setType] = useState("password");
 
   // ********
   // Required Fields states
   const [aboutRequiredFields, setAboutRequiredFields] = useState({
     email: "",
-    password: "",
   });
 
   // validation start ******************
@@ -47,22 +42,7 @@ function Login(props) {
       return true;
     }
   };
-  const validatePassword = () => {
-    if (!formData.password.length) {
-      const msg = "Required";
-      setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
-      return false;
-    } else if (formData.password.length < 6) {
-      const msg = "Passowrd needs to be at least 6 characters";
-      setAboutRequiredFields({ ...aboutRequiredFields, password: msg });
 
-      return false;
-    } else {
-      setAboutRequiredFields({ ...aboutRequiredFields, password: "" });
-      setFormData({ ...formData, password: formData.password });
-      return true;
-    }
-  };
   const checkValidateForm = () => {
     let obj = {};
     let reqFields = true;
@@ -96,35 +76,28 @@ function Login(props) {
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
-    const check = checkValidateForm();
-    if (check == true) {
+    const check = validateEmail();
+    if (check === true) {
       try {
         axios
-          .post("http://localhost:1190/api/v1/auth/login", formData)
+          .post(
+            "http://localhost:1190/api/v1/profile/request-forget-password",
+            {
+              email: formData.email,
+            }
+          )
           .then((res) => {
             setisLoading(false);
-            // console.log(res, "res user");
-            localStorage.setItem("jwt", res.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
 
             setFormData(loginData);
-
-            addToast(`Login Successfully`, {
+            setisSuccess(true);
+            addToast(`Request Sent Successfully,Check your email`, {
               appearance: "success",
               autoDismiss: true,
               autoDismissTimeout: 3000,
             });
-            if (formData.email === "admin@admin.com") {
-              setisAdminSuccess(true);
-            } else {
-              setisSuccess(true);
-            }
           })
           .catch((err) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-
             if (err.response.data) {
               if (err.response.data.message) {
                 addToast(`${err.response.data.message}`, {
@@ -140,6 +113,9 @@ function Login(props) {
                 });
               }
             }
+            setTimeout(() => {
+              setisLoading(false);
+            }, 1000);
 
             // console.log(" error =>", err);
           });
@@ -166,16 +142,14 @@ function Login(props) {
   };
   // handle actions end ***************
   if (isSuccess === true) {
-    return <Redirect to="/" />;
-  } else if (isAdminSuccess === true) {
-    return <Redirect to={`/Admindashboard/${getUser()._id}`} />;
+    return <Redirect to="/Login" />;
   } else {
     return (
       <div className="main">
         <div className="Logincontainer">
           <div>
             <Link to="/">
-              <p className="p-4 ">
+              <p className="pl-4 pt-2 ">
                 <i
                   class="fa fa-arrow-left"
                   aria-hidden="true"
@@ -189,7 +163,7 @@ function Login(props) {
             </Link>
           </div>
           <form method="POST" className="appointmentform" id="appointment-form">
-            <h2>Login Form</h2>
+            <h2>Forgot Password</h2>
             <div className="form-group-1">
               <label className="label-agree-term row">
                 Email*{" "}
@@ -209,53 +183,6 @@ function Login(props) {
                 onBlur={validateEmail}
                 onChange={handleChange}
               />
-
-              <label className="label-agree-term row">
-                Password*
-                {aboutRequiredFields.password !== "" ? (
-                  <p className="error"> {aboutRequiredFields.password}</p>
-                ) : (
-                  ""
-                )}
-              </label>
-              <div style={{ display: "flex" }}>
-                <input
-                  type={type}
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  onBlur={validatePassword}
-                  onChange={handleChange}
-                  value={formData.password}
-                />
-                {type === "password" ? (
-                  <i
-                    onClick={showHide}
-                    class="fas fa-eye"
-                    style={{
-                      color: "#000",
-                      fontSize: "15px",
-                      position: "absolute",
-                      left: "20rem",
-                      right: 0,
-                      top: "19.3rem",
-                    }}
-                  ></i>
-                ) : (
-                  <i
-                    onClick={showHide}
-                    class="fas fa-eye-slash"
-                    style={{
-                      color: "#000",
-                      fontSize: "15px",
-                      position: "absolute",
-                      left: "20rem",
-                      right: 0,
-                      top: "19.3rem",
-                    }}
-                  ></i>
-                )}
-              </div>
             </div>
 
             <div className="form-submit ">
@@ -272,28 +199,10 @@ function Login(props) {
                   name="add"
                   className="submit"
                 >
-                  Login
+                  Submit
                 </Button>
               )}
             </div>
-            <p className="text-left ml-1 mt-3">
-              <span style={{ opacity: 0.5 }}> Not registered? </span>
-              <Link to="/SignUp">
-                <span
-                  style={{ fontSize: "15px", color: "#77b5dd" }}
-                  id="register"
-                >
-                  Create an account
-                </span>
-              </Link>
-            </p>
-            <p className="text-left ml-1 mt-2">
-              <Link to={`/ForgotPassword`}>
-                <span id="register" style={{ color: "#77b5dd" }}>
-                  Forgot password?
-                </span>
-              </Link>
-            </p>
           </form>
         </div>
       </div>
