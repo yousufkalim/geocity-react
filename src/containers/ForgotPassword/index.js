@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {url} from '../../urlConfig' 
+
 import CircularProgress from "@material-ui/core/CircularProgress";
 import "../../Components/UI/Theme/css/main.css";
 import { useStyles } from "../../Components/UI/Theme/styles";
@@ -9,6 +11,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { useToasts } from "react-toast-notifications";
 import { loginData } from "../../shared/Data";
 import { Link } from "react-router-dom";
+
 function Login() {
   const { addToast } = useToasts();
   // single states
@@ -81,7 +84,7 @@ function Login() {
       try {
         axios
           .post(
-            "http://localhost:1190/api/v1/profile/request-forget-password",
+            `${url}/api/v1/profile/request-forget-password`,
             {
               email: formData.email,
             }

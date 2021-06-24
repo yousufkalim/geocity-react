@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "../../Components/Header/header";
 import Footer from "../../Components/footer";
 import Autocomplete from "react-autocomplete";
-import ProjectList from "../../Components/projectList";
+import ProjectList from "./components/projectList";
 import DefaultImage from "../../Components/UI/Theme/images/index2.png";
 import { isAuthenticated, getUser } from "../../Auth/Index";
 import { Redirect, withRouter } from "react-router-dom";
@@ -14,16 +14,14 @@ import Loaders from "../../shared/Loaders";
 import AutoComplete from "../../Components/SearchAutoComplete";
 import { projectaboutRequired } from "../../shared/Data";
 import io from "socket.io-client";
+import { url } from "../../urlConfig";
 
 function List({ notificationsData, setdata }) {
   const { addToast } = useToasts();
   useEffect(() => {
-    window.socket = io(
-      process.env.REACT_APP_SOCKET_URL || "http://160.153.249.64:7002",
-      {
-        query: `userConnectionId=${getUser()._id}`,
-      }
-    );
+    window.socket = io(process.env.REACT_APP_SOCKET_URL || url, {
+      query: `userConnectionId=${getUser()._id}`,
+    });
     if (window.socket) {
       window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
         setdata([...notificationsData, datas]);
@@ -57,9 +55,8 @@ function List({ notificationsData, setdata }) {
   const [request, setRequest] = useState(false);
   const [filter, setFilter] = useState(false);
   const [address, setAddress] = useState("");
-  const [aboutRequiredFields, setAboutRequiredFields] = useState(
-    projectaboutRequired
-  );
+  const [aboutRequiredFields, setAboutRequiredFields] =
+    useState(projectaboutRequired);
   // single states end
 
   // useEffect ************************
@@ -71,7 +68,7 @@ function List({ notificationsData, setdata }) {
     };
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/skillList")
+        .get(`${url}/api/v1/auth/skillList`)
         .then((res) => {
           const array = [...res.data.skills];
           const tempArray = array.filter((ft) => ft.isDeleted == false);
@@ -86,7 +83,7 @@ function List({ notificationsData, setdata }) {
     } catch (error) {}
     try {
       axios
-        .get("http://localhost:1190/api/v1/admin/categoryList", headers)
+        .get(`${url}/api/v1/admin/categoryList`, headers)
         .then((res) => {
           const array = [...res.data.categories];
           const tempArray = array.filter((ft) => ft.isDeleted == false);
@@ -100,7 +97,7 @@ function List({ notificationsData, setdata }) {
     } catch (error) {}
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/projectList")
+        .get(`${url}/api/v1/auth/projectList`)
         .then((res) => {
           setProjectData(res.data.projects);
           console.log(res, "response project");
@@ -116,7 +113,7 @@ function List({ notificationsData, setdata }) {
     if (address === "") {
       try {
         axios
-          .get("http://localhost:1190/api/v1/auth/projectList")
+          .get(`${url}/api/v1/auth/projectList`)
           .then((res) => {
             setProjectData(res.data.projects);
             console.log(res, "response project");
@@ -134,7 +131,7 @@ function List({ notificationsData, setdata }) {
     }
   };
   // request for view ***********************
-  const RequestToView = (id) => {
+  const RequestToView = async (id) => {
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -149,38 +146,24 @@ function List({ notificationsData, setdata }) {
       });
     } else {
       try {
-        axios
-          .post(
-            `http://localhost:1190/api/v1/project/view-project/send-request?id=${id}`,
-            {},
-            headers
-          )
-          .then((res) => {
-            addToast("You have successfully Send Request to View Project ", {
-              appearance: "success",
-              autoDismiss: true,
-              autoDismissTimeout: 1000,
-            });
-          })
-          .catch((err) => {
-            if (err.response.data) {
-              if (err.response.data.message) {
-                addToast(`${err.response.data.message}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 1000,
-                });
-              } else {
-                addToast(`${err.response.data}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 1000,
-                });
-              }
-            }
+        let response = await axios.post(
+          `${url}/api/v1/project/view-project/send-request?id=${id}`,
+          {},
+          headers
+        );
+        addToast(response.data.message, {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 1000,
+        });
+      } catch (err) {
+        if (err.response.data) {
+          addToast(`${err.response.data.message}`, {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 1000,
           });
-      } catch (error) {
-        console.log(" error request =>", error);
+        }
       }
     }
   };
@@ -202,7 +185,7 @@ function List({ notificationsData, setdata }) {
       try {
         axios
           .post(
-            "http://localhost:1190/api/v1/project/search/category",
+            `${url}/api/v1/project/search/category`,
             { category: e.value },
             headers
           )
@@ -240,7 +223,7 @@ function List({ notificationsData, setdata }) {
       try {
         axios
           .post(
-            "http://localhost:1190/api/v1/project/search/skill",
+            `${url}/api/v1/project/search/skill`,
             { skill: e.value },
             headers
           )
@@ -312,11 +295,7 @@ function List({ notificationsData, setdata }) {
     }
     try {
       axios
-        .post(
-          "http://localhost:1190/api/v1/project/search/city",
-          { city: city },
-          headers
-        )
+        .post(`${url}/api/v1/project/search/city`, { city: city }, headers)
         .then((res) => {
           setFilter(true);
           // setProjectData(res.data);

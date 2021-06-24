@@ -7,12 +7,15 @@ import Button from "@material-ui/core/Button";
 import { Redirect, Route } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { SignOut, isAuthenticated, getUser } from "../../Auth/Index";
+import { url } from "../../urlConfig";
 
 import { useToasts } from "react-toast-notifications";
 import { loginData } from "../../shared/Data";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 function Login(props) {
   const { addToast } = useToasts();
+  let router = useHistory();
   // single states
   const [isLoading, setisLoading] = useState(false);
   const [isSuccess, setisSuccess] = useState(false);
@@ -93,23 +96,21 @@ function Login(props) {
 
     setFormData({ ...formData, [e.target.name]: value });
   };
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
     const check = checkValidateForm();
     if (check == true) {
       try {
-        let res = await axios.post(
-          `${process.env.url}/api/v1/auth/login`,
-          formData
-        );
+        let res = await axios.post(`${url}/api/v1/auth/login`, formData);
 
         setisLoading(false);
         // console.log(res, "res user");
         localStorage.setItem("jwt", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-
+        if (res.data.user.role === "admin") {
+          router.push(`/Admindashboard/${res.data.user._id}`);
+        }
         setFormData(loginData);
 
         addToast(`Login Successfully`, {
@@ -125,11 +126,11 @@ function Login(props) {
       } catch (err) {
         setisLoading(false);
         if (err.response) {
-            addToast(`${err.response.data.message}`, {
-              appearance: "error",
-              autoDismiss: true,
-              autoDismissTimeout: 3000,
-            });
+          addToast(`${err.response.data.message}`, {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
         }
       }
     } else {

@@ -8,7 +8,7 @@ export const loginData = {
 export const signupData = {
   firstname: "",
   lastname: "",
-  username: "",
+ 
   email: "",
   city: "",
   password: "",
@@ -25,7 +25,6 @@ export const signupData = {
 export const editProfileData = {
   firstname: "",
   lastname: "",
-  username: "",
   // email: "",
   city: "",
   // password: "",
@@ -56,7 +55,6 @@ export const signupskillRequired = {
 export const signupaboutRequired = {
   firstname: "",
   lastname: "",
-  username: "",
   email: "",
   city: "",
   password: "",
@@ -70,7 +68,6 @@ export const signupaboutRequired = {
 export const editProfileRequired = {
   firstname: "",
   lastname: "",
-  username: "",
   email: "",
   city: "",
   password: "",

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
+import { url } from "../urlConfig";
 
 export default function ImpementationStep({
   step,
@@ -22,13 +23,36 @@ export default function ImpementationStep({
   const onShowInterest = (id) => {
     ShowInterest(id, setisShown);
   };
+  const FilterUser = (step) => {
+    let fill = step?.user_requests?.some((dt) => dt === getUser()._id);
+    if (fill === false) {
+      return (
+        <button
+          onClick={() => onShowInterest(step._id)}
+          type="button"
+          // id="modifyButton"
+
+          className="btn btn-block ml-1 mt-3"
+        >
+          Show Interest
+        </button>
+      );
+    } else {
+      return (
+        <button
+          type="button"
+          
+          className="btn btn-block ml-1 mt-3"
+        >
+          Pending
+        </button>
+      );
+    }
+  };
   useEffect(() => {
     if (getUser().interests && getUser().interests.length > 0) {
-      let isFill = getUser().interests.some(
-        (dt) => dt === `${paramID}`
-      );
-      setisSent(isFill)
-      console.log(isFill,paramID, "isFill");
+      let isFill = getUser().interests.some((dt) => dt === `${paramID}`);
+      setisSent(isFill);
     }
   }, []);
   return (
@@ -168,7 +192,7 @@ export default function ImpementationStep({
                         fontSize: "12px",
                       }}
                     >
-                      {step.description.substring(0,50)}
+                      {step.description.substring(0, 50)}
                     </span>
                   </p>
                 </p>
@@ -237,7 +261,7 @@ export default function ImpementationStep({
                         className="project-image-sm"
                         src={
                           cont.profile_picture
-                            ? `http://localhost:1190/views/uploads/${cont.profile_picture}`
+                            ? `${url}/views/uploads/${cont.profile_picture}`
                             : DefaultImage
                         }
                         alt="alternative"
@@ -292,15 +316,7 @@ export default function ImpementationStep({
               step.contributing_user.find((el) => el._id == getUser()._id) ? (
               ""
             ) : isShown == false ? (
-              <button
-                onClick={() => onShowInterest(step._id)}
-                type="button"
-                // id="modifyButton"
-
-                className="btn btn-block ml-1 mt-3"
-              >
-                Show Interest
-              </button>
+              FilterUser(step)
             ) : (
               <div className={useStyles.root}>
                 <CircularProgress disableShrink />

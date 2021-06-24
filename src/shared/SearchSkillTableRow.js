@@ -8,7 +8,7 @@ export default function SkillTableRow({
 }) {
   return (
     <tr>
-      <th scope="row">{skill.username}</th>
+      <th scope="row">{skill.firstName}</th>
       <td>{skill.city}</td>
 
       <td>

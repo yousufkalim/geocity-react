@@ -9,6 +9,9 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { useToasts } from "react-toast-notifications";
 import { loginData } from "../../shared/Data";
 import { Link } from "react-router-dom";
+import {url} from '../../urlConfig' 
+
+
 function Login(props) {
   const { addToast } = useToasts();
   // single states
@@ -98,7 +101,7 @@ function Login(props) {
         try {
           axios
             .post(
-              `http://localhost:1190/api/v1/profile/reset-password?passwordToken=${props.match.params.id}`,
+              `${url}/api/v1/profile/reset-password?passwordToken=${props.match.params.id}`,
               {
                 password: formData.password,
                 confirm: formData.confirm,

@@ -13,6 +13,7 @@ import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import UserProjectList from "../../Components/userprojectList";
+import {url} from '../../urlConfig' 
 
 import LikeUser from "../../Components/RecommendUser";
 import DefaultImage from "../../Components/UI/Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.jpg";
@@ -40,7 +41,7 @@ export default function Profile(props) {
   const { notificationsData, setdata } = props;
   useEffect(() => {
     window.socket = io(
-      process.env.REACT_APP_SOCKET_URL || "http://160.153.249.64:7002",
+      process.env.REACT_APP_SOCKET_URL || "${url}",
       {
         query: `userConnectionId=${getUser()._id}`,
       }
@@ -104,7 +105,7 @@ export default function Profile(props) {
         };
 
         await Axios.post(
-          `http://localhost:1190/api/v1/profile/view-profile/comment?id=${props.match.params.id}`,
+          `${url}/api/v1/profile/view-profile/comment?id=${props.match.params.id}`,
           { comment: comment },
           headers
         )
@@ -154,7 +155,7 @@ export default function Profile(props) {
           };
 
           await Axios.post(
-            `http://localhost:1190/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
+            `${url}/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
             { skillField: skillField },
             headers
           )
@@ -192,7 +193,7 @@ export default function Profile(props) {
         };
 
         await Axios.post(
-          `http://localhost:1190/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
+          `${url}/api/v1/profile/view-profile/recommendSkill?id=${props.match.params.id}`,
           { skillField: skillField },
           headers
         )
@@ -228,7 +229,7 @@ export default function Profile(props) {
       };
 
       await Axios.post(
-        `http://localhost:1190/api/v1/profile/view-profile/UnrecommendSkill?id=${props.match.params.id}`,
+        `${url}/api/v1/profile/view-profile/UnrecommendSkill?id=${props.match.params.id}`,
         { skillId: skillId },
         headers
       )
@@ -270,7 +271,7 @@ export default function Profile(props) {
 
       await axios
         .post(
-          `http://localhost:1190/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
+          `${url}/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
           { commentId: commentId },
           headers
         )
@@ -316,7 +317,7 @@ export default function Profile(props) {
 
       await axios
         .post(
-          `http://localhost:1190/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
+          `${url}/api/v1/profile/view-profile/delete-comment?id=${props.match.params.id}`,
           { commentId: commentId },
           headers
         )
@@ -362,7 +363,7 @@ export default function Profile(props) {
 
         try {
           Axios.post(
-            `http://localhost:1190/api/v1/project/view-project/likedBy?id=${id}`,
+            `${url}/api/v1/project/view-project/likedBy?id=${id}`,
             {},
             headers
           )
@@ -398,7 +399,7 @@ export default function Profile(props) {
 
       try {
         Axios.post(
-          `http://localhost:1190/api/v1/project/view-project/likedBy?id=${id}`,
+          `${url}/api/v1/project/view-project/likedBy?id=${id}`,
           {},
           headers
         )
@@ -432,7 +433,7 @@ export default function Profile(props) {
 
     try {
       Axios.post(
-        `http://localhost:1190/api/v1/project/view-project/unlike?id=${id}`,
+        `${url}/api/v1/project/view-project/unlike?id=${id}`,
         {},
         headers
       )
@@ -470,7 +471,7 @@ export default function Profile(props) {
     try {
       axios
         .post(
-          `http://localhost:1190/api/v1/profile/delete-profile?id=${props.match.params.id}`,
+          `${url}/api/v1/profile/delete-profile?id=${props.match.params.id}`,
           {},
           headers
         )
@@ -505,7 +506,7 @@ export default function Profile(props) {
     };
 
     try {
-      Axios.get("http://localhost:1190/api/v1/profile/myProjects", headers)
+      Axios.get("${url}/api/v1/profile/myProjects", headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
           // console.log(res.data, "res owened projects");
@@ -516,9 +517,9 @@ export default function Profile(props) {
     } catch (error) {
       // console.log(error, "error catch");
     }
-    try {
+   
       Axios.get(
-        `http://localhost:1190/api/v1/profile/view-profile?id=${props.match.params.id}`,
+        `${url}/api/v1/profile/view-profile?id=${props.match.params.id}`,
         headers
       )
         .then((res) => {
@@ -530,8 +531,8 @@ export default function Profile(props) {
           console.log(res.data, "res data user");
         })
         .catch((err) => {});
-    } catch (error) {}
-  }, []);
+   
+  }, [setComment,comment]);
   // useEffect(() => {
   //   if (data.data && data.data.comments) {
   //     setCommentArray(data.data.comments);
@@ -619,7 +620,7 @@ export default function Profile(props) {
                         src={
                           data.data.profile_picture == "default.png"
                             ? DefaultuserImage
-                            : `http://localhost:1190/views/uploads/${data.data.profile_picture}`
+                            : `${url}/views/uploads/${data.data.profile_picture}`
                         }
                         alt="alternative"
                       />
@@ -628,7 +629,7 @@ export default function Profile(props) {
                 </div>
                 <div className="col-lg-9 col-md-8 col-sm-12 text-left">
                   <div>
-                    <h5 style={{ fontWeight: "bold" }}>{data.data.username}</h5>
+                    <h5 style={{ fontWeight: "bold" }}>{data.data.firstName}</h5>
                     <hr style={{ border: "2px solid #c4bec2" }} />
                   </div>
                   <p className="mt-2 " style={{ paddingBottom: "3rem" }}>

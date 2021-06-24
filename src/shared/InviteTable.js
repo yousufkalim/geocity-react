@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import InviteTableRow from "../Components/InviteTableRow";
 import PrivateInviteTableRow from "../shared/PrivateInviteTableRow";
+import {url} from '../urlConfig' 
 
 import { projectData } from "./Data";
 export default function UserTable(props) {
@@ -30,7 +31,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `${url}/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -91,7 +92,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `${url}/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -151,7 +152,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `${url}/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -214,7 +215,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `${url}/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -276,7 +277,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
+          `${url}/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -339,7 +340,7 @@ export default function UserTable(props) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
+          `${url}/api/v1/project/view-project/sendInviteToCollaborateByUser/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )

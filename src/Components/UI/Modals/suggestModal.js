@@ -17,6 +17,7 @@ import axios from "axios";
 import "../Theme/css/main.css";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useStyles } from "../Theme/styles";
+import {url} from '../../../urlConfig' 
 
 const ModalExample = (props) => {
   const [suggest, setsuggest] = useState("");
@@ -51,7 +52,7 @@ const ModalExample = (props) => {
       };
       try {
         let res = await axios.post(
-          `http://localhost:1190/api/v1/project/suggestStep`,
+          `${url}/api/v1/project/suggestStep`,
           { suggest: suggest, email: props.email },
           headers
         );
@@ -148,7 +149,7 @@ export default ModalExample;
 //   array.push(dt);
 //   axios
 //     .post(
-//       `http://localhost:1190/api/v1/admin/create-skillField`,
+//       `${url}/api/v1/admin/create-skillField`,
 //       { skillField: data[0], skills: array },
 //       headers
 //     )

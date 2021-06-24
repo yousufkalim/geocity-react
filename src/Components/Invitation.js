@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useToasts } from "react-toast-notifications";
+import {url} from '../urlConfig' 
 
 export default function UserprojectList({ data, i, DefaultImage }) {
   const { addToast } = useToasts();
@@ -15,7 +16,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
+          `${url}/api/v1/project/view-project/invite-collaborator/decison?id=${projectId}`,
           { step: stepId, decision: decision, invitation: invitation },
           headers
         )
@@ -49,7 +50,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/requests/decision?id=${projectId}`,
+          `${url}/api/v1/project/view-project/requests/decision?id=${projectId}`,
           { sender: sender, decision: decision, invitation: invitation },
           headers
         )
@@ -87,7 +88,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
           //   }}
           src={
             data.sender.profile_picture
-              ? `http://localhost:1190/views/uploads/${data.sender.profile_picture}`
+              ? `${url}/views/uploads/${data.sender.profile_picture}`
               : DefaultImage
           }
           alt="alternative"
@@ -96,7 +97,7 @@ export default function UserprojectList({ data, i, DefaultImage }) {
       <div className="text-left" style={{ width: "50%" }}>
         <div style={{ marginLeft: "2rem" }}>
           {/* <p>{data.name}</p> */}
-          <h5 style={{ fontWeight: "bold" }}>{data.sender.username}</h5>
+          <h5 style={{ fontWeight: "bold" }}>{data.sender.firstName}</h5>
           <span style={{ fontSize: "14px" }}>
             {data.sender.profile_description}
           </span>

@@ -38,4 +38,3 @@ export const headers = {
     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
   },
 };
-// export const socket = socketIOClient("http://160.153.249.64:7002");

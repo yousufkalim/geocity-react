@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
-import { getUser } from "../Auth/Index";
-import PrivateModal from "../Components/UI/Modals/PrivateModal";
-import AutorenewIcon from "../Theme/images/geocity/Group 3.png";
+import { getUser } from "../../../Auth/Index";
+import PrivateModal from "../../../Components/UI/Modals/PrivateModal";
+import AutorenewIcon from "../../../Components/UI/Theme/images/geocity/Group 3.png";
+import {url} from '../../../urlConfig' 
 
 export default function ProjectList({
   data,
@@ -83,7 +84,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.project.general_photo
-                    ? `http://localhost:1190/views/uploads/${data.project.general_photo}`
+                    ? `${url}/views/uploads/${data.project.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -175,7 +176,7 @@ export default function ProjectList({
                   privateFilter === false
                     ? DefaultImage
                     : data.general_photo
-                    ? `http://localhost:1190/views/uploads/${data.general_photo}`
+                    ? `${url}/views/uploads/${data.general_photo}`
                     : DefaultImage
                 }
                 alt="alternative"
@@ -191,7 +192,7 @@ export default function ProjectList({
                       privateFilter === false
                         ? DefaultImage
                         : data.general_photo
-                        ? `http://localhost:1190/views/uploads/${data.general_photo}`
+                        ? `${url}/views/uploads/${data.general_photo}`
                         : DefaultImage
                     }
                     alt="alternative"

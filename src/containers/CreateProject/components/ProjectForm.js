@@ -1,11 +1,11 @@
 import React from "react";
-import AutoComplete from "./AutoComplete";
+import AutoComplete from "../../../Components/AutoComplete";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { names } from "../shared/Data";
-import { useStyles } from "../Theme/styles";
-import StepCard from "../Components/UI/StepCard";
+import { names } from "../../../shared/Data";
+import { useStyles } from "../../../Theme/styles";
+import StepCard from "../../../Components/UI/StepCard";
 function Form(props) {
   const {
     address,
@@ -14,6 +14,7 @@ function Form(props) {
     handleStepChange,
     onSubmit,
     isLoading,
+    skillFieldItems,
     //   validator
     validateStepName,
     validateDescription,
@@ -31,6 +32,9 @@ function Form(props) {
     ValidateSkill,
     validatePhoto,
     validateCity,
+    getSkillField,
+    SetSkillFieldAddress,
+    skillField,
     // validator
     setmaterialArrayData,
     skillRequiredFields,
@@ -354,21 +358,13 @@ function Form(props) {
               </label>
 
               <div className="select-list">
-                <select
-                  name="skillField"
-                  id="skillField"
-                  value={formDataSkillField.skillField}
-                  onChange={handleSkillChange}
-                  onBlur={ValidateSkillField}
-                >
-                  <option value="">Select skillField</option>
-
-                  {skillfieldList
-                    ? skillfieldList.map((mat) => (
-                        <option value={mat._id}>{mat.skillField}</option>
-                      ))
-                    : ""}
-                </select>
+                <AutoComplete
+                  items={skillFieldItems}
+                  SetAddress={SetSkillFieldAddress}
+                  getAddress={getSkillField}
+                  address={skillField}
+                  validateCity={ValidateSkillField}
+                />
               </div>
 
               {skillList.length > 0 ? (

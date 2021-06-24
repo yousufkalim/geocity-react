@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useToasts } from "react-toast-notifications";
+import {url} from '../urlConfig' 
 
 export default function UserprojectList({ i, DefaultImage, data }) {
   const { addToast } = useToasts();
@@ -20,7 +21,7 @@ export default function UserprojectList({ i, DefaultImage, data }) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/take-decision?id=${projectId}`,
+          `${url}/api/v1/project/take-decision?id=${projectId}`,
           { decision: "Yes" },
           headers
         )
@@ -52,7 +53,7 @@ export default function UserprojectList({ i, DefaultImage, data }) {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/take-decision?id=${projectId}`,
+          `${url}/api/v1/project/take-decision?id=${projectId}`,
           { decision: "No" },
           headers
         )

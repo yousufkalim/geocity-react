@@ -5,6 +5,7 @@ import axios from "axios";
 import DeleteModal from "./ContributerModal";
 import ProjectTableRow from "../Components/ProjectTableRow";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {url} from '../urlConfig' 
 
 export default function UserTable(props) {
   const { data, addToast, materialList, skillFieldList } = props;
@@ -45,7 +46,7 @@ export default function UserTable(props) {
     try {
       axios
         .post(
-          `http://localhost:1190/api/v1/project/view-project/delete-contributing-user?id=${projectId}`,
+          `${url}/api/v1/project/view-project/delete-contributing-user?id=${projectId}`,
           { user_id: userId, step_Id: stepId },
           headers
         )

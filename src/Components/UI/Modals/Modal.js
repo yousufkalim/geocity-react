@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Loaders from "../../../shared/Loaders";
 import axios from "axios";
+import {url} from '../../../urlConfig' 
+
 import { useToasts } from "react-toast-notifications";
 import Table from "../../../shared/Table";
 const ModalExample = (props) => {
@@ -34,7 +36,7 @@ const ModalExample = (props) => {
       };
       await axios
         .post(
-          `http://localhost:1190/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
+          `${url}/api/v1/project/SearchCollaboratorsByCategory?id=${id}`,
           {},
 
           headers

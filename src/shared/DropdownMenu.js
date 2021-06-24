@@ -11,6 +11,7 @@ import DefaultImage from "../Theme/images/men.png";
 import { Link, Redirect } from "react-router-dom";
 import { SignOut, isAuthenticated, getUser } from "../Auth/Index";
 import { useHistory } from "react-router";
+import {url} from '../urlConfig' 
 
 import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({}));
@@ -81,7 +82,7 @@ export default function MenuListComposition() {
           src={
             getUser().profile_picture == "default.png"
               ? DefaultImage
-              : `http://localhost:1190/views/uploads/${
+              : `${url}/views/uploads/${
                   getUser().profile_picture
                 }`
           }

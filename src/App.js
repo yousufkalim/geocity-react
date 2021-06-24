@@ -12,6 +12,7 @@ import {
   Route,
   // Link
 } from "react-router-dom";
+import { url } from "./urlConfig";
 import CreateProject from "./containers/CreateProject/index";
 import Home from "./containers/Home/index";
 import ForgotPassword from "./containers/ForgotPassword/index";
@@ -30,7 +31,6 @@ import AdminDashbaord from "./containers/AdminDashboard/index";
 import ResetPassword from "./containers/ResetPassword/index";
 import VerifyEmail from "./containers/EmailVerify/index";
 
-
 import "./Theme/css/bootstrap.css";
 import "./Theme/css/styles.css";
 import "./Theme/css/list.css";
@@ -41,13 +41,13 @@ import "./Theme/css/profile.css";
 import "./Theme/css/fontawesomeAll.css";
 import "./Theme/css/swiper.css";
 import "./Theme/css/magnific-popup.css";
-
 import axios from "axios";
 export default function App() {
+
   const [data, setdata] = useState([]);
   // console.log(this.state.notify_data, "notify_data");
   // console.log(data, "sort");
-
+  
   useEffect(() => {
     var headers = {
       headers: {
@@ -64,7 +64,7 @@ export default function App() {
       try {
         axios
           .post(
-            `http://localhost:1190/api/v1/profile/view-profile/all-notifications?id=${
+            `${url}/api/v1/profile/view-profile/all-notifications?id=${
               getUser()._id
             }`,
             {},

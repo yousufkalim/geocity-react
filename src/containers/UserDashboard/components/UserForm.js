@@ -1,6 +1,6 @@
 import React from "react";
-import Autocomplete from "react-autocomplete";
-import { scores } from "../shared/Data";
+import { scores } from "../../../shared/Data";
+import AutoComplete from "../../../Components/AutoComplete";
 
 export default function UserForm({
   formData,
@@ -10,6 +10,10 @@ export default function UserForm({
   materialArrayData,
   handleChange,
   SetAddress,
+  skillFieldItems,
+  getSkillField,
+  skillField,
+  SetSkillFieldAddress,
   getAddress,
   items,
   skillList,
@@ -21,7 +25,7 @@ export default function UserForm({
   FormGroup,
   Input,
   Label,
-  Autocomplete,
+
   setPhoto,
   address,
   CategoryList,
@@ -112,7 +116,7 @@ export default function UserForm({
             />
           </FormGroup>
         </Col>
-        
+
         {/* <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail">Email*</Label>
@@ -129,55 +133,19 @@ export default function UserForm({
         <Col md={6} sm={12} lg={4}>
           <FormGroup>
             <Label for="exampleEmail" className="row label">
-              City*{" "}
+              Address*{" "}
               {aboutRequiredFields.city !== "" ? (
                 <p className="error"> {aboutRequiredFields.city}</p>
               ) : (
                 ""
               )}
             </Label>
-            <Autocomplete
+            <AutoComplete
               items={items}
-              // shouldItemRender={(item, value) =>
-              //   item.label.toLowerCase().indexOf(value.toLowerCase()) > -1
-              // }
-              getItemValue={(item) => item.label}
-              renderItem={(item, highlighted) => (
-                <div
-                  key={item.id}
-                  style={{
-                    backgroundColor: highlighted ? "#eee" : "transparent",
-                  }}
-                >
-                  {item.label}
-                </div>
-              )}
-              wrapperStyle={{
-                display: "block",
-              }}
-              menuStyle={{
-                zIndex: "1",
-                position: "static",
-                borderRadius: "3px",
-                // boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                background: "rgba(255, 255, 255, 0.9)",
-                padding: "2px 12px",
-                fontSize: "90%",
-                color: "#000",
-                overflow: "auto",
-                maxHeight: "50%",
-                marginTop: "0px",
-              }}
-              inputProps={{
-                className: "form-control",
-                placeholder: "e.g Sas Van Genstraete 59270 Bailleul",
-                onBlur: validateCity,
-              }}
-              value={address}
-              name="address"
-              onChange={getAddress}
-              onSelect={SetAddress}
-              // selectOnBlur={validateCity}
+              SetAddress={SetAddress}
+              getAddress={getAddress}
+              address={address}
+              validateCity={validateCity}
             />
           </FormGroup>
         </Col>
@@ -350,22 +318,13 @@ export default function UserForm({
                 ""
               )}
             </Label>
-            <Input
-              name="skillField"
-              id="skillField"
-              type="select"
-              value={skillformData.skillField}
-              onBlur={ValidateSkillField}
-              onChange={handleSkillChange}
-            >
-              <option value="">Select SelectField</option>
-
-              {skillFieldList
-                ? skillFieldList.map((skill) => (
-                    <option value={skill._id}>{skill.skillField}</option>
-                  ))
-                : ""}
-            </Input>
+            <AutoComplete
+              items={skillFieldItems}
+              SetAddress={SetSkillFieldAddress}
+              getAddress={getSkillField}
+              address={skillField}
+              validateCity={ValidateSkillField}
+            />
           </FormGroup>
         </Col>
 

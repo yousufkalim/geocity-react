@@ -23,7 +23,7 @@ export default function InviteTableRow({
         {"/"}
         {new Date(project.createdAt).getFullYear()}
       </td>
-      <td>{project.sender.username}</td>
+      <td>{project.sender.firstName}</td>
       <td>
         {project.type === "inviteProjectOwner"
           ? "Shown Interest"

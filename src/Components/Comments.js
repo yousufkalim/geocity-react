@@ -1,5 +1,5 @@
 import React from "react";
-
+import {url} from '../urlConfig'
 export default function comments({
   comment,
   data,
@@ -15,7 +15,7 @@ export default function comments({
           className="com-image"
           src={
             comment.profile_picture
-              ? `http://localhost:1190/views/uploads/${comment.profile_picture}`
+              ? `${url}/views/uploads/${comment.profile_picture}`
               : DefaultImage
           }
           alt="alternative"

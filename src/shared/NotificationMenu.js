@@ -16,6 +16,8 @@ import {
   getNotifications,
 } from "../Auth/Index";
 import Typography from "@material-ui/core/Typography";
+import {url} from '../urlConfig' 
+
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import Badge from "@material-ui/core/Badge";
 import axios from "axios";
@@ -82,7 +84,7 @@ export default function MenuListComposition({ data, setdata }) {
         try {
           axios
             .post(
-              `http://localhost:1190/api/v1/profile/update-notifications?id=${notify._id}`,
+              `${url}/api/v1/profile/update-notifications?id=${notify._id}`,
               { title: not.title, description: not.description },
               headers
             )

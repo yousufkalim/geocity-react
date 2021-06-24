@@ -2,6 +2,8 @@ import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getUser } from "../Auth/Index";
 import ProjectOwnerImage from "../Theme/images/geocity/Image 35.png";
+import {url} from '../urlConfig' 
+
 export default function UserprojectList({
   data,
   i,
@@ -39,7 +41,7 @@ export default function UserprojectList({
               src={
                 data.general_photo == "default.png"
                   ? DefaultImage
-                  : `http://localhost:1190/views/uploads/${data.general_photo}`
+                  : `${url}/views/uploads/${data.general_photo}`
               }
               alt="alternative"
             />

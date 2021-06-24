@@ -8,6 +8,7 @@ import axios from "axios";
 import ChipArray from "../../Components/UI/MaterialChip";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
+import { url } from "../../urlConfig";
 
 import {
   signupData,
@@ -39,7 +40,6 @@ function Signup() {
 
   // Single States
   const [address, setAddress] = useState("");
-  const [skillField, setskillField] = useState("");
 
   const [material, setMaterial] = useState("");
   const [interest, setInterest] = useState("");
@@ -57,6 +57,7 @@ function Signup() {
   //List States
   const [items, setItems] = useState([]);
   const [skillFieldItems, setskillFieldItems] = useState([]);
+  const [skillField, setskillField] = useState("");
 
   const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
@@ -374,7 +375,7 @@ function Signup() {
     };
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/categoryList")
+        .get(`${url}/api/v1/auth/categoryList`)
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -385,7 +386,7 @@ function Signup() {
     }
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/materialList")
+        .get(`${url}/api/v1/auth/materialList`)
         .then((res) => {
           setMaterialList(res.data.materials);
         })
@@ -396,7 +397,7 @@ function Signup() {
 
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/skillList")
+        .get(`${url}/api/v1/auth/skillList`)
         .then((res) => {
           setskillFieldList(res.data.skills);
           // console.log(res, "res skill");
@@ -417,31 +418,62 @@ function Signup() {
     }
   };
   const onMaterialAdd = async () => {
-    validateMaterial();
+    let matCheck = validateMaterial();
     // ""
-    if (materialArrayData.length > 0) {
-      const tempCheck = materialArrayData.find((cont) => cont === material);
-      if (tempCheck) {
-        addToast("Material already existed", {
-          appearance: "error",
-          autoDismiss: true,
-          autoDismissTimeout: 3000,
-        });
-        setMaterial("");
-      } else {
-        var array = materialArrayData.filter((mat) => mat !== material);
+    if (matCheck === true) {
+      if (materialArrayData.length > 0) {
+        const tempCheck = materialArrayData.find((cont) => cont === material);
+        if (tempCheck) {
+          addToast("Material already existed", {
+            appearance: "error",
+            autoDismiss: true,
+            autoDismissTimeout: 3000,
+          });
+          setMaterial("");
+        } else {
+          var array = materialArrayData.filter((mat) => mat !== material);
 
-        if (material !== "Other") {
-          array.push(material);
+          if (material !== "Other") {
+            array.push(material);
+          }
+          if (otherMaterial) {
+            try {
+              let response = await axios.post(
+                `${url}/api/v1/auth/createMaterial`,
+                { name: otherMaterial }
+              );
+              let _id = response.data.material;
+              array.push(_id);
+            } catch (error) {
+              addToast(error.response.data.message, {
+                appearance: "error",
+                autoDismiss: true,
+                autoDismissTimeout: 3000,
+              });
+            }
+          }
+          setmaterialArrayData(array);
+          // setMaterial("");
+          const msg = "";
+          setmaterialRequiredFields({
+            ...materialRequiredFields,
+            error: msg,
+          });
+          setMaterial("");
+          setotherMaterial("");
         }
-        if (otherMaterial) {
+      } else {
+        if (material !== "Other") {
+          setmaterialArrayData((prevState) => [...prevState, material]);
+          setMaterial("");
+        } else {
           try {
             let response = await axios.post(
-              "http://localhost:1190/api/v1/auth/createMaterial",
+              `${url}/api/v1/auth/createMaterial`,
               { name: otherMaterial }
             );
             let _id = response.data.material;
-            array.push(_id);
+            setmaterialArrayData((prevState) => [...prevState, _id]);
           } catch (error) {
             addToast(error.response.data.message, {
               appearance: "error",
@@ -449,43 +481,14 @@ function Signup() {
               autoDismissTimeout: 3000,
             });
           }
-        }
-        setmaterialArrayData(array);
-        // setMaterial("");
-        const msg = "";
-        setmaterialRequiredFields({
-          ...materialRequiredFields,
-          error: msg,
-        });
-        setMaterial("");
-        setotherMaterial("");
-      }
-    } else {
-      if (material !== "Other") {
-        setmaterialArrayData((prevState) => [...prevState, material]);
-        setMaterial("");
-      } else {
-        try {
-          let response = await axios.post(
-            "http://localhost:1190/api/v1/auth/createMaterial",
-            { name: otherMaterial }
-          );
-          let _id = response.data.material;
-          setmaterialArrayData((prevState) => [...prevState, _id]);
-        } catch (error) {
-          addToast(error.response.data.message, {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-        }
 
-        setotherMaterial("");
-        setMaterial("");
+          setotherMaterial("");
+          setMaterial("");
+        }
       }
     }
   };
-  console.log(materialArrayData, "dsadasd");
+
   const onInterestChange = (e) => {
     setInterest(e.target.value);
     if (e.target.value !== "") {
@@ -688,14 +691,14 @@ function Signup() {
                 setskillFormData(signupstepData);
                 setskillRequiredFields(signupskillRequired);
                 setotherSkill("");
-                setskillField("")
+                setskillField("");
               } else {
                 ValidateOtherSkill();
               }
             } else {
               setskillArrayData([...skillArrayData, skillformData]);
               setskillFormData(signupstepData);
-              setskillField("")
+              setskillField("");
               setskillRequiredFields(signupskillRequired);
             }
           }
@@ -730,7 +733,7 @@ function Signup() {
               setskillArrayData([...skillArrayData, skillformData]);
               setskillFormData(signupstepData);
               setskillRequiredFields(signupskillRequired);
-              setskillField("")
+              setskillField("");
               setotherSkill("");
             } else {
               ValidateOtherSkill();
@@ -739,7 +742,7 @@ function Signup() {
             setskillArrayData([...skillArrayData, skillformData]);
             setskillFormData(signupstepData);
             setskillRequiredFields(signupskillRequired);
-            setskillField("")
+            setskillField("");
           }
         }
       }
@@ -748,7 +751,7 @@ function Signup() {
   const getSkillField = (e) => {
     setskillField(e.target.value);
     ValidateSkillField();
-    fetch(`http://localhost:1190/api/v1/auth/getSkillList/?q=${e.target.value}`)
+    fetch(`${url}/api/v1/auth/getSkillList/?q=${e.target.value}`)
       .then((response) => response.json())
       .then((responseJson) => {
         var addressToSet = [];
@@ -861,19 +864,7 @@ function Signup() {
       }
       return obj;
     });
-    if (
-      !reqFields
-      // !vfn ||
-      // !vln ||
-      // !vun ||
-      // !ve ||
-      // !vp ||
-      // !vcp ||
-      // !vcity ||
-      // !vphone ||
-      // !vavail ||
-      // !vpd
-    ) {
+    if (!reqFields) {
       setAboutRequiredFields(obj);
 
       // setmaterialArrayData((prevState) => [...prevState, material]);
@@ -925,104 +916,80 @@ function Signup() {
     e.preventDefault();
     setisLoading(true);
     checkValidateForm();
-    // checkValidateForm2();
-    if (skillArrayData.length == 0) {
-      addToast(`You must add atleast one skill`, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
+    // social links
+    // console.log(formData.firstName, "formData.firstName");
+    // ****
+    const newFormData = new FormData();
+    newFormData.append("firstName", formData.firstname);
+    newFormData.append("lastName", formData.lastname);
+    newFormData.append("availability", formData.availability);
+    newFormData.append("city", formData.city);
+    newFormData.append("confirm_password", formData.confirm_password);
+    newFormData.append("email", formData.email);
+    newFormData.append("latitude", formData.latitude);
+    newFormData.append("longitude", formData.longitude);
+    newFormData.append("password", formData.password);
+    newFormData.append("phone", formData.phone);
+    newFormData.append("profile_description", formData.profile_description);
+    newFormData.append("profile_picture", photo);
+    newFormData.append("zipCode", formData.zipCode);
 
-      setisLoading(false);
-    } else if (materialArrayData.length == 0) {
-      addToast(`You must add atleast one material`, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
+    newFormData.append("facebook", socialformData.facebook);
+    newFormData.append("instagram", socialformData.instagram);
+    newFormData.append("youtube", socialformData.youtube);
+    newFormData.append("interests", JSON.stringify(interestArrayData));
 
-      setisLoading(false);
+    newFormData.append("skills", JSON.stringify(skillArrayData));
 
-      validateMaterial();
-    } else {
-      validatePhoneNumber();
-
-      // social links
-      // console.log(formData.firstName, "formData.firstName");
-      // ****
-      const newFormData = new FormData();
-      newFormData.append("firstName", formData.firstname);
-      newFormData.append("lastName", formData.lastname);
-      newFormData.append("availability", formData.availability);
-      newFormData.append("city", formData.city);
-      newFormData.append("confirm_password", formData.confirm_password);
-      newFormData.append("email", formData.email);
-      newFormData.append("latitude", formData.latitude);
-      newFormData.append("longitude", formData.longitude);
-      newFormData.append("password", formData.password);
-      newFormData.append("phone", formData.phone);
-      newFormData.append("profile_description", formData.profile_description);
-      newFormData.append("profile_picture", photo);
-      newFormData.append("zipCode", formData.zipCode);
-
-      newFormData.append("facebook", socialformData.facebook);
-      newFormData.append("instagram", socialformData.instagram);
-      newFormData.append("youtube", socialformData.youtube);
-      newFormData.append("interests", JSON.stringify(interestArrayData));
-
-      newFormData.append("skills", JSON.stringify(skillArrayData));
-
-      newFormData.append("material", JSON.stringify(materialArrayData));
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
+    newFormData.append("material", JSON.stringify(materialArrayData));
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+    try {
+      let response = await axios.post(
+        `${url}/api/v1/auth/register`,
+        newFormData
+      );
       try {
         let response = await axios.post(
-          "http://localhost:1190/api/v1/auth/register",
-          newFormData
+          `${url}/api/v1/auth/email-verfication`,
+          { email: formData.email }
         );
+        setFormData(signupData);
+        setisSuccess(true);
         setisLoading(false);
 
-        try {
-          let response = await axios.post(
-            "http://localhost:1190/api/v1/auth/email-verfication",
-            { email: formData.email }
-          );
-          setFormData(signupData);
-          setisSuccess(true);
-
-          addToast(response.data.message, {
-            appearance: "success",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
-        } catch (err) {
-          setisLoading(false);
-
-          if (err.response.data) {
-            if (err.response.data.message) {
-              addToast(`${err.response.data.message}`, {
-                appearance: "error",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            }
-          }
-        }
-
-        // console.log(" error signup =>", err.response.data);
+        addToast(response.data.message, {
+          appearance: "success",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
       } catch (err) {
         setisLoading(false);
 
-        if (err.response) {
-          addToast(`${err.response.data.message}`, {
-            appearance: "error",
-            autoDismiss: true,
-            autoDismissTimeout: 3000,
-          });
+        if (err.response.data) {
+          if (err.response.data.message) {
+            addToast(`${err.response.data.message}`, {
+              appearance: "error",
+              autoDismiss: true,
+              autoDismissTimeout: 3000,
+            });
+          }
         }
+      }
+
+      // console.log(" error signup =>", err.response.data);
+    } catch (err) {
+      setisLoading(false);
+
+      if (err.response) {
+        addToast(`${err.response.data.message}`, {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
       }
     }
   };

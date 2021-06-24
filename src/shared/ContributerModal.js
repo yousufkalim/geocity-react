@@ -39,7 +39,7 @@ const ModalExample = (props) => {
               data.contributing_user.length > 0 ? (
                 data.contributing_user.map((skill) => (
                   <tr>
-                    <th scope="row">{skill.username}</th>
+                    <th scope="row">{skill.firstName}</th>
                     <td>
                       {skill.skills
                         ? skill.skills.map((data) => {

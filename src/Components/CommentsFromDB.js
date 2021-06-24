@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {url} from '../urlConfig' 
 export default function CommentsFromDB({
   data,
   DefaultImage,
@@ -22,7 +22,7 @@ export default function CommentsFromDB({
           src={
             comment.user
               ? comment.user.profile_picture
-                ? `http://localhost:1190/views/uploads/${comment.user.profile_picture}`
+                ? `${url}/views/uploads/${comment.user.profile_picture}`
                 : DefaultImage
               : DefaultImage
           }
@@ -36,7 +36,7 @@ export default function CommentsFromDB({
       >
         <div className="commentUser">
           <h5 style={{ fontWeight: "bold" }}>
-            {comment.user.username}
+            {comment.user.firstName}
 
             <small className="ml-4">
               {new Date(comment.createdAt).toString().split(" ")[2]}

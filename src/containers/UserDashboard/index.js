@@ -23,8 +23,9 @@ import UserTable from "../../shared/ProjectsTable";
 import InviteTable from "../../shared/InviteTable";
 import DropDown from "../../shared/DropdownMenu";
 import NotificationMenu from "../../shared/NotificationMenu";
-import UserForm from "../../Components/UserForm";
+import UserForm from "./components/UserForm";
 import { useHistory, useParams } from "react-router-dom";
+import { url } from "../../urlConfig";
 
 export default function UserDashboard(props) {
   const { notificationsData } = props;
@@ -48,12 +49,14 @@ export default function UserDashboard(props) {
   const [profilemodal, setprofileModal] = useState(false);
   const [address, setAddress] = useState("");
   const [items, setItems] = useState([]);
+  const [skillFieldItems, setskillFieldItems] = useState([]);
+  const [skillField, setskillField] = useState("");
+
   const [photo, setPhoto] = useState("");
   const [skillArrayData, setskillArrayData] = useState([]);
   const [materialArrayData, setmaterialArrayData] = useState([]);
-  const [aboutRequiredFields, setAboutRequiredFields] = useState(
-    editProfileRequired
-  );
+  const [aboutRequiredFields, setAboutRequiredFields] =
+    useState(editProfileRequired);
   const [interestRequiredFields, setinterestRequiredFields] = useState({
     interest: "",
   });
@@ -62,9 +65,8 @@ export default function UserDashboard(props) {
     error: "",
     otherMaterial: "",
   });
-  const [skillRequiredFields, setskillRequiredFields] = useState(
-    signupskillRequired
-  );
+  const [skillRequiredFields, setskillRequiredFields] =
+    useState(signupskillRequired);
   const [materialList, setMaterialList] = useState("");
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
@@ -99,7 +101,7 @@ export default function UserDashboard(props) {
       try {
         axios
           .post(
-            `http://localhost:1190/api/v1/profile/create-interest?id=${props.match.params.id}`,
+            `${url}/api/v1/profile/create-interest?id=${props.match.params.id}`,
             { interest: interest },
             headers
           )
@@ -173,7 +175,7 @@ export default function UserDashboard(props) {
     try {
       axios
         .post(
-          `http://localhost:1190/api/v1/profile/delete-interest?id=${props.match.params.id}`,
+          `${url}/api/v1/profile/delete-interest?id=${props.match.params.id}`,
           { interest: id },
           headers
         )
@@ -222,6 +224,43 @@ export default function UserDashboard(props) {
   const handleSocialChange = (e) => {
     setsocialFormData({ ...socialformData, [e.target.name]: e.target.value });
   };
+
+  const getSkillField = (e) => {
+    setskillField(e.target.value);
+    ValidateSkillField();
+    fetch(`${url}/api/v1/auth/getSkillList/?q=${e.target.value}`)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var addressToSet = [];
+        // ""
+        for (var i = 0; i < responseJson.length; i++) {
+          addressToSet.push({
+            id: responseJson[i]._id,
+            label: responseJson[i].skillField,
+          });
+        }
+        if (addressToSet.length === responseJson.length) {
+          setskillFieldItems(addressToSet);
+        }
+        // setskillFieldItems(responseJson);
+      });
+  };
+  const SetSkillFieldAddress = (item) => {
+    setskillField(item);
+    ValidateSkillField();
+    var _id;
+    for (let i = 0; i < skillFieldItems.length; i++) {
+      if (skillFieldItems[i].label === item) {
+        _id = skillFieldItems[i].id;
+
+        setskillFormData({ ...skillformData, ["skillField"]: _id });
+      }
+    }
+    skillFieldList.map((skill) =>
+      skill._id === _id ? setskillList(skill.skill) : ""
+    );
+  };
+
   const getAddress = (e) => {
     setAddress(e.target.value);
     fetch(
@@ -267,20 +306,14 @@ export default function UserDashboard(props) {
         // ""
         var city = items[i].city;
         var zipCode = items[i].PostalCode;
-        var lat = items[i].lat.toString();
-        var lng = items[i].lng.toString();
+        var latitude = items[i].lat.toString();
+        var longitude = items[i].lng.toString();
         var newAddress = items[i].label.split(String(zipCode));
-        setFormData({
-          address: newAddress[0],
-          zipCode: zipCode,
-          city: city,
-          latitude: lat,
-          longitude: lng,
-          email: formData.email,
-          password: formData.password,
-          confirm_password: formData.confirm_password,
-          availability: formData.availability,
-        });
+        setFormData({ ...formData, ["city"]: city });
+        setFormData({ ...formData, ["zipCode"]: zipCode });
+        setFormData({ ...formData, ["latitude"]: latitude });
+        setFormData({ ...formData, ["address"]: newAddress[0] });
+        setFormData({ ...formData, ["longitude"]: longitude });
       }
     }
     // validateCity();
@@ -321,9 +354,10 @@ export default function UserDashboard(props) {
   };
 
   const validateEmail = () => {
-    const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-z]+)*$/.test(
-      formData.email
-    );
+    const isValid =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-z]+)*$/.test(
+        formData.email
+      );
     if (!formData.email) {
       const msg = "Required";
       setAboutRequiredFields({ ...aboutRequiredFields, email: msg });
@@ -351,17 +385,20 @@ export default function UserDashboard(props) {
   };
   const ValidateSkillField = () => {
     // alert(skillformData.skillField);
-    if (skillformData.skillField) {
-      const msg = "";
+    if (skillField === "") {
+      const msg = "Required";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return true;
     } else if (!skillformData.skillField) {
-      const msg = "Required";
+      let msg = "Please select your skill from list";
       setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return false;
+    } else {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
     }
   };
-
   const ValidateSkill = () => {
     if (skillformData.skill) {
       const msg = "";
@@ -515,8 +552,6 @@ export default function UserDashboard(props) {
       return true;
     }
   };
-
-  
 
   // *
   const checkValidateForm = () => {
@@ -743,116 +778,66 @@ export default function UserDashboard(props) {
       }
     }
   };
-
   const onSubmit = async (e) => {
     e.preventDefault();
     checkValidateForm();
-    if (skillArrayData.length == 0) {
-      addToast(`You must add atleast one skill`, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
-    } else if (materialArrayData.length == 0) {
-      validateMaterial();
-      addToast(`You must add atleast one material`, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
+    const newFormData = new FormData();
+    setisLoading(true);
+    newFormData.append("firstName", formData.firstname);
+    newFormData.append("lastName", formData.lastname);
+    newFormData.append("availability", formData.availability);
+    newFormData.append("city", formData.city);
+    // newFormData.append("email", formData.email);
+    newFormData.append("latitude", formData.latitude);
+    newFormData.append("longitude", formData.longitude);
+    newFormData.append("phone", formData.phone);
+    newFormData.append("profile_description", formData.profile_description);
+    newFormData.append("profile_picture", photo);
+    newFormData.append("zipCode", formData.zipCode);
+
+    newFormData.append("facebook", socialformData.facebook);
+    newFormData.append("instagram", socialformData.instagram);
+    newFormData.append("youtube", socialformData.youtube);
+    if (skillArrayData.length > 0 && materialArrayData.length > 0) {
+      newFormData.append("skills", JSON.stringify(skillArrayData));
+      newFormData.append("material", JSON.stringify(materialArrayData));
     } else {
-      const newFormData = new FormData();
+      newFormData.append("skills", JSON.stringify(formData.skills));
+      newFormData.append("material", JSON.stringify(formData.material));
+    }
 
-      setisLoading(true);
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
 
-      newFormData.append("firstName", formData.firstname);
-      newFormData.append("lastName", formData.lastname);
-      
-      newFormData.append("availability", formData.availability);
-      newFormData.append("city", formData.city);
-      // newFormData.append("email", formData.email);
-      newFormData.append("latitude", formData.latitude);
-      newFormData.append("longitude", formData.longitude);
-      newFormData.append("phone", formData.phone);
-      newFormData.append("profile_description", formData.profile_description);
-      newFormData.append("profile_picture", photo);
-      newFormData.append("zipCode", formData.zipCode);
+    try {
+      let response = await axios.post(
+        `${url}/api/v1/profile/editProfile?id=${props.match.params.id}`,
+        newFormData,
+        headers
+      );
 
-      newFormData.append("facebook", socialformData.facebook);
-      newFormData.append("instagram", socialformData.instagram);
-      newFormData.append("youtube", socialformData.youtube);
-      if (skillArrayData.length > 0 && materialArrayData.length > 0) {
-        newFormData.append("skills", JSON.stringify(skillArrayData));
-        newFormData.append("material", JSON.stringify(materialArrayData));
-      } else {
-        newFormData.append("skills", JSON.stringify(formData.skills));
-        newFormData.append("material", JSON.stringify(formData.material));
-      }
+      setisLoading(false);
 
-      try {
-        const headers = {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
-        await axios
-          .post(
-            `http://localhost:1190/api/v1/profile/editProfile?id=${props.match.params.id}`,
-            newFormData,
-            headers
-          )
-          .then((response) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-            // setprofileModal(false);
-            history.push(`/profile/${getUser()._id}`)
-            if (response.data) {
-              if (response.data.message) {
-                addToast(`${response.data.message}`, {
-                  appearance: "success",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              } else {
-                addToast(`${response.data}`, {
-                  appearance: "success",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              }
-            }
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // setprofileModal(false);
+      history.push(`/profile/${getUser()._id}`);
+      addToast(response.data.message, {
+        appearance: "success",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+    } catch (err) {
+      setisLoading(false);
 
-            // console.log(res,"res")
-          })
-          .catch((err) => {
-            setTimeout(() => {
-              setisLoading(false);
-            }, 1000);
-
-            if (err.response.data) {
-              if (err.response.data.message) {
-                addToast(`${err.response.data.message}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              } else {
-                addToast(`${err.response.data}`, {
-                  appearance: "error",
-                  autoDismiss: true,
-                  autoDismissTimeout: 3000,
-                });
-              }
-            }
-            // console.log(" error =>", err);
-          });
-      } catch (error) {
-        console.log(error, "error catch");
-        setTimeout(() => {
-          setisLoading(false);
-        }, 1000);
+      if (err.response) {
+        addToast(`${err.response.data.message}`, {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
       }
     }
   };
@@ -977,7 +962,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/materialList")
+        .get(`${url}/api/v1/auth/materialList`)
         .then((res) => {
           setMaterialList(res.data.materials);
           // console.log(res, "res material");
@@ -989,7 +974,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/skillList")
+        .get(`${url}/api/v1/auth/skillList`)
         .then((res) => {
           setskillFieldList(res.data.skills);
           // console.log(res, "res skill");
@@ -1000,7 +985,7 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/categoryList")
+        .get(`${url}/api/v1/auth/categoryList`)
         .then((res) => {
           setCategoryList(res.data.category);
           // console.log(res, "response category");
@@ -1011,12 +996,10 @@ export default function UserDashboard(props) {
     }
     try {
       axios
-        .get(
-          `http://localhost:1190/api/v1/profile/all-interest?id=${props.match.params.id}`
-        )
+        .get(`${url}/api/v1/profile/all-interest?id=${props.match.params.id}`)
         .then((res) => {
           setInterestList(res.data.interests[0].interests);
-          console.log(res, "response interest");
+          // console.log(res, "response interest");
         })
         .catch((err) => console.log(" error interest =>", err));
     } catch (error) {
@@ -1025,7 +1008,7 @@ export default function UserDashboard(props) {
 
     try {
       axios
-        .get("http://localhost:1190/api/v1/profile/myProjects", headers)
+        .get(`${url}/api/v1/profile/myProjects`, headers)
         .then((res) => {
           setProjectdataList(res.data.ownedProjects);
           // console.log(res.data, "res owened projects");
@@ -1048,7 +1031,7 @@ export default function UserDashboard(props) {
     };
     await axios
       .get(
-        `http://localhost:1190/api/v1/profile/view-profile?id=${props.match.params.id}`,
+        `${url}/api/v1/profile/view-profile?id=${props.match.params.id}`,
         headers
       )
       .then((res) => {
@@ -1214,8 +1197,12 @@ export default function UserDashboard(props) {
                             socialformData={socialformData}
                             SetAddress={SetAddress}
                             getAddress={getAddress}
+                            getSkillField={getSkillField}
+                            SetSkillFieldAddress={SetSkillFieldAddress}
+                            skillField={skillField}
                             items={items}
                             skillList={skillList}
+                            skillFieldItems={skillFieldItems}
                             skillFieldList={skillFieldList}
                             materialList={materialList}
                             Form={Form}
@@ -1251,7 +1238,6 @@ export default function UserDashboard(props) {
                             validateScore={validateScore}
                             ValidateSkillField={ValidateSkillField}
                             ValidateSkill={ValidateSkill}
-                            
                             validateFirstName={validateFirstName}
                             validateLastName={validateLastName}
                             ValidateOtherSkill={ValidateOtherSkill}

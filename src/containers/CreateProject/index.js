@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../Components/UI/Theme/css/main.css";
 import axios from "axios";
-import Form from "../../Components/ProjectForm";
+import Form from "./components/ProjectForm";
 import { useToasts } from "react-toast-notifications";
 import {
   projectData,
@@ -14,6 +14,7 @@ import {
   cityaboutRequired,
 } from "../../shared/Data";
 import { useHistory, useParams } from "react-router-dom";
+import { url } from "../../urlConfig";
 
 function CreateProject() {
   const { addToast } = useToasts();
@@ -29,6 +30,9 @@ function CreateProject() {
 
   // list states
   const [items, setItems] = useState([]);
+  const [skillFieldItems, setskillFieldItems] = useState([]);
+  const [skillField, setskillField] = useState("");
+
   const [CategoryList, setCategoryList] = useState("");
   const [materialList, setMaterialList] = useState("");
   const [skillfieldList, setskillFieldList] = useState("");
@@ -39,7 +43,7 @@ function CreateProject() {
   const [materialArrayData, setmaterialArrayData] = useState([]);
   const [stepArrayData, setstepArrayData] = useState([]);
   // ************
-
+  console.log(stepArrayData, "stepArrayData");
   // Single Statess
   const [address, setAddress] = useState("");
   const [material, setMaterial] = useState("");
@@ -68,6 +72,22 @@ function CreateProject() {
   // *************
 
   // validation start
+  const ValidateSkillField = () => {
+    // alert(skillformData.skillField);
+    if (skillField === "") {
+      const msg = "Required";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
+    } else if (!formDataSkillField.skillField) {
+      let msg = "Please select your skill from list";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return false;
+    } else {
+      const msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
+      return true;
+    }
+  };
   const ValidateOtherMaterial = () => {
     if (!otherMaterial) {
       const msg = "Required";
@@ -82,17 +102,6 @@ function CreateProject() {
         ...materialRequiredFields,
         otherMaterial: msg,
       });
-      return true;
-    }
-  };
-  const ValidateSkillField = () => {
-    if (!formDataSkillField.skillField) {
-      const msg = "Required";
-      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
-      return false;
-    } else {
-      const msg = "";
-      setskillRequiredFields({ ...skillRequiredFields, skillField: msg });
       return true;
     }
   };
@@ -418,7 +427,7 @@ function CreateProject() {
       if (stepType === "Material") {
         try {
           axios
-            .get("http://localhost:1190/api/v1/auth/materialList", headers)
+            .get(`${url}/api/v1/auth/materialList`, headers)
             .then((res) => {
               setMaterialList(res.data.materials);
               // // console.log(res, "res material");
@@ -430,7 +439,7 @@ function CreateProject() {
       } else if (stepType === "Field") {
         try {
           axios
-            .get("http://localhost:1190/api/v1/auth/skillList")
+            .get(`${url}/api/v1/auth/skillList`)
             .then((res) => {
               setskillFieldList(res.data.skills);
               // // console.log(res, "res skilllist");
@@ -443,7 +452,7 @@ function CreateProject() {
     }
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/categoryList")
+        .get(`${url}/api/v1/auth/categoryList`)
         .then((res) => {
           setCategoryList(res.data.category);
         })
@@ -454,7 +463,43 @@ function CreateProject() {
   }, [stepType]);
   // useEffect end *********************
   // get set address
-
+  const getSkillField = (e) => {
+    setskillField(e.target.value);
+    ValidateSkillField();
+    fetch(`${url}/api/v1/auth/getSkillList/?q=${e.target.value}`)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var addressToSet = [];
+        // ""
+        for (var i = 0; i < responseJson.length; i++) {
+          addressToSet.push({
+            id: responseJson[i]._id,
+            label: responseJson[i].skillField,
+          });
+        }
+        if (addressToSet.length === responseJson.length) {
+          setskillFieldItems(addressToSet);
+        }
+        // setskillFieldItems(responseJson);
+      });
+  };
+  const SetSkillFieldAddress = (item) => {
+    setskillField(item);
+    ValidateSkillField();
+    var _id;
+    for (let i = 0; i < skillFieldItems.length; i++) {
+      if (skillFieldItems[i].label === item) {
+        _id = skillFieldItems[i].id;
+        setFormDataSkillField({
+          ...formDataSkillField,
+          ["skillField"]: _id,
+        });
+      }
+    }
+    skillfieldList.map((skill) =>
+      skill._id === _id ? setskillList(skill.skill) : ""
+    );
+  };
   const getAddress = (e) => {
     setAddress(e.target.value);
     validateCity();
@@ -701,96 +746,58 @@ function CreateProject() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setisLoading(true);
-    const checkForm1 = checkValidateForm();
+    checkValidateForm();
 
-    const cityCheck = validateCity();
-    if (checkForm1 == true && cityCheck === true) {
-      if (stepArrayData.length > 0) {
-        // validateCity();
-        setstepRequiredFields(projectstepRequired);
+    validateCity();
 
-        // console.log(photo, "photo");
-        const newFormData = new FormData();
-        newFormData.append("title", formData.title);
-        newFormData.append("type", formData.type);
-        newFormData.append("general_photo", photo);
-        newFormData.append("general_description", formData.general_description);
-        newFormData.append("category", formData.category);
-        newFormData.append("address", JSON.stringify(formDataCity));
-        newFormData.append(
-          "implementation_steps",
-          JSON.stringify(stepArrayData)
-        );
-        try {
-          const headers = {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-            },
-          };
-          await axios
-            .post(
-              "http://localhost:1190/api/v1/project/CreateProject",
-              newFormData,
-              headers
-            )
-            .then((response) => {
-              setisLoading(false);
-              setFormData(projectData);
-              setPhoto("");
-              setFormDataCity(projectcityData);
-              setstepArrayData([]);
-              setAddress("");
-              history.push("ProjectList");
-              addToast(`Project created Successfully`, {
-                appearance: "success",
-                autoDismiss: true,
-                autoDismissTimeout: 3000,
-              });
-            })
-            .catch((err) => {
-              setTimeout(() => {
-                setisLoading(false);
-              }, 1000);
-              if (err.response.data) {
-                if (err.response.data.message) {
-                  addToast(`${err.response.data.message}`, {
-                    appearance: "error",
-                    autoDismiss: true,
-                    autoDismissTimeout: 3000,
-                  });
-                } else {
-                  addToast(`${err.response.data}`, {
-                    appearance: "error",
-                    autoDismiss: true,
-                    autoDismissTimeout: 3000,
-                  });
-                }
-              }
-            });
-        } catch (error) {
-          setTimeout(() => {
-            setisLoading(false);
-          }, 1000);
-        }
-      } else {
-        setTimeout(() => {
-          setisLoading(false);
-        }, 1000);
-        addToast(`Please add atleast one implementation_step `, {
+    // validateCity();
+    setstepRequiredFields(projectstepRequired);
+
+    // console.log(photo, "photo");
+    const newFormData = new FormData();
+    newFormData.append("title", formData.title);
+    newFormData.append("type", formData.type);
+    newFormData.append("general_photo", photo);
+    newFormData.append("general_description", formData.general_description);
+    newFormData.append("category", formData.category);
+    newFormData.append("address", JSON.stringify(formDataCity));
+    newFormData.append("implementation_steps", JSON.stringify(stepArrayData));
+    try {
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      };
+      let response = await axios.post(
+        `${url}/api/v1/project/CreateProject`,
+        newFormData,
+        headers
+      );
+
+      setisLoading(false);
+      setFormData(projectData);
+      setPhoto("");
+      setFormDataCity(projectcityData);
+      setstepArrayData([]);
+      setAddress("");
+      history.push("ProjectList");
+      addToast(response.data.message, {
+        appearance: "success",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+    } catch (err) {
+      setTimeout(() => {
+        setisLoading(false);
+      }, 1000);
+
+      if (err.response) {
+        addToast(`${err.response.data.message}`, {
           appearance: "error",
           autoDismiss: true,
           autoDismissTimeout: 3000,
         });
       }
-    } else {
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
-      addToast(`Please fill mandatory fields`, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
     }
   };
   // *****************
@@ -815,6 +822,7 @@ function CreateProject() {
           ValidateOtherSkill={ValidateOtherSkill}
           ValidateOtherMaterial={ValidateOtherMaterial}
           addToast={addToast}
+          skillFieldItems={skillFieldItems}
           // ***********
           // Required Fields
           stepRequiredFields={stepRequiredFields}
@@ -832,6 +840,9 @@ function CreateProject() {
           CategoryList={CategoryList}
           formDataCity={formDataCity}
           stepformData={stepformData}
+          getSkillField={getSkillField}
+          SetSkillFieldAddress={SetSkillFieldAddress}
+          skillField={skillField}
           // on chnage
           handleStepChange={handleStepChange}
           handleChange={handleChange}

@@ -12,9 +12,11 @@ import target from "../../Components/UI/Theme/images/target.svg";
 import Header from "../../Components/HomeHeader";
 import projectImage from "../../Components/UI/Theme/images/projectImage.png";
 import avatarimage from "../../Components/UI/Theme/images/avatar.png";
-import ProjectList from "../../Components/projectList";
 import axios from "axios";
 import Loaders from "../../shared/Loaders";
+import {url} from '../../urlConfig' 
+
+
 import DefaultImage from "../../Components/UI/Theme/images/index2.png";
 export default function Home({ notificationsData }) {
   const [projectData, setProjectData] = useState("");
@@ -22,7 +24,7 @@ export default function Home({ notificationsData }) {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:1190/api/v1/auth/projectList")
+        .get(`${url}/api/v1/auth/projectList`)
         .then((res) => {
           setProjectData(res.data.projects);
         })
@@ -190,7 +192,7 @@ export default function Home({ notificationsData }) {
                           }}
                           src={
                             data.project.general_photo
-                              ? `http://localhost:1190/views/uploads/${data.project.general_photo}`
+                              ? `${url}/views/uploads/${data.project.general_photo}`
                               : DefaultImage
                           }
                           alt="GeoCity Project"
@@ -202,7 +204,7 @@ export default function Home({ notificationsData }) {
                           <img
                             src={
                               data.project.general_photo
-                                ? `http://localhost:1190/views/uploads/${data.project.general_photo}`
+                                ? `${url}/views/uploads/${data.project.general_photo}`
                                 : DefaultImage
                             }
                             alt="avatar"

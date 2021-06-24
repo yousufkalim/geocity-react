@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios'
+import axios from "axios";
+import { url } from "../../../urlConfig";
+
 import {
   Card,
   CardImg,
@@ -30,16 +32,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ChipsArray({
   materialArrayData,
   setmaterialArrayData,
-  materialList,
-  addToast,
   step,
-  otherMaterial,
 }) {
-  const classes = useStyles();
   const [state, setstate] = useState("");
-
   useEffect(async () => {
-    let res = await axios.get("http://localhost:1190/api/v1/auth/materialList");
+    let res = await axios.get(`${url}/api/v1/auth/materialList`);
     res.data.materials &&
       res.data.materials.map((mat) => {
         if (mat._id === step) {

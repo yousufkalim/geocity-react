@@ -1,5 +1,6 @@
 import React from "react";
 import DefaultImage from "../Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.png";
+import {url} from '../urlConfig' 
 
 export default function TableRow({ project, DeleteProject, step }) {
   //   const onDeletContributor = (id) => {
@@ -24,7 +25,7 @@ export default function TableRow({ project, DeleteProject, step }) {
               }}
               src={
                 project.general_photo
-                  ? `http://localhost:1190/views/uploads/${project.general_photo}`
+                  ? `${url}/views/uploads/${project.general_photo}`
                   : DefaultImage
               }
               alt="alternative"
@@ -34,7 +35,7 @@ export default function TableRow({ project, DeleteProject, step }) {
             {project.title}
           </td>
           <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>
-            <span> {project.project_owner.username}</span>
+            <span> {project.project_owner.firstName}</span>
           </td>
           <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>{step.name}</td>
           <td style={{ padding: "0.4rem 0.4rem 0rem 0.4rem" }}>

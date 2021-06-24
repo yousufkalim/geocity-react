@@ -102,7 +102,7 @@ export default function SignupForm({
           </p>
         </Link>
       </div>
-      <form method="POST" className="appointmentform" id="signup-form">
+      <form method="POST" autocomplete="off" className="appointmentform" id="signup-form">
         <h2>Sign Up form</h2>
         <div className="form-group-1">
           <label className="label-agree-term row">
@@ -116,6 +116,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             name="firstname"
             id="firstname"
             value={formData.firstname}
@@ -136,6 +137,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             name="lastname"
             id="lastname"
             value={formData.lastname}
@@ -156,6 +158,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             name="email"
             id="email"
             placeholder="Email"
@@ -314,6 +317,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             name="phone"
             id="phone"
             placeholder="0xxxxxxxxx"
@@ -358,6 +362,7 @@ export default function SignupForm({
             rows={3}
             cols={5}
             type="text"
+           
             name="profile_description"
             className="form-control"
             id="profile_description"
@@ -444,6 +449,7 @@ export default function SignupForm({
                   </label>
                   <TextField
                     type="text"
+                   
                     name="skill"
                     id="skill"
                     placeholder="Other"
@@ -467,6 +473,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             onChange={handleSkillChange}
             // onBlur={ValidateSpecialization}
             name="specialization"
@@ -582,6 +589,7 @@ export default function SignupForm({
             </label>
             <TextField
               type="text"
+             
               name="skill"
               id="skill"
               placeholder="Other"
@@ -633,7 +641,7 @@ export default function SignupForm({
         )}
         {/*Add interests */}
         <label className="label-agree-term pt-4 row">
-          Interests*{" "}
+          Interests{" "}
           {interestRequiredFields.name !== "" ? (
             <p className="errorselect"> {interestRequiredFields.name}</p>
           ) : (
@@ -698,6 +706,7 @@ export default function SignupForm({
           <label className="label-agree-term">Facebook</label>
           <TextField
             type="text"
+           
             name="facebook"
             id="facebook"
             placeholder="https://www.facebook.com/"
@@ -709,6 +718,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             name="instagram"
             id="instagram"
             placeholder="https://www.instagram.com"
@@ -720,6 +730,7 @@ export default function SignupForm({
 
           <TextField
             type="text"
+           
             name="youtube"
             id="youtube"
             placeholder="https://www.youtube.com"

@@ -71,19 +71,7 @@ const ModalExample = (props) => {
         <ModalBody>
           <Form>
             <Row form>
-              <Col md={4}>
-                <FormGroup>
-                  <Label for="exampleEmail">User_name*</Label>
-                  <Input
-                    type="text"
-                    name="username"
-                    id="username"
-                    value={formData.username}
-                    placeholder="username"
-                    onChange={handleChange}
-                  />
-                </FormGroup>
-              </Col>
+            
 
               <Col md={4}>
                 <FormGroup>
@@ -210,7 +198,7 @@ const ModalExample = (props) => {
                   src={
                     profilePreview
                       ? profilePreview
-                      : `http://localhost:1190/views/uploads/${data.data.profile_picture}`
+                      : `${url}/views/uploads/${data.data.profile_picture}`
                   }
                   alt="alternative"
                 />
