@@ -16,44 +16,44 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({}));
 
 export default function MenuListComposition() {
-  const classes = useStyles();
-  const history = useHistory();
+	const classes = useStyles();
+	const history = useHistory();
 
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+	const [open, setOpen] = React.useState(false);
+	const anchorRef = React.useRef(null);
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+	const handleToggle = () => {
+		setOpen((prevOpen) => !prevOpen);
+	};
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
+	const handleClose = (event) => {
+		if (anchorRef.current && anchorRef.current.contains(event.target)) {
+			return;
+		}
 
-    setOpen(false);
-  };
+		setOpen(false);
+	};
 
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
+	function handleListKeyDown(event) {
+		if (event.key === "Tab") {
+			event.preventDefault();
+			setOpen(false);
+		}
+	}
 
-  // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
+	// return focus to the button when we transitioned from !open -> open
+	const prevOpen = React.useRef(open);
+	React.useEffect(() => {
+		if (prevOpen.current === true && open === false) {
+			anchorRef.current.focus();
+		}
 
-    prevOpen.current = open;
-  }, [open]);
+		prevOpen.current = open;
+	}, [open]);
 
-  return (
-    <div>
-      {/* <Button
+	return (
+		<div>
+			{/* <Button
           ref={anchorRef}
           aria-controls={open ? "menu-list-grow" : undefined}
           aria-haspopup="true"
@@ -61,87 +61,87 @@ export default function MenuListComposition() {
         >
           Toggle Menu Grow
         </Button> */}
-      <div
-        className="row ml-4 userdiv"
-        ref={anchorRef}
-        aria-controls={open ? "menu-list-grow" : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle}
-      >
-        <img
-          style={{
-            width: "33px",
-            height: "33px",
-            borderRadius: "100%",
-            // marginRight: "auto",
-            // marginBottom: "0.5rem",
-            // marginLeft: "auto",
-            marginTop: "5px",
-          }}
-          src={
-            getUser().profile_picture == "default.png"
-              ? DefaultImage
-              : `http://localhost:1190/views/uploads/${
-                  getUser().profile_picture
-                }`
-          }
-          alt="alternative"
-        />
-        <ul className="navbar-nav">
-          <li className="nav-item row">
-            <a className="nav-link username">{getUser().firstName}{" "}</a>
-            <i
-              class="fas fa-caret-down"
-              style={{
-                fontSize: "22px",
-                margin: "auto",
-                color: "#fff",
-              }}
-            ></i>
-          </li>
-        </ul>
-      </div>
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === "bottom" ? "right top" : "right bottom",
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={open}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
-                  {getUser().role === "admin" ? (
-                    <Link to={`/Admindashboard/${getUser()._id}`}>
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    </Link>
-                  ) : (
-                    <Link to={`/profile/${getUser()._id}`}>
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    </Link>
-                  )}
-                  <hr style={{ margin: "0 auto", width: "90%" }} />
-                  <Link onClick={() => SignOut(history)}>
-                    <MenuItem>Log Out</MenuItem>
-                  </Link>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </div>
-  );
+			<div
+				className="row ml-4 userdiv"
+				ref={anchorRef}
+				aria-controls={open ? "menu-list-grow" : undefined}
+				aria-haspopup="true"
+				onClick={handleToggle}
+			>
+				<img
+					style={{
+						width: "33px",
+						height: "33px",
+						borderRadius: "100%",
+						// marginRight: "auto",
+						// marginBottom: "0.5rem",
+						// marginLeft: "auto",
+						marginTop: "5px",
+					}}
+					src={
+						getUser().profile_picture == "default.png"
+							? DefaultImage
+							: `http://160.153.249.64:7002/views/uploads/${
+									getUser().profile_picture
+							  }`
+					}
+					alt="alternative"
+				/>
+				<ul className="navbar-nav">
+					<li className="nav-item row">
+						<a className="nav-link username">{getUser().firstName} </a>
+						<i
+							class="fas fa-caret-down"
+							style={{
+								fontSize: "22px",
+								margin: "auto",
+								color: "#fff",
+							}}
+						></i>
+					</li>
+				</ul>
+			</div>
+			<Popper
+				open={open}
+				anchorEl={anchorRef.current}
+				role={undefined}
+				transition
+				disablePortal
+			>
+				{({ TransitionProps, placement }) => (
+					<Grow
+						{...TransitionProps}
+						style={{
+							transformOrigin:
+								placement === "bottom" ? "right top" : "right bottom",
+						}}
+					>
+						<Paper>
+							<ClickAwayListener onClickAway={handleClose}>
+								<MenuList
+									autoFocusItem={open}
+									id="menu-list-grow"
+									onKeyDown={handleListKeyDown}
+								>
+									{getUser().role === "admin" ? (
+										<Link to={`/Admindashboard/${getUser()._id}`}>
+											<MenuItem onClick={handleClose}>Profile</MenuItem>
+										</Link>
+									) : (
+										<Link to={`/profile/${getUser()._id}`}>
+											<MenuItem onClick={handleClose}>Profile</MenuItem>
+										</Link>
+									)}
+									<hr style={{ margin: "0 auto", width: "90%" }} />
+									<Link onClick={() => SignOut(history)}>
+										<MenuItem>Log Out</MenuItem>
+									</Link>
+								</MenuList>
+							</ClickAwayListener>
+						</Paper>
+					</Grow>
+				)}
+			</Popper>
+		</div>
+	);
 }
