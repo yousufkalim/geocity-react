@@ -607,36 +607,6 @@ function Signup() {
         }
       } else if (e.target.name === "score") {
         setskillFormData({ ...skillformData, [e.target.name]: value });
-
-        // var avail = e.target.value.replace(/\D/g, "");
-        // if (e.target.value <= 5) {
-        //   if (avail !== "") {
-        //     if (avail.length >= 2 && e.target.value >= 5) {
-        //     } else {
-        //       setskillFormData({
-        //         ...skillformData,
-        //         [e.target.name]: avail,
-        //       });
-        //     }
-        //   } else {
-        //     if (e.target.value) {
-        //       setskillFormData({
-        //         ...skillformData,
-        //         [e.target.name]: e.target.value.replace(/\D/g, ""),
-        //       });
-        //     } else {
-        //       setskillFormData({
-        //         ...skillformData,
-        //         [e.target.name]: "",
-        //       });
-        //     }
-        //   }
-        //   const msg = "";
-        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        // } else {
-        //   const msg = "Rating must be less than equal to 5";
-        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        // }
       } else {
         setskillFormData({ ...skillformData, [e.target.name]: value });
       }

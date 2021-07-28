@@ -8,7 +8,7 @@ export const loginData = {
 export const signupData = {
   firstname: "",
   lastname: "",
- 
+
   email: "",
   city: "",
   password: "",
@@ -41,6 +41,7 @@ export const editProfileData = {
 export const signupstepData = {
   skillField: "",
   skill: "",
+  intentions: "",
   specialization: "",
   score: "1",
 };

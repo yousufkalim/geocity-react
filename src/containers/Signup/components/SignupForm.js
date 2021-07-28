@@ -102,7 +102,12 @@ export default function SignupForm({
           </p>
         </Link>
       </div>
-      <form method="POST" autocomplete="off" className="appointmentform" id="signup-form">
+      <form
+        method="POST"
+        autocomplete="off"
+        className="appointmentform"
+        id="signup-form"
+      >
         <h2>Sign Up form</h2>
         <div className="form-group-1">
           <label className="label-agree-term row">
@@ -116,7 +121,6 @@ export default function SignupForm({
 
           <TextField
             type="text"
-           
             name="firstname"
             id="firstname"
             value={formData.firstname}
@@ -137,7 +141,6 @@ export default function SignupForm({
 
           <TextField
             type="text"
-           
             name="lastname"
             id="lastname"
             value={formData.lastname}
@@ -158,7 +161,6 @@ export default function SignupForm({
 
           <TextField
             type="text"
-           
             name="email"
             id="email"
             placeholder="Email"
@@ -317,7 +319,6 @@ export default function SignupForm({
 
           <TextField
             type="text"
-           
             name="phone"
             id="phone"
             placeholder="0xxxxxxxxx"
@@ -362,7 +363,6 @@ export default function SignupForm({
             rows={3}
             cols={5}
             type="text"
-           
             name="profile_description"
             className="form-control"
             id="profile_description"
@@ -390,23 +390,6 @@ export default function SignupForm({
             address={skillField}
             validateCity={ValidateSkillField}
           />
-          {/* <div className="select-list">
-            <select
-              name="skillField"
-              id="skillField"
-              value={skillformData.skillField}
-              onChange={handleSkillChange}
-              onBlur={ValidateSkillField}
-            >
-              <option value="">Select SkillField</option>
-
-              {skillFieldList
-                ? skillFieldList.map((skill) => (
-                    <option value={skill._id}>{skill.skillField}</option>
-                  ))
-                : ""}
-            </select>
-          </div> */}
 
           {skillList.length > 0 ? (
             <>
@@ -417,8 +400,7 @@ export default function SignupForm({
                 ) : (
                   ""
                 )}
-              </label>{" "}
-              {/* <br /> */}
+              </label>
               <div className="select-list">
                 <select
                   name="skill"
@@ -449,7 +431,6 @@ export default function SignupForm({
                   </label>
                   <TextField
                     type="text"
-                   
                     name="skill"
                     id="skill"
                     placeholder="Other"
@@ -469,11 +450,44 @@ export default function SignupForm({
             ""
           )}
 
-          <label className="label-agree-term">Specialization</label>
+          {/*   Intentions field  */}
+          {skillformData.skill.length > 0 ? (
+            <>
+              <label className="label-agree-term row">
+                Intentions*
+                {skillRequiredFields.intentions !== "" ? (
+                  <p className="errorselect">
+                    {" "}
+                    {skillRequiredFields.intentions}
+                  </p>
+                ) : (
+                  ""
+                )}
+              </label>
+              <div className="select-list">
+                <select
+                  name="intentions"
+                  id="intentions"
+                  value={skillformData.intentions}
+                  onChange={handleSkillChange}
+                  onBlur={ValidateSkill}
+                >
+                  <option value="">Select intentions</option>
 
+                  <option value="volunteer">volunteer</option>
+                  <option value="barter">barter</option>
+                  <option value="paid">paid</option>
+                </select>
+              </div>
+              {/*Intentions End field*/}
+            </>
+          ) : (
+            <></>
+          )}
+
+          <label className="label-agree-term">Specialization</label>
           <TextField
             type="text"
-           
             onChange={handleSkillChange}
             // onBlur={ValidateSpecialization}
             name="specialization"
@@ -589,7 +603,6 @@ export default function SignupForm({
             </label>
             <TextField
               type="text"
-             
               name="skill"
               id="skill"
               placeholder="Other"
@@ -706,7 +719,6 @@ export default function SignupForm({
           <label className="label-agree-term">Facebook</label>
           <TextField
             type="text"
-           
             name="facebook"
             id="facebook"
             placeholder="https://www.facebook.com/"
@@ -718,7 +730,6 @@ export default function SignupForm({
 
           <TextField
             type="text"
-           
             name="instagram"
             id="instagram"
             placeholder="https://www.instagram.com"
@@ -730,7 +741,6 @@ export default function SignupForm({
 
           <TextField
             type="text"
-           
             name="youtube"
             id="youtube"
             placeholder="https://www.youtube.com"
