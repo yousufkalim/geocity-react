@@ -1215,6 +1215,7 @@ export default function UserDashboard(props) {
     setShowsSkills(true);
     setSkills(userData[0].skills);
   };
+  // End show skills
   return (
     <div>
       <SkillsModal data={skills} show={showsSkills} setShow={setShowsSkills} />
