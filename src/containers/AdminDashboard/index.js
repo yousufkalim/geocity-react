@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Nav, Row, Col, Tab, Container } from "react-bootstrap";
 import { useToasts } from "react-toast-notifications";
-import {url} from '../../urlConfig' 
+import { url } from "../../urlConfig";
 
 import {
   signupskillRequired,
@@ -26,6 +26,7 @@ import AddSKillModal from "../../Components/UI/Modals/AddSKillModal";
 import AddMaterialModal from "../../Components/UI/Modals/AddMaterialModal";
 import DropDown from "../../shared/DropdownMenu";
 import NotificationMenu from "../../shared/NotificationMenu";
+import SkillsModal from "../../shared/SkillsModal";
 export default function UserDashboard(props) {
   const { addToast } = useToasts();
   const { notificationsData } = props;
@@ -74,9 +75,8 @@ export default function UserDashboard(props) {
     category: "",
     color: "",
   });
-  const [skillRequiredFields, setskillRequiredFields] = useState(
-    signupskillRequired
-  );
+  const [skillRequiredFields, setskillRequiredFields] =
+    useState(signupskillRequired);
   const [materialList, setMaterialList] = useState([]);
   const [skillList, setskillList] = useState("");
   const [material, setMaterial] = useState("");
@@ -165,7 +165,6 @@ export default function UserDashboard(props) {
             });
             setaddcategorymodal(!addcategorymodal);
             setMaterial("");
-            // console.log(res, "res material");
           })
           .catch((err) => {
             setTimeout(() => {
@@ -201,7 +200,6 @@ export default function UserDashboard(props) {
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
-        // console.log(error, "error catch");
       }
     } else {
       setTimeout(() => {
@@ -244,7 +242,6 @@ export default function UserDashboard(props) {
             });
             seteditcategorymodal(!editcategorymodal);
             setMaterial("");
-            // console.log(res, "res material");
           })
           .catch((err) => {
             setTimeout(() => {
@@ -280,7 +277,6 @@ export default function UserDashboard(props) {
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
-        // console.log(error, "error catch");
       }
     } else {
       setTimeout(() => {
@@ -321,7 +317,6 @@ export default function UserDashboard(props) {
             });
             setmaterialmodal(!materialmodal);
             setMaterial("");
-            // console.log(res, "res material");
           })
           .catch((err) => {
             setTimeout(() => {
@@ -357,7 +352,6 @@ export default function UserDashboard(props) {
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
-        // console.log(error, "error catch");
       }
     } else {
       setTimeout(() => {
@@ -398,7 +392,6 @@ export default function UserDashboard(props) {
             });
             seteditmaterialmodal(!editmaterialmodal);
             setMaterial("");
-            // console.log(res, "res material");
           })
           .catch((err) => {
             setTimeout(() => {
@@ -434,7 +427,6 @@ export default function UserDashboard(props) {
         setTimeout(() => {
           setisLoading(false);
         }, 1000);
-        // console.log(error, "error catch");
       }
     } else {
       setTimeout(() => {
@@ -481,7 +473,7 @@ export default function UserDashboard(props) {
   const EditMaterialToggle = (materialId) => {
     if (editmaterialmodal === false) {
       const filter = materialList.filter((dt) => dt._id === materialId);
-      // console.log(filter, "filter material");
+
       seteditMaterial(filter[0].name);
       setmaterialId(materialId);
     }
@@ -517,7 +509,6 @@ export default function UserDashboard(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-          // console.log(res, "res material");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -543,7 +534,6 @@ export default function UserDashboard(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      // console.log(error, "error catch");
     }
   };
   const AddSkill = () => {
@@ -588,7 +578,7 @@ export default function UserDashboard(props) {
   const AddSkillSubmit = () => {
     setisLoading(true);
     const check = ValidateSkillField();
-    console.log(formData, "formdata");
+
     if (skillArrayData.length > 0) {
       if (check === true) {
         const headers = {
@@ -615,7 +605,6 @@ export default function UserDashboard(props) {
               setskillArrayData("");
               setFormData({ ...formData, ["skillField"]: "" });
               setaddskillmodal(!addskillmodal);
-              // console.log(res, "res material");
             })
             .catch((err) => {
               setTimeout(() => {
@@ -641,7 +630,6 @@ export default function UserDashboard(props) {
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
-          // console.log(error, "error catch");
         }
       } else {
         setTimeout(() => {
@@ -660,14 +648,12 @@ export default function UserDashboard(props) {
     }
   };
   // *****
-  // console.log(editformData, "seteditformData");
+
   const Edittoggle = (skillId) => {
     // alert(skillId);
 
     if (editskillmodal === false) {
       const filter = skillFieldList.filter((skill) => skill._id == skillId);
-
-      // console.log(filter, "fileted");
       seteditskillArrayData(filter[0]);
       const obj = {
         skillField: filter[0].skillField,
@@ -697,7 +683,6 @@ export default function UserDashboard(props) {
     seteditFormData({ ...editformData, [e.target.name]: value });
   };
   // *******************
-  // console.log(materialRequiredFields, "materialRequiredFields");
   // Validations
   const checkValidateForm = () => {
     let obj = {};
@@ -925,52 +910,36 @@ export default function UserDashboard(props) {
         .get(`${url}/api/v1/auth/materialList`)
         .then((res) => {
           setMaterialList(res.data.materials);
-          // console.log(res, "res material");
         })
         .catch((err) => console.log(" error =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+    } catch (error) {}
 
     try {
       axios
         .get(`${url}/api/v1/auth/skillList`)
         .then((res) => {
           setskillFieldList(res.data.skills);
-          console.log(res, "res skill");
         })
         .catch((err) => console.log(" error =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+    } catch (error) {}
     try {
       axios
         .get(`${url}/api/v1/auth/categoryList`)
         .then((res) => {
           setCategoryList(res.data.category);
-          // console.log(res, "response category");
         })
         .catch((err) => console.log(" error category =>", err));
-    } catch (error) {
-      // console.log(error, "error catch");
-    }
+    } catch (error) {}
 
     try {
       axios
         .get(`${url}/api/v1/admin/userslist`, headers)
         .then((res) => {
-          const filter = res.data.users.filter(
-            (dt) => dt.role !== "admin"
-          );
+          const filter = res.data.users.filter((dt) => dt.role !== "admin");
           setuserData(filter);
-          console.log(res.data.users, "res data user");
         })
-        .catch((err) => {
-          console.log(" error =>", err);
-        });
-    } catch (error) {
-      console.log(error, "error catch");
-    }
+        .catch((err) => {});
+    } catch (error) {}
 
     // fecth all projects
     try {
@@ -978,14 +947,9 @@ export default function UserDashboard(props) {
         .get(`${url}/api/v1/admin/projectslist`, headers)
         .then((res) => {
           setprojectData(res.data.projects);
-          // console.log(res.data, "res data projects");
         })
-        .catch((err) => {
-          console.log(" error =>", err);
-        });
-    } catch (error) {
-      console.log(error, "error catch");
-    }
+        .catch((err) => {});
+    } catch (error) {}
   }, [
     key,
     addcategorymodal,
@@ -995,7 +959,6 @@ export default function UserDashboard(props) {
     editskillmodal,
     addskillmodal,
   ]);
-  // console.log(data, "data user");
 
   // Delete User
   const DeleteUser = (id) => {
@@ -1007,11 +970,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .post(
-          `${url}/api/v1/admin/delete-user?id=${id}`,
-          {},
-          headers
-        )
+        .post(`${url}/api/v1/admin/delete-user?id=${id}`, {}, headers)
         .then((res) => {
           setTimeout(() => {
             setisLoading(false);
@@ -1023,8 +982,6 @@ export default function UserDashboard(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-
-          // console.log(res, "res material");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -1050,7 +1007,6 @@ export default function UserDashboard(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      // console.log(error, "error catch");
     }
   };
 
@@ -1064,11 +1020,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .post(
-          `${url}/api/v1/admin//delete-project?id=${id}`,
-          {},
-          headers
-        )
+        .post(`${url}/api/v1/admin//delete-project?id=${id}`, {}, headers)
         .then((res) => {
           setTimeout(() => {
             setisLoading(false);
@@ -1080,8 +1032,6 @@ export default function UserDashboard(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-
-          // console.log(res, "res material");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -1107,9 +1057,9 @@ export default function UserDashboard(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      // console.log(error, "error catch");
     }
   };
+
   const DeleteMaterial = (id) => {
     setisLoading(true);
     const headers = {
@@ -1119,11 +1069,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .post(
-          `${url}/api/v1/admin/delete-material?id=${id}`,
-          {},
-          headers
-        )
+        .post(`${url}/api/v1/admin/delete-material?id=${id}`, {}, headers)
         .then((res) => {
           setTimeout(() => {
             setisLoading(false);
@@ -1135,8 +1081,6 @@ export default function UserDashboard(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-
-          // console.log(res, "res material");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -1162,7 +1106,6 @@ export default function UserDashboard(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      // console.log(error, "error catch");
     }
   };
   const DeleteSkillField = (id) => {
@@ -1174,11 +1117,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .post(
-          `${url}/api/v1/admin/delete-skillField?id=${id}`,
-          {},
-          headers
-        )
+        .post(`${url}/api/v1/admin/delete-skillField?id=${id}`, {}, headers)
         .then((res) => {
           setTimeout(() => {
             setisLoading(false);
@@ -1190,8 +1129,6 @@ export default function UserDashboard(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-
-          // console.log(res, "res material");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -1217,7 +1154,6 @@ export default function UserDashboard(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      // console.log(error, "error catch");
     }
   };
   const DeleteCategory = (id) => {
@@ -1229,11 +1165,7 @@ export default function UserDashboard(props) {
     };
     try {
       axios
-        .post(
-          `${url}/api/v1/admin/delete-category?id=${id}`,
-          {},
-          headers
-        )
+        .post(`${url}/api/v1/admin/delete-category?id=${id}`, {}, headers)
         .then((res) => {
           setTimeout(() => {
             setisLoading(false);
@@ -1245,8 +1177,6 @@ export default function UserDashboard(props) {
             autoDismiss: true,
             autoDismissTimeout: 3000,
           });
-
-          // console.log(res, "res material");
         })
         .catch((err) => {
           setTimeout(() => {
@@ -1272,14 +1202,22 @@ export default function UserDashboard(props) {
       setTimeout(() => {
         setisLoading(false);
       }, 1000);
-      // console.log(error, "error catch");
     }
   };
   // ****
   // Edit Skill
 
+  // show skills
+  const [showsSkills, setShowsSkills] = useState(false);
+  const [skills, setSkills] = useState([]);
+  const seeSkills = (id) => {
+    const userData = userdata.filter((x) => x._id === id);
+    setShowsSkills(true);
+    setSkills(userData[0].skills);
+  };
   return (
     <div>
+      <SkillsModal data={skills} show={showsSkills} setShow={setShowsSkills} />
       <Header data={notificationsData} />
       <EditSkillModal
         modal={editskillmodal}
@@ -1443,6 +1381,7 @@ export default function UserDashboard(props) {
                           addToast={addToast}
                           materialList={materialList}
                           DeleteUser={DeleteUser}
+                          seeSkills={seeSkills}
                           skillFieldList={skillFieldList}
                         />
                       </Tab.Pane>

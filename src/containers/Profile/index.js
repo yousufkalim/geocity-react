@@ -754,7 +754,6 @@ export default function Profile(props) {
                   </p>
                 </div>
                 <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                  {console.log(data.data.skills)}
                   {data.data.skills
                     ? data.data.skills.map((skill, i) => (
                         <div
@@ -834,7 +833,7 @@ export default function Profile(props) {
               {getUser()._id == props.match.params.id ? (
                 ""
               ) : (
-                <div className="container ">
+                <div className="container">
                   <div
                     className="row"
                     style={{ marginTop: "2rem", marginLeft: "3rem" }}
@@ -849,7 +848,7 @@ export default function Profile(props) {
                         onChange={handleCommentChange}
                         rows={3}
                         style={{ width: "90%" }}
-                        placeholder="  Add a coment"
+                        placeholder="Add a coment"
                         onBlur={validateComment}
                       />
                       {commentError !== "" ? (

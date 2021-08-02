@@ -473,10 +473,9 @@ export default function SignupForm({
                   onBlur={ValidateSkill}
                 >
                   <option value="">Select intentions</option>
-
-                  <option value="volunteer">volunteer</option>
-                  <option value="barter">barter</option>
-                  <option value="paid">paid</option>
+                  <option value="bénévole">bénévole</option>
+                  <option value="troc">troc</option>
+                  <option value="payé">payé</option>
                 </select>
               </div>
               {/*Intentions End field*/}
