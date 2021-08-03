@@ -43,7 +43,6 @@ function CreateProject() {
   const [materialArrayData, setmaterialArrayData] = useState([]);
   const [stepArrayData, setstepArrayData] = useState([]);
   // ************
-  console.log(stepArrayData, "stepArrayData");
   // Single Statess
   const [address, setAddress] = useState("");
   const [material, setMaterial] = useState("");
@@ -105,7 +104,6 @@ function CreateProject() {
       return true;
     }
   };
-
   const ValidateSkill = () => {
     if (!formDataSkillField.skill) {
       const msg = "Required";
@@ -128,7 +126,6 @@ function CreateProject() {
       return true;
     }
   };
-
   const validateStepType = () => {
     if (!stepType) {
       const msg = "Required";
@@ -136,9 +133,7 @@ function CreateProject() {
       return false;
     } else {
       const msg = "";
-
       setstepRequiredFields({ ...stepRequiredFields, stepType: msg });
-
       return true;
     }
   };
@@ -150,7 +145,6 @@ function CreateProject() {
     } else {
       const msg = "";
       setmaterialRequiredFields({ ...materialRequiredFields, name: msg });
-
       return true;
     }
   };
@@ -206,7 +200,6 @@ function CreateProject() {
       return false;
     }
   };
-
   const validateCity = () => {
     // ""
     if (address === "") {
@@ -224,7 +217,6 @@ function CreateProject() {
       return true;
     }
   };
-
   const validateCategory = () => {
     if (!formData.category) {
       const msg = "Required";
@@ -236,7 +228,6 @@ function CreateProject() {
       return true;
     }
   };
-
   const validateTitle = () => {
     if (!formData.title) {
       const msg = "Required";
@@ -277,7 +268,6 @@ function CreateProject() {
       return true;
     }
   };
-
   const validateDescription = () => {
     if (!stepformData.description) {
       const msg = "Required";
@@ -324,7 +314,6 @@ function CreateProject() {
     }
   };
   // console.log(aboutRequiredFields, "obj");
-
   const checkValidateForm2 = () => {
     let obj = {};
     let reqFields = true;
@@ -413,7 +402,6 @@ function CreateProject() {
       return true;
     }
   };
-
   // validation end************************************
 
   // useEffect
@@ -559,7 +547,6 @@ function CreateProject() {
       setcityRequiredFields({ ...cityRequiredFields, city: msg });
     }
   };
-
   // get set adress end
 
   // handle change
@@ -568,7 +555,6 @@ function CreateProject() {
 
     setFormData({ ...formData, [e.target.name]: value });
   };
-
   const handleSkillChange = async (e) => {
     if (e.target.name === "skillField") {
       setFormDataSkillField({
@@ -665,6 +651,7 @@ function CreateProject() {
             skills.speciality = formDataSkillField.speciality;
             skills.skill = formDataSkillField.skill;
             skills.skillField = formDataSkillField.skillField;
+            skills.intentions = formDataSkillField.intentions;
             stepformData.skills = skills;
             setstepArrayData((prevState) => [...prevState, stepformData]);
             setstepFormData(projectstepData);
@@ -705,6 +692,7 @@ function CreateProject() {
           skills.speciality = formDataSkillField.speciality;
           skills.skill = formDataSkillField.skill;
           skills.skillField = formDataSkillField.skillField;
+          skills.intentions = formDataSkillField.intentions;
           stepformData.skills = skills;
           setstepArrayData((prevState) => [...prevState, stepformData]);
           setstepFormData(projectstepData);
@@ -752,8 +740,6 @@ function CreateProject() {
 
     // validateCity();
     setstepRequiredFields(projectstepRequired);
-
-    // console.log(photo, "photo");
     const newFormData = new FormData();
     newFormData.append("title", formData.title);
     newFormData.append("type", formData.type);
@@ -773,7 +759,6 @@ function CreateProject() {
         newFormData,
         headers
       );
-
       setisLoading(false);
       setFormData(projectData);
       setPhoto("");
@@ -787,10 +772,7 @@ function CreateProject() {
         autoDismissTimeout: 3000,
       });
     } catch (err) {
-      setTimeout(() => {
-        setisLoading(false);
-      }, 1000);
-
+      setisLoading(false);
       if (err.response) {
         addToast(`${err.response.data.message}`, {
           appearance: "error",

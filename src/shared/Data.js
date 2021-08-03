@@ -124,12 +124,12 @@ export const projectstepRequired = {
   speciality: "",
   stepType: "",
   status: "",
-
   error: "",
 };
 export const projectskillRequired = {
   skillField: "",
-  speciality: "",
   skill: "",
+  intentions: "",
+  speciality: "",
   otherSKill: "",
 };
