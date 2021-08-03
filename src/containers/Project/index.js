@@ -947,18 +947,12 @@ export default function Project(props) {
         (step) => step._id === id
       );
       const step = data.project.implementation_steps[stepIndex];
-      // console.log(step, "step form toggle");
-      // if (step.skills) {
-      //   setstepType("Field");
-      // } else {
-      //   setstepType("Material");
-      // }
-
       if (step.skills) {
         setstepType("Field");
         const skillData = {
           skillField: step.skills.skillField._id,
           speciality: step.skills.speciality,
+          intentions: step.skills.intentions,
           skill: step.skills.skill,
         };
         skillfieldList.map((skill) =>
@@ -972,7 +966,6 @@ export default function Project(props) {
           description: step.description,
           status: step.status,
         };
-        // stepData.skills = skillData;
 
         setstepFormData(stepData);
       } else if (step.material) {

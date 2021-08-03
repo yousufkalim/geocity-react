@@ -222,10 +222,9 @@ const ModalExample = (props) => {
                   <Col md={4}>
                     <FormGroup>
                       <Label for="exampleAddress" className="row label">
-                        Skill*{" "}
+                        Skill*
                         {skillRequiredFields.skill !== "" ? (
                           <p className="errorselect ">
-                            {" "}
                             {skillRequiredFields.skill}
                           </p>
                         ) : (
@@ -247,6 +246,35 @@ const ModalExample = (props) => {
                               <option value={mat}>{mat}</option>
                             ))
                           : ""}
+                      </Input>
+                    </FormGroup>
+                  </Col>
+
+                  <Col md={4}>
+                    <FormGroup>
+                      <Label for="exampleAddress" className="row label">
+                        intentions*
+                        {skillRequiredFields.skill !== "" ? (
+                          <p className="errorselect ">
+                            {" "}
+                            {skillRequiredFields.skill}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </Label>
+                      <Input
+                        type="select"
+                        name="intentions"
+                        id="intentions"
+                        value={formDataSkillField.intentions}
+                        onChange={handleSkillChange}
+                        onBlur={ValidateSkill}
+                      >
+                        <option value="">Select intentions</option>
+                        <option value="bénévole">bénévole</option>
+                        <option value="troc">troc</option>
+                        <option value="payé">payé</option>
                       </Input>
                     </FormGroup>
                   </Col>
