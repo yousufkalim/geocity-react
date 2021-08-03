@@ -82,6 +82,7 @@ export default function Project(props) {
   const [CheckStep, setCheckStep] = useState("");
   const [commentError, setCommentError] = useState("");
   const [skillFieldData, setSkillFieldData] = useState("");
+  const [intentionData, setIntentionData] = useState("");
   const [implementationstepData, setimplementationstepData] = useState([]);
 
   const [MaterialData, setMaterialData] = useState("");
@@ -1000,29 +1001,45 @@ export default function Project(props) {
         headers
       )
       .then((res) => {
-        // setProjectdataList(res.data.ownedProjects);
-        console.log(res, "res skill search data");
-
         const filter = res.data.filter(
           (dt) =>
             dt._id !== data.project.project_owner._id && dt.role !== "admin"
         );
         setSkillFieldData(filter);
-        // addToast("Success", {
-        //   appearance: "success",
-        //   autoDismiss: true,
-        //   autoDismissTimeout: 3000,
-        // });
       })
       .catch((err) => {
-        // addToast("Error", {
-        //   appearance: "error",
-        //   autoDismiss: true,
-        //   autoDismissTimeout: 3000,
-        // });
         console.log(" error searchbyskill =>", err);
       });
   };
+  // search by intention
+  const SearchByintentions = async (skill, intention) => {
+    console.log(skill, intention);
+    setsearchBy(skill);
+    var headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+
+    await axios
+      .post(
+        `${url}/api/v1/project/SearchCollaboratorsByintention`,
+        { intention: intention },
+        headers
+      )
+      .then((res) => {
+        const filter = res.data.filter(
+          (dt) =>
+            dt._id !== data.project.project_owner._id && dt.role !== "admin"
+        );
+        console.log(filter);
+        setIntentionData(filter);
+      })
+      .catch((err) => {
+        console.log(" error searchbyskill =>", err);
+      });
+  };
+  // search by intention
   const SearchByMaterials = (skill, id) => {
     setsearchBy(skill);
 
@@ -1066,7 +1083,6 @@ export default function Project(props) {
   const toggle = (skill, id, stepId) => {
     setsearchBy(skill);
     setstepId(stepId);
-
     setInviteId(id);
     const fil = implementationstepData.find((el) => el._id == stepId);
     setSingleStep(fil);
@@ -1074,6 +1090,8 @@ export default function Project(props) {
       SearchBySkills(skill, id);
     } else if (modal === false && skill === "material") {
       SearchByMaterials(skill, id);
+    } else if (modal === false && skill === "intention") {
+      SearchByintentions(skill, id);
     }
     setModal(!modal);
   };
@@ -1782,7 +1800,6 @@ export default function Project(props) {
     // setimplementationstepData,
     // implementationstepData,
   ]);
-  // console.log(skillFieldData, "data skillFieldData");
   useEffect(() => {
     var headers = {
       headers: {
@@ -1833,11 +1850,13 @@ export default function Project(props) {
             InviteId={InviteId}
             SearchByMaterials={SearchByMaterials}
             toggle={toggle}
+            SearchByintentions={SearchByintentions}
             materialList={materialList}
             searchBy={searchBy}
             data={data}
             singleStep={singleStep}
             skillFieldData={skillFieldData ? skillFieldData : []}
+            intentionData={intentionData ? intentionData : []}
             MaterialData={MaterialData ? MaterialData : []}
           />
           <SuggestModal

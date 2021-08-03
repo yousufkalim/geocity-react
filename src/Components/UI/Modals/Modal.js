@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Loaders from "../../../shared/Loaders";
 import axios from "axios";
-import {url} from '../../../urlConfig' 
+import { url } from "../../../urlConfig";
 
 import { useToasts } from "react-toast-notifications";
 import Table from "../../../shared/Table";
@@ -15,10 +15,12 @@ const ModalExample = (props) => {
     searchBy,
     setsearchBy,
     MaterialData,
+    intentionData,
     id,
     materialList,
     SearchBySkills,
     SearchByMaterials,
+    SearchByintentions,
     InviteId,
     data,
     singleStep,
@@ -44,8 +46,7 @@ const ModalExample = (props) => {
         .then((res) => {
           const filter = res.data.filter(
             (dt) =>
-              dt._id !== data.project.project_owner._id &&
-              dt.role !== "admin"
+              dt._id !== data.project.project_owner._id && dt.role !== "admin"
           );
           setCategoryData(filter);
 
@@ -70,6 +71,9 @@ const ModalExample = (props) => {
   const SearchByMaterial = () => {
     SearchByMaterials("material", InviteId);
   };
+  const SearchByintention = () => {
+    SearchByintentions("intention", InviteId);
+  };
   return (
     <div>
       <Modal
@@ -93,7 +97,6 @@ const ModalExample = (props) => {
               <i className="fas fa-search text-dark"></i> SEARCH BY :
             </h6>
             <div className="row  mt-4">
-              <div className="col-lg-2"></div>
               <div className="col-lg-3">
                 <button
                   type="button"
@@ -138,7 +141,20 @@ const ModalExample = (props) => {
                   Category
                 </button>
               </div>
-              <div className="col-lg-1"></div>
+              <div className="col-lg-3">
+                <button
+                  onClick={SearchByintention}
+                  type="button"
+                  id="modalButton"
+                  className={
+                    searchBy === "Intention"
+                      ? "btn "
+                      : "bg-light text-dark border"
+                  }
+                >
+                  Intention
+                </button>
+              </div>
             </div>
             {searchBy === "skills" ? (
               <Table
@@ -162,6 +178,15 @@ const ModalExample = (props) => {
                 singleStep={singleStep}
                 materialList={materialList}
                 CategoryData={CategoryData ? CategoryData : ""}
+              />
+            ) : searchBy === "Intention" ? (
+              <Table
+                searchBy={searchBy}
+                skillFieldData={skillFieldData}
+                sendInvite={sendInvite}
+                singleStep={singleStep}
+                materialList={materialList}
+                intentionData={intentionData ? intentionData : ""}
               />
             ) : (
               ""

@@ -242,6 +242,16 @@ export default function ImpementationStep({
                       toggle("material", step.material._id, step._id)
                     }
                   />
+                ) : step.skills.intentions ? (
+                  <>
+                    <i
+                      className="fas fa-search fa-lg  text-secondary"
+                      onClick={() =>
+                        toggle("intention", step.skills.intentions, step._id)
+                      }
+                    />
+                    {console.log(step.skills.intentions, "date")}
+                  </>
                 ) : (
                   ""
                 )}
