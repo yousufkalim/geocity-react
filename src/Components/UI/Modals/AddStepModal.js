@@ -259,6 +259,7 @@ const ModalExample = (props) => {
                       </Input>
                     </FormGroup>
                   </Col>
+
                   {formDataSkillField.skill === "Other" ? (
                     <Col md={4}>
                       <FormGroup>
@@ -289,6 +290,39 @@ const ModalExample = (props) => {
                     </Col>
                   ) : (
                     ""
+                  )}
+                  {/*   Intentions field  */}
+                  {formDataSkillField.skill.length > 0 ? (
+                    <>
+                      <label className="label-agree-term row">
+                        Intentions*
+                        {skillRequiredFields.intentions !== "" ? (
+                          <p className="errorselect">
+                            {" "}
+                            {skillRequiredFields.intentions}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </label>
+                      <div className="select-list">
+                        <select
+                          name="intentions"
+                          id="intentions"
+                          value={formDataSkillField.intentions}
+                          onChange={handleSkillChange}
+                          onBlur={ValidateSkill}
+                        >
+                          <option value="">Select intentions</option>
+                          <option value="bénévole">bénévole</option>
+                          <option value="troc">troc</option>
+                          <option value="payé">payé</option>
+                        </select>
+                      </div>
+                      {/*Intentions End field*/}
+                    </>
+                  ) : (
+                    <></>
                   )}
                   <Col md={4}>
                     <FormGroup>

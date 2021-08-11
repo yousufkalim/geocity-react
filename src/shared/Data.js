@@ -50,6 +50,8 @@ export const signupskillRequired = {
   skillField: "",
   skill: "",
   specialization: "",
+  intentions: "",
+
   score: "",
   otherSKill: "",
 };

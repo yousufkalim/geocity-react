@@ -67,6 +67,7 @@ export default function Project(props) {
     skillField: "",
     speciality: "",
     skill: "",
+    intentions: "",
   };
   const projectData = {
     title: "",
@@ -333,7 +334,7 @@ export default function Project(props) {
                 setData(res.data);
                 setCommentArray(res.data.project.comments);
 
-                console.log(res.data, "res project data");
+                // console.log(res.data, "res project data");
               })
               .catch((err) => {
                 // console.log(" error projects all =>", err.response.data);
@@ -1008,13 +1009,12 @@ export default function Project(props) {
         setSkillFieldData(filter);
       })
       .catch((err) => {
-        console.log(" error searchbyskill =>", err);
+        // console.log(" error searchbyskill =>", err);
       });
   };
   // search by intention
   const SearchByintentions = async (skill, intention) => {
-    console.log(skill, intention);
-    setsearchBy(skill);
+    // console.log(skill, intention);
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -1028,21 +1028,21 @@ export default function Project(props) {
         headers
       )
       .then((res) => {
-        const filter = res.data.filter(
-          (dt) =>
-            dt._id !== data.project.project_owner._id && dt.role !== "admin"
-        );
-        console.log(filter);
-        setIntentionData(filter);
+        if (res.data) {
+          const filter = res.data.filter(
+            (dt) =>
+              dt._id !== data.project.project_owner._id && dt.role !== "admin"
+          );
+          console.log(filter, "filter");
+          setIntentionData(filter);
+        }
       })
       .catch((err) => {
-        console.log(" error searchbyskill =>", err);
+        // console.log(" error searchbyskill =>", err);
       });
   };
   // search by intention
   const SearchByMaterials = (skill, id) => {
-    setsearchBy(skill);
-
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -1090,7 +1090,7 @@ export default function Project(props) {
       SearchBySkills(skill, id);
     } else if (modal === false && skill === "material") {
       SearchByMaterials(skill, id);
-    } else if (modal === false && skill === "intention") {
+    } else if (modal === false && skill === "Intention") {
       SearchByintentions(skill, id);
     }
     setModal(!modal);
@@ -1528,7 +1528,7 @@ export default function Project(props) {
             (el) => el._id == tempstepId
           );
           obj2.contributing_user = fil.contributing_user;
-          console.log(fil, "fil oy");
+          // console.log(fil, "fil oy");
           // stepformData.skills = formDataSkillField;
           // let merge = { ...stepformData, ...formDataSkillField };
 

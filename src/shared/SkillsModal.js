@@ -5,7 +5,7 @@ const SkillsModal = (props) => {
     <>
       <Modal show={props.show} onHide={() => props.setShow(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>skills</Modal.Title>
+          <Modal.Title>Intentions</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <table class="table table-striped">

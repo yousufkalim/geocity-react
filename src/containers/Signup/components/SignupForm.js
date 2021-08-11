@@ -52,6 +52,7 @@ export default function SignupForm({
   validatePhoto,
   validateMaterial,
   validateCity,
+  ValidateIntension,
   //   *********
   otherMaterial,
   setotherMaterial,
@@ -470,7 +471,7 @@ export default function SignupForm({
                   id="intentions"
                   value={skillformData.intentions}
                   onChange={handleSkillChange}
-                  onBlur={ValidateSkill}
+                  onBlur={ValidateIntension}
                 >
                   <option value="">Select intentions</option>
                   <option value="bénévole">bénévole</option>

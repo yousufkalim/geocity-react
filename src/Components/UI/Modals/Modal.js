@@ -44,12 +44,13 @@ const ModalExample = (props) => {
           headers
         )
         .then((res) => {
-          const filter = res.data.filter(
-            (dt) =>
-              dt._id !== data.project.project_owner._id && dt.role !== "admin"
-          );
-          setCategoryData(filter);
-
+          if (res.data) {
+            const filter = res.data.filter(
+              (dt) =>
+                dt._id !== data.project.project_owner._id && dt.role !== "admin"
+            );
+            setCategoryData(filter);
+          }
           // addToast("Success", {
           //   appearance: "success",
           //   autoDismiss: true,
@@ -66,13 +67,18 @@ const ModalExample = (props) => {
     }
   };
   const SearchBySkill = () => {
+    setsearchBy("skills");
     SearchBySkills("skills", InviteId);
   };
   const SearchByMaterial = () => {
+    setsearchBy("material");
+
     SearchByMaterials("material", InviteId);
   };
   const SearchByintention = () => {
-    SearchByintentions("intention", InviteId);
+    setsearchBy("Intention");
+
+    SearchByintentions("Intention", InviteId);
   };
   return (
     <div>
@@ -104,7 +110,7 @@ const ModalExample = (props) => {
                   // id="userButton"
                   id="modalButton"
                   className={
-                    searchBy === "skills" || searchBy === "Category"
+                    searchBy !== "material"
                       ? "btn bg-light text-dark border"
                       : "btn "
                   }
@@ -119,7 +125,7 @@ const ModalExample = (props) => {
                   type="button"
                   id="modalButton"
                   className={
-                    searchBy === "material" || searchBy === "Category"
+                    searchBy !== "skills"
                       ? "btn bg-light text-dark border"
                       : "btn "
                   }
@@ -186,7 +192,7 @@ const ModalExample = (props) => {
                 sendInvite={sendInvite}
                 singleStep={singleStep}
                 materialList={materialList}
-                intentionData={intentionData ? intentionData : ""}
+                CategoryData={intentionData ? intentionData : ""}
               />
             ) : (
               ""

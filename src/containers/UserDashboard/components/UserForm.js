@@ -165,7 +165,7 @@ export default function UserForm({
               name="phone"
               id="phone"
               value={formData.phone}
-              placeholder="e.g 3017614142"
+              placeholder="0xxxxxxxxx"
               onChange={handleChange}
               onBlur={validatePhoneNumber}
             />

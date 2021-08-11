@@ -434,7 +434,7 @@ function CreateProject() {
             })
             .catch((err) => console.log(" error =>", err));
         } catch (error) {
-          console.log(error, "error catch");
+          // console.log(error, "error catch");
         }
       }
     }
@@ -480,7 +480,7 @@ function CreateProject() {
         _id = skillFieldItems[i].id;
         setFormDataSkillField({
           ...formDataSkillField,
-          ["skillField"]: _id,
+          skillField: _id,
         });
       }
     }

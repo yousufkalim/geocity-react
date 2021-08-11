@@ -37,7 +37,7 @@ const Example = ({
     searchBy === "skills"
   ) {
     return (
-      <div className="col-lg-12 text-center " style={{ marginTop: "5rem" }}>
+      <div className="col-lg-12 text-center " style={{ marginTop: "2rem" }}>
         <Table>
           <thead>
             <tr>
@@ -68,7 +68,7 @@ const Example = ({
     searchBy === "material"
   ) {
     return (
-      <div className="col-lg-12 text-center " style={{ marginTop: "5rem" }}>
+      <div className="col-lg-12 text-center " style={{ marginTop: "2rem" }}>
         <Table>
           <thead>
             <tr>
@@ -99,7 +99,39 @@ const Example = ({
     searchBy === "Category"
   ) {
     return (
-      <div className="col-lg-12 text-center " style={{ marginTop: "5rem" }}>
+      <div className="col-lg-12 text-center " style={{ marginTop: "2rem" }}>
+        <Table>
+          <thead>
+            <tr>
+              <th style={{ width: "20%" }}> Name</th>
+              <th style={{ width: "20%" }}>City</th>
+              <th style={{ width: "20%" }}>Goods</th>
+              <th style={{ width: "40%" }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(CategoryData).length > 0 &&
+              CategoryData.map((skill, i) => (
+                <SearchCategoryTableRow
+                  skill={skill}
+                  Link={Link}
+                  onSendInvite={onSendInvite}
+                  singleStep={singleStep}
+                  materialList={materialList}
+                />
+              ))}
+          </tbody>
+        </Table>
+      </div>
+    );
+  } else if (
+    CategoryData &&
+    typeof CategoryData !== typeof "" &&
+    Object.keys(CategoryData).length > 0 &&
+    searchBy === "Intention"
+  ) {
+    return (
+      <div className="col-lg-12 text-center " style={{ marginTop: "2rem" }}>
         <Table>
           <thead>
             <tr>

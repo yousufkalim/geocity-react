@@ -253,7 +253,7 @@ export default function UserDashboard(props) {
       if (skillFieldItems[i].label === item) {
         _id = skillFieldItems[i].id;
 
-        setskillFormData({ ...skillformData, ["skillField"]: _id });
+        setskillFormData({ ...skillformData, skillField: _id });
       }
     }
     skillFieldList.map((skill) =>
@@ -309,11 +309,11 @@ export default function UserDashboard(props) {
         var latitude = items[i].lat.toString();
         var longitude = items[i].lng.toString();
         var newAddress = items[i].label.split(String(zipCode));
-        setFormData({ ...formData, ["city"]: city });
-        setFormData({ ...formData, ["zipCode"]: zipCode });
-        setFormData({ ...formData, ["latitude"]: latitude });
-        setFormData({ ...formData, ["address"]: newAddress[0] });
-        setFormData({ ...formData, ["longitude"]: longitude });
+        setFormData({ ...formData, city: city });
+        setFormData({ ...formData, zipCode: zipCode });
+        setFormData({ ...formData, latitude: latitude });
+        setFormData({ ...formData, address: newAddress[0] });
+        setFormData({ ...formData, longitude: longitude });
       }
     }
     // validateCity();
@@ -707,7 +707,7 @@ export default function UserDashboard(props) {
             return false;
           }
         });
-        if (check[0] === true && check[1] === true) {
+        if (check[0] === true && check[1] === true && check[2] === true) {
           if (skillArrayData.length === 5) {
             // alert(skillArrayData.length);
             addToast("skills length must be 1 or less than equal to 5", {
@@ -720,17 +720,18 @@ export default function UserDashboard(props) {
             if (skillformData.skill === "Other") {
               if (otherSKill !== "") {
                 skillformData.skill = otherSKill;
-
                 setskillArrayData([...skillArrayData, skillformData]);
                 setskillFormData(signupstepData);
                 setskillRequiredFields(signupskillRequired);
                 setotherSkill("");
+                setskillField("");
               } else {
                 ValidateOtherSkill();
               }
             } else {
               setskillArrayData([...skillArrayData, skillformData]);
               setskillFormData(signupstepData);
+              setskillField("");
               setskillRequiredFields(signupskillRequired);
             }
           }
@@ -745,7 +746,7 @@ export default function UserDashboard(props) {
           return false;
         }
       });
-      if (check[0] === true && check[1] === true) {
+      if (check[0] === true && check[1] === true && check[2] === true) {
         if (skillArrayData.length === 5) {
           // alert(skillArrayData.length);
           addToast("skills length must be 1 or less than equal to 5", {
@@ -765,6 +766,7 @@ export default function UserDashboard(props) {
               setskillArrayData([...skillArrayData, skillformData]);
               setskillFormData(signupstepData);
               setskillRequiredFields(signupskillRequired);
+              setskillField("");
               setotherSkill("");
             } else {
               ValidateOtherSkill();
@@ -773,6 +775,7 @@ export default function UserDashboard(props) {
             setskillArrayData([...skillArrayData, skillformData]);
             setskillFormData(signupstepData);
             setskillRequiredFields(signupskillRequired);
+            setskillField("");
           }
         }
       }
@@ -1037,7 +1040,7 @@ export default function UserDashboard(props) {
       .then((res) => {
         // const obj = { ...res.data };
 
-        setData({ ["data"]: res.data.user });
+        setData({ data: res.data.user });
         setinvitationData(res.data.user.invitation);
         UserData(res.data.user);
         // console.log(res.data, "res data user");

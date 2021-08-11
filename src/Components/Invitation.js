@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useToasts } from "react-toast-notifications";
-import {url} from '../urlConfig' 
+import { url } from "../urlConfig";
 
 export default function UserprojectList({ data, i, DefaultImage }) {
   const { addToast } = useToasts();
@@ -35,10 +35,10 @@ export default function UserprojectList({ data, i, DefaultImage }) {
               autoDismissTimeout: 1000,
             });
           }
-          console.log(" error =>", err);
+          // console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
   };
   const DeclineFunc = async (projectId, sender, decision, invitation) => {
@@ -67,10 +67,10 @@ export default function UserprojectList({ data, i, DefaultImage }) {
             autoDismiss: true,
             autoDismissTimeout: 1000,
           });
-          console.log(" error =>", err);
+          // console.log(" error =>", err);
         });
     } catch (error) {
-      console.log(error, "error catch");
+      // console.log(error, "error catch");
     }
   };
   return (
