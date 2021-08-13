@@ -99,14 +99,15 @@ function Signup() {
   };
   // validation start*************************
 
-  const ValidateSpecialization = () => {
-    if (skillformData.specialization) {
-      setskillRequiredFields({ ...skillRequiredFields, specialization: "" });
+  const ValidateIntension = () => {
+    if (skillformData.intentions) {
+      let msg = "";
+      setskillRequiredFields({ ...skillRequiredFields, intentions: msg });
 
       return true;
-    } else if (!skillformData.specialization) {
+    } else if (!skillformData.intentions) {
       const msg = "Required";
-      setskillRequiredFields({ ...skillRequiredFields, specialization: msg });
+      setskillRequiredFields({ ...skillRequiredFields, intentions: msg });
       return false;
     }
   };
@@ -607,36 +608,6 @@ function Signup() {
         }
       } else if (e.target.name === "score") {
         setskillFormData({ ...skillformData, [e.target.name]: value });
-
-        // var avail = e.target.value.replace(/\D/g, "");
-        // if (e.target.value <= 5) {
-        //   if (avail !== "") {
-        //     if (avail.length >= 2 && e.target.value >= 5) {
-        //     } else {
-        //       setskillFormData({
-        //         ...skillformData,
-        //         [e.target.name]: avail,
-        //       });
-        //     }
-        //   } else {
-        //     if (e.target.value) {
-        //       setskillFormData({
-        //         ...skillformData,
-        //         [e.target.name]: e.target.value.replace(/\D/g, ""),
-        //       });
-        //     } else {
-        //       setskillFormData({
-        //         ...skillformData,
-        //         [e.target.name]: "",
-        //       });
-        //     }
-        //   }
-        //   const msg = "";
-        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        // } else {
-        //   const msg = "Rating must be less than equal to 5";
-        //   setskillRequiredFields({ ...skillRequiredFields, score: msg });
-        // }
       } else {
         setskillFormData({ ...skillformData, [e.target.name]: value });
       }
@@ -673,7 +644,7 @@ function Signup() {
             return false;
           }
         });
-        if (check[0] === true && check[1] === true) {
+        if (check[0] === true && check[1] === true && check[2] === true) {
           if (skillArrayData.length === 5) {
             // alert(skillArrayData.length);
             addToast("skills length must be 1 or less than equal to 5", {
@@ -713,7 +684,7 @@ function Signup() {
           return false;
         }
       });
-      if (check[0] === true && check[1] === true) {
+      if (check[0] === true && check[1] === true && check[2] === true) {
         if (skillArrayData.length === 5) {
           // alert(skillArrayData.length);
           addToast("skills length must be 1 or less than equal to 5", {
@@ -776,7 +747,7 @@ function Signup() {
       if (skillFieldItems[i].label === item) {
         _id = skillFieldItems[i].id;
 
-        setskillFormData({ ...skillformData, ["skillField"]: _id });
+        setskillFormData({ ...skillformData, skillField: _id });
       }
     }
     skillFieldList.map((skill) =>
@@ -1038,6 +1009,7 @@ function Signup() {
             validateScore={validateScore}
             ValidateSkillField={ValidateSkillField}
             ValidateSkill={ValidateSkill}
+            ValidateIntension={ValidateIntension}
             validateFirstName={validateFirstName}
             validateLastName={validateLastName}
             ValidateOtherSkill={ValidateOtherSkill}

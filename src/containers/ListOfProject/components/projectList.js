@@ -4,7 +4,7 @@ import axios from "axios";
 import { getUser } from "../../../Auth/Index";
 import PrivateModal from "../../../Components/UI/Modals/PrivateModal";
 import AutorenewIcon from "../../../Components/UI/Theme/images/geocity/Group 3.png";
-import {url} from '../../../urlConfig' 
+import { url } from "../../../urlConfig";
 
 export default function ProjectList({
   data,
@@ -23,8 +23,10 @@ export default function ProjectList({
     var checkPrivate = data.usersToView
       ? data.usersToView.some((user) => user === getUser()._id)
       : "";
+
     setprivateFilter(checkPrivate);
   }, []);
+  console.log(data, "data.project.category.color");
   const onRequestToView = (id) => {
     RequestToView(id);
   };
@@ -54,6 +56,7 @@ export default function ProjectList({
       }
     }
   };
+
   if (filter === true && data.project) {
     if (check == true) {
       return <Redirect to={`/SingleProject/${data._id}`} />;
@@ -73,8 +76,8 @@ export default function ProjectList({
                   border: `${
                     data.project.category
                       ? data.project.category.color
-                        ? `5px solid ${data.project.category.color}`
-                        : "5px solid #000"
+                        ? `5px solid ${data.project.category.color} !important`
+                        : "5px solid #000 !important"
                       : ""
                   }`,
                 }}
@@ -110,7 +113,7 @@ export default function ProjectList({
                   getUser()._id !== data.project.project_owner &&
                   privateFilter === false
                     ? "This project is private"
-                    : data.project.general_description.substring(0,70)}
+                    : data.project.general_description.substring(0, 70)}
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   <span>
@@ -210,7 +213,7 @@ export default function ProjectList({
                   getUser()._id !== data.project_owner &&
                   privateFilter === false
                     ? "This Project is private"
-                    : data.general_description.substring(0,70)}
+                    : data.general_description.substring(0, 70)}
                 </p>
                 <div className="w-100  ml-2 " id="iconRow">
                   {data.type === "Private" &&

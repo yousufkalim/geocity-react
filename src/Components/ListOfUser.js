@@ -6,7 +6,14 @@ import UserTableRow from "../shared/UsersTableRow";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 export default function UserTable(props) {
-  const { data, addToast, materialList, skillFieldList, DeleteUser } = props;
+  const {
+    data,
+    addToast,
+    materialList,
+    skillFieldList,
+    DeleteUser,
+    seeSkills,
+  } = props;
 
   return (
     <>
@@ -17,6 +24,7 @@ export default function UserTable(props) {
             <th>User Name</th>
             <th>Email</th>
             <th>Total Projects</th>
+            <th>Intentions</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -24,7 +32,11 @@ export default function UserTable(props) {
           {data && data.length > 0 ? (
             data &&
             data.map((user) => (
-              <UserTableRow data={user} DeleteUser={DeleteUser} />
+              <UserTableRow
+                data={user}
+                DeleteUser={DeleteUser}
+                seeSkills={seeSkills}
+              />
             ))
           ) : (
             <h5 className="text-dark">No Users found</h5>

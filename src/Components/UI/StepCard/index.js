@@ -117,6 +117,30 @@ const Example = ({
             : ""}
           {/* {step.material ? `Material: ${step.material}` : ``} */}
         </CardSubtitle>
+        {step.skills?.intentions ? (
+          <>
+            <CardText>
+              <p>
+                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  {" "}
+                  Intentions:
+                </span>{" "}
+                <span
+                  style={{
+                    opacity: 0.7,
+                    fontSize: "15px",
+                  }}
+                >
+                  {" "}
+                  {step.skills.intentions}
+                </span>
+              </p>
+            </CardText>
+          </>
+        ) : (
+          <>{""}</>
+        )}
+
         <CardText>
           <p>
             <span style={{ fontSize: "15px", fontWeight: "bold" }}>

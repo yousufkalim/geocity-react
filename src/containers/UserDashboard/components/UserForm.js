@@ -165,7 +165,7 @@ export default function UserForm({
               name="phone"
               id="phone"
               value={formData.phone}
-              placeholder="e.g 3017614142"
+              placeholder="0xxxxxxxxx"
               onChange={handleChange}
               onBlur={validatePhoneNumber}
             />
@@ -328,59 +328,6 @@ export default function UserForm({
           </FormGroup>
         </Col>
 
-        <Col md={6} sm={12} lg={4}>
-          <FormGroup>
-            <Label for="exampleAddress2" className="row label">
-              Specialization
-            </Label>
-            <Input
-              type="text"
-              name="specialization"
-              id="specialization"
-              value={skillformData.specialization}
-              placeholder="Specialization"
-              // onBlur={ValidateSpecialization}
-              onChange={handleSkillChange}
-            />
-          </FormGroup>
-        </Col>
-        <Col md={6} sm={12} lg={4}>
-          <FormGroup>
-            <Label for="exampleAddress2" className="row label">
-              Rate Your Skill (1 to 5)*{" "}
-            </Label>
-            <Input
-              name="score"
-              id="score"
-              type="select"
-              value={skillformData.score}
-              onBlur={validateScore}
-              onChange={handleSkillChange}
-            >
-              <option value="">Select Score</option>
-
-              {scores
-                ? scores.map((skill) => <option value={skill}>{skill}</option>)
-                : ""}
-            </Input>
-            {/* <Input
-              min={1}
-              max={5}
-              type="number"
-              name="score"
-              id="score"
-              onBlur={validateScore}
-              value={skillformData.score}
-              placeholder="Score"
-              onChange={handleSkillChange}
-            /> */}
-            {skillRequiredFields.score !== "" ? (
-              <p className="error "> {skillRequiredFields.score}</p>
-            ) : (
-              ""
-            )}
-          </FormGroup>
-        </Col>
         {skillList.length > 0 ? (
           <Col md={6} sm={12} lg={4}>
             <FormGroup>
@@ -485,23 +432,101 @@ export default function UserForm({
                 />
               </FormGroup>
             </Col>
-
-            {/* <input
-                type="text"
-                name="skill"
-                id="skill"
-                placeholder="Enter your Skill"
-                value={otherSKill}
-                onChange={(e) => {
-                  ValidateOtherSkill();
-                  setotherSkill(e.target.value);
-                }}
-                onBlur={ValidateOtherSkill}
-              /> */}
           </>
         ) : (
           ""
         )}
+        {/*   Intentions field  */}
+        {skillformData.skill.length > 0 ? (
+          <>
+            <Col md={6} sm={12} lg={4}>
+              <FormGroup>
+                <label className="label-agree-term row">
+                  Intentions*
+                  {skillRequiredFields.intentions !== "" ? (
+                    <p className="errorselect">
+                      {" "}
+                      {skillRequiredFields.intentions}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </label>
+                <div className="select-list">
+                  <Input
+                    name="intentions"
+                    id="intentions"
+                    type="select"
+                    value={skillformData.intentions}
+                    onChange={handleSkillChange}
+                    onBlur={ValidateSkill}
+                  >
+                    <option value="">Select intentions</option>
+                    <option value="bénévole">bénévole</option>
+                    <option value="troc">troc</option>
+                    <option value="payé">payé</option>
+                  </Input>
+                </div>
+              </FormGroup>
+            </Col>
+            {/*Intentions End field*/}
+          </>
+        ) : (
+          <></>
+        )}
+        <Col md={6} sm={12} lg={4}>
+          <FormGroup>
+            <Label for="exampleAddress2" className="row label">
+              Specialization
+            </Label>
+            <Input
+              type="text"
+              name="specialization"
+              id="specialization"
+              value={skillformData.specialization}
+              placeholder="Specialization"
+              // onBlur={ValidateSpecialization}
+              onChange={handleSkillChange}
+            />
+          </FormGroup>
+        </Col>
+        <Col md={6} sm={12} lg={4}>
+          <FormGroup>
+            <Label for="exampleAddress2" className="row label">
+              Rate Your Skill (1 to 5)*{" "}
+            </Label>
+            <Input
+              name="score"
+              id="score"
+              type="select"
+              value={skillformData.score}
+              onBlur={validateScore}
+              onChange={handleSkillChange}
+            >
+              <option value="">Select Score</option>
+
+              {scores
+                ? scores.map((skill) => <option value={skill}>{skill}</option>)
+                : ""}
+            </Input>
+            {/* <Input
+              min={1}
+              max={5}
+              type="number"
+              name="score"
+              id="score"
+              onBlur={validateScore}
+              value={skillformData.score}
+              placeholder="Score"
+              onChange={handleSkillChange}
+            /> */}
+            {skillRequiredFields.score !== "" ? (
+              <p className="error "> {skillRequiredFields.score}</p>
+            ) : (
+              ""
+            )}
+          </FormGroup>
+        </Col>
         {skillArrayData.length < 5 ? (
           <Col md={6} sm={12} lg={4} className="text-left">
             <button

@@ -39,11 +39,7 @@ export default function ImpementationStep({
       );
     } else {
       return (
-        <button
-          type="button"
-          
-          className="btn btn-block ml-1 mt-3"
-        >
+        <button type="button" className="btn btn-block ml-1 mt-3">
           Pending
         </button>
       );
@@ -105,31 +101,58 @@ export default function ImpementationStep({
                 >
                   {step.skills ? (
                     Object.entries(step.skills).length > 0 ? (
-                      <p
-                        style={{
-                          color: "#707070",
-                        }}
-                      >
-                        <span
+                      <>
+                        <p
                           style={{
-                            fontWeight: "unset",
-                            fontSize: "13px",
+                            color: "#707070",
+                            margin: "0px",
                           }}
                         >
-                          {" "}
-                          Field
-                        </span>{" "}
-                        :
-                        <span
-                          className="ml-1"
+                          <span
+                            style={{
+                              fontWeight: "unset",
+                              fontSize: "13px",
+                            }}
+                          >
+                            Field
+                          </span>
+                          :
+                          <span
+                            className="ml-1"
+                            style={{
+                              fontWeight: "unset",
+                              fontSize: "12px",
+                            }}
+                          >
+                            {step.skills.skillField.skillField}
+                          </span>
+                        </p>
+
+                        <p
                           style={{
-                            fontWeight: "unset",
-                            fontSize: "12px",
+                            color: "#707070",
                           }}
                         >
-                          {step.skills.skillField.skillField}
-                        </span>
-                      </p>
+                          <span
+                            style={{
+                              fontWeight: "unset",
+                              fontSize: "13px",
+                            }}
+                          >
+                            Intentions
+                          </span>
+                          :
+                          <span
+                            className="ml-1"
+                            style={{
+                              fontWeight: "unset",
+                              fontSize: "12px",
+                            }}
+                          >
+                            {step.skills.intentions}
+                          </span>
+                        </p>
+                      </>
                     ) : (
                       ""
                     )
@@ -219,6 +242,16 @@ export default function ImpementationStep({
                       toggle("material", step.material._id, step._id)
                     }
                   />
+                ) : step.skills.intentions ? (
+                  <>
+                    <i
+                      className="fas fa-search fa-lg  text-secondary"
+                      onClick={() =>
+                        toggle("intention", step.skills.intentions, step._id)
+                      }
+                    />
+                    {console.log(step.skills.intentions, "date")}
+                  </>
                 ) : (
                   ""
                 )}

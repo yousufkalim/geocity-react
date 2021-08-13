@@ -45,34 +45,8 @@ export default function ChipsArray({
     setskillArrayData(ChipsArray);
   };
 
-  //   console.log(chipData, "skillchipData");
   return (
     <>
-      {/* {skillArrayData
-        ? skillArrayData.map((data) => {
-            // let icon = <TagFacesIcon />;
-            return (
-              skillFieldList &&
-              skillFieldList.map((mat) => {
-                if (mat._id === data.skillField) {
-                  return (
-                    <li key={data.skillField}>
-                      <Chip
-                        //   icon={icon}
-                        label={`SkillField: ${" "} ${
-                          mat.skillField
-                        } Skill: ${" "}${data.skill} 
-                         `}
-                        onDelete={() => handleDelete(data.skillField)}
-                        className={classes.chip}
-                      />
-                    </li>
-                  );
-                }
-              })
-            );
-          })
-        : ""} */}
       <Card
         style={{
           width: "70%",
@@ -83,7 +57,6 @@ export default function ChipsArray({
           border: "0.1px solid #ccc",
           marginTop: "5px",
         }}
-        // className={i == 0 ? "" : "mt-2"}
       >
         <CardBody style={{ padding: "0.6rem" }} className="text-left">
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -151,17 +124,32 @@ export default function ChipsArray({
             {
               <p style={{ marginBottom: "0px" }}>
                 <span style={{ fontSize: "15px", fontWeight: "bold" }}>
-                  {" "}
                   Score:
-                </span>{" "}
+                </span>
                 <span
                   style={{
                     opacity: 0.7,
                     fontSize: "15px",
                   }}
                 >
-                  {" "}
                   {step.score}
+                </span>
+              </p>
+            }
+          </CardText>
+          <CardText>
+            {
+              <p style={{ marginBottom: "0px" }}>
+                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  Intentions:
+                </span>
+                <span
+                  style={{
+                    opacity: 0.7,
+                    fontSize: "15px",
+                  }}
+                >
+                  {step.intentions}
                 </span>
               </p>
             }

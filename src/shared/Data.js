@@ -8,7 +8,7 @@ export const loginData = {
 export const signupData = {
   firstname: "",
   lastname: "",
- 
+
   email: "",
   city: "",
   password: "",
@@ -41,6 +41,7 @@ export const editProfileData = {
 export const signupstepData = {
   skillField: "",
   skill: "",
+  intentions: "",
   specialization: "",
   score: "1",
 };
@@ -49,6 +50,8 @@ export const signupskillRequired = {
   skillField: "",
   skill: "",
   specialization: "",
+  intentions: "",
+
   score: "",
   otherSKill: "",
 };
@@ -123,12 +126,12 @@ export const projectstepRequired = {
   speciality: "",
   stepType: "",
   status: "",
-
   error: "",
 };
 export const projectskillRequired = {
   skillField: "",
-  speciality: "",
   skill: "",
+  intentions: "",
+  speciality: "",
   otherSKill: "",
 };

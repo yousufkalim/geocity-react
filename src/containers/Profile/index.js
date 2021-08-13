@@ -13,7 +13,7 @@ import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import UserProjectList from "../../Components/userprojectList";
-import {url} from '../../urlConfig' 
+import { url } from "../../urlConfig";
 
 import LikeUser from "../../Components/RecommendUser";
 import DefaultImage from "../../Components/UI/Theme/images/8ff2fc404f633816f64064b2a064f4e8436068c4.jpg";
@@ -27,7 +27,6 @@ import Image46 from "../../Components/UI/Theme/images/geocity/Image 46.png";
 import Image47 from "../../Components/UI/Theme/images/geocity/Image 47.png";
 import Image48 from "../../Components/UI/Theme/images/geocity/time.png";
 
-
 import instagram from "../../Components/UI/Theme/images/instagram.png";
 import youtube from "../../Components/UI/Theme/images/youtube.png";
 import { useToasts } from "react-toast-notifications";
@@ -40,12 +39,9 @@ import io from "socket.io-client";
 export default function Profile(props) {
   const { notificationsData, setdata } = props;
   useEffect(() => {
-    window.socket = io(
-      process.env.REACT_APP_SOCKET_URL || "${url}",
-      {
-        query: `userConnectionId=${getUser()._id}`,
-      }
-    );
+    window.socket = io(process.env.REACT_APP_SOCKET_URL || "${url}", {
+      query: `userConnectionId=${getUser()._id}`,
+    });
     if (window.socket) {
       window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
         setdata([...notificationsData, datas]);
@@ -517,27 +513,21 @@ export default function Profile(props) {
     } catch (error) {
       // console.log(error, "error catch");
     }
-   
-      Axios.get(
-        `${url}/api/v1/profile/view-profile?id=${props.match.params.id}`,
-        headers
-      )
-        .then((res) => {
-          // const obj = { ...res.data };
 
-          setData({ ["data"]: res.data.user });
-          setCommentArray(res.data.user.comments);
+    Axios.get(
+      `${url}/api/v1/profile/view-profile?id=${props.match.params.id}`,
+      headers
+    )
+      .then((res) => {
+        // const obj = { ...res.data };
 
-          console.log(res.data, "res data user");
-        })
-        .catch((err) => {});
-   
-  }, [setComment,comment]);
-  // useEffect(() => {
-  //   if (data.data && data.data.comments) {
-  //     setCommentArray(data.data.comments);
-  //   }
-  // }, [comment]);
+        setData({ ["data"]: res.data.user });
+        setCommentArray(res.data.user.comments);
+
+        console.log(res.data, "res data user");
+      })
+      .catch((err) => {});
+  }, [setComment, comment]);
 
   return (
     <div>
@@ -629,7 +619,9 @@ export default function Profile(props) {
                 </div>
                 <div className="col-lg-9 col-md-8 col-sm-12 text-left">
                   <div>
-                    <h5 style={{ fontWeight: "bold" }}>{data.data.firstName}</h5>
+                    <h5 style={{ fontWeight: "bold" }}>
+                      {data.data.firstName}
+                    </h5>
                     <hr style={{ border: "2px solid #c4bec2" }} />
                   </div>
                   <p className="mt-2 " style={{ paddingBottom: "3rem" }}>
@@ -652,7 +644,6 @@ export default function Profile(props) {
                     <span className="ml-3">
                       {data.data.city ? data.data.city : "City"}{" "}
                       {data.data.zipCode ? data.data.zipCode : ""}
-
                     </span>
                   </p>
                 </div>
@@ -745,7 +736,7 @@ export default function Profile(props) {
                     </span>
                   </p>
                   <p style={{ marginTop: "1.5rem" }}>
-                  <img src={Image48} style={{ height: "25px" }} />
+                    <img src={Image48} style={{ height: "25px" }} />
 
                     <span className="ml-3">
                       {data.data.availability ? data.data.availability : ""}
@@ -838,22 +829,11 @@ export default function Profile(props) {
                     />
                   ))
                 : ""}
-              {/* {tempcommentArray.length > 0
-                ? tempcommentArray.map((comment) => (
-                    <Comments
-                      comment={comment}
-                      getUser={getUser}
-                      data={data}
-                      DefaultImage={DefaultImage}
-                      DeleteComment={DeleteTempComment}
-                      ClearOutlinedIcon={ClearOutlinedIcon}
-                    />
-                  ))
-                : ""} */}
+
               {getUser()._id == props.match.params.id ? (
                 ""
               ) : (
-                <div className="container ">
+                <div className="container">
                   <div
                     className="row"
                     style={{ marginTop: "2rem", marginLeft: "3rem" }}
@@ -868,7 +848,7 @@ export default function Profile(props) {
                         onChange={handleCommentChange}
                         rows={3}
                         style={{ width: "90%" }}
-                        placeholder="  Add a coment"
+                        placeholder="Add a coment"
                         onBlur={validateComment}
                       />
                       {commentError !== "" ? (
@@ -906,8 +886,7 @@ export default function Profile(props) {
                 </div>
               )}
             </div>
-            {/* end of row */}
-          </div>{" "}
+          </div>
           {/* Footer */}
           <Footer />
         </div>

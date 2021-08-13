@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Loaders from "../../../shared/Loaders";
 import axios from "axios";
-import {url} from '../../../urlConfig' 
+import { url } from "../../../urlConfig";
 
 import { useToasts } from "react-toast-notifications";
 import Table from "../../../shared/Table";
@@ -15,10 +15,12 @@ const ModalExample = (props) => {
     searchBy,
     setsearchBy,
     MaterialData,
+    intentionData,
     id,
     materialList,
     SearchBySkills,
     SearchByMaterials,
+    SearchByintentions,
     InviteId,
     data,
     singleStep,
@@ -42,13 +44,13 @@ const ModalExample = (props) => {
           headers
         )
         .then((res) => {
-          const filter = res.data.filter(
-            (dt) =>
-              dt._id !== data.project.project_owner._id &&
-              dt.role !== "admin"
-          );
-          setCategoryData(filter);
-
+          if (res.data) {
+            const filter = res.data.filter(
+              (dt) =>
+                dt._id !== data.project.project_owner._id && dt.role !== "admin"
+            );
+            setCategoryData(filter);
+          }
           // addToast("Success", {
           //   appearance: "success",
           //   autoDismiss: true,
@@ -65,10 +67,18 @@ const ModalExample = (props) => {
     }
   };
   const SearchBySkill = () => {
+    setsearchBy("skills");
     SearchBySkills("skills", InviteId);
   };
   const SearchByMaterial = () => {
+    setsearchBy("material");
+
     SearchByMaterials("material", InviteId);
+  };
+  const SearchByintention = () => {
+    setsearchBy("Intention");
+
+    SearchByintentions("Intention", InviteId);
   };
   return (
     <div>
@@ -93,7 +103,6 @@ const ModalExample = (props) => {
               <i className="fas fa-search text-dark"></i> SEARCH BY :
             </h6>
             <div className="row  mt-4">
-              <div className="col-lg-2"></div>
               <div className="col-lg-3">
                 <button
                   type="button"
@@ -101,7 +110,7 @@ const ModalExample = (props) => {
                   // id="userButton"
                   id="modalButton"
                   className={
-                    searchBy === "skills" || searchBy === "Category"
+                    searchBy !== "material"
                       ? "btn bg-light text-dark border"
                       : "btn "
                   }
@@ -116,7 +125,7 @@ const ModalExample = (props) => {
                   type="button"
                   id="modalButton"
                   className={
-                    searchBy === "material" || searchBy === "Category"
+                    searchBy !== "skills"
                       ? "btn bg-light text-dark border"
                       : "btn "
                   }
@@ -138,7 +147,20 @@ const ModalExample = (props) => {
                   Category
                 </button>
               </div>
-              <div className="col-lg-1"></div>
+              <div className="col-lg-3">
+                <button
+                  onClick={SearchByintention}
+                  type="button"
+                  id="modalButton"
+                  className={
+                    searchBy === "Intention"
+                      ? "btn "
+                      : "bg-light text-dark border"
+                  }
+                >
+                  Intention
+                </button>
+              </div>
             </div>
             {searchBy === "skills" ? (
               <Table
@@ -162,6 +184,15 @@ const ModalExample = (props) => {
                 singleStep={singleStep}
                 materialList={materialList}
                 CategoryData={CategoryData ? CategoryData : ""}
+              />
+            ) : searchBy === "Intention" ? (
+              <Table
+                searchBy={searchBy}
+                skillFieldData={skillFieldData}
+                sendInvite={sendInvite}
+                singleStep={singleStep}
+                materialList={materialList}
+                CategoryData={intentionData ? intentionData : ""}
               />
             ) : (
               ""

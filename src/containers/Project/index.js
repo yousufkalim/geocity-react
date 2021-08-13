@@ -67,6 +67,7 @@ export default function Project(props) {
     skillField: "",
     speciality: "",
     skill: "",
+    intentions: "",
   };
   const projectData = {
     title: "",
@@ -82,6 +83,7 @@ export default function Project(props) {
   const [CheckStep, setCheckStep] = useState("");
   const [commentError, setCommentError] = useState("");
   const [skillFieldData, setSkillFieldData] = useState("");
+  const [intentionData, setIntentionData] = useState("");
   const [implementationstepData, setimplementationstepData] = useState([]);
 
   const [MaterialData, setMaterialData] = useState("");
@@ -332,7 +334,7 @@ export default function Project(props) {
                 setData(res.data);
                 setCommentArray(res.data.project.comments);
 
-                console.log(res.data, "res project data");
+                // console.log(res.data, "res project data");
               })
               .catch((err) => {
                 // console.log(" error projects all =>", err.response.data);
@@ -947,18 +949,12 @@ export default function Project(props) {
         (step) => step._id === id
       );
       const step = data.project.implementation_steps[stepIndex];
-      // console.log(step, "step form toggle");
-      // if (step.skills) {
-      //   setstepType("Field");
-      // } else {
-      //   setstepType("Material");
-      // }
-
       if (step.skills) {
         setstepType("Field");
         const skillData = {
           skillField: step.skills.skillField._id,
           speciality: step.skills.speciality,
+          intentions: step.skills.intentions,
           skill: step.skills.skill,
         };
         skillfieldList.map((skill) =>
@@ -972,7 +968,6 @@ export default function Project(props) {
           description: step.description,
           status: step.status,
         };
-        // stepData.skills = skillData;
 
         setstepFormData(stepData);
       } else if (step.material) {
@@ -1007,32 +1002,47 @@ export default function Project(props) {
         headers
       )
       .then((res) => {
-        // setProjectdataList(res.data.ownedProjects);
-        console.log(res, "res skill search data");
-
         const filter = res.data.filter(
           (dt) =>
             dt._id !== data.project.project_owner._id && dt.role !== "admin"
         );
         setSkillFieldData(filter);
-        // addToast("Success", {
-        //   appearance: "success",
-        //   autoDismiss: true,
-        //   autoDismissTimeout: 3000,
-        // });
       })
       .catch((err) => {
-        // addToast("Error", {
-        //   appearance: "error",
-        //   autoDismiss: true,
-        //   autoDismissTimeout: 3000,
-        // });
-        console.log(" error searchbyskill =>", err);
+        // console.log(" error searchbyskill =>", err);
       });
   };
-  const SearchByMaterials = (skill, id) => {
-    setsearchBy(skill);
+  // search by intention
+  const SearchByintentions = async (skill, intention) => {
+    // console.log(skill, intention);
+    var headers = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
 
+    await axios
+      .post(
+        `${url}/api/v1/project/SearchCollaboratorsByintention`,
+        { intention: intention },
+        headers
+      )
+      .then((res) => {
+        if (res.data) {
+          const filter = res.data.filter(
+            (dt) =>
+              dt._id !== data.project.project_owner._id && dt.role !== "admin"
+          );
+          console.log(filter, "filter");
+          setIntentionData(filter);
+        }
+      })
+      .catch((err) => {
+        // console.log(" error searchbyskill =>", err);
+      });
+  };
+  // search by intention
+  const SearchByMaterials = (skill, id) => {
     var headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -1073,7 +1083,6 @@ export default function Project(props) {
   const toggle = (skill, id, stepId) => {
     setsearchBy(skill);
     setstepId(stepId);
-
     setInviteId(id);
     const fil = implementationstepData.find((el) => el._id == stepId);
     setSingleStep(fil);
@@ -1081,6 +1090,8 @@ export default function Project(props) {
       SearchBySkills(skill, id);
     } else if (modal === false && skill === "material") {
       SearchByMaterials(skill, id);
+    } else if (modal === false && skill === "Intention") {
+      SearchByintentions(skill, id);
     }
     setModal(!modal);
   };
@@ -1517,7 +1528,7 @@ export default function Project(props) {
             (el) => el._id == tempstepId
           );
           obj2.contributing_user = fil.contributing_user;
-          console.log(fil, "fil oy");
+          // console.log(fil, "fil oy");
           // stepformData.skills = formDataSkillField;
           // let merge = { ...stepformData, ...formDataSkillField };
 
@@ -1789,7 +1800,6 @@ export default function Project(props) {
     // setimplementationstepData,
     // implementationstepData,
   ]);
-  // console.log(skillFieldData, "data skillFieldData");
   useEffect(() => {
     var headers = {
       headers: {
@@ -1840,11 +1850,13 @@ export default function Project(props) {
             InviteId={InviteId}
             SearchByMaterials={SearchByMaterials}
             toggle={toggle}
+            SearchByintentions={SearchByintentions}
             materialList={materialList}
             searchBy={searchBy}
             data={data}
             singleStep={singleStep}
             skillFieldData={skillFieldData ? skillFieldData : []}
+            intentionData={intentionData ? intentionData : []}
             MaterialData={MaterialData ? MaterialData : []}
           />
           <SuggestModal

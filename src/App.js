@@ -43,11 +43,10 @@ import "./Theme/css/swiper.css";
 import "./Theme/css/magnific-popup.css";
 import axios from "axios";
 export default function App() {
-
   const [data, setdata] = useState([]);
   // console.log(this.state.notify_data, "notify_data");
   // console.log(data, "sort");
-  
+
   useEffect(() => {
     var headers = {
       headers: {
@@ -76,11 +75,9 @@ export default function App() {
               (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
             );
             setdata(sort);
-
-            console.log(res.data, "res notifications data");
           })
           .catch((err) => {
-            console.log(" error projects all =>", err.response.data);
+            // console.log(" error projects all =>", err.response.data);
           });
       } catch (error) {
         // console.log(error, "error catch");

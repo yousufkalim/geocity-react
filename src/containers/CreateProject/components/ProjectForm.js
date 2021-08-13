@@ -433,6 +433,40 @@ function Form(props) {
                 ""
               )}
 
+              {/*   Intentions field  */}
+              {formDataSkillField.skill.length > 0 ? (
+                <>
+                  <label className="label-agree-term row">
+                    Intentions*
+                    {skillRequiredFields.intentions !== "" ? (
+                      <p className="errorselect">
+                        {" "}
+                        {skillRequiredFields.intentions}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </label>
+                  <div className="select-list">
+                    <select
+                      name="intentions"
+                      id="intentions"
+                      value={formDataSkillField.intentions}
+                      onChange={handleSkillChange}
+                      onBlur={validateSpeciality}
+                    >
+                      <option value="">Select intentions</option>
+                      <option value="bénévole">bénévole</option>
+                      <option value="troc">troc</option>
+                      <option value="payé">payé</option>
+                    </select>
+                  </div>
+                  {/*Intentions End field*/}
+                </>
+              ) : (
+                <></>
+              )}
+
               <label className="label-agree-term row">
                 Speciality*
                 {skillRequiredFields.speciality !== "" ? (
@@ -507,15 +541,6 @@ function Form(props) {
             onChange={handleStepChange}
             onBlur={validateDescription}
           ></textarea>
-          {/* <input
-            type="text"
-            name="description"
-            id="title"
-            value={stepformData.description}
-            placeholder="Description"
-            onChange={handleStepChange}
-            onBlur={validateDescription}
-          /> */}
 
           <Button
             variant="contained"
