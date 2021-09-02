@@ -1,2 +1,2 @@
-//export const url = "https://api.geocity.io";
-export const url = "http://localhost:1190";
+export const url = process.env.REACT_APP_URL;
+
