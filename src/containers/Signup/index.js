@@ -9,6 +9,7 @@ import ChipArray from "../../Components/UI/MaterialChip";
 import { Link } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import { url } from "../../urlConfig";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 import {
   signupData,
@@ -18,6 +19,8 @@ import {
 } from "../../shared/Data";
 import { Redirect } from "react-router-dom";
 import SignupForm from "./components/SignupForm";
+import SuccessMessage from "./components/successMessage";
+
 
 function Signup() {
   const { addToast } = useToasts();
@@ -40,6 +43,8 @@ function Signup() {
 
   // Single States
   const [address, setAddress] = useState("");
+  const [successmodal, setSuccessModal] = useState(false);
+
 
   const [material, setMaterial] = useState("");
   const [interest, setInterest] = useState("");
@@ -81,6 +86,10 @@ function Signup() {
   });
   // *************************
   // states end ***************************
+
+  const successToggle = () => {
+    setSuccessModal(!successmodal)
+  }
   const showHide1 = (e) => {
     e.preventDefault();
     if (type1 === "password") {
@@ -760,8 +769,8 @@ function Signup() {
     validateCity();
     fetch(
       "https://api-adresse.data.gouv.fr/search/?q=" +
-        e.target.value +
-        "&type=housenumber&autocomplete=1&limit=10"
+      e.target.value +
+      "&type=housenumber&autocomplete=1&limit=10"
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -912,7 +921,7 @@ function Signup() {
 
     newFormData.append("skills", JSON.stringify(skillArrayData));
 
-    newFormData.append("material", JSON.stringify(materialArrayData));
+    materialArrayData && newFormData.append("material", JSON.stringify(materialArrayData));
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -929,8 +938,9 @@ function Signup() {
           { email: formData.email }
         );
         setFormData(signupData);
-        setisSuccess(true);
+
         setisLoading(false);
+        successToggle()
 
         addToast(response.data.message, {
           appearance: "success",
@@ -964,97 +974,121 @@ function Signup() {
       }
     }
   };
+  const GoToLogin = () => {
+    setisSuccess(true);
+    successToggle()
+  }
   if (isSuccess === true) {
     return <Redirect to="/Login" />;
   } else {
     return (
-      <div className="main">
-        <div className="containerProject">
-          <SignupForm
-            // HandleChange
-            handleChange={handleChange}
-            handleSkillChange={handleSkillChange}
-            onMaterialChange={onMaterialChange}
-            onInterestChange={onInterestChange}
-            address={address}
-            getAddress={getAddress}
-            getSkillField={getSkillField}
-            SetSkillFieldAddress={SetSkillFieldAddress}
-            skillField={skillField}
-            SetAddress={SetAddress}
-            setPhoto={setPhoto}
-            // formData
-            isLoading={isLoading}
-            skillformData={skillformData}
-            formData={formData}
-            socialformData={socialformData}
-            handleSocialChange={handleSocialChange}
-            //********** */
-            skillArrayData={skillArrayData}
-            interestArrayData={interestArrayData}
-            setinterestArrayData={setinterestArrayData}
-            materialArrayData={materialArrayData}
-            setmaterialArrayData={setmaterialArrayData}
-            //Validation Required
-            skillRequiredFields={skillRequiredFields}
-            aboutRequiredFields={aboutRequiredFields}
-            materialRequiredFields={materialRequiredFields}
-            interestRequiredFields={interestRequiredFields}
-            validateAvailability={validateAvailability}
-            validateConfirmPassword={validateConfirmPassword}
-            validateEmail={validateEmail}
-            validatePassword={validatePassword}
-            validatePhoneNumber={validatePhoneNumber}
-            validateProfileDesc={validateProfileDesc}
-            validateScore={validateScore}
-            ValidateSkillField={ValidateSkillField}
-            ValidateSkill={ValidateSkill}
-            ValidateIntension={ValidateIntension}
-            validateFirstName={validateFirstName}
-            validateLastName={validateLastName}
-            ValidateOtherSkill={ValidateOtherSkill}
-            validateMaterial={validateMaterial}
-            validateCity={validateCity}
-            validateInterest={validateInterest}
-            ValidateOtherMaterial={ValidateOtherMaterial}
-            // ***********
-            // Components
-            CircularProgress={CircularProgress}
-            Autocomplete={Autocomplete}
-            ChipArray={ChipArray}
-            useStyles={useStyles}
-            Link={Link}
-            addToast={addToast}
-            Button={Button}
-            showHide1={showHide1}
-            type1={type1}
-            type2={type2}
-            showHide2={showHide2}
-            // *********
+      <>
+        <Modal
+          size="lg"
+          isOpen={successmodal}
 
-            // List
-            items={items}
-            skillFieldItems={skillFieldItems}
-            materialList={materialList}
-            skillFieldList={skillFieldList}
-            CategoryList={CategoryList}
-            skillList={skillList}
-            material={material}
-            interest={interest}
-            otherSKill={otherSKill}
-            setotherSkill={setotherSkill}
-            otherMaterial={otherMaterial}
-            setotherMaterial={setotherMaterial}
-            setskillArrayData={setskillArrayData}
-            // ***********
-            // onSubmit
-            onskillAdd={onskillAdd}
-            onSubmit={onSubmit}
-            onMaterialAdd={onMaterialAdd}
-            onInterestAdd={onInterestAdd}
-          />
+          toggle={successToggle}
+
+        >
+          <ModalBody>
+            <SuccessMessage
+              toggle={successToggle}
+              onClick={GoToLogin}
+
+              title="Un e-mail de vérification vous a été envoyé, merci de cliquer sur le lien présent dans cet e-mail."
+              buttonText="Ok!"
+            />
+          </ModalBody>
+        </Modal>
+        <div className="main">
+
+          <div className="containerProject">
+            <SignupForm
+              // HandleChange
+              handleChange={handleChange}
+              handleSkillChange={handleSkillChange}
+              onMaterialChange={onMaterialChange}
+              onInterestChange={onInterestChange}
+              address={address}
+              getAddress={getAddress}
+              getSkillField={getSkillField}
+              SetSkillFieldAddress={SetSkillFieldAddress}
+              skillField={skillField}
+              SetAddress={SetAddress}
+              setPhoto={setPhoto}
+              // formData
+              isLoading={isLoading}
+              skillformData={skillformData}
+              formData={formData}
+              socialformData={socialformData}
+              handleSocialChange={handleSocialChange}
+              //********** */
+              skillArrayData={skillArrayData}
+              interestArrayData={interestArrayData}
+              setinterestArrayData={setinterestArrayData}
+              materialArrayData={materialArrayData}
+              setmaterialArrayData={setmaterialArrayData}
+              //Validation Required
+              skillRequiredFields={skillRequiredFields}
+              aboutRequiredFields={aboutRequiredFields}
+              materialRequiredFields={materialRequiredFields}
+              interestRequiredFields={interestRequiredFields}
+              validateAvailability={validateAvailability}
+              validateConfirmPassword={validateConfirmPassword}
+              validateEmail={validateEmail}
+              validatePassword={validatePassword}
+              validatePhoneNumber={validatePhoneNumber}
+              validateProfileDesc={validateProfileDesc}
+              validateScore={validateScore}
+              ValidateSkillField={ValidateSkillField}
+              ValidateSkill={ValidateSkill}
+              ValidateIntension={ValidateIntension}
+              validateFirstName={validateFirstName}
+              validateLastName={validateLastName}
+              ValidateOtherSkill={ValidateOtherSkill}
+              validateMaterial={validateMaterial}
+              validateCity={validateCity}
+              validateInterest={validateInterest}
+              ValidateOtherMaterial={ValidateOtherMaterial}
+              // ***********
+              // Components
+              CircularProgress={CircularProgress}
+              Autocomplete={Autocomplete}
+              ChipArray={ChipArray}
+              useStyles={useStyles}
+              Link={Link}
+              addToast={addToast}
+              Button={Button}
+              showHide1={showHide1}
+              type1={type1}
+              type2={type2}
+              showHide2={showHide2}
+              // *********
+
+              // List
+              items={items}
+              skillFieldItems={skillFieldItems}
+              materialList={materialList}
+              skillFieldList={skillFieldList}
+              CategoryList={CategoryList}
+              skillList={skillList}
+              material={material}
+              interest={interest}
+              otherSKill={otherSKill}
+              setotherSkill={setotherSkill}
+              otherMaterial={otherMaterial}
+              setotherMaterial={setotherMaterial}
+              setskillArrayData={setskillArrayData}
+              // ***********
+              // onSubmit
+              onskillAdd={onskillAdd}
+              onSubmit={onSubmit}
+              onMaterialAdd={onMaterialAdd}
+              onInterestAdd={onInterestAdd}
+            />
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
