@@ -562,7 +562,7 @@ export default function SignupForm({
         </div>
 
         <label className="label-agree-term row">
-          Material*{" "}
+          Material{" "}
           {materialRequiredFields.name !== "" ? (
             <p className="errorselect"> {materialRequiredFields.name}</p>
           ) : (

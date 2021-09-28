@@ -43,7 +43,7 @@ export default function Profile(props) {
       query: `userConnectionId=${getUser()._id}`,
     });
     if (window.socket) {
-      window.socket.on(`recieveNotification${getUser()._id}`, (datas) => {
+      window.socket.once(`recieveNotification${getUser()._id}`, (datas) => {
         setdata([...notificationsData, datas]);
         console.log(datas, "datas");
         addToast(datas.title, {
