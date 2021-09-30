@@ -21,7 +21,6 @@ import { Redirect } from "react-router-dom";
 import SignupForm from "./components/SignupForm";
 import SuccessMessage from "./components/successMessage";
 
-
 function Signup() {
   const { addToast } = useToasts();
 
@@ -44,7 +43,6 @@ function Signup() {
   // Single States
   const [address, setAddress] = useState("");
   const [successmodal, setSuccessModal] = useState(false);
-
 
   const [material, setMaterial] = useState("");
   const [interest, setInterest] = useState("");
@@ -88,8 +86,8 @@ function Signup() {
   // states end ***************************
 
   const successToggle = () => {
-    setSuccessModal(!successmodal)
-  }
+    setSuccessModal(!successmodal);
+  };
   const showHide1 = (e) => {
     e.preventDefault();
     if (type1 === "password") {
@@ -767,29 +765,25 @@ function Signup() {
   const getAddress = (e) => {
     setAddress(e.target.value);
     validateCity();
-    fetch(
-      "https://api-adresse.data.gouv.fr/search/?q=" +
-      e.target.value +
-      "&type=housenumber&autocomplete=1&limit=10"
-    )
+    fetch(`${url}/api/v1/auth/places/?name=${e.target.value}`)
       .then((response) => response.json())
       .then((responseJson) => {
         // console.log("res address", responseJson);
-        console.log(responseJson, "responseJson");
+        // console.log(responseJson, "responseJson");
 
         var addressToSet = [];
         // ""
-        for (var i = 0; i < responseJson.features.length; i++) {
+        for (var i = 0; i < responseJson.places.length; i++) {
           addressToSet.push({
             id: i,
-            label: responseJson.features[i].properties.label,
-            city: responseJson.features[i].properties.city,
-            PostalCode: responseJson.features[i].properties.postcode,
-            lat: responseJson.features[0].geometry.coordinates[1],
-            lng: responseJson.features[0].geometry.coordinates[0],
+            label: responseJson.places[i].formatted_address,
+            // city: responseJson.places[i].properties.city,
+            // PostalCode: responseJson.places[i].properties.postcode,
+            lat: responseJson.places[i].geometry.location.lat,
+            lng: responseJson.places[i].geometry.location.lng,
           });
         }
-        if (addressToSet.length === responseJson.features.length) {
+        if (addressToSet.length === responseJson.places.length) {
           setItems(addressToSet);
         }
       })
@@ -799,14 +793,32 @@ function Signup() {
         // console.error(error);
       });
   };
-  const SetAddress = (item) => {
+  const SetAddress = async (item) => {
     setAddress(item);
     validateCity();
-
+    let placesKey = "GOOGLE_API_KEY_REDACTED";
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
-        var city = items[i].city;
-        var zipCode = items[i].PostalCode;
+        let place = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${items[i].lat},${items[i].lng}&key=${placesKey}`
+        );
+        let temp = place.data.results[0].formatted_address.split(",");
+        let country = temp[temp.length - 1];
+        let city;
+        let zipCode;
+
+        if (temp.length === 4) {
+          let array = temp[2].split(" ");
+          zipCode = Number(array[1]);
+          city = array[2];
+        } else {
+          let array = temp[1].split(" ");
+          zipCode = Number(array[1]);
+          city = array[2];
+        }
+
+        console.log(country, temp, city, zipCode, "cityName");
+
         var lat = items[i].lat.toString();
         var lng = items[i].lng.toString();
         var newAddress = items[i].label.split(String(zipCode));
@@ -818,7 +830,6 @@ function Signup() {
           longitude: lng,
           firstname: formData.firstname,
           lastname: formData.lastname,
-
           email: formData.email,
           password: formData.password,
           confirm_password: formData.confirm_password,
@@ -921,7 +932,8 @@ function Signup() {
 
     newFormData.append("skills", JSON.stringify(skillArrayData));
 
-    materialArrayData && newFormData.append("material", JSON.stringify(materialArrayData));
+    materialArrayData &&
+      newFormData.append("material", JSON.stringify(materialArrayData));
     const headers = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -940,7 +952,7 @@ function Signup() {
         setFormData(signupData);
 
         setisLoading(false);
-        successToggle()
+        successToggle();
 
         addToast(response.data.message, {
           appearance: "success",
@@ -976,32 +988,24 @@ function Signup() {
   };
   const GoToLogin = () => {
     setisSuccess(true);
-    successToggle()
-  }
+    successToggle();
+  };
   if (isSuccess === true) {
     return <Redirect to="/Login" />;
   } else {
     return (
       <>
-        <Modal
-          size="lg"
-          isOpen={successmodal}
-
-          toggle={successToggle}
-
-        >
+        <Modal size="lg" isOpen={successmodal} toggle={successToggle}>
           <ModalBody>
             <SuccessMessage
               toggle={successToggle}
               onClick={GoToLogin}
-
               title="Un e-mail de vérification vous a été envoyé, merci de cliquer sur le lien présent dans cet e-mail."
               buttonText="Ok!"
             />
           </ModalBody>
         </Modal>
         <div className="main">
-
           <div className="containerProject">
             <SignupForm
               // HandleChange
