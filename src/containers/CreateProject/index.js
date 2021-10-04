@@ -488,50 +488,71 @@ function CreateProject() {
       skill._id === _id ? setskillList(skill.skill) : ""
     );
   };
+
+  // ************
   const getAddress = (e) => {
     setAddress(e.target.value);
     validateCity();
-
-    fetch(
-      "https://api-adresse.data.gouv.fr/search/?q=" +
-        e.target.value +
-        "&type=housenumber&autocomplete=1&limit=10"
-    )
+    fetch(`${url}/api/v1/auth/places/?name=${e.target.value}`)
       .then((response) => response.json())
       .then((responseJson) => {
+        // console.log("res address", responseJson);
+        // console.log(responseJson, "responseJson");
+
         var addressToSet = [];
-        for (var i = 0; i < responseJson.features.length; i++) {
+        // ""
+        for (var i = 0; i < responseJson.places.length; i++) {
           addressToSet.push({
             id: i,
-            label: responseJson.features[i].properties.label,
-            city: responseJson.features[i].properties.city,
-            PostalCode: responseJson.features[i].properties.postcode,
-            lat: responseJson.features[0].geometry.coordinates[1],
-            lng: responseJson.features[0].geometry.coordinates[0],
+            label: responseJson.places[i].formatted_address,
+            // city: responseJson.places[i].properties.city,
+            // PostalCode: responseJson.places[i].properties.postcode,
+            lat: responseJson.places[i].geometry.location.lat,
+            lng: responseJson.places[i].geometry.location.lng,
           });
         }
-        if (addressToSet.length === responseJson.features.length) {
+        if (addressToSet.length === responseJson.places.length) {
           setItems(addressToSet);
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        const msg = "Required";
+        setAboutRequiredFields({ ...aboutRequiredFields, city: msg });
+        // console.error(error);
+      });
   };
-  const SetAddress = (item) => {
+  const SetAddress = async (item) => {
     setAddress(item);
     const check = validateCity();
-
+    let placesKey = "GOOGLE_API_KEY_REDACTED";
     for (let i = 0; i < items.length; i++) {
       if (items[i].label === item) {
-        var city = items[i].city;
-        var zipCode = items[i].PostalCode;
+        let place = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${items[i].lat},${items[i].lng}&key=${placesKey}`
+        );
+        let temp = place.data.results[0].formatted_address.split(",");
+        let city;
+        let zipCode;
+
+        if (temp.length === 4) {
+          let array = temp[2].split(" ");
+          zipCode = Number(array[1]);
+          city = array[2];
+        } else {
+          let array = temp[1].split(" ");
+          zipCode = Number(array[1]);
+          city = array[2];
+        }
+
         var lat = items[i].lat.toString();
         var lng = items[i].lng.toString();
-
+        var newAddress = items[i].label.split(String(zipCode));
         setFormDataCity({
-          zipCode: zipCode,
+          zipCode: zipCode.toString(),
           city: city,
           latitude: lat,
           longitude: lng,
+          street: newAddress.toString(),
         });
         setFormData({
           title: formData.title,
