@@ -803,7 +803,6 @@ function Signup() {
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${items[i].lat},${items[i].lng}&key=${placesKey}`
         );
         let temp = place.data.results[0].formatted_address.split(",");
-        let country = temp[temp.length - 1];
         let city;
         let zipCode;
 
@@ -816,8 +815,6 @@ function Signup() {
           zipCode = Number(array[1]);
           city = array[2];
         }
-
-        console.log(country, temp, city, zipCode, "cityName");
 
         var lat = items[i].lat.toString();
         var lng = items[i].lng.toString();
