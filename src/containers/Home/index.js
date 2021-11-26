@@ -10,12 +10,11 @@ import magnifier from "../../Components/UI/Theme/images/magnifier.svg";
 import paperPlane from "../../Components/UI/Theme/images/paper-plane.svg";
 import target from "../../Components/UI/Theme/images/target.svg";
 import Header from "../../Components/HomeHeader";
-import projectImage from "../../Components/UI/Theme/images/projectImage.png";
+import projectImage from "../../Components/UI/Theme/images/logo-new.png";
 import avatarimage from "../../Components/UI/Theme/images/avatar.png";
 import axios from "axios";
 import Loaders from "../../shared/Loaders";
-import {url} from '../../urlConfig' 
-
+import { url } from "../../urlConfig";
 
 import DefaultImage from "../../Components/UI/Theme/images/index2.png";
 export default function Home({ notificationsData }) {
@@ -49,17 +48,22 @@ export default function Home({ notificationsData }) {
               style={{ backgroundColor: "#00bcb6" }}
             >
               <p>
-                Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-                used in laying out print, graphic or web designs. The passage is
-                attributed to an unknown typesetter in the 15th century who is
-                thought to have scrambled parts of Cicero's De Finibus Bonorum
-                et Malorum for use in a type specimen book.
-                <br />
-                What is Lorem Ipsum Lorem Ipsum is simply dummy text of the
-                printing and typesetting industry Lorem Ipsum has been the
-                industry's standard dummy text ever since the 1500s when an
-                unknown printer took a galley of type and scrambled it to make a
-                type specimen book it has?
+                Bienvenue sur le site Géocity. Une ASBL qui vous propose un
+                réseau social complètement dédié à vos projets. Le but de ce
+                réseau est développer une infinité de collaborations
+                stimulantes, enrichissantes, voire surprenantes autour de vos
+                projets. Sur ce site vous pourrez coopérer, vous entraider pour
+                réaliser des projets (privées ou publiques). Une fois inscrit,
+                le site vous permettra de créer des pages projet et d’organiser
+                les contenus qui leur sont liés : photo, video, live streaming.
+                Les projets publiés ont la forme d’un fil d’actualité général
+                comme sur Facebook. Géocity vous permet de suivre l’évolution en
+                temps réel de vos projets et des projets auxquels vous aurez
+                choisi de collaborer. Rejoignez-nous sur Facebook (lien) pour
+                découvrir la toute dernière version de Géocity. Géocity est un
+                projet sans but lucratif et open source. Tout le monde peut
+                participer à son développement. Nos valeurs clés sont:
+                Coopération – Entraide - Solidarité.
               </p>
             </div>
 
@@ -79,11 +83,24 @@ export default function Home({ notificationsData }) {
                 </div>
                 <div className="col-lg-8 col-md-12 ">
                   <p className="pt-1">
-                    <b>Description</b>: What is Lorem Ipsum Lorem Ipsum is
-                    simply dummy text of the printing and typesetting industry
-                    Lorem Ipsum has been the industry's standard dummy text ever
-                    since the 1500s when an unknown printer took a galley of
-                    type and scrambled it to make a type specimen book it has?
+                    <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social complètement dédié à vos
+                    projets. Le but de ce réseau est développer une infinité de
+                    collaborations stimulantes, enrichissantes, voire
+                    surprenantes autour de vos projets. Sur ce site vous pourrez
+                    coopérer, vous entraider pour réaliser des projets (privées
+                    ou publiques). Une fois inscrit, le site vous permettra de
+                    créer des pages projet et d’organiser les contenus qui leur
+                    sont liés : photo, video, live streaming. Les projets
+                    publiés ont la forme d’un fil d’actualité général comme sur
+                    Facebook. Géocity vous permet de suivre l’évolution en temps
+                    réel de vos projets et des projets auxquels vous aurez
+                    choisi de collaborer. Rejoignez-nous sur Facebook (lien)
+                    pour découvrir la toute dernière version de Géocity. Géocity
+                    est un projet sans but lucratif et open source. Tout le
+                    monde peut participer à son développement. Nos valeurs clés
+                    sont: Coopération – Entraide - Solidarité. type and
+                    scrambled it to make a type specimen book it has?
                   </p>
                 </div>
               </div>
@@ -218,7 +235,7 @@ export default function Home({ notificationsData }) {
                         <div className="col-lg-8 col-md-12 ">
                           <p className="pt-1">
                             <b>Description</b>:{" "}
-                            {data.project.general_description.substring(0,100)}
+                            {data.project.general_description.substring(0, 100)}
                           </p>
                         </div>
                       </div>
