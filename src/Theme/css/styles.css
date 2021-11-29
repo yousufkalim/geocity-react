@@ -1825,17 +1825,20 @@ a:hover.back-to-top {
 }
 /* section homepage */
 .section_2 .div2 .imageBlock img {
-  width: 100%;
+  width: 16rem;
+  height: 10rem;
 }
 .section_3 .div2 .imageBlock img {
   width: 100%;
 }
 .section_2 .div2 .imageBlock {
-  width: 100%;
+  width: 19rem;
+  height: 12rem;
 }
 .section_2 .div2 {
-  padding: 0px 20px;
+  padding: 0rem 5rem;
   text-align: center;
+
 }
 
 .section_3 .div2 {
@@ -1854,7 +1857,6 @@ a:hover.back-to-top {
   justify-content: center;
 }
 .section_2 .div1 video {
-  
   width: 100%;
   justify-content: center;
 }
