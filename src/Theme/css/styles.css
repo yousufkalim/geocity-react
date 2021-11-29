@@ -1853,6 +1853,11 @@ a:hover.back-to-top {
   font-size: 16px;
   justify-content: center;
 }
+.section_2 .div1 video {
+  
+  width: 100%;
+  justify-content: center;
+}
 .userHeader .notify {
   padding-top: 10px;
   padding-left: 10px;
