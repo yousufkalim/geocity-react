@@ -69,8 +69,14 @@ export default function Home({ notificationsData }) {
                    
                   
                     <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social Bienvenue sur le site Géocity. 
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social
                   </p>
                 </div>
               </div>
