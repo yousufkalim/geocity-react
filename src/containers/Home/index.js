@@ -18,6 +18,7 @@ import Loaders from "../../shared/Loaders";
 import { url } from "../../urlConfig";
 
 import DefaultImage from "../../Components/UI/Theme/images/index2.png";
+import { Description } from "@material-ui/icons";
 export default function Home({ notificationsData }) {
   const [projectData, setProjectData] = useState("");
 
@@ -64,10 +65,12 @@ export default function Home({ notificationsData }) {
                   <h5 className="text-bold pl-3">Geocity</h5>
                 </div>
                 <div className="col-lg-8 col-md-12 ">
-                  <p className="pt-1">
+                  <p className=" pt-1">
+                   
                   
                     <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social 
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. 
                   </p>
                 </div>
               </div>

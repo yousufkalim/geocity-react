@@ -1824,6 +1824,12 @@ a:hover.back-to-top {
   margin: 0 auto;
 }
 /* section homepage */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -40px;
+  margin-left: -20px;
+}
 .section_2 .div2 .imageBlock img {
   width: 16rem;
   height: 10rem;
@@ -1838,6 +1844,13 @@ a:hover.back-to-top {
 .section_2 .div2 {
   padding: 0rem 5rem;
   text-align: center;
+
+}
+.section_2 .div2 .card_block p  {
+  width: 21rem;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  text-align: left;
 
 }
 
