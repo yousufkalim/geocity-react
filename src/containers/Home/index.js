@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../Components/footer";
 import { SignOut, isAuthenticated, getUser } from "../../Auth/Index";
 import { Link } from "react-router-dom";
+import ReactTooltip from 'react-tooltip';
 import lightbulb from "../../Components/UI/Theme/images/light-bulb.svg";
 import deal from "../../Components/UI/Theme/images/deal.svg";
 import rocket from "../../Components/UI/Theme/images/rocket.svg";
@@ -41,7 +42,7 @@ export default function Home({ notificationsData }) {
         <div className="container">
           <div className="row my-2">
             <div className="col-lg-12">
-              <h2 className="text-center">Comment cela fontctionne ?</h2>
+              <h2 className="text-center">Comment cela fonctionne ?</h2>
             </div>
           </div>
           <div className="row section_2">
@@ -65,19 +66,16 @@ export default function Home({ notificationsData }) {
                   <h5 className="text-bold pl-3">Geocity</h5>
                 </div>
                 <div className="col-lg-8 col-md-12 ">
-                  <p className=" pt-1">
+                  <p>
+                  
                    
                   
-                    <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
+                  <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social
                   </p>
+                  
                 </div>
               </div>
             </div>
