@@ -67,9 +67,6 @@ export default function Home({ notificationsData }) {
                 </div>
                 <div className="col-lg-8 col-md-12 ">
                   <p>
-                  
-                   
-                  
                   <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL

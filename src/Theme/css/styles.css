@@ -1858,12 +1858,6 @@ a:hover.back-to-top {
   -webkit-box-orient: vertical;
 
 }
-.tooltip .tooltiptext {
-  width: 120px;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
-}
 
 .section_3 .div2 {
   padding: 10px;
