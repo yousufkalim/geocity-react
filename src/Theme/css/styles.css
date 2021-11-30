@@ -808,9 +808,9 @@ input[type="checkbox"] {
   background-color: #fff;
 }
 
-.navbar-custom-home.dropdown-item .item-text {
-  /* font: 600 0.875rem/0.875rem "Raleway", sans-serif; */
-}
+/* .navbar-custom-home.dropdown-item .item-text {
+  font: 600 0.875rem/0.875rem "Raleway", sans-serif; 
+} */
 
 .navbar-custom-home.dropdown-item:hover .item-text {
   color: #00bfd8;
@@ -929,9 +929,9 @@ input[type="checkbox"] {
 #search2 #iconRow #second #span2 {
   font-size: 14px;
 }
-#search2 .card .card-image {
+/* #search2 .card .card-image { */
   /* border: 10px solid blue; */
-}
+/* } */
 #search2 p {
   width: 180px;
   margin-left: 4px;
@@ -1198,7 +1198,7 @@ input[type="checkbox"] {
   margin-left: auto;
   border: 1px solid #c4d8dc;
   border-radius: 0.5rem;
-  vertical-align: top;
+  /* vertical-align: top; */
 }
 
 .cards-2 .card .card-body {
@@ -2247,9 +2247,9 @@ a:hover.back-to-top {
     margin-bottom: 0;
   }
 
-  .basic-2 .text-container {
+  /* .basic-2 .text-container { */
     /* margin-top: 3.125rem; */
-  }
+  /* } */
   /* end of details 2 */
 
   /* Details Lightboxes */
