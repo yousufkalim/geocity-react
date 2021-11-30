@@ -1824,18 +1824,39 @@ a:hover.back-to-top {
   margin: 0 auto;
 }
 /* section homepage */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -40px;
+  margin-left: -20px;
+}
 .section_2 .div2 .imageBlock img {
-  width: 100%;
+  width: 16rem;
+  height: 10rem;
 }
 .section_3 .div2 .imageBlock img {
   width: 100%;
 }
 .section_2 .div2 .imageBlock {
-  width: 100%;
+  width: 19rem;
+  height: 12rem;
 }
 .section_2 .div2 {
-  padding: 0px 20px;
+  padding: 0rem 5rem;
   text-align: center;
+
+}
+.section_2 .div2 .card_block p  {
+  width: 21rem;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+
 }
 
 .section_3 .div2 {
@@ -1851,6 +1872,10 @@ a:hover.back-to-top {
 .section_2 .div1 p {
   padding: 20px;
   font-size: 16px;
+  justify-content: center;
+}
+.section_2 .div1 video {
+  width: 100%;
   justify-content: center;
 }
 .userHeader .notify {

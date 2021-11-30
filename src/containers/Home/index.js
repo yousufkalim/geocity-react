@@ -12,11 +12,13 @@ import target from "../../Components/UI/Theme/images/target.svg";
 import Header from "../../Components/HomeHeader";
 import projectImage from "../../Components/UI/Theme/images/logo-new.png";
 import avatarimage from "../../Components/UI/Theme/images/avatar.png";
+import bgvideo from "../../Components/UI/Theme/videos/bgvideo.mov";
 import axios from "axios";
 import Loaders from "../../shared/Loaders";
 import { url } from "../../urlConfig";
 
 import DefaultImage from "../../Components/UI/Theme/images/index2.png";
+import { Description } from "@material-ui/icons";
 export default function Home({ notificationsData }) {
   const [projectData, setProjectData] = useState("");
 
@@ -44,27 +46,8 @@ export default function Home({ notificationsData }) {
           </div>
           <div className="row section_2">
             <div
-              className="div1 col-lg-6 col-md-12 col-sm-12"
-              style={{ backgroundColor: "#00bcb6" }}
-            >
-              <p>
-                Bienvenue sur le site Géocity. Une ASBL qui vous propose un
-                réseau social complètement dédié à vos projets. Le but de ce
-                réseau est développer une infinité de collaborations
-                stimulantes, enrichissantes, voire surprenantes autour de vos
-                projets. Sur ce site vous pourrez coopérer, vous entraider pour
-                réaliser des projets (privées ou publiques). Une fois inscrit,
-                le site vous permettra de créer des pages projet et d’organiser
-                les contenus qui leur sont liés : photo, video, live streaming.
-                Les projets publiés ont la forme d’un fil d’actualité général
-                comme sur Facebook. Géocity vous permet de suivre l’évolution en
-                temps réel de vos projets et des projets auxquels vous aurez
-                choisi de collaborer. Rejoignez-nous sur Facebook (lien) pour
-                découvrir la toute dernière version de Géocity. Géocity est un
-                projet sans but lucratif et open source. Tout le monde peut
-                participer à son développement. Nos valeurs clés sont:
-                Coopération – Entraide - Solidarité.
-              </p>
+              className="div1 col-lg-6 col-md-12 col-sm-12">
+              <video autoPlay controls loop src={bgvideo}/>
             </div>
 
             <div className="div2 col-lg-6 col-md-12 col-sm-12">
@@ -82,25 +65,18 @@ export default function Home({ notificationsData }) {
                   <h5 className="text-bold pl-3">Geocity</h5>
                 </div>
                 <div className="col-lg-8 col-md-12 ">
-                  <p className="pt-1">
+                  <p className=" pt-1">
+                   
+                  
                     <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social complètement dédié à vos
-                    projets. Le but de ce réseau est développer une infinité de
-                    collaborations stimulantes, enrichissantes, voire
-                    surprenantes autour de vos projets. Sur ce site vous pourrez
-                    coopérer, vous entraider pour réaliser des projets (privées
-                    ou publiques). Une fois inscrit, le site vous permettra de
-                    créer des pages projet et d’organiser les contenus qui leur
-                    sont liés : photo, video, live streaming. Les projets
-                    publiés ont la forme d’un fil d’actualité général comme sur
-                    Facebook. Géocity vous permet de suivre l’évolution en temps
-                    réel de vos projets et des projets auxquels vous aurez
-                    choisi de collaborer. Rejoignez-nous sur Facebook (lien)
-                    pour découvrir la toute dernière version de Géocity. Géocity
-                    est un projet sans but lucratif et open source. Tout le
-                    monde peut participer à son développement. Nos valeurs clés
-                    sont: Coopération – Entraide - Solidarité. type and
-                    scrambled it to make a type specimen book it has?
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social Bienvenue sur le site Géocity. Une ASBL
+                    qui vous propose un réseau social
                   </p>
                 </div>
               </div>
