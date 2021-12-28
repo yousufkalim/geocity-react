@@ -2343,6 +2343,9 @@ a:hover.back-to-top {
     font-size: 14px !important;
     margin-top: 5px;
   }
+  .home-btn-res .row{
+    margin: 0px !important;
+  }
   .interetpour {
     text-align: left !important;
   }

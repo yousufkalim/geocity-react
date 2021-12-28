@@ -231,7 +231,7 @@ export default function Home({ notificationsData }) {
             )}
           </div>
           <div className="row">
-            <div className="col-lg-12 text-center">
+            <div className="col-lg-12 text-center home-btn-res">
               <div className="row section_4">
                 <div className="btn_1  col-lg-6 col-sm-4 col-md-6">
                   <Link className="btn-outline-bm" to="/ProjectList">
