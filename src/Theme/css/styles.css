@@ -1854,7 +1854,7 @@ a:hover.back-to-top {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
+  /* -webkit-line-clamp: 2; number of lines to show */
   -webkit-box-orient: vertical;
 
 }
@@ -1889,10 +1889,20 @@ a:hover.back-to-top {
     margin: 0 auto;
     width: 70%;
   }
+  .proj-des-res p{
+    width: 100% !important;
+  }
+  .services-res .container .row{
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
   .section_2 .div2 .imageBlock {
     text-align: center;
     margin: 0 auto;
-    width: 70%;
+     width: 18rem; 
+  }
+  .section_2 .div2  {
+    padding: 0rem !important;
   }
   .section_3 .div2 .card_block {
     text-align: left;
@@ -1909,6 +1919,7 @@ a:hover.back-to-top {
   }
   .section_2 .div2 {
     padding-top: 40px;
+    margin-top: 25px;
   }
 
   .footer .footer-col {

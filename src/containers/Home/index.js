@@ -21,6 +21,9 @@ import DefaultImage from "../../Components/UI/Theme/images/index2.png";
 import { Description } from "@material-ui/icons";
 export default function Home({ notificationsData }) {
   const [projectData, setProjectData] = useState("");
+  const [des, setDes] = useState(false);
+
+  
 
   useEffect(() => {
     try {
@@ -37,7 +40,7 @@ export default function Home({ notificationsData }) {
   return (
     <div>
       <Header data={notificationsData} />
-      <div id="services" className="cards-1">
+      <div id="services" className="cards-1 services-res">
         <div className="container">
           <div className="row my-2">
             <div className="col-lg-12">
@@ -51,14 +54,14 @@ export default function Home({ notificationsData }) {
             </div>
 
             <div className="div2 col-lg-6 col-md-12 col-sm-12">
-              <div className="imageBlock" style={{ border: "10px solid blue" }}>
+              <div onClick={()=>{setDes(!des)}} className="imageBlock" style={{ border: "10px solid blue" }}>
                 <img
                   src={projectImage}
                   alt="GeoCity Project"
                   className="geocity-image"
                 />
               </div>
-              <div className="card_block">
+              <div className="card_block proj-des-res">
                 <div className="d-flex align-items-center pt-2">
                   <img src={avatarimage} alt="avatar" className="avatar" />
 
@@ -66,10 +69,16 @@ export default function Home({ notificationsData }) {
                 </div>
                 <div className="col-lg-8 col-md-12 ">
                   <p>
-                  <b>Description</b>: Bienvenue sur le site Géocity. Une ASBL
+                  <b>Description</b>:
+                   { des ?
+                   `Bienvenue sur le site Géocity. Une ASBL
+                   qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                   qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
+                   qui vous propose un réseau social`
+                    :`Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
                     qui vous propose un réseau social  Bienvenue sur le site Géocity. Une ASBL
-                    qui vous propose un réseau social
+                    qui vous propose un réseau social`.substring(0, 50)+`...`}
                   </p>
                   
                 </div>
