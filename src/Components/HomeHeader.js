@@ -79,7 +79,7 @@ export default function HomeHeader({ data }) {
         </div>
       </nav>{" "}
       <div className="header-content">
-        <div className="container">
+        <div className="container head-text-res">
           <div className="row">
             <div className="col-lg-5">
               <img

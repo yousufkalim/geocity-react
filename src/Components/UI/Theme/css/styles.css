@@ -1864,10 +1864,18 @@ a:hover.back-to-top {
     margin: 0 auto;
     width: 70%;
   }
+  .services-res .container .row{
+    margin-left: 0px !important;
+    margin-right: 0px;
+  }
+  .cards-1 .section_2 .div2{
+    padding: 0px !important;
+  }
   .section_2 .div2 .imageBlock {
     text-align: center;
     margin: 0 auto;
-    width: 70%;
+    width: 19rem !important;
+    /* width: 70%; */
   }
   .section_3 .div2 .card_block {
     text-align: left;

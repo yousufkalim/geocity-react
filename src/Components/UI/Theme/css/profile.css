@@ -2320,10 +2320,31 @@ a:hover.back-to-top {
 .interetpour {
   margin-right: 3rem;
 }
+@media (max-width:610px) {
+  .head-text-res .row{
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+ }
+ /* .footer-res .row{
+  margin-right: 10px !important;
+  margin-left: 10px !important;
+
+ } */
+}
+@media (max-width:576px) {
+  .footer-res .row{
+  margin-right: 8px !important;
+  margin-left: 5px !important;
+
+ }
+}
 @media (max-width: 425px) {
   .profileModify button {
     font-size: 14px !important;
     margin-top: 5px;
+  }
+  .home-btn-res .row{
+    margin: 0px !important;
   }
   .interetpour {
     text-align: left !important;
