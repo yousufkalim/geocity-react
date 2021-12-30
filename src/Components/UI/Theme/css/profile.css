@@ -2320,6 +2320,9 @@ a:hover.back-to-top {
 .interetpour {
   margin-right: 3rem;
 }
+.userdiv-res .row{
+  margin-right: -27px !important;
+}
 @media (max-width:610px) {
   .head-text-res .row{
     margin-right: 10px !important;
