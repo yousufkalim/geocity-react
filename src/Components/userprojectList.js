@@ -60,7 +60,7 @@ export default function UserprojectList({
         </div>
       </div>
       <div className="text-center col-lg-3 col-md-4 col-sm-12 col-xs-12">
-        <div className="viewmore">
+        <div className="viewmore viewmore-res">
           <div className="row ">
             {getUser()._id === data.project_owner ? (
               <p>

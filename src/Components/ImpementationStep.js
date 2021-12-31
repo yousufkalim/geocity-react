@@ -125,7 +125,7 @@ export default function ImpementationStep({
                               fontSize: "12px",
                             }}
                           >
-                            {step.skills.skillField.skillField}
+                            {step.skills.skillField &&   step.skills.skillField.skillField}
                           </span>
                         </p>
 

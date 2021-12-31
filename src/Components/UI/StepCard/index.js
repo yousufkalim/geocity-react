@@ -42,7 +42,7 @@ const Example = ({
           <div className="col-10">
             <CardTitle tag="h5">
               <p>
-                <span style={{ fontSize: "15px", fontWeight: "bold" }}>
+                <span style={{ fontSize: "15px", fontWeight: "bold",marginLeft:"20px"}}>
                   {" "}
                   Step Name:
                 </span>{" "}

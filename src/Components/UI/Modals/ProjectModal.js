@@ -50,7 +50,7 @@ const ModalExample = (props) => {
       >
         <ModalHeader toggle={props.toggle}>Edit Project</ModalHeader>
         <ModalBody>
-          <Form>
+          <Form className="editmodal-res">
             <Row form>
               <Col md={6}>
                 <FormGroup>

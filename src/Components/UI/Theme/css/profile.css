@@ -1666,7 +1666,14 @@ textarea:focus {
   border-top: 1px solid #c4d8dc;
   opacity: 0.7;
 }
-
+.viewmore-res .row{
+margin-right: 0px !important;
+margin-left: 0px !important;
+}
+.editmodal-res .row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
 /**********************************/
 /*     18. Back To Top Button     */
 /**********************************/

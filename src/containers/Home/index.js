@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import "../../Components/UI/Theme/css/styles.css";
 import Footer from "../../Components/footer";
 import { SignOut, isAuthenticated, getUser } from "../../Auth/Index";
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import lightbulb from "../../Components/UI/Theme/images/light-bulb.svg";
 import deal from "../../Components/UI/Theme/images/deal.svg";
 import rocket from "../../Components/UI/Theme/images/rocket.svg";
@@ -22,6 +22,7 @@ import { Description } from "@material-ui/icons";
 export default function Home({ notificationsData }) {
   const [projectData, setProjectData] = useState("");
   const [des, setDes] = useState(false);
+  let history = useHistory();
 
   
 
@@ -54,7 +55,11 @@ export default function Home({ notificationsData }) {
             </div>
 
             <div className="div2 col-lg-6 col-md-12 col-sm-12">
-              <div onClick={()=>{setDes(!des)}} className="imageBlock" style={{ border: "10px solid blue" }}>
+              <div 
+              onClick={()=>{history.push("/SingleProject/61ced5e0859f13a2a14c9958")}}
+              // onClick={()=>{setDes(!des)}} 
+              className="imageBlock" 
+              style={{ border: "10px solid blue" ,cursor:"pointer"}}>
                 <img
                   src={projectImage}
                   alt="GeoCity Project"
