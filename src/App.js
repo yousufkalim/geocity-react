@@ -117,13 +117,13 @@ export default function App() {
               <List {...props} notificationsData={data} setdata={setdata} />
             )}
           />
-          <PrivateRoute
+          {/* <PrivateRoute
             path="/SingleProject/:id"
             exact
             component={(props) => (
               <Project {...props} notificationsData={data} setdata={setdata} />
             )}
-          />
+          /> */}
           {/* <PrivateRoute path="/SingleProject/:id" component={Project} exact /> */}
           <PrivateRoute path="/Createproject" exact component={CreateProject} />
 
@@ -156,7 +156,13 @@ export default function App() {
           <Route path="/ForgotPassword" exact>
             <ForgotPassword />
           </Route>
-
+          <Route
+            path="/SingleProject/:id"
+            exact
+            component={(props) => (
+              <Project {...props} notificationsData={data} setdata={setdata} />
+            )}
+          />
           <HomeRoute
             path="/"
             exact

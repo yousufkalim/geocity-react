@@ -54,6 +54,7 @@ export default function Project(props) {
         });
       });
     }
+ 
     // return () => {
     //   io.socket.off();
     // };
@@ -1966,7 +1967,7 @@ export default function Project(props) {
                     className=" col-lg-3 col-md-12 col-sm-12 col-xs-12 text-center"
                     style={{
                       background: "#f7f7f7",
-                      height: "15.1rem",
+                      // height: "15.1rem",
                     }}
                   >
                     <div
