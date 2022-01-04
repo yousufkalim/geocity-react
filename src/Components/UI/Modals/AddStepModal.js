@@ -78,7 +78,7 @@ const ModalExample = (props) => {
       >
         <ModalHeader toggle={props.toggle}>Add Implementation Step</ModalHeader>
         <ModalBody>
-          <Form>
+          <Form className="editmodal-res">
             <Row form>
               <Col md={4}>
                 <FormGroup>
