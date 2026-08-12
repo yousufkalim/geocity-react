@@ -27,7 +27,7 @@
     "react-star-ratings": "^2.3.0",
     "react-toast-notifications": "^2.4.0",
     "reactstrap": "^8.7.1",
-    "socket.io-client": "^3.0.5",
+    "socket.io-client": "^4.8.3",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
